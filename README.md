@@ -1,3 +1,45 @@
-# مدار
+# مدار — تتبّع الأقمار الصناعية
 
-جارٍ تجهيز النسخة الكاملة من التطبيق وملفات النشر.
+نسخة التطبيق كاملة: كرة أرضية ثلاثية الأبعاد، حركة محسوبة بـ SGP4، بحث بالاسم ورقم NORAD والدولة والأنواع والتاريخ والوقت، تقارير المرور والتحليل متعدد الأيام وتصدير Word بالأعلام.
+
+## نشر النسخة الكاملة على Cloudflare
+
+في Cloudflare افتح Workers & Pages ثم Create application ثم Import a repository، واختر `aymen684-netizen/madar` وفرع `main`. دليل العمل هو جذر المستودع، وأمر البناء `npm run build` وأمر النشر `npx wrangler deploy`. بعد النشر يظهر رابط workers.dev ويمكن ربط نطاقك وتفعيل النشر عند تحديث main من إعدادات الربط مع GitHub.
+
+أو من جهازك:
+
+```sh
+git clone https://github.com/aymen684-netizen/madar.git
+cd madar
+npm install
+npx wrangler login
+npm run deploy
+```
+
+`wrangler.jsonc` يربط مجلد public بالملفات الثابتة وworker/index.js بتنزيل Word على /api/word.docx. لا يحتاج التطبيق قاعدة بيانات؛ البحث والتقارير محفوظة في متصفح المستخدم، وخدمة Word تعيد الملف دون تخزينه على الخادم.
+
+## GitHub Pages
+
+في المستودع افتح Settings → Pages → Source → GitHub Actions، ثم Actions → Publish GitHub Pages → Run workflow. رابط النشر المتوقع بعد النجاح: https://aymen684-netizen.github.io/madar/
+
+GitHub Pages يشغّل الواجهة فقط: تنزيل Word المباشر والمشاركة يعملان من المتصفح، أما تنزيل Word عبر الخادم فهو متاح في نسخة Cloudflare ويُخفى تلقائيًا على GitHub Pages.
+
+## التطوير والتحقق
+
+```sh
+npm install
+npm run check
+npm run dev
+```
+
+مجلد public يحتوي جميع ملفات الواجهة والبيانات والصور والمكتبات. بيانات النسخة الاحتياطية جُلبت في 13 أكتوبر 2026؛ يحاول التطبيق جلب العناصر الأحدث من CelesTrak عند الاتصال. المواقع والتقارير تقديرات من العناصر المدارية المتاحة، وليست قياسات مباشرة أو سجلًا مرصودًا. تصنيف CIS يجمع روسيا ورابطة الدول المستقلة والاتحاد السوفيتي السابق.
+
+راجع public/credits.txt للمصادر والتراخيص. ملفات هوية استضافة ChatGPT ومفاتيح الوصول غير مضمنة.
+
+توثيق النشر: https://developers.cloudflare.com/workers/static-assets/binding/ و https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages
+
+الأعلام محفوظة في flags.bundle.zip ويستخرجها أمر البناء تلقائيًا دون تغيير الصور.
+
+خلفية النجوم محفوظة على أجزاء تجمع تلقائيًا في أمر البناء دون تغيير الصورة.
+
+البيانات والمكتبات الكبيرة محفوظة مضغوطة في packed/ ويعيدها أمر البناء بعد التحقق من بصمة SHA-256. جميع ملفات الواجهة الأصلية موجودة في public/، والبيانات والمكتبات تعود كما هي دون فقد.

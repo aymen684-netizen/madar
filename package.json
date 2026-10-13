@@ -1,0 +1,15 @@
+{
+  "name": "madar-satellite-tracker",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/prepare-assets.mjs && wrangler dev",
+    "deploy": "node scripts/prepare-assets.mjs && wrangler deploy",
+    "check": "node scripts/prepare-assets.mjs && node scripts/check.mjs",
+    "build": "node scripts/prepare-assets.mjs"
+  },
+  "devDependencies": {
+    "wrangler": "latest"
+  }
+}

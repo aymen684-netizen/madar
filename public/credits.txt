@@ -1,0 +1,16 @@
+Madār — satellite tracker
+Orbital elements: CelesTrak https://celestrak.org/ (snapshot retrieved 2026-10-13).
+Propagation: satellite.js 6.0.1 (MIT), https://github.com/shashwatak/satellite-js
+Globe renderer: globe.gl 2.41.4 (MIT), https://github.com/vasturiano/globe.gl
+Earth texture: NASA Blue Marble, distributed in three-globe examples.
+Earth and sky assets: https://github.com/vasturiano/three-globe/tree/master/example/img
+Independent application; not affiliated with KeepTrack.
+Country boundaries: Natural Earth 1:50m, public domain; world-atlas 2.0.2 (ISC).
+Country ISO mapping: datasets/country-codes.
+Word export: docx 9.5.1 (MIT), https://github.com/dolanmiu/docx
+Compatibility globe renderer: globe.gl 2.31.0 (MIT).
+Satellite country/registered-owner metadata: CelesTrak SATCAT and SATCAT Sources, retrieved 2026-10-13.
+General mission categories: CelesTrak GP satellite groups, retrieved 2026-10-13.
+Documented ISS and Hubble mission descriptions: NASA mission pages, links included in the application.
+Military category: CelesTrak military GP group. Reconnaissance subset: SAR-Lupe (DLR), CSO and CERES (French Ministry of Armed Forces), cited in each satellite's mission metadata.
+Supplemental orbital estimates: Mike McCants publicly observed elements https://mmccants.org/tles/classfd.zip, retrieved 2026-10-13; retained curated reconnaissance elements no older than 30 days at retrieval. These are independent observations and not official telemetry.

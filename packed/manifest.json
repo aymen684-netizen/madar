@@ -1,0 +1,68 @@
+[
+  {
+    "target": "public/data/active.txt",
+    "parts": [
+      "packed/active.txt.gz.part00",
+      "packed/active.txt.gz.part01",
+      "packed/active.txt.gz.part02",
+      "packed/active.txt.gz.part03",
+      "packed/active.txt.gz.part04"
+    ],
+    "sha256": "78a197da1e7004a3fc63382a286ff5f2b64b20570439ea0fc6c896b932d8fc29"
+  },
+  {
+    "target": "public/data/countries.json",
+    "parts": [
+      "packed/countries.json.gz.part00",
+      "packed/countries.json.gz.part01",
+      "packed/countries.json.gz.part02",
+      "packed/countries.json.gz.part03",
+      "packed/countries.json.gz.part04",
+      "packed/countries.json.gz.part05",
+      "packed/countries.json.gz.part06",
+      "packed/countries.json.gz.part07"
+    ],
+    "sha256": "1104442b690d4c95c9719fca241f4cf64a87699a8f2254ae09083bd060dbce33"
+  },
+  {
+    "target": "public/data/satellite-metadata.json",
+    "parts": [
+      "packed/satellite-metadata.json.gz.part00"
+    ],
+    "sha256": "76fed3ef773c9373e6c2f5508a81253ca68cf82e767c80f9e651fda64dfcb330"
+  },
+  {
+    "target": "public/data/starlink.txt",
+    "parts": [
+      "packed/starlink.txt.gz.part00",
+      "packed/starlink.txt.gz.part01",
+      "packed/starlink.txt.gz.part02",
+      "packed/starlink.txt.gz.part03"
+    ],
+    "sha256": "10ceae6d18564ca01f0aab322430464b32528e598064e223884bb779fe07783a"
+  },
+  {
+    "target": "public/vendor/docx.js",
+    "parts": [
+      "packed/docx.js.gz.part00"
+    ],
+    "sha256": "aee5cf06c948263b7489f7e1bd08f4b8f612bb845275d6b931c6ef5b0d0a20de"
+  },
+  {
+    "target": "public/vendor/globe-compat.min.js",
+    "parts": [
+      "packed/globe-compat.min.js.gz.part00",
+      "packed/globe-compat.min.js.gz.part01"
+    ],
+    "sha256": "042a0092f352252bb2fdb5ff7c02788689c1bdb05c30e1fed5e2d9a61dade83b"
+  },
+  {
+    "target": "public/vendor/globe.min.js",
+    "parts": [
+      "packed/globe.min.js.gz.part00",
+      "packed/globe.min.js.gz.part01",
+      "packed/globe.min.js.gz.part02"
+    ],
+    "sha256": "983fefdaad2a6d51d84f63b906acb728c32875dc396d33e78fc7c2ff210ed054"
+  }
+]
