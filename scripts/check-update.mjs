@@ -31,7 +31,8 @@ fakeWorker.onmessage({data:{type:'positions',token:first,buf:new Float32Array(6)
 swarm.show(b,new Date(3000));assert.equal(fakeWorker.messages.length,4,'stale response must not release current calculation');
 fakeWorker.onmessage({data:{type:'positions',token:second,buf:new Float32Array([1,2,3,4,5,6])}});assert.equal(fakeWorker.messages.at(-1).time,3000);assert.equal(swarm.object(drawn[0][1]).id,b[1].id);
 const refresh=b.map(o=>({...o,l1:o.l1+' '}));swarm.show(refresh,new Date(3000));assert.equal(fakeWorker.messages.at(-2).type,'set','same IDs with new TLE must refresh');
-swarm.show([],new Date(3000));assert.equal(drawn.length,0);
+let sceneVisible=true;swarmContext.RenderLifecycle={sceneActive:()=>sceneVisible};swarm.show(refresh,new Date(4000));const messageCount=fakeWorker.messages.length,previousDrawing=drawn,refreshToken=fakeWorker.messages.filter(m=>m.type==='set').at(-1).token;sceneVisible=false;fakeWorker.onmessage({data:{type:'positions',token:refreshToken,buf:new Float32Array([1,2,3,4,5,6])}});assert.equal(fakeWorker.messages.length,messageCount,'hidden scene must not drain a queued tick');assert.equal(drawn,previousDrawing,'hidden scene must discard completed positions');sceneVisible=true;swarm.show(refresh,new Date(4000));assert.equal(fakeWorker.messages.at(-1).type,'tick');assert.equal(fakeWorker.messages.length,messageCount+1,'returning to a frozen time must still replace a discarded result');
+swarm.show([],new Date(4000));assert.equal(drawn.length,0);
 let keys=['oneweb','analyst'];const pickerContext={OrbitData:groupsContext.OrbitData,window:{SatGroups:groups},parse,document:{querySelectorAll:()=>keys.map(value=>({value}))}};
 vm.createContext(pickerContext);vm.runInContext(fs.readFileSync('public/type-picker.js','utf8'),pickerContext);
 const partial=await pickerContext.window.TypePicker.load('catalog');assert(partial.length);assert.equal(partial.failed.length,1);
