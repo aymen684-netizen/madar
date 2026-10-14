@@ -5,7 +5,7 @@ const app=fs.readFileSync('public/app.js','utf8');
 const parse=text=>{const lines=text.trim().split(/\r?\n/),out=[];for(let i=0;i<lines.length;i++)if(lines[i].startsWith('1 ')&&lines[i+1]?.startsWith('2 ')){out.push({name:lines[i-1],id:Number(lines[i].slice(2,7)),l1:lines[i],l2:lines[++i]})}return out};
 const active=parse(fs.readFileSync('public/data/active.txt','utf8'));
 const groupsContext={AbortSignal,fetch:async url=>{if(!url.startsWith('data/'))throw Error('offline');return{ok:fs.existsSync('public/'+url),text:async()=>fs.readFileSync('public/'+url,'utf8')}}};
-vm.createContext(groupsContext);vm.runInContext(fs.readFileSync('public/satellite-groups.js','utf8'),groupsContext);
+vm.createContext(groupsContext);for(const file of ['orbit-data.js','orbit-service.js'])vm.runInContext(fs.readFileSync('public/'+file,'utf8'),groupsContext);vm.runInContext(fs.readFileSync('public/satellite-groups.js','utf8'),groupsContext);
 const groups=groupsContext.SatGroups;
 assert.equal(new Set(groups.list.map(g=>g.key)).size,groups.list.length);
 assert(groups.list.length>40);
@@ -15,14 +15,14 @@ const oneweb=await groups.fetchGroup('oneweb',parse);assert.equal(oneweb.source,
 await assert.rejects(groups.fetchGroup('analyst',parse),/نسخة احتياطية/);
 let posted;
 const workerContext={self:{postMessage:m=>{posted=m}},importScripts:()=>{}};
-vm.createContext(workerContext);vm.runInContext(fs.readFileSync('public/vendor/satellite.min.js','utf8'),workerContext);vm.runInContext(fs.readFileSync('public/positions-worker.js','utf8'),workerContext);
+vm.createContext(workerContext);vm.runInContext(fs.readFileSync('public/orbit-data.js','utf8'),workerContext);vm.runInContext(fs.readFileSync('public/vendor/satellite.min.js','utf8'),workerContext);vm.runInContext(fs.readFileSync('public/positions-worker.js','utf8'),workerContext);
 workerContext.self.onmessage({data:{type:'set',token:1,tles:active.map(o=>[o.l1,o.l2])}});
 workerContext.self.onmessage({data:{type:'tick',token:1,time:Date.UTC(2026,9,14)}});
 assert.equal(posted.buf.length,active.length*3);assert(posted.buf.filter(Number.isFinite).length>active.length*2);
 const before=posted;workerContext.self.onmessage({data:{type:'tick',token:0,time:Date.now()}});assert.equal(posted,before);
 let fakeWorker,drawn;
 class FakeWorker{constructor(){fakeWorker=this;this.messages=[]}postMessage(m){this.messages.push(m)}terminate(){this.terminated=true}}
-const swarmContext={Worker:FakeWorker,world:{particlesData:d=>{drawn=d}},update:()=>{}};
+const swarmContext={OrbitData:groupsContext.OrbitData,Worker:FakeWorker,world:{particlesData:d=>{drawn=d}},update:()=>{}};
 vm.createContext(swarmContext);vm.runInContext(app.slice(app.indexOf('const Swarm='),app.indexOf('\nfunction parse('))+'\nglobalThis.swarm=Swarm;',swarmContext);
 const swarm=swarmContext.swarm;const a=active.slice(0,2),b=active.slice(2,4);
 swarm.show(a,new Date(1000));const first=fakeWorker.messages[0].token;
@@ -32,11 +32,11 @@ swarm.show(b,new Date(3000));assert.equal(fakeWorker.messages.length,4,'stale re
 fakeWorker.onmessage({data:{type:'positions',token:second,buf:new Float32Array([1,2,3,4,5,6])}});assert.equal(fakeWorker.messages.at(-1).time,3000);assert.equal(swarm.object(drawn[0][1]).id,b[1].id);
 const refresh=b.map(o=>({...o,l1:o.l1+' '}));swarm.show(refresh,new Date(3000));assert.equal(fakeWorker.messages.at(-2).type,'set','same IDs with new TLE must refresh');
 swarm.show([],new Date(3000));assert.equal(drawn.length,0);
-let keys=['oneweb','analyst'];const pickerContext={window:{SatGroups:groups},parse,document:{querySelectorAll:()=>keys.map(value=>({value}))}};
+let keys=['oneweb','analyst'];const pickerContext={OrbitData:groupsContext.OrbitData,window:{SatGroups:groups},parse,document:{querySelectorAll:()=>keys.map(value=>({value}))}};
 vm.createContext(pickerContext);vm.runInContext(fs.readFileSync('public/type-picker.js','utf8'),pickerContext);
 const partial=await pickerContext.window.TypePicker.load('catalog');assert(partial.length);assert.equal(partial.failed.length,1);
 await assert.rejects(pickerContext.window.TypePicker.load('report'),/لم يُنشأ التقرير/);
 await assert.rejects(pickerContext.window.TypePicker.load('analysis'),/لم يُنشأ التقرير/);
 console.log(`PASS: ${groups.list.length} groups, offline fallback, ${active.length} worker positions, stale responses, TLE refresh and incomplete-report protection`);
 
-const prepareContext={S:{twoline2satrec:()=>({})}};vm.createContext(prepareContext);vm.runInContext(app.slice(app.indexOf('function prepare('),app.indexOf('\nfunction dateNow(')),prepareContext);const prepared=prepareContext.prepare(partial);assert.equal(prepared.failed.length,1,'current-group reports retain loading failures');assert.equal(prepared.derived,true);assert(pickerContext.window.TypePicker.describe(prepared,'OneWeb').includes('تقريبي'));console.log('PASS: current-group report provenance and partial-load metadata');
+const prepareContext={OrbitData:groupsContext.OrbitData,S:{twoline2satrec:()=>({})}};vm.createContext(prepareContext);vm.runInContext(app.slice(app.indexOf('function prepare('),app.indexOf('\nfunction dateNow(')),prepareContext);const prepared=prepareContext.prepare(partial);assert.equal(prepared.failed.length,1,'current-group reports retain loading failures');assert.equal(prepared.derived,true);assert(pickerContext.window.TypePicker.describe(prepared,'OneWeb').includes('تقريبي'));console.log('PASS: current-group report provenance and partial-load metadata');

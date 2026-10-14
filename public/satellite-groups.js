@@ -2,7 +2,7 @@
 // جميع مجموعات CelesTrak للأقمار الصناعية، مع قاعدة بديلة تُطبَّق على الفهرس النشط عند تعذّر الاتصال.
 // local: ملف احتياطي مستقل في data/. match: نمط على اسم القمر. orbit: شرط على العناصر المدارية. meta: شرط على بيانات الفهرس.
 const R=s=>new RegExp(s,'i');
-const motion=o=>Number(o.l2.slice(52,63)),ecc=o=>Number('0.'+o.l2.slice(26,33).trim()),incl=o=>Number(o.l2.slice(8,16));
+const motion=o=>OrbitData.fields(o).motion,ecc=o=>OrbitData.fields(o).ecc,incl=o=>OrbitData.fields(o).incl;
 const sections=[
  {title:'مجموعات خاصة',groups:[
   {key:'active',label:'جميع الأقمار النشطة',local:true,all:true},
@@ -57,13 +57,13 @@ const sections=[
   {key:'cubesat',label:'CubeSats',none:true}]}];
 const list=sections.flatMap(s=>s.groups),byKey=Object.fromEntries(list.map(g=>[g.key,g]));
 const labels=Object.fromEntries(list.map(g=>[g.key,g.label]));
-function url(key){return 'https://celestrak.org/NORAD/elements/gp.php?GROUP='+encodeURIComponent(key)+'&FORMAT=tle'}
+function url(key){return 'https://celestrak.org/NORAD/elements/gp.php?GROUP='+encodeURIComponent(key)+'&FORMAT=json'}
 let activePromise=null;
 function activeCatalog(parse){if(!activePromise)activePromise=fetch('data/active.txt').then(r=>{if(!r.ok)throw Error();return r.text()}).then(parse).catch(e=>{activePromise=null;throw e});return activePromise}
 // يعيد نصًّا أو مصفوفة كائنات من النسخة الاحتياطية. يرمي خطأ عربيًا عند عدم توفّرها.
 async function fallback(key,parse){const g=byKey[key];if(!g)throw Error('نوع غير معروف');if(g.local){const r=await fetch('data/'+key+'.txt');if(!r.ok)throw Error();const data=parse(await r.text());if(data.length)return{data,derived:false}}if(g.none||!(g.match||g.orbit||g.meta))throw Error('تعذّر الاتصال بـ CelesTrak لتحميل «'+g.label+'»، ولا توجد له نسخة احتياطية. أعد المحاولة عند توفّر الاتصال.');const all=await activeCatalog(parse);if(g.meta)await root.SatMetadata?.load().catch(()=>null);const data=all.filter(o=>(!g.match||g.match.test(o.name))&&(!g.orbit||g.orbit(o))&&(!g.meta||g.meta(root.SatMetadata?.get(o.id))));if(!data.length)throw Error('لا توجد عناصر احتياطية للنوع: '+g.label);return{data,derived:true}}
 // يجلب المجموعة من CelesTrak مباشرة ثم يعود إلى النسخة الاحتياطية.
-async function fetchGroup(key,parse,{force=false}={}){const g=byKey[key];if(g&&!g.offline){try{const r=await fetch(url(key),{signal:AbortSignal.timeout(12000),cache:force?'reload':'default'});if(!r.ok)throw Error();const text=await r.text();const data=parse(text);if(!data.length)throw Error();return{data,text,source:'live'}}catch{}}const f=await fallback(key,parse);return{data:f.data,source:f.derived?'derived':'local'}}
+async function fetchGroup(key,parse,{force=false}={}){const g=byKey[key];if(!g)throw Error('نوع غير معروف');return OrbitService.fetchGroup(key,parse,fallback,g)}
 function checkboxes(container){container.replaceChildren();const legend=document.createElement('legend');legend.textContent='اختر نوعًا أو أكثر ('+list.filter(g=>!g.all).length+' نوعًا)';container.append(legend);for(const s of sections){const box=document.createElement('details');box.className='type-section';const sum=document.createElement('summary');sum.textContent=s.title+' · '+s.groups.length;const grid=document.createElement('div');grid.className='type-grid';for(const g of s.groups){if(g.all)continue;const label=document.createElement('label'),input=document.createElement('input');input.type='checkbox';input.value=g.key;label.append(input,g.label);grid.append(label)}box.append(sum,grid);container.append(box)}}
 function options(select,{skip=[]}={}){const current=select.value;select.replaceChildren();for(const s of sections){const og=document.createElement('optgroup');og.label=s.title;for(const g of s.groups){if(skip.includes(g.key))continue;const o=document.createElement('option');o.value=g.key;o.textContent=g.key==='active'?'جميع الأقمار النشطة · دول متعددة':g.label;og.append(o)}if(og.children.length)select.append(og)}if([...select.options].some(o=>o.value===current))select.value=current}
 function build(){if(typeof document==='undefined')return;for(const id of ['catalog-types','report-types','analysis-types']){const e=document.getElementById(id);if(e)checkboxes(e)}const group=document.getElementById('group');if(group)options(group)}
