@@ -2,6 +2,8 @@
 
 نسخة التطبيق كاملة: كرة أرضية ثلاثية الأبعاد، حركة محسوبة بـ SGP4، بحث بالاسم ورقم NORAD والدولة والأنواع والتاريخ والوقت، تقارير المرور والتحليل متعدد الأيام وتصدير Word بالأعلام.
 
+النسخة المنشورة على Cloudflare: https://madar.aymen684.workers.dev/
+
 ## نشر النسخة الكاملة على Cloudflare
 
 في Cloudflare افتح Workers & Pages ثم Create application ثم Import a repository، واختر `aymen684-netizen/madar` وفرع `main`. دليل العمل هو جذر المستودع، وأمر البناء `npm run build` وأمر النشر `npx wrangler deploy`. بعد النشر يظهر رابط workers.dev ويمكن ربط نطاقك وتفعيل النشر عند تحديث main من إعدادات الربط مع GitHub.
@@ -11,7 +13,7 @@
 ```sh
 git clone https://github.com/aymen684-netizen/madar.git
 cd madar
-npm install
+npm ci --ignore-scripts
 npx wrangler login
 npm run deploy
 ```
@@ -55,3 +57,5 @@ npm run dev
 ## الخصوصية والحماية
 
 يمكن إيقاف «حفظ عملي على هذا الجهاز» من لوحة الخصوصية للعمل دون حفظ بين الجلسات، أو مسح بيانات مدار المحلية. أزيل تحميل الخطوط الخارجية وأضيفت سياسة حماية للمحتوى. تعمل ضوابط الخدمة البديلة وتنظيم الطلبات عند نشر إصدار Cloudflare الجديد. راجع SECURITY.md لتفاصيل الحماية وحدود الاستضافة والتخزين، وشغّل npm run audit لفحص الاعتماديات المعروفة.
+
+نُشرت نسخة main مباشرة على Cloudflare في 14 أكتوبر 2026. ربط النشر التلقائي يحتاج تفويض Cloudflare للوصول إلى مستودع GitHub من إعدادات Builds؛ اتصال كل خدمة بـChatGPT لا يمنح هذا التفويض تلقائيًا. يتيح مسار Verify Cloudflare production في Actions تشغيل اختبارات النسخة المنشورة يدويًا.

@@ -12,7 +12,7 @@
 
 GitHub Pages يطبّق CSP وReferrer-Policy بواسطة meta. لا تتيح هذه الاستضافة إعداد ترويسات HTTP مخصصة، ولا يمكن فرض frame-ancestors أو Permissions-Policy بواسطة meta. إعداد public/_headers يضيف CSP مع frame-ancestors none، وX-Frame-Options وnosniff وReferrer-Policy وPermissions-Policy وHSTS عند نشر Cloudflare. يطبّق العامل الترويسات كذلك على ردود API والأخطاء.
 
-لم يُنقل التطبيق إلى استضافة أخرى. ضوابط Cloudflare تتطلب نشر الإصدار الجديد هناك، وترويسات GitHub Pages تبقى خاضعة للاستضافة.
+نُشرت النسخة كذلك على https://madar.aymen684.workers.dev/ في 14 أكتوبر 2026 مع ترويسات Cloudflare وخدمة Word ومحدد الطلبات. يبقى رابط GitHub Pages متاحًا، وترويساته خاضعة للاستضافة.
 
 ## خدمة Word في Cloudflare
 
