@@ -15,3 +15,5 @@ public/vendor/globe-compat.min.js
 public/vendor/globe.min.js
 
 test-results/
+
+public/data/mission-profiles.json

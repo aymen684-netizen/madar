@@ -1,0 +1,29 @@
+{
+  "checked": "2026-10-14",
+  "programs": {
+    "kuiper": {"pattern":"^KUIPER-\\d+$","title":"Amazon Leo / Kuiper","mission":"اتصالات وإنترنت واسع النطاق ضمن منظومة Amazon Leo، المعروفة سابقًا باسم Kuiper","source":"https://www.aboutamazon.com/what-we-do/devices-services/amazon-leo","sourceTitle":"Amazon — الجهة المشغّلة"},
+    "flock": {"pattern":"^FLOCK ","title":"PlanetScope / Flock","mission":"تصوير بصري متعدد الأطياف لسطح الأرض ضمن منظومة PlanetScope","source":"https://docs.planet.com/data/imagery/planetscope/","sourceTitle":"Planet — توثيق PlanetScope"},
+    "lemur": {"pattern":"^LEMUR[- ]","title":"LEMUR","mission":"منصة أقمار صغيرة تستخدمها منظومة LEMUR لجمع بيانات الطقس والنشاط البحري والجوي؛ تختلف الحمولات بين الأقمار","source":"https://spire.com/spirepedia/low-earth-multi-use-receiver/","sourceTitle":"Spire — تعريف منصة LEMUR"},
+    "iceye": {"pattern":"^ICEYE[- ]","title":"ICEYE","mission":"تصوير راداري لسطح الأرض نهارًا وليلًا وعبر السحب ضمن منظومة ICEYE","source":"https://www.iceye.com/defense-and-intelligence/sar-data","sourceTitle":"ICEYE — وصف بيانات الرادار"},
+    "hawk": {"pattern":"^HAWK-\\d+[A-Z]?$","title":"HawkEye 360","mission":"رصد الإشارات الراديوية وتحديد مواقع مصادرها ضمن منظومة HawkEye 360","source":"https://www.he360.com/technology/","sourceTitle":"HawkEye 360 — التقنية والمهمة"},
+    "kineis": {"pattern":"^KINEIS[- ]","title":"Kinéis","mission":"اتصال الأجهزة ونقل بيانات إنترنت الأشياء ضمن منظومة Kinéis؛ تقدم المنظومة أيضًا خدمات التعرف البحري","source":"https://kineis.com/en/faqs/","sourceTitle":"Kinéis — الأسئلة الرسمية"},
+    "nusat": {"pattern":"^NUSAT[- ]","title":"Satellogic / NewSat","mission":"تصوير سطح الأرض ضمن منظومة NewSat التابعة لـSatellogic","source":"https://satellogic.com/products/space-systems/","sourceTitle":"Satellogic — أنظمة NewSat"},
+    "iride": {"pattern":"^IRIDE[- _]","title":"IRIDE","mission":"رصد سطح الأرض ضمن برنامج IRIDE الإيطالي لمتابعة البيئة والأراضي والموارد المائية؛ تختلف المستشعرات بين المنظومات الفرعية","source":"https://www.esa.int/Applications/Observing_the_Earth/IRIDE/IRIDE_satellites","sourceTitle":"وكالة الفضاء الأوروبية — أقمار IRIDE"},
+    "tdrs": {"pattern":"^TDRS \\d+$","title":"TDRS","mission":"ترحيل الاتصالات والبيانات بين المركبات الفضائية والمحطات الأرضية ضمن شبكة TDRS","source":"https://www.nasa.gov/mission/tracking-and-data-relay-satellites/","sourceTitle":"NASA — أقمار ترحيل البيانات"},
+    "milstar": {"pattern":"MILSTAR","title":"Milstar","mission":"اتصالات عسكرية فضائية محمية ضمن منظومة Milstar؛ تفاصيل الاستخدام التشغيلي غير منشورة هنا","source":"https://www.spaceforce.mil/About-Us/Fact-Sheets/Fact-Sheet-Display/Article/2197755/milstar-satellite-communications-system/","sourceTitle":"قوة الفضاء الأمريكية — Milstar"},
+    "wgs": {"pattern":"^WGS ","title":"WGS","mission":"اتصالات عسكرية واسعة النطاق ضمن منظومة WGS؛ تفاصيل الاستخدام التشغيلي غير منشورة هنا","source":"https://www.spaceforce.mil/About-Us/Fact-Sheets/Fact-Sheet-Display/Article/2197740/wideband-global-satcom-satellite/","sourceTitle":"قوة الفضاء الأمريكية — WGS"},
+    "sarlupe": {"pattern":"^SAR-LUPE \\d+$","title":"SAR-Lupe","mission":"استطلاع وتصوير راداري ضمن منظومة SAR-Lupe الألمانية؛ الوصف لا يؤكد الحالة التشغيلية الحالية للقمر","source":"https://www.dlr.de/en/rb/research-operation/missions/earth-observation-science/sar-lupe","sourceTitle":"المركز الألماني للطيران والفضاء — SAR-Lupe"},
+    "cso": {"pattern":"^CSO[- ]\\d+$","title":"CSO","mission":"استطلاع وتصوير بصري عسكري ضمن برنامج CSO الفرنسي","source":"https://www.defense.gouv.fr/en/cde/space-capabilities","sourceTitle":"وزارة الجيوش الفرنسية — القدرات الفضائية"},
+    "ceres": {"pattern":"^CERES[- ]\\d+$","title":"CERES","mission":"جمع معلومات استخبارية من الإشارات الكهرومغناطيسية ضمن منظومة CERES الفرنسية","source":"https://www.defense.gouv.fr/dga/programme-ceres-capacite-renseignement-electromagnetique-spatiale","sourceTitle":"وزارة الجيوش الفرنسية — برنامج CERES"}
+  },
+  "individuals": {
+    "900":{"name":"CALSPHERE 1","mission":"كرة معايرة رادارية لاختبار أنظمة التتبع الأرضية","source":"https://naic.nrao.edu/arecibo/phil/hardware/radarcal/radarcal.html","sourceTitle":"مرصد أريسيبو — توثيق معايرة الرادار"},
+    "902":{"name":"CALSPHERE 2","mission":"كرة معايرة رادارية لاختبار أنظمة التتبع الأرضية","source":"https://naic.nrao.edu/arecibo/phil/hardware/radarcal/radarcal.html","sourceTitle":"مرصد أريسيبو — توثيق معايرة الرادار"},
+    "1361":{"name":"LCS 1","mission":"كرة معدنية ذات مقطع راداري معروف لمعايرة الرادارات الأرضية","source":"https://naic.nrao.edu/arecibo/phil/hardware/radarcal/radarcal.html","sourceTitle":"مرصد أريسيبو — كرات معايرة Lincoln"},
+    "3597":{"name":"OAO 2","mission":"مرصد فلكي فضائي لدراسة النجوم بالأشعة فوق البنفسجية؛ وصف للمهمة التاريخية","source":"https://www.nasa.gov/solar-system/nasas-first-stellar-observatory-oao-2-turns-50/","sourceTitle":"NASA — مرصد OAO 2"},
+    "4327":{"name":"SERT 2","mission":"اختبار طويل المدة لمحركات الدفع الأيوني في الفضاء؛ وصف للمهمة التاريخية","source":"https://www.nasa.gov/centers-and-facilities/glenn/nasas-sert-ii-a-genuine-space-success-story/","sourceTitle":"NASA — مهمة SERT II"},
+    "8820":{"name":"LAGEOS 1","mission":"قياس المسافة بالليزر لدراسة شكل الأرض وحركتها وتحديد مواقع المحطات الأرضية","source":"https://science.nasa.gov/mission/lageos/","sourceTitle":"NASA — مهمة LAGEOS"},
+    "22195":{"name":"LAGEOS 2","mission":"قياس المسافة بالليزر لدراسة شكل الأرض وحركتها وتحديد مواقع المحطات الأرضية","source":"https://science.nasa.gov/mission/lageos/","sourceTitle":"NASA — مهمة LAGEOS"},
+    "10967":{"name":"SEASAT 1","mission":"رصد المحيطات وقياس خصائص سطح البحر والرياح والأمواج؛ انتهت المهمة في عام 1978","source":"https://www.jpl.nasa.gov/missions/seasat/","sourceTitle":"NASA / JPL — مهمة Seasat"}
+  }
+}
