@@ -1,0 +1,13 @@
+import fs from 'node:fs';
+import vm from 'node:vm';
+import assert from 'node:assert/strict';
+const context=vm.createContext({});vm.runInContext(fs.readFileSync('public/catalog-search.js','utf8'),context);
+const {compile,normalize}=context.CatalogSearch,o={id:25544,name:'ISS (ZARYA)',omm:{OBJECT_ID:'1998-067A'}};
+for(const query of ['٢٥٥٤٤','۲۵۵۴۴','NORAD 25544','iss zarya','1998–067A','1998 067a','  ISS  '])assert(compile(query)(o),query);
+assert(compile('مَحَطّة الفَضاء')({id:1,name:'محطة الفضاء الدولية'}));
+assert(compile('اقمار')({id:2,name:'أقمار'}));
+assert(compile('رصد الأرض')(o,{program:'منظومة رصد الأرض'}));
+assert(!compile('25544 STARLINK')(o),'all search terms must match');
+assert(!compile('<img src=x>')(o),'markup is plain searchable text');
+assert.equal(normalize('١۲٣—أرض'),'123 ارض');
+console.log('PASS: Arabic/Persian NORAD digits, international identifiers, Arabic normalization, program names and multi-term search');
