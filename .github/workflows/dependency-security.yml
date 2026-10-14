@@ -1,0 +1,22 @@
+name: Dependency security audit
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 6 * * 1'
+  push:
+    branches: [main]
+    paths:
+      - 'package*.json'
+      - 'tools/vendor-audit/package*.json'
+      - '.github/workflows/dependency-security.yml'
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm run audit
