@@ -38,3 +38,5 @@ const partial=await pickerContext.window.TypePicker.load('catalog');assert(parti
 await assert.rejects(pickerContext.window.TypePicker.load('report'),/لم يُنشأ التقرير/);
 await assert.rejects(pickerContext.window.TypePicker.load('analysis'),/لم يُنشأ التقرير/);
 console.log(`PASS: ${groups.list.length} groups, offline fallback, ${active.length} worker positions, stale responses, TLE refresh and incomplete-report protection`);
+
+const prepareContext={S:{twoline2satrec:()=>({})}};vm.createContext(prepareContext);vm.runInContext(app.slice(app.indexOf('function prepare('),app.indexOf('\nfunction dateNow(')),prepareContext);const prepared=prepareContext.prepare(partial);assert.equal(prepared.failed.length,1,'current-group reports retain loading failures');assert.equal(prepared.derived,true);assert(pickerContext.window.TypePicker.describe(prepared,'OneWeb').includes('تقريبي'));console.log('PASS: current-group report provenance and partial-load metadata');
