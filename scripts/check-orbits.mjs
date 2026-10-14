@@ -12,7 +12,7 @@ for(const object of [legacy,modern])for(const sample of reference.samples){
  for(const [i,k]of ['x','y','z'].entries()){assert(Math.abs(state.position[k]-sample.position[i])<0.00002,`${object.id} position ${k}`);assert(Math.abs(state.velocity[k]-sample.velocity[i])<0.00000002)}
 }
 assert.equal(O.freshness(modern,O.epoch(modern)).level,'recent');assert.equal(O.freshness(modern,O.epoch(modern)+4*86400000).level,'old');
-for(const change of [{NORAD_CAT_ID:100001.5},{EPOCH:'2026-02-30T00:00:00Z'},{MEAN_MOTION:''},{INCLINATION:181},{ECCENTRICITY:1},{REF_FRAME:'GCRF'}])assert.equal(O.parse(JSON.stringify([{...fixture,...change}])).length,0);
+for(const change of [{BSTAR:null},{NORAD_CAT_ID:100001.5},{EPOCH:'2026-02-30T00:00:00Z'},{MEAN_MOTION:''},{INCLINATION:181},{ECCENTRICITY:1},{REF_FRAME:'GCRF'}])assert.equal(O.parse(JSON.stringify([{...fixture,...change}])).length,0);
 const newer=O.fromOmm({...fixture,EPOCH:'2000-06-28T18:50:19Z'});assert.equal(O.merge([[newer],[modern]])[0].omm.EPOCH,newer.omm.EPOCH);
 // The real worker accepts OMM objects without converting/truncating NORAD IDs to TLE.
 let posted;ctx.self={postMessage:m=>{posted=m}};ctx.importScripts=()=>{};

@@ -8,7 +8,7 @@ function fromOmm(value,provenance={}){
  for(const [k,expected]of Object.entries({CENTER_NAME:'EARTH',REF_FRAME:'TEME',TIME_SYSTEM:'UTC',MEAN_ELEMENT_THEORY:'SGP4'}))if(value[k]!=null&&value[k]!==expected)throw Error('نظام مرجعي غير مدعوم');
  const epoch=utc(value.EPOCH);if(!Number.isFinite(epoch))throw Error('تاريخ العناصر غير صالح');
  const omm={OBJECT_NAME:String(value.OBJECT_NAME||id).slice(0,160),OBJECT_ID:String(value.OBJECT_ID||'').slice(0,40),NORAD_CAT_ID:id,EPOCH:value.EPOCH.endsWith('Z')?value.EPOCH:value.EPOCH+'Z'};
- for(const key of numeric){const input=value[key]??(['BSTAR','MEAN_MOTION_DOT','MEAN_MOTION_DDOT'].includes(key)?0:undefined);if(input==null||typeof input==='string'&&input.trim()===''||!Number.isFinite(Number(input)))throw Error('حقل مداري غير صالح: '+key);omm[key]=Number(input)}
+ for(const key of numeric){const input=value[key]??(['MEAN_MOTION_DOT','MEAN_MOTION_DDOT'].includes(key)?0:undefined);if(input==null||typeof input==='string'&&input.trim()===''||!Number.isFinite(Number(input)))throw Error('حقل مداري غير صالح: '+key);omm[key]=Number(input)}
  if(omm.MEAN_MOTION<=0||omm.MEAN_MOTION>25||omm.ECCENTRICITY<0||omm.ECCENTRICITY>=1||omm.INCLINATION<0||omm.INCLINATION>180)throw Error('عناصر مدارية خارج النطاق');
  for(const k of ['RA_OF_ASC_NODE','ARG_OF_PERICENTER','MEAN_ANOMALY'])if(omm[k]<0||omm[k]>=360)throw Error('زاوية مدارية غير صالحة');
  return{id,name:omm.OBJECT_NAME,omm,provenance:{...provenance,format:'OMM JSON'}};
