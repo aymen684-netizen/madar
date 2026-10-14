@@ -13,3 +13,5 @@ public/data/starlink.txt
 public/vendor/docx.js
 public/vendor/globe-compat.min.js
 public/vendor/globe.min.js
+
+test-results/
