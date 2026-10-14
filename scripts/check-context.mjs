@@ -12,3 +12,5 @@ assert.throws(()=>C.merge(state,{...state,sites:[{...sites[0],name:'conflict'}]}
 assert.throws(()=>C.state({...state,notes:[{id:'x',siteId:'missing'}]}));
 assert.throws(()=>C.parseCsv('a,"bad'));
 console.log('Context: geometry, Arabic numbers, CSV, backup merge and validation passed');
+
+assert.throws(()=>C.state({...state,sites:[{...sites[0],updatedAt:1e300}]}));
