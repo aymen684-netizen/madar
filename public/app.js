@@ -57,7 +57,7 @@ $('marker-style').onchange=()=>{pathAt=0;update();window.DraftState?.save()};
 function motionBearing(a,b){const rad=Math.PI/180,lat1=a.lat*rad,lat2=b.lat*rad,dl=(b.lng-a.lng)*rad;return (Math.atan2(Math.sin(dl)*Math.cos(lat2),Math.cos(lat1)*Math.sin(lat2)-Math.sin(lat1)*Math.cos(lat2)*Math.cos(dl))/rad+360)%360}
 function showGlobeCard(){if(!selected)return;const card=$('globe-card');if(card){card.hidden=false;positionGlobeCard();updateGlobeCard()}}
 function updateGlobeCard(){const card=$('globe-card');if(!card||card.hidden||!selected)return;const m=window.SatMetadata?.get(selected.id),p=position(selected);$('globe-card-name').textContent=selected.name;$('globe-card-id').textContent='NORAD '+selected.id+' · '+OrbitData.fields(selected).internationalId;$('globe-card-country').textContent='الدولة أو الجهة: '+(m?.country||'غير متاح');$('globe-card-mission').textContent='المهمة: '+(m?.missionLabel||'غير متاحة');$('globe-card-evidence').textContent=(m?.evidenceLabel||'جارٍ تحميل المعلومات')+(m?.checked?' · '+m.checked:'');renderMetadataSources($('globe-card-sources'),m);$('globe-card-data-status').textContent=OrbitData.freshness(selected,dateNow()).label+' · '+(selected.omm?'OMM JSON':'TLE');$('globe-card-motion').textContent=p?'الارتفاع '+p.h.toFixed(1)+' km · السرعة '+p.speed.toFixed(2)+' km/s':'';const flag=$('globe-card-flag');flag.hidden=!m?.ownerIso2;if(m?.ownerIso2)flag.src='assets/flags/'+m.ownerIso2.toLowerCase()+'.png';$('track-selected').textContent=trackingSelected?'إيقاف متابعة الحركة':'متابعة حركة القمر';$('track-selected').setAttribute('aria-pressed',String(trackingSelected))}
-$('globe-card-close').onclick=()=>{$('globe-card').hidden=true};document.addEventListener('keydown',e=>{if(e.key==='Escape')$('globe-card').hidden=true});window.addEventListener('resize',positionGlobeCard);$('track-selected').onclick=()=>{trackingSelected=!trackingSelected;updateGlobeCard();if(trackingSelected)focusSelected()};
+$('globe-card-close').onclick=()=>{$('globe-card').hidden=true};document.addEventListener('keydown',e=>{if(e.key==='Escape')$('globe-card').hidden=true});window.addEventListener('resize',positionGlobeCard);window.addEventListener('scroll',positionGlobeCard,{passive:true});$('track-selected').onclick=()=>{trackingSelected=!trackingSelected;updateGlobeCard();if(trackingSelected)focusSelected()};
 
 $('catalog-country').onchange=async()=>{$('search').value='';onlySaved=false;$('all').classList.toggle('active',true);$('saved').classList.toggle('active',false);if(!window.TypePicker?.selected('catalog').length)$('group').value='active';await load();const count=rows().length;$('country-info').textContent=count+' قمر في الفهرس المختار لهذه الدولة أو الجهة · تصنيف CIS يجمع روسيا والرابطة والاتحاد السوفيتي السابق.';if(selected)focusSelected();window.DraftState?.save()};
 
@@ -80,7 +80,9 @@ function renderDataHealth(o,time){
  $('health-invalid').textContent=dataset.rejected?'استُبعد '+dataset.rejected+' سجلًا غير صالح من الاستجابة.':'';
 }
 function positionGlobeCard(){
- const card=$('globe-card');if(!card||card.hidden)return;const mobile=innerWidth<=700,width=Math.min(mobile?innerWidth-24:345,innerWidth-24),rect=$('globe').getBoundingClientRect();
- card.style.left=(mobile?12:Math.max(12,Math.min(innerWidth-width-12,rect.left+12)))+'px';
- card.style.width=width+'px';
+ const card=$('globe-card');if(!card||card.hidden)return;const mobile=innerWidth<=700,width=Math.min(mobile?innerWidth-24:345,innerWidth-24),rect=$('globe').getBoundingClientRect(),controls=document.querySelector('.scene-bottom').getBoundingClientRect();
+ card.style.left=(mobile?12:Math.max(12,Math.min(innerWidth-width-12,rect.left+12)))+'px';card.style.width=width+'px';
+ let bottom=12,available=innerHeight-24;
+ if(controls.top<innerHeight&&controls.bottom>0){const above=controls.top-24,below=innerHeight-controls.bottom-24;if(above>=below){bottom=innerHeight-controls.top+12;available=above}else available=below}
+ card.style.bottom=bottom+'px';card.style.maxHeight=Math.max(60,Math.min(available,mobile?innerHeight*.65:innerHeight-24))+'px';
 }
