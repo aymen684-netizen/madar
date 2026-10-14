@@ -19,6 +19,7 @@ let posted;ctx.self={postMessage:m=>{posted=m}};ctx.importScripts=()=>{};
 vm.runInContext(fs.readFileSync('public/positions-worker.js','utf8'),ctx);
 ctx.self.onmessage({data:{type:'set',token:1,objects:[O.serialize(modern)]}});ctx.self.onmessage({data:{type:'tick',token:1,time:O.epoch(modern)}});
 assert.equal(posted.buf.length,3);assert(Array.from(posted.buf).every(Number.isFinite));
+vm.runInContext(fs.readFileSync('public/report-insights.js','utf8'),ctx);
 vm.runInContext(fs.readFileSync('public/report-engine.js','utf8'),ctx);
 const E=ctx.self.ReportEngine,t=O.epoch(modern),p=E.point(S,O.satrec(S,modern),t);
 const country={geometry:{type:'Polygon',coordinates:[[[p.lng-3,p.lat-3],[p.lng+3,p.lat-3],[p.lng+3,p.lat+3],[p.lng-3,p.lat+3],[p.lng-3,p.lat-3]]]}};
