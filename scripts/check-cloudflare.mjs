@@ -26,9 +26,12 @@ const invalid=await fetch(base+'/api/word.docx',{method:'POST',body:new URLSearc
 assert.equal(invalid.status,400);headers(invalid);await invalid.arrayBuffer();
 const get=await fetch(base+'/api/word.docx');assert.equal(get.status,405);headers(get);await get.arrayBuffer();
 const results=[];
-for(let i=0;i<12;i++){
+// Cloudflare synchronizes local counters asynchronously; allow propagation between requests.
+for(let i=0;i<40;i++){
  const r=await fetch(base+'/api/word.docx',{method:'POST',body:new URLSearchParams({file:'AAAA',name:'bad.docx'}),headers:{Origin:base}});
  headers(r);assert([400,429].includes(r.status));results.push(r.status);await r.arrayBuffer();
+ if(r.status===429)break;
+ await new Promise(resolve=>setTimeout(resolve,500));
 }
 assert(results.includes(429),'real Cloudflare rate-limit binding must reject excess requests');
 console.log('PASS: live Cloudflare headers, exact Word downloads, origin checks, invalid DOCX, method restriction and real rate limit');
