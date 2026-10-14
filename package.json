@@ -4,12 +4,14 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "node scripts/prepare-assets.mjs && wrangler dev",
-    "deploy": "node scripts/prepare-assets.mjs && wrangler deploy",
-    "check": "node scripts/prepare-assets.mjs && node scripts/check.mjs && node scripts/check-update.mjs",
-    "build": "node scripts/prepare-assets.mjs"
+    "dev": "node scripts/prepare-security.mjs && node scripts/prepare-assets.mjs && wrangler dev",
+    "deploy": "node scripts/prepare-security.mjs && node scripts/prepare-assets.mjs && wrangler deploy",
+    "check": "node scripts/prepare-security.mjs && node scripts/prepare-assets.mjs && node scripts/check.mjs && node scripts/check-update.mjs && node scripts/check-security.mjs",
+    "build": "node scripts/prepare-security.mjs && node scripts/prepare-assets.mjs",
+    "audit": "npm audit --audit-level=high && npm --prefix tools/vendor-audit audit --audit-level=high"
   },
   "devDependencies": {
-    "wrangler": "latest"
+    "wrangler": "4.151.0",
+    "playwright": "1.64.0"
   }
 }
