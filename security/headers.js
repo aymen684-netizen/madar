@@ -1,4 +1,4 @@
-export const CSP="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://celestrak.org https://www.celestrak.org https://api.open-meteo.com https://earthquake.usgs.gov; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-src 'none'";
+export const CSP="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://celestrak.org https://www.celestrak.org; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-src 'none'";
 export const SECURITY_HEADERS={
  'Content-Security-Policy':CSP+"; frame-ancestors 'none'",
  'X-Frame-Options':'DENY',
