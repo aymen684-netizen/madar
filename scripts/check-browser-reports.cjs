@@ -14,7 +14,7 @@ async function checkBrowserReports(page,output){
  assert.equal(await page.locator('#report-summary canvas').count(),2);assert.equal(await page.locator('#analysis-insights canvas').count(),2);
  assert((await page.locator('#report-summary').innerText()).includes('بيانات مستوردة 1'));
  assert((await page.locator('#report-summary').innerText()).includes('مهمة فردية أو وصف منظومة موثق 0 من 1'));
- await page.selectOption('#analysis-visual-period','1');assert((await page.locator('#analysis-insights').innerText()).includes('ضمن 24 ساعة 1'));
+ await page.evaluate(()=>document.getElementById('analysis-panel').open=true);await page.selectOption('#analysis-visual-period','1');assert((await page.locator('#analysis-insights').innerText()).includes('ضمن 24 ساعة 1'));
  const results=await page.evaluate(async()=>({tracks:testReport.result.rows.map(r=>r.track),quality:testReport.result.quality,report:Array.from(new Uint8Array(await (await StateStore.get('report-word')).blob.arrayBuffer())),analysis:Array.from(new Uint8Array(await (await StateStore.get('analysis-word')).blob.arrayBuffer()))}));
  assert(results.tracks.length>0);assert(results.tracks.every(t=>t.length===61&&t.flat().every(Number.isFinite)));assert.equal(results.quality.recent,1);
  const {validDocx}=await import('../worker/docx-validation.js');for(const kind of ['report','analysis']){const b=Buffer.from(results[kind]);assert(validDocx(b));fs.writeFileSync(output+'/'+kind+'-insights.docx',b)}
