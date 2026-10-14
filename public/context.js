@@ -1,5 +1,6 @@
 (function(){'use strict';
 const C=ContextCore,$=id=>document.getElementById('ctx-'+id),empty=()=>({format:'madar-context',version:1,sites:[],notes:[]}),stamp=t=>new Date(t).toLocaleString('ar-SA',{dateStyle:'medium',timeStyle:'short'}),uuid=()=>crypto.randomUUID();let data=empty(),pending=null,importToken=0,busy=true;
+document.getElementById('context-panel').addEventListener('toggle',()=>{if(document.getElementById('context-panel').open)document.getElementById('globe-card-close')?.click()});
 const say=s=>$('message').textContent=s,chosen=()=>data.sites.find(s=>s.id===$('sites').value);
 function el(tag,text){const n=document.createElement(tag);if(text!==undefined)n.textContent=text;return n}
 function download(name,body,type){const a=el('a');a.href=URL.createObjectURL(new Blob([body],{type}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
