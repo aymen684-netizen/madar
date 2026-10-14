@@ -1,6 +1,8 @@
 name: Publish GitHub Pages
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
 permissions:
   contents: read
   pages: write
@@ -16,8 +18,11 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
-      - name: Prepare country flags
-        run: node scripts/prepare-assets.mjs
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prepare assets and check application
+        run: npm run check
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
