@@ -27,3 +27,5 @@
 .shell-ready :is(#report-cancel,#analysis-cancel,#observer-cancel):not(:disabled){border-color:#c89962;color:#ffd083}
 .shell-ready #list>p{padding:22px 16px;border:1px dashed var(--line);border-radius:10px;line-height:1.9}
 @media(max-width:700px){.shell-ready .data-health summary{gap:5px 8px}.shell-ready .health-name{flex-basis:100%}.shell-ready .health-badge{font-size:11px}}
+
+@media(min-width:701px){.shell-ready .globe-card{max-height:var(--shell-card-height,calc(100dvh - 280px))!important}}
