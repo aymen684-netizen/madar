@@ -16,3 +16,5 @@ function startReportWorker(request,data,resume=null){const activeToken=reportTok
 function resumeReport(pending){if(reportBusy)return;reportToken++;finishedReport=null;window.StateStore?.remove('report-result');clearReportDownload();toggleReportBusy(true);reportEl('report-panel').open=true;reportEl('report-resume').hidden=true;reportEl('report-status').textContent='جارٍ استئناف البحث المحفوظ…';startReportWorker(pending.request,pending.data,pending.checkpoint)}
 
 for(const e of document.querySelectorAll('#report-types input'))e.addEventListener('change',()=>{reportEl('report-scope').value='types'});
+
+document.addEventListener('madar-language',()=>{if(!finishedReport||reportBusy)return;clearReportDownload();renderReport(finishedReport);prepareReportDownload()});
