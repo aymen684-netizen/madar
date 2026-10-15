@@ -11,3 +11,25 @@
 .shell-ready .space{height:var(--shell-scene-height,540px);min-height:390px}
 
 @media(min-width:701px){.shell-ready .globe-card{max-height:var(--shell-scene-height,calc(100dvh - 280px))!important}}
+
+/* Shared spacing, keyboard focus and source summary. */
+.shell-ready button,.shell-ready input,.shell-ready select{min-height:42px;border-radius:9px}
+.shell-ready :is(button,a,input,select,summary):focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
+.shell-ready .data-health summary{display:flex;align-items:center;gap:8px;flex-wrap:wrap;list-style:none}
+.shell-ready .data-health summary::after{content:'التفاصيل ⌄';margin-inline-start:auto;font-size:12px;color:var(--muted)}
+.shell-ready .data-health[open] summary::after{content:'إغلاق التفاصيل ⌃'}
+.shell-ready .health-badge{font-size:12px;line-height:1.7;overflow-wrap:anywhere}
+.shell-ready .health-name{color:#e4eef8;font-weight:600}
+.shell-ready .health-source{border:1px solid var(--line);padding:2px 9px;border-radius:20px;color:#b6c5d6}
+.shell-ready .health-freshness{color:var(--cyan)}
+.shell-ready .data-health:is([data-level=old],[data-level=unknown]) .health-freshness{color:#ffd083}
+.shell-ready progress{display:block;width:100%;height:12px;accent-color:var(--cyan);margin-block:18px 10px}
+.shell-ready :is(#report-cancel,#analysis-cancel,#observer-cancel):not(:disabled){border-color:#c89962;color:#ffd083}
+.shell-ready #list>p{padding:22px 16px;border:1px dashed var(--line);border-radius:10px;line-height:1.9}
+@media(max-width:700px){.shell-ready .data-health summary{gap:5px 8px}.shell-ready .health-name{flex-basis:100%}.shell-ready .health-badge{font-size:11px}}
+
+@media(min-width:701px){.shell-ready .globe-card{max-height:var(--shell-card-height,calc(100dvh - 280px))!important}}
+
+.shell-ready .report-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-block:16px}
+.shell-ready .report-actions>a{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:10px 14px;border:1px solid var(--line);border-radius:9px;line-height:1.5}
+@media(max-width:700px){.shell-ready .report-actions>*{flex:1 1 140px;text-align:center;white-space:normal;overflow-wrap:anywhere}}

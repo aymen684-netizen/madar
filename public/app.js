@@ -76,7 +76,10 @@ function renderDataHealth(o,time){
  const panel=$('data-health');if(!panel)return;const h=o?OrbitData.freshness(o,time):null,p=o?.provenance||{};
  const stamp=t=>Number.isFinite(Number(t))&&t!=null?new Date(Number(t)).toISOString().slice(0,19).replace('T',' ')+' UTC':'غير متاح';
  const modes={live:'جلب مباشر من المصدر',cache:'نسخة محفوظة من جلب سابق',local:'نسخة احتياطية محلية',derived:'تصنيف تقريبي من النسخة الاحتياطية',independent:'رصد علني مستقل',imported:'بيانات مستوردة'};
- panel.dataset.level=h?.level||'unknown';$('data-health-summary').textContent=o?'حداثة بيانات '+o.name+' · '+h.label:'حداثة البيانات · اختر قمرًا';
+ panel.dataset.level=h?.level||'unknown';
+ const summary=$('data-health-summary');summary.replaceChildren();
+ for(const [kind,text]of [['name',o?'بيانات '+o.name:'حداثة البيانات · اختر قمرًا'],['source',o?(modes[p.mode]||'مصدر غير موثق'):null],['freshness',h?.label]]){if(!text)continue;const part=document.createElement('span');part.className='health-badge health-'+kind;part.textContent=text;summary.append(part)}
+ summary.title='تفاصيل القمر المحدد: المصدر وتاريخ العناصر وآخر جلب ناجح؛ الحداثة محسوبة بالنسبة إلى وقت العرض.';
  $('health-source').textContent=o?OrbitData.sourceLabel(o)+' · '+(modes[p.mode]||'سجل محفوظ دون تاريخ جلب موثق'):'—';
  $('health-format').textContent=o?(o.omm?'OMM JSON · يدعم أرقام NORAD الطويلة':'TLE · تنسيق قديم لبيانات منشورة سابقًا'):'—';
  $('health-epoch').textContent=stamp(h?.epoch);$('health-retrieved').textContent=stamp(p.fetchedAt);
