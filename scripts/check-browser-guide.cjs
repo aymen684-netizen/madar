@@ -5,8 +5,8 @@ async function checkBrowserGuide(browser,url,output){
  page.on('pageerror',e=>errors.push(e.message));await page.route('https://celestrak.org/**',r=>r.fulfill({status:200,contentType:'application/json',body:JSON.stringify([fixture])}));
  try{
   await page.goto(url);await page.waitForFunction(()=>window.MadarGuide&&objects.length===1);
-  assert.equal(await page.locator('#guide-panel').getAttribute('open'),null);await page.click('#program-guide');assert.equal(await page.locator('#program-guide').getAttribute('aria-expanded'),'true');
-  assert.equal(await page.locator('.guide-term').count(),21);assert((await page.locator('.guide-steps').textContent()).includes('Word'));
+  assert.equal(await page.locator('#program-guide').count(),1);assert.equal(await page.locator('.overview-bar #program-guide').count(),0);assert.equal(await page.locator('#guide-panel>summary#program-guide').count(),1);assert.equal(await page.locator('#guide-panel').getAttribute('open'),null);await page.click('#program-guide');await page.waitForFunction(()=>document.getElementById('program-guide').getAttribute('aria-expanded')==='true');assert.equal(await page.locator('#program-guide').getAttribute('aria-expanded'),'true');
+  await page.click('#program-guide');assert.equal(await page.locator('#guide-panel').getAttribute('open'),null);await page.focus('#program-guide');await page.keyboard.press('Enter');await page.waitForFunction(()=>document.getElementById('guide-panel').open);assert.equal(await page.locator('.guide-term').count(),21);assert((await page.locator('.guide-steps').textContent()).includes('Word'));
   await page.fill('#guide-search','SGP4');assert.equal(await page.locator('.guide-term:visible').count(),1);assert((await page.locator('.guide-term:visible').textContent()).includes('Simplified General Perturbations 4'));
   await page.fill('#guide-search','الرَّادار');assert((await page.locator('.guide-term:visible').textContent()).includes('Synthetic Aperture Radar'));
   await page.fill('#guide-search','<img src=x onerror=alert(1)>');assert(await page.locator('#guide-empty').isVisible());assert.equal(await page.locator('.guide-term:visible').count(),0);
