@@ -1385,5 +1385,17 @@
   "الحدود Natural Earth 1:50m عبر world-atlas https://www.naturalearthdata.com/": "Natural Earth 1:50m boundaries via world-atlas https://www.naturalearthdata.com/",
   "الملخص التنفيذي ومؤشرات البيانات": "Executive summary and data metrics",
   "الرسوم غير متاحة في هذه النسخة.": "Charts unavailable in this version.",
-  "فترة": "period"
+  "فترة": "period",
+  "تخصيص الأقمار على الخريطة · الدولة والمهمة": "Customize the map · country and mission",
+  "جميع الدول والجهات": "All countries and organizations",
+  "المهمة أو المنظومة": "Mission or constellation",
+  "مثل اتصالات أو ملاحة أو Starlink": "e.g. communications, navigation or Starlink",
+  "إظهار كل الأقمار في النطاق": "Show all satellites in this scope",
+  "تُطبّق الخيارات على الخريطة ودليل الأقمار ضمن المجموعة والبحث الحاليين. لا تغيّر نطاق التقارير.": "Filters apply to the map and catalog within the current group and search. Report scope is unchanged.",
+  "جهة غير معروفة": "Unknown organization",
+  "قمر ضمن التصفية الحالية": "satellites match the current filters",
+  "لتخفيف ازدحام العرض يظهر علم القمر المحدد فقط؛ ضيّق التصفية إلى 180 قمرًا أو أقل لإظهار الرموز لكل الأقمار.": "To reduce clutter, only the selected satellite has a flag. Narrow the filters to 180 satellites or fewer to show all symbols.",
+  "العلم للجهة المسجلة، والرمز ◇ للجهات المشتركة أو غير المعروفة.": "Flags represent the registered owner; ◇ marks joint or unknown organizations.",
+  "🛰️ علم الدولة": "🛰️ Country flag",
+  "قمر في الفهرس المختار لهذه الدولة أو الجهة.": "satellites in the selected catalog for this country or organization."
 }
