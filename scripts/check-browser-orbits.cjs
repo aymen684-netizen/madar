@@ -12,7 +12,7 @@ async function checkBrowserOrbits(browser,url,output){
   assert((await page.locator('#health-format').textContent()).includes('OMM JSON'));
   assert((await page.locator('#health-retrieved').textContent()).includes('UTC'));
   const fetched=await page.evaluate(()=>selected.provenance.fetchedAt);
-  async function visibleCard(){const r=await page.locator('#globe-card').boundingBox(),v=page.viewportSize();console.log('card viewport geometry',r,v,await page.evaluate(()=>({scroll:scrollY,height:getComputedStyle(document.querySelector('main')).getPropertyValue('--shell-card-height'),top:document.querySelector('.space').getBoundingClientRect().top})));await page.screenshot({path:output+'/card-viewport-check.png'});assert(r&&r.x>=0&&r.y>=0&&r.x+r.width<=v.width+1&&r.y+r.height<=v.height+1,'satellite card must fit the visible viewport')}
+  async function visibleCard(){await page.waitForFunction(()=>{const r=document.getElementById('globe-card').getBoundingClientRect();return r.width>0&&r.x>=0&&r.y>=0&&r.right<=innerWidth+1&&r.bottom<=innerHeight+1});const r=await page.locator('#globe-card').boundingBox(),v=page.viewportSize();assert(r&&r.x>=0&&r.y>=0&&r.x+r.width<=v.width+1&&r.y+r.height<=v.height+1,'satellite card must fit the visible viewport')}
   await visibleCard();await page.screenshot({path:output+'/omm-desktop.png'});
   await page.click('#globe-card-favorite');await page.waitForFunction(async()=>{const r=await StateStore.get('orbit-favorites-v2');return r?.items?.some(o=>o.id===100001)});
   const favorite=await page.evaluate(()=>JSON.parse(localStorage.getItem('orbit-favorites'))[0]);assert.equal(favorite.id,100001);assert.equal(favorite.omm.NORAD_CAT_ID,100001);assert.equal(favorite.l1,undefined);
