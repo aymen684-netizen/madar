@@ -1,0 +1,102 @@
+{
+  "sha256": "c17e65a9636cbd08c497609026178c8e83ca99f44040895448e8eeea16a70473",
+  "version": "15 October 2026",
+  "paragraphs": [
+    {
+      "text": "Madar application overview",
+      "heading": false
+    },
+    {
+      "text": "Edition 15 October 2026",
+      "heading": false
+    },
+    {
+      "text": "Madar is an independent application for exploring satellites and producing pass reports from publicly available data. It brings together a 3D globe, satellite information, a watchlist, country reports, period comparisons and observer-site calculations. Arabic and English have appropriate reading directions and interface labels.",
+      "heading": false
+    },
+    {
+      "text": "From the first visit to a report",
+      "heading": true
+    },
+    {
+      "text": "A first-visit welcome screen offers Launch Madar and a language switch. The device remembers entry, and the screen can be reopened from About and help. The workflow follows Track, Catalog, Watchlist, Reports, then Help and settings.",
+      "heading": false
+    },
+    {
+      "text": "Primary actions use light green, document preparation and downloads use blue, and cancellation or caution uses amber. Text labels and disabled states also identify actions. Larger report inputs use a blue-green background and tinted text instead of white.",
+      "heading": false
+    },
+    {
+      "text": "Tracking and satellite information",
+      "heading": true
+    },
+    {
+      "text": "Search by name, NORAD ID or international designator. Choose a group or combine categories and filter by registered country and element freshness. Selecting a satellite shows its identity, mission, evidence sources, altitude, speed, coordinates and orbital path when available. Add it to your watchlist directly from its card.",
+      "heading": false
+    },
+    {
+      "text": "Use current time or select a date and time, pause motion and resume. Calculated position time is distinct from element epoch and source fetch time. Elements aged 23 hours do not imply a position displayed 23 hours late. The source is rechecked after two hours while the page is visible and current-time mode is active. Elements may remain unchanged if the provider has not published a newer model.",
+      "heading": false
+    },
+    {
+      "text": "Country pass reports",
+      "heading": true
+    },
+    {
+      "text": "Start with a grouping criterion such as country, local date, mission, entry altitude or entry hour. Combine country, mission, altitude and entry-time filters as needed. Choose the country, a period of up to seven days, time zone, satellite scope and sampling interval, then calculate. Narrow the period or satellite scope for large scans.",
+      "heading": false
+    },
+    {
+      "text": "Results include a summary, grouped statistics, a single satellite directory, entry and exit times, durations, entry speed and altitude, and ground tracks. Refine calculated results using the available controls, print or download Word, CSV and a results snapshot. Exports follow the applied selection. Recurring times describe this sample across at least three dates and do not guarantee a fixed daily schedule.",
+      "heading": false
+    },
+    {
+      "text": "Comparison and observer-site reports",
+      "heading": true
+    },
+    {
+      "text": "Compare two to twelve periods, each up to 24 hours, for shared satellites, pass frequency and time-of-day similarity. Similar daily times differ from simultaneous absolute dates and times. Observer-site reports calculate passes for a selected satellite or a bounded watchlist using coordinates entered manually. Geometric visibility above the horizon does not guarantee naked-eye visibility.",
+      "heading": false
+    },
+    {
+      "text": "Accuracy limits and sources",
+      "heading": true
+    },
+    {
+      "text": "Positions use SGP4 and orbital elements from CelesTrak, with local alternatives when access fails. The application identifies sources, element epochs and successful fetch times. Imported or cached data keep their provenance instead of being presented as fresh source updates. Verified details are not available for every satellite; unpublished missions are not guessed.",
+      "heading": false
+    },
+    {
+      "text": "A country pass means the satellite's ground projection is inside approximate Natural Earth boundaries. It does not establish imaging, communication, sensor coverage or targeting. Positions and reports are estimates, not direct measurements or a historical observation archive. Element age, maneuvers and sampling interval affect accuracy. No detected pass in a sample does not prove that no pass occurred.",
+      "heading": false
+    },
+    {
+      "text": "Space livestreams",
+      "heading": true
+    },
+    {
+      "text": "The livestream section offers NASA's official ISS Earth-view player after you choose to load it, a link to Sen's orbital Earth cameras and ESA Web TV for scheduled programs and events. Sen and ESA open on their providers' websites. External video is independent of simulation and may stop, lag or require a provider account or subscription. Public video is not available for every satellite.",
+      "heading": false
+    },
+    {
+      "text": "Storage privacy and help",
+      "heading": true
+    },
+    {
+      "text": "Save my work on this device controls persistence of the watchlist, inputs and results in the browser. Watchlists can be backed up and restored from a local file without uploading the restore file. The app does not encrypt local data. Clearing browser data or changing devices does not transfer work. Interface language and welcome-screen entry are stored as usage preferences.",
+      "heading": false
+    },
+    {
+      "text": "About and help includes a workflow guide and a glossary with expanded abbreviations, definitions and references. Read this overview in the application or download Word in Arabic or English at any time. Switching language changes interface direction and labels; original satellite names and identifiers remain as supplied by their source.",
+      "heading": false
+    },
+    {
+      "text": "Open the application",
+      "heading": true
+    },
+    {
+      "text": "https://madar.aymen684.workers.dev/",
+      "heading": false
+    }
+  ]
+}
