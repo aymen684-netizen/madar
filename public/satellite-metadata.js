@@ -31,5 +31,5 @@ function get(id){
  return {country,ownerCode:r?.owner||'',mission,missionKind:kind,missionLabel:mission+(kind==='category'?' (تصنيف عام)':kind==='program'?' (وصف المنظومة)':''),countrySource:r?identitySource:'',missionSource,missionSourceTitle,missionNote,evidenceLabel,checked,catalogName:profile?.name||'',program:program?.title||'',objectType:typeLabels[r?.type]||'غير متاح',retrieved:catalog?.retrieved||'',launch:r?.launch||'غير متاح',orbitSource:r?.orbitSource||'CelesTrak',ownerIso2:owner?.iso2||''};
 }
 function use(data,extra=null){catalog=data;profiles=extra;pending=null}
-const api={load,get,use};if(typeof module!=='undefined')module.exports=api;else root.SatMetadata=api;
+function owners(){return Object.entries(catalog?.owners||{}).map(([code,o])=>({code,label:o.arabic||(o.iso2?names.of(o.iso2):o.name)||code})).sort((a,b)=>a.label.localeCompare(b.label,'ar'))}const api={load,get,use,owners};if(typeof module!=='undefined')module.exports=api;else root.SatMetadata=api;
 })(typeof window!=='undefined'?window:globalThis);
