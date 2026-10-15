@@ -33,3 +33,6 @@
 .shell-ready .report-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-block:16px}
 .shell-ready .report-actions>a{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:10px 14px;border:1px solid var(--line);border-radius:9px;line-height:1.5}
 @media(max-width:700px){.shell-ready .report-actions>*{flex:1 1 140px;text-align:center;white-space:normal;overflow-wrap:anywhere}}
+
+.shell-ready .catalog-loading{padding:12px 14px;border:1px solid var(--line);border-inline-start:3px solid var(--cyan);border-radius:9px;color:var(--cyan);font-size:13px;line-height:1.8}
+.shell-ready .catalog[aria-busy=true] #list{opacity:.65}
