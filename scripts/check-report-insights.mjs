@@ -6,3 +6,5 @@ const w={start:0,end:100000,result:{total:4,unique:2,invalid:1,rows:[{id:1,name:
 const s=I.summary(w);assert.equal(s.unionSeconds,90);assert.equal(s.sumSeconds,120);assert.equal(s.clipped,1);assert.equal(s.peak.count,2);assert.equal(s.missions,0);assert(I.lines(w,0,String,String).some(l=>l.includes('غير متاحة لهذا التقرير المحفوظ')));
 assert.equal(I.summary({start:0,end:1000,result:{rows:[]}}).unionSeconds,0);assert(I.notes(w).includes('أول 2 حالة'));
 console.log('PASS: report union vs summed duration, freshness endpoints and thresholds, imported/unknown sources, empty and legacy reports');
+
+assert.equal(I.summary({start:0,end:1000,result:{rows:[{id:1,entry:0,exit:1000,duration:1,metadata:{missionKind:'documented'}}]}}).missions,1,'documented individual missions count as sourced mission descriptions');
