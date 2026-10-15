@@ -1,5 +1,5 @@
 {
-  "مدار ": " مرصدك الفضائي|Madar | Satellite explorer",
+  "مدار ": "Madar ",
   "مدار": "Madar",
   "مرصدك الشخصي في الفضاء": "Your personal satellite observatory",
   "● استكشف ما يدور حول الأرض": "Explore what orbits Earth",
@@ -206,7 +206,7 @@
   "مصدر البيانات: CelesTrak ↗": "Data source: CelesTrak ↗",
   "التنقل الرئيسي": "Main navigation",
   "الخريطة": "Track",
-  "دليل الأقمار": "Satellite directory",
+  "دليل الأقمار": "Catalog",
   "المتابعة": "Watchlist",
   "التقارير": "Reports",
   "النبذة والمساعدة": "About and help",
@@ -1208,5 +1208,13 @@
   "المسافة كم": "Range km",
   "تقرير موقع الرصد": "Observer-site report",
   "تقرير مرور الأقمار من موقع الرصد": "Observer-site satellite pass report",
-  "* وقت محصور ضمن بداية أو نهاية فترة البحث. جميع المصادر وتواريخ العناصر مضمنة في CSV ولقطة JSON. المرجع الحسابي https://github.com/shashwatak/satellite-js": "* Time clipped to the requested period. All sources and epochs are in CSV and the JSON snapshot. Calculation reference https://github.com/shashwatak/satellite-js"
+  "* وقت محصور ضمن بداية أو نهاية فترة البحث. جميع المصادر وتواريخ العناصر مضمنة في CSV ولقطة JSON. المرجع الحسابي https://github.com/shashwatak/satellite-js": "* Time clipped to the requested period. All sources and epochs are in CSV and the JSON snapshot. Calculation reference https://github.com/shashwatak/satellite-js",
+  "العناصر قريبة زمنيًا من وقت العرض": "Elements are close to display time",
+  "نوعًا": "categories",
+  "اختر نوعًا أو أكثر (": "Select one or more categories (",
+  "الحالات": "Passes",
+  "ارتفاع ": "Altitude ",
+  "سرعة ": "Speed ",
+  "طول غير متاح": "Length unavailable",
+  "التتبع": "Track"
 }
