@@ -1,54 +1,238 @@
 {
- "ar":[
- ["نبذة عن تطبيق مدار",1],
- ["إصدار 15 أكتوبر 2026",0],
- ["مدار تطبيق مستقل لاستكشاف الأقمار الصناعية وبناء تقارير مرورها من بيانات عامة متاحة. يجمع التتبع على كرة أرضية ثلاثية الأبعاد، ومعلومات الأقمار، وقائمة المتابعة، وتقارير البلدان والمقارنة ومواقع الرصد. يدعم العربية والإنجليزية، مع اتجاه وواجهة مناسبين لكل لغة.",0],
- ["واجهة واضحة من البداية إلى التقرير",1],
- ["تظهر شاشة ترحيب عند الزيارة الأولى بزر تشغيل برنامج مدار، ويمكن تغيير اللغة فيها. يتذكر الجهاز الدخول السابق، وتتوفر إعادة فتح الشاشة في النبذة والمساعدة. تنتظم الأقسام في التتبع، ودليل الأقمار، والمتابعة، والتقارير، ثم المساعدة والإعدادات.",0],
- ["تتميز إجراءات الإنشاء باللون الأخضر الفاتح، والتنزيل والتجهيز بالأزرق، والإلغاء والتحذير بالكهرماني، إضافة إلى عناوين نصية وحالات تعطيل واضحة. حقول إعداد التقرير أكبر وبخلفية زرقاء مخضرة ونص مختلف عن الأبيض.",0],
- ["التتبع ومعلومات القمر",1],
- ["ابحث بالاسم أو رقم NORAD أو المعرّف الدولي، واختر مجموعة أو عدة أنواع، وصفِّ النتائج بحسب الدولة وحداثة العناصر. يعرض اختيار القمر هويته ومهمته ومصدر توثيقها والارتفاع والسرعة والإحداثيات والمسار، بحسب ما يتوفر من بيانات. أضفه إلى المتابعة من بطاقته مباشرة.",0],
- ["يمكن عرض الوقت الحالي أو اختيار تاريخ ووقت، وإيقاف الحركة ثم استئنافها. يميز التطبيق وقت الموقع المحسوب عن تاريخ العناصر المدارية ووقت جلبها. عمر العناصر البالغ 23 ساعة لا يعني أن الموضع المعروض متأخر 23 ساعة. تُراجع بيانات المصدر بعد ساعتين عند ظهور الصفحة وفي وضع الوقت الحالي؛ قد تبقى العناصر كما هي إذا لم ينشر المصدر نموذجًا أحدث.",0],
- ["تقرير البلد الشامل",1],
- ["ابدأ بمعيار التصنيف مثل الدولة أو التاريخ أو المهمة أو ارتفاع الدخول أو ساعته، واجمع شروط الدولة والمهمة والارتفاع والوقت عند الحاجة. حدد البلد والفترة حتى سبعة أيام والتوقيت ومجموعة الأقمار وخطوة الفحص، ثم أنشئ التقرير. للحسابات الكبيرة، قلّل الفترة أو الأقمار.",0],
- ["تتضمن النتائج ملخصًا وتصنيفًا حسب المعايير، ودليلًا موحدًا للأقمار، وأوقات الدخول والخروج والمدد والسرعة والارتفاع عند الدخول والمسار الأرضي. تستطيع تضييق النتائج المحسوبة بحسب الخيارات المتاحة وطباعة التقرير أو تنزيل Word وCSV ولقطة النتائج. التصدير يتبع الاختيار المطبق. الأوقات المتكررة وصف لعينة الحساب عبر ثلاثة تواريخ أو أكثر، وليست موعدًا يوميًا مضمونًا.",0],
- ["التحليل وموقع الرصد",1],
- ["يقارن التحليل فترتين إلى اثنتي عشرة فترة، كل منها حتى 24 ساعة، من حيث الأقمار المشتركة وتكرار المرور وتشابه ساعة اليوم. يختلف هذا التشابه عن التزامن الفعلي في التاريخ والوقت. يحسب تقرير موقع الرصد مرور قمر محدد أو قائمة متابعة ضمن حدوده، من إحداثيات تدخلها يدويًا؛ الوجود فوق الأفق لا يضمن الرؤية بالعين.",0],
- ["حدود الدقة ومصادر البيانات",1],
- ["تستخدم حسابات المواقع نموذج SGP4 وعناصر مدارية من CelesTrak، مع بدائل محلية عند تعذر الاتصال. يوضح التطبيق المصدر وتاريخ العناصر وآخر جلب ناجح، ويحافظ على وصف البيانات المستوردة أو المحفوظة دون ادعاء تحديث مباشر. لا تتوفر معلومات موثقة عن كل قمر، ولا تُخمن المهام غير المنشورة.",0],
- ["المرور فوق بلد يعني وقوع الإسقاط الأرضي للقمر داخل حدود Natural Earth التقريبية. لا يثبت تصوير البلد أو الاتصال به أو تغطية المستشعرات أو الاستهداف. المواقع والتقارير تقديرات وليست قياسات مباشرة أو أرشيفًا تاريخيًا مرصودًا؛ تتأثر بعمر العناصر والمناورات وخطوة الفحص. عدم اكتشاف مرور في العينة لا يؤكد عدم حدوثه.",0],
- ["البث الفضائي",1],
- ["يتيح قسم مصادر البث مشغل مشاهد الأرض الرسمي من NASA داخل الموقع بعد طلبك، ورابط Sen لمشاهد الأرض من كاميراته المدارية، ورابط ESA Web TV للبرامج والفعاليات المجدولة. يفتح Sen وESA في موقع المزود. البث مستقل عن المحاكاة، وقد يتوقف أو يتأخر أو يتطلب حسابًا أو اشتراكًا لدى المزود. لا يتوفر بث عام لكل قمر.",0],
- ["الحفظ والخصوصية والمساعدة",1],
- ["يحدد خيار حفظ عملي على هذا الجهاز بقاء المتابعة ومدخلات العمل والنتائج في المتصفح. يمكن نسخ المتابعة واستعادتها من ملف محلي، ولا تُرفع نسخة الاستعادة إلى خادم. البيانات المحلية غير مشفرة بواسطة التطبيق؛ مسحها أو تغيير الجهاز لا ينقل العمل تلقائيًا. تُحفظ لغة الواجهة وتجاوز شاشة البداية كتفضيلات استخدام.",0],
- ["تتضمن النبذة والمساعدة دليل العمل وقاموس المصطلحات والاختصارات وتعريفاتها ومراجعها. يمكن عرض هذه النبذة داخل الموقع أو تنزيل نسخة Word بالعربية أو الإنجليزية في أي وقت. عند تبديل اللغة تتغير اتجاهات الواجهة وعناوينها؛ تبقى الأسماء والمعرّفات الأصلية للقمر كما وردت في المصدر.",0],
- ["الوصول إلى التطبيق",1],
- ["https://madar.aymen684.workers.dev/",0]
- ],
- "en":[
- ["Madar application overview",1],
- ["Edition 15 October 2026",0],
- ["Madar is an independent application for exploring satellites and producing pass reports from publicly available data. It brings together a 3D globe, satellite information, a watchlist, country reports, period comparisons and observer-site calculations. Arabic and English have appropriate reading directions and interface labels.",0],
- ["From the first visit to a report",1],
- ["A first-visit welcome screen offers Launch Madar and a language switch. The device remembers entry, and the screen can be reopened from About and help. The workflow follows Track, Catalog, Watchlist, Reports, then Help and settings.",0],
- ["Primary actions use light green, document preparation and downloads use blue, and cancellation or caution uses amber. Text labels and disabled states also identify actions. Larger report inputs use a blue-green background and tinted text instead of white.",0],
- ["Tracking and satellite information",1],
- ["Search by name, NORAD ID or international designator. Choose a group or combine categories and filter by registered country and element freshness. Selecting a satellite shows its identity, mission, evidence sources, altitude, speed, coordinates and orbital path when available. Add it to your watchlist directly from its card.",0],
- ["Use current time or select a date and time, pause motion and resume. Calculated position time is distinct from element epoch and source fetch time. Elements aged 23 hours do not imply a position displayed 23 hours late. The source is rechecked after two hours while the page is visible and current-time mode is active. Elements may remain unchanged if the provider has not published a newer model.",0],
- ["Country pass reports",1],
- ["Start with a grouping criterion such as country, local date, mission, entry altitude or entry hour. Combine country, mission, altitude and entry-time filters as needed. Choose the country, a period of up to seven days, time zone, satellite scope and sampling interval, then calculate. Narrow the period or satellite scope for large scans.",0],
- ["Results include a summary, grouped statistics, a single satellite directory, entry and exit times, durations, entry speed and altitude, and ground tracks. Refine calculated results using the available controls, print or download Word, CSV and a results snapshot. Exports follow the applied selection. Recurring times describe this sample across at least three dates and do not guarantee a fixed daily schedule.",0],
- ["Comparison and observer-site reports",1],
- ["Compare two to twelve periods, each up to 24 hours, for shared satellites, pass frequency and time-of-day similarity. Similar daily times differ from simultaneous absolute dates and times. Observer-site reports calculate passes for a selected satellite or a bounded watchlist using coordinates entered manually. Geometric visibility above the horizon does not guarantee naked-eye visibility.",0],
- ["Accuracy limits and sources",1],
- ["Positions use SGP4 and orbital elements from CelesTrak, with local alternatives when access fails. The application identifies sources, element epochs and successful fetch times. Imported or cached data keep their provenance instead of being presented as fresh source updates. Verified details are not available for every satellite; unpublished missions are not guessed.",0],
- ["A country pass means the satellite's ground projection is inside approximate Natural Earth boundaries. It does not establish imaging, communication, sensor coverage or targeting. Positions and reports are estimates, not direct measurements or a historical observation archive. Element age, maneuvers and sampling interval affect accuracy. No detected pass in a sample does not prove that no pass occurred.",0],
- ["Space livestreams",1],
- ["The livestream section offers NASA's official ISS Earth-view player after you choose to load it, a link to Sen's orbital Earth cameras and ESA Web TV for scheduled programs and events. Sen and ESA open on their providers' websites. External video is independent of simulation and may stop, lag or require a provider account or subscription. Public video is not available for every satellite.",0],
- ["Storage privacy and help",1],
- ["Save my work on this device controls persistence of the watchlist, inputs and results in the browser. Watchlists can be backed up and restored from a local file without uploading the restore file. The app does not encrypt local data. Clearing browser data or changing devices does not transfer work. Interface language and welcome-screen entry are stored as usage preferences.",0],
- ["About and help includes a workflow guide and a glossary with expanded abbreviations, definitions and references. Read this overview in the application or download Word in Arabic or English at any time. Switching language changes interface direction and labels; original satellite names and identifiers remain as supplied by their source.",0],
- ["Open the application",1],
- ["https://madar.aymen684.workers.dev/",0]
- ]
+  "ar": [
+    [
+      "نبذة عن تطبيق مدار",
+      1
+    ],
+    [
+      "إصدار 16 أكتوبر 2026",
+      0
+    ],
+    [
+      "مدار تطبيق مستقل لاستكشاف الأقمار الصناعية وإعداد تقارير من بيانات علنية. يجمع التتبع على كرة أرضية تفاعلية، ودليل الأقمار، والمتابعة، وتقارير المرور والمقارنة وموقع الرصد، وحصر الأقمار المنسوبة إلى الدول والجهات. تعمل الواجهة بالعربية والإنجليزية، وتوضح مصادر البيانات وحدود استخدامها.",
+      0
+    ],
+    [
+      "واجهة واضحة من البداية إلى التقرير",
+      1
+    ],
+    [
+      "تظهر شاشة ترحيب عند الزيارة الأولى بزر تشغيل برنامج مدار، ويمكن تغيير اللغة فيها. يتذكر الجهاز الدخول السابق، وتتوفر إعادة فتح الشاشة في النبذة والمساعدة. تنتظم الأقسام في التتبع، ودليل الأقمار، والمتابعة، والتقارير، ثم المساعدة والإعدادات.",
+      0
+    ],
+    [
+      "تملأ الكرة الأرضية مساحة التتبع على الجوال وسطح المكتب. تفتح أيقونات البحث والتخصيص لوحة الأدوات فوق الخريطة، ويفتح شريط المصدر تفاصيل البيانات. ابدأ بإعدادات جاهزة مثل المحطات أو الملاحة أو الكل، وافتح متقدم للاختيار التفصيلي. نطاق التقارير مستقل عن مرشحات الخريطة.",
+      0
+    ],
+    [
+      "التتبع ومعلومات القمر",
+      1
+    ],
+    [
+      "ابحث بالاسم أو رقم NORAD أو المعرّف الدولي، ثم اختر القمر من الخريطة أو الدليل لفتح بطاقته. تعرض البطاقة الهوية والمهمة المتاحة ومصادر التوثيق وتقديرات الحركة، ويمكنك إضافته إلى المتابعة. توضح الألوان مجموعات المدار المنخفض والمتوسط والمتزامن والمدارات الأخرى؛ التصنيف تقريبي ولا يثبت تشغيل القمر أو مهمته.",
+      0
+    ],
+    [
+      "يمكن عرض الوقت الحالي أو اختيار تاريخ ووقت، وإيقاف الحركة ثم استئنافها. يميز التطبيق وقت الموقع المحسوب عن تاريخ العناصر المدارية ووقت جلبها. عمر العناصر البالغ 23 ساعة لا يعني أن الموضع المعروض متأخر 23 ساعة. تُراجع بيانات المصدر بعد ساعتين عند ظهور الصفحة وفي وضع الوقت الحالي؛ قد تبقى العناصر كما هي إذا لم ينشر المصدر نموذجًا أحدث.",
+      0
+    ],
+    [
+      "تقرير البلد الشامل",
+      1
+    ],
+    [
+      "ابدأ بمعيار التصنيف مثل الدولة أو التاريخ أو المهمة أو ارتفاع الدخول أو ساعته، واجمع شروط الدولة والمهمة والارتفاع والوقت عند الحاجة. حدد البلد والفترة حتى سبعة أيام والتوقيت ومجموعة الأقمار وخطوة الفحص، ثم أنشئ التقرير. للحسابات الكبيرة، قلّل الفترة أو الأقمار.",
+      0
+    ],
+    [
+      "تتضمن النتائج ملخصًا وتصنيفًا حسب المعايير، ودليلًا موحدًا للأقمار، وأوقات الدخول والخروج والمدد والسرعة والارتفاع عند الدخول والمسار الأرضي. تستطيع تضييق النتائج المحسوبة بحسب الخيارات المتاحة وطباعة التقرير أو تنزيل Word وCSV ولقطة النتائج. التصدير يتبع الاختيار المطبق. الأوقات المتكررة وصف لعينة الحساب عبر ثلاثة تواريخ أو أكثر، وليست موعدًا يوميًا مضمونًا.",
+      0
+    ],
+    [
+      "حصر أقمار الدول والجهات",
+      1
+    ],
+    [
+      "اختر حصر أقمار الدول في التقارير، ثم دولة أو جميع الدول والجهات. يتضمن الحصر اسم القمر ورقم NORAD والمعرّف الدولي وتاريخ الإطلاق والمدار المسجل والمهمة وحالة توثيقها وروابط المصادر. الجهات المشتركة مستقلة، وتظهر المعلومات غير المتاحة بوضوح. الحصر مبني على نسخة مؤرخة من الفهرس العام؛ لا يضم جميع الإطلاقات التاريخية أو الأقمار غير المعلنة، ولا يثبت المالك القانوني أو المشغّل الحالي.",
+      0
+    ],
+    [
+      "يعرض الحصر 50 سجلًا في الصفحة، وتشمل ملفات التصدير جميع نتائج الاختيار. تتوفر CSV وJSON والطباعة مع حفظ PDF من المتصفح. يُجهّز Word في الخلفية مع إمكانية الإلغاء. الاختيارات الكبيرة تُنزَّل في حزمة ZIP حسب الدولة، بحد أقصى 500 سجل في كل جزء؛ فك ضغطها لفتح وثائق Word. قيم المدار في الحصر تخص تاريخ نسخة الفهرس، لا وقت إنشاء التقرير.",
+      0
+    ],
+    [
+      "التحليل وموقع الرصد",
+      1
+    ],
+    [
+      "يقارن التحليل فترتين إلى اثنتي عشرة فترة، كل منها حتى 24 ساعة، من حيث الأقمار المشتركة وتكرار المرور وتشابه ساعة اليوم. يختلف هذا التشابه عن التزامن الفعلي في التاريخ والوقت. يحسب تقرير موقع الرصد مرور قمر محدد أو قائمة متابعة ضمن حدوده، من إحداثيات تدخلها يدويًا؛ الوجود فوق الأفق لا يضمن الرؤية بالعين.",
+      0
+    ],
+    [
+      "حدود الدقة ومصادر البيانات",
+      1
+    ],
+    [
+      "تستخدم حسابات المواقع نموذج SGP4 وعناصر مدارية من CelesTrak، مع بدائل محلية عند تعذر الاتصال. يوضح التطبيق المصدر وتاريخ العناصر وآخر جلب ناجح، ويحافظ على وصف البيانات المستوردة أو المحفوظة دون ادعاء تحديث مباشر. لا تتوفر معلومات موثقة عن كل قمر، ولا تُخمن المهام غير المنشورة.",
+      0
+    ],
+    [
+      "المرور فوق بلد يعني وقوع الإسقاط الأرضي للقمر داخل حدود Natural Earth التقريبية. لا يثبت تصوير البلد أو الاتصال به أو تغطية المستشعرات أو الاستهداف. المواقع والتقارير تقديرات وليست قياسات مباشرة أو أرشيفًا تاريخيًا مرصودًا؛ تتأثر بعمر العناصر والمناورات وخطوة الفحص. عدم اكتشاف مرور في العينة لا يؤكد عدم حدوثه.",
+      0
+    ],
+    [
+      "البث الفضائي",
+      1
+    ],
+    [
+      "تجد روابط NASA وSen وESA في مصادر البث الفضائي ضمن أدوات التتبع. تفتح المشاهدة في موقع المصدر خارج مدار، ولا يوجد مشغل خارجي مضمّن داخل التطبيق. البث مستقل عن حساب المدار، وقد يتوقف أو يتأخر أو يتطلب حسابًا أو اشتراكًا لدى المزود. لا يتوفر بث عام لكل قمر.",
+      0
+    ],
+    [
+      "الحفظ والخصوصية والمساعدة",
+      1
+    ],
+    [
+      "عند تفعيل حفظ العمل، يحتفظ المتصفح بالمتابعة والمدخلات والنتائج القابلة للاستعادة. يُحفظ اختيار الدولة في حصر الأقمار ويمكن إنشاء حصرها من جديد. لا يزامن مدار العمل تلقائيًا بين الأجهزة. يمكنك تنزيل نسخة المتابعة واستعادتها محليًا دون رفع الملف إلى خادم.",
+      0
+    ],
+    [
+      "يعالج مدار البحث والإحداثيات والتقارير على الجهاز، ولا يرفعها ضمن وظائفه الحالية. تقتصر تحديثات المدارات على مجموعات عامة عبر خادم مدار أو CelesTrak؛ قد ترى الجهة المتصلة عنوان الشبكة ووقت الطلب والمجموعة. إيقاف التحديثات يمنع طلب مدارات جديدة، لكنه لا يضمن فتح التطبيق من جديد دون إنترنت.",
+      0
+    ],
+    [
+      "إيقاف الحفظ يمسح عمل مدار المحفوظ ويجعل العمل الجديد مؤقتًا حتى إعادة تحميل الصفحة. مسح بيانات مدار لا يحذف الملفات المنزّلة أو المشارَكة أو النسخ في متصفح آخر، وتبقى بعض تفضيلات الواجهة. البيانات المحلية غير مشفّرة بواسطة مدار، ولا يوجد قفل مستقل للتطبيق؛ استخدم قفل الجهاز وأوقف الحفظ على الأجهزة المشتركة. فتح الروابط أو مشاركة الملفات ينقلك إلى جهات تختارها خارج مدار.",
+      0
+    ],
+    [
+      "تتضمن النبذة والمساعدة دليل العمل وقاموس المصطلحات والاختصارات وتعريفاتها ومراجعها. يمكن عرض هذه النبذة داخل الموقع أو تنزيل نسخة Word بالعربية أو الإنجليزية في أي وقت. عند تبديل اللغة تتغير اتجاهات الواجهة وعناوينها؛ تبقى الأسماء والمعرّفات الأصلية للقمر كما وردت في المصدر.",
+      0
+    ],
+    [
+      "الوصول إلى التطبيق",
+      1
+    ],
+    [
+      "https://madar.aymen684.workers.dev/",
+      0
+    ]
+  ],
+  "en": [
+    [
+      "Madar application overview",
+      1
+    ],
+    [
+      "Edition 16 October 2026",
+      0
+    ],
+    [
+      "Madar is an independent application for exploring satellites and preparing reports from public data. It combines an interactive tracking globe, a satellite catalog, a watchlist, pass and comparison reports, observer-site calculations, and inventories of satellites attributed to countries and organizations. Arabic and English interfaces identify data sources and explain their limits.",
+      0
+    ],
+    [
+      "From the first visit to a report",
+      1
+    ],
+    [
+      "A first-visit welcome screen offers Launch Madar and a language switch. The device remembers entry, and the screen can be reopened from About and help. The workflow follows Track, Catalog, Watchlist, Reports, then Help and settings.",
+      0
+    ],
+    [
+      "The globe fills the tracking area on mobile and desktop. Search and customization icons open the tools panel over the map, while the source strip opens data details. Start with presets such as Stations, Navigation or All; detailed categories remain under Advanced. Report scopes are independent of map filters.",
+      0
+    ],
+    [
+      "Tracking and satellite information",
+      1
+    ],
+    [
+      "Search by name, NORAD number or international designator, then select a satellite on the map or in the catalog to open its card. The card shows identity, available mission details, evidence sources and motion estimates, with an option to add it to the watchlist. Colors identify low, medium, synchronous and other orbit groups; this approximate classification does not establish operation or mission.",
+      0
+    ],
+    [
+      "Use current time or select a date and time, pause motion and resume. Calculated position time is distinct from element epoch and source fetch time. Elements aged 23 hours do not imply a position displayed 23 hours late. The source is rechecked after two hours while the page is visible and current-time mode is active. Elements may remain unchanged if the provider has not published a newer model.",
+      0
+    ],
+    [
+      "Country pass reports",
+      1
+    ],
+    [
+      "Start with a grouping criterion such as country, local date, mission, entry altitude or entry hour. Combine country, mission, altitude and entry-time filters as needed. Choose the country, a period of up to seven days, time zone, satellite scope and sampling interval, then calculate. Narrow the period or satellite scope for large scans.",
+      0
+    ],
+    [
+      "Results include a summary, grouped statistics, a single satellite directory, entry and exit times, durations, entry speed and altitude, and ground tracks. Refine calculated results using the available controls, print or download Word, CSV and a results snapshot. Exports follow the applied selection. Recurring times describe this sample across at least three dates and do not guarantee a fixed daily schedule.",
+      0
+    ],
+    [
+      "Country and organization satellite inventories",
+      1
+    ],
+    [
+      "Choose Country satellite inventory in Reports, then a country or all countries and organizations. The inventory includes satellite names, NORAD and international IDs, launch dates, catalog orbit values, missions, evidence and source links. Joint entities are listed separately and unavailable information is explicit. The dated public catalog snapshot does not cover every historical launch or undisclosed satellite, and does not establish the current legal owner or operator.",
+      0
+    ],
+    [
+      "The inventory displays 50 records per page; exports include all selected results. CSV, JSON and a printable view with browser PDF saving are available. Word preparation runs in the background and can be canceled. Large selections download as a ZIP by country, with up to 500 records per part; extract it to open the Word documents. Inventory orbit values belong to the catalog snapshot date, not report creation time.",
+      0
+    ],
+    [
+      "Comparison and observer-site reports",
+      1
+    ],
+    [
+      "Compare two to twelve periods, each up to 24 hours, for shared satellites, pass frequency and time-of-day similarity. Similar daily times differ from simultaneous absolute dates and times. Observer-site reports calculate passes for a selected satellite or a bounded watchlist using coordinates entered manually. Geometric visibility above the horizon does not guarantee naked-eye visibility.",
+      0
+    ],
+    [
+      "Accuracy limits and sources",
+      1
+    ],
+    [
+      "Positions use SGP4 and orbital elements from CelesTrak, with local alternatives when access fails. The application identifies sources, element epochs and successful fetch times. Imported or cached data keep their provenance instead of being presented as fresh source updates. Verified details are not available for every satellite; unpublished missions are not guessed.",
+      0
+    ],
+    [
+      "A country pass means the satellite's ground projection is inside approximate Natural Earth boundaries. It does not establish imaging, communication, sensor coverage or targeting. Positions and reports are estimates, not direct measurements or a historical observation archive. Element age, maneuvers and sampling interval affect accuracy. No detected pass in a sample does not prove that no pass occurred.",
+      0
+    ],
+    [
+      "Space livestreams",
+      1
+    ],
+    [
+      "NASA, Sen and ESA links are available under Space livestream sources in tracking tools. Viewing opens on the source website outside Madar; the application contains no embedded external player. Video is independent of orbit calculations and may stop, lag or require a provider account or subscription. Public video is not available for every satellite.",
+      0
+    ],
+    [
+      "Storage privacy and help",
+      1
+    ],
+    [
+      "With work storage enabled, the browser retains the watchlist, inputs and restorable results. The inventory country selection is saved and its report can be generated again. Madar does not automatically sync work across devices. Watchlists can be backed up and restored locally without uploading the file.",
+      0
+    ],
+    [
+      "Madar processes searches, coordinates and reports on the device and does not upload them through its current functions. Orbit updates request public groups through Madar’s server or CelesTrak; the receiving service may see the network address, request time and group. Turning updates off stops requests for new orbits but does not guarantee that the app can reopen without internet access.",
+      0
+    ],
+    [
+      "Turning saving off clears stored Madar work and keeps new work only until page reload. Clearing Madar data does not delete downloaded or shared files or copies in another browser, and some interface preferences remain. Madar does not encrypt local data or provide a separate app lock; use the device lock and turn saving off on shared devices. External links and file sharing lead to services you choose outside Madar.",
+      0
+    ],
+    [
+      "About and help includes a workflow guide and a glossary with expanded abbreviations, definitions and references. Read this overview in the application or download Word in Arabic or English at any time. Switching language changes interface direction and labels; original satellite names and identifiers remain as supplied by their source.",
+      0
+    ],
+    [
+      "Open the application",
+      1
+    ],
+    [
+      "https://madar.aymen684.workers.dev/",
+      0
+    ]
+  ]
 }

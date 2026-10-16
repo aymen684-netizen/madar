@@ -1,17 +1,17 @@
 {
-  "sha256": "c17e65a9636cbd08c497609026178c8e83ca99f44040895448e8eeea16a70473",
-  "version": "15 October 2026",
+  "sha256": "85aed40415e90253cb3394b4ea5961e9d194b92fc40a9b73cf47733bab868c96",
+  "version": "16 October 2026",
   "paragraphs": [
     {
       "text": "Madar application overview",
       "heading": false
     },
     {
-      "text": "Edition 15 October 2026",
+      "text": "Edition 16 October 2026",
       "heading": false
     },
     {
-      "text": "Madar is an independent application for exploring satellites and producing pass reports from publicly available data. It brings together a 3D globe, satellite information, a watchlist, country reports, period comparisons and observer-site calculations. Arabic and English have appropriate reading directions and interface labels.",
+      "text": "Madar is an independent application for exploring satellites and preparing reports from public data. It combines an interactive tracking globe, a satellite catalog, a watchlist, pass and comparison reports, observer-site calculations, and inventories of satellites attributed to countries and organizations. Arabic and English interfaces identify data sources and explain their limits.",
       "heading": false
     },
     {
@@ -23,7 +23,7 @@
       "heading": false
     },
     {
-      "text": "Primary actions use light green, document preparation and downloads use blue, and cancellation or caution uses amber. Text labels and disabled states also identify actions. Larger report inputs use a blue-green background and tinted text instead of white.",
+      "text": "The globe fills the tracking area on mobile and desktop. Search and customization icons open the tools panel over the map, while the source strip opens data details. Start with presets such as Stations, Navigation or All; detailed categories remain under Advanced. Report scopes are independent of map filters.",
       "heading": false
     },
     {
@@ -31,7 +31,7 @@
       "heading": true
     },
     {
-      "text": "Search by name, NORAD ID or international designator. Choose a group or combine categories and filter by registered country and element freshness. Selecting a satellite shows its identity, mission, evidence sources, altitude, speed, coordinates and orbital path when available. Add it to your watchlist directly from its card.",
+      "text": "Search by name, NORAD number or international designator, then select a satellite on the map or in the catalog to open its card. The card shows identity, available mission details, evidence sources and motion estimates, with an option to add it to the watchlist. Colors identify low, medium, synchronous and other orbit groups; this approximate classification does not establish operation or mission.",
       "heading": false
     },
     {
@@ -48,6 +48,18 @@
     },
     {
       "text": "Results include a summary, grouped statistics, a single satellite directory, entry and exit times, durations, entry speed and altitude, and ground tracks. Refine calculated results using the available controls, print or download Word, CSV and a results snapshot. Exports follow the applied selection. Recurring times describe this sample across at least three dates and do not guarantee a fixed daily schedule.",
+      "heading": false
+    },
+    {
+      "text": "Country and organization satellite inventories",
+      "heading": true
+    },
+    {
+      "text": "Choose Country satellite inventory in Reports, then a country or all countries and organizations. The inventory includes satellite names, NORAD and international IDs, launch dates, catalog orbit values, missions, evidence and source links. Joint entities are listed separately and unavailable information is explicit. The dated public catalog snapshot does not cover every historical launch or undisclosed satellite, and does not establish the current legal owner or operator.",
+      "heading": false
+    },
+    {
+      "text": "The inventory displays 50 records per page; exports include all selected results. CSV, JSON and a printable view with browser PDF saving are available. Word preparation runs in the background and can be canceled. Large selections download as a ZIP by country, with up to 500 records per part; extract it to open the Word documents. Inventory orbit values belong to the catalog snapshot date, not report creation time.",
       "heading": false
     },
     {
@@ -75,7 +87,7 @@
       "heading": true
     },
     {
-      "text": "The livestream section offers NASA's official ISS Earth-view player after you choose to load it, a link to Sen's orbital Earth cameras and ESA Web TV for scheduled programs and events. Sen and ESA open on their providers' websites. External video is independent of simulation and may stop, lag or require a provider account or subscription. Public video is not available for every satellite.",
+      "text": "NASA, Sen and ESA links are available under Space livestream sources in tracking tools. Viewing opens on the source website outside Madar; the application contains no embedded external player. Video is independent of orbit calculations and may stop, lag or require a provider account or subscription. Public video is not available for every satellite.",
       "heading": false
     },
     {
@@ -83,7 +95,15 @@
       "heading": true
     },
     {
-      "text": "Save my work on this device controls persistence of the watchlist, inputs and results in the browser. Watchlists can be backed up and restored from a local file without uploading the restore file. The app does not encrypt local data. Clearing browser data or changing devices does not transfer work. Interface language and welcome-screen entry are stored as usage preferences.",
+      "text": "With work storage enabled, the browser retains the watchlist, inputs and restorable results. The inventory country selection is saved and its report can be generated again. Madar does not automatically sync work across devices. Watchlists can be backed up and restored locally without uploading the file.",
+      "heading": false
+    },
+    {
+      "text": "Madar processes searches, coordinates and reports on the device and does not upload them through its current functions. Orbit updates request public groups through Madar’s server or CelesTrak; the receiving service may see the network address, request time and group. Turning updates off stops requests for new orbits but does not guarantee that the app can reopen without internet access.",
+      "heading": false
+    },
+    {
+      "text": "Turning saving off clears stored Madar work and keeps new work only until page reload. Clearing Madar data does not delete downloaded or shared files or copies in another browser, and some interface preferences remain. Madar does not encrypt local data or provide a separate app lock; use the device lock and turn saving off on shared devices. External links and file sharing lead to services you choose outside Madar.",
       "heading": false
     },
     {
