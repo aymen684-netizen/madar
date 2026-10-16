@@ -4,7 +4,7 @@ async function checkBrowserCatalog(browser,url,output){
  const fixture=JSON.parse(fs.readFileSync('scripts/fixtures/omm-six-digit.json','utf8'));
  const data=[{...fixture,NORAD_CAT_ID:25544,OBJECT_NAME:'ISS (ZARYA)',OBJECT_ID:'1998-067A',EPOCH:new Date().toISOString()},...Array.from({length:300},(_,i)=>({...fixture,NORAD_CAT_ID:100001+i,OBJECT_NAME:'TEST OMM '+(i+1),EPOCH:new Date(Date.now()-5*86400000).toISOString()}))];
  data[1].OBJECT_NAME='ZULU';data[2].OBJECT_NAME='ALPHA';data[3].EPOCH=new Date(Date.now()-3*86400000).toISOString();
- page.on('pageerror',e=>errors.push(e.message));await page.route('https://celestrak.org/**',r=>r.fulfill({status:200,contentType:'application/json',body:JSON.stringify(data)}));
+ await page.route('**/data/mission-profiles.json*',r=>r.fulfill({contentType:'application/json',body:'{"programs":{},"satellites":{}}'}));page.on('pageerror',e=>errors.push(e.message));await page.route('https://celestrak.org/**',r=>r.fulfill({status:200,contentType:'application/json',body:JSON.stringify(data)}));
  try{
   await page.goto(url);await page.waitForFunction(()=>objects.length===301&&document.querySelectorAll('#list button').length===100);
   assert((await page.locator('#results-summary').textContent()).includes('301'));
