@@ -1,5 +1,5 @@
 (function(root){'use strict';
-const VERSION='49',missing='غير متاح',documented=new Set(['documented','individual','program']);
+const VERSION='52',missing='غير متاح',documented=new Set(['documented','individual','program']);
 const labels={documented:'مهمة فردية موثقة',individual:'مهمة فردية موثقة',program:'وصف منظومة موثق',category:'تصنيف عام للمهمة',unknown:'مهمة غير موثقة'};
 function known(v){return typeof v==='string'&&v.trim()!==''&&![missing,'غير موثق','—'].includes(v.trim())}
 function https(v){try{const u=new URL(v);return u.protocol==='https:'&&!u.username&&!u.password?u.href:null}catch{return null}}
@@ -18,7 +18,16 @@ if(inventory||!r.observer){metrics.push(metric('launch','تاريخ إطلاق �
 if(inventory){metrics.push(metric('internationalId','معرّف دولي متاح',unique.filter(x=>known(x.internationalId)).length,total,scope),metric('orbit','مدار قابل للتصنيف',unique.filter(x=>x.orbit.regime!=='غير محدد').length,total,scope))}
 else{const qs=windows.map(w=>w.result?.quality),valid=qs.every(q=>q&&['total','recent','aging','old','unknown','fetched'].every(k=>Number.isInteger(q[k])&&q[k]>=0)&&q.recent+q.aging+q.old+q.unknown===q.total&&q.fetched<=q.total);if(valid){const sum=k=>qs.reduce((n,q)=>n+q[k],0),scanned=sum('total'),qualityScope=r.windows?'حالات فحص الأقمار عبر الفترات؛ قد يتكرر القمر':'جميع الأقمار المفحوصة قبل تصفية النتائج';for(const [key,label]of [['recent','عناصر ضمن 24 ساعة من كامل الفترة'],['aging','عناصر من 24 إلى 72 ساعة'],['old','عناصر أبعد من 72 ساعة'],['unknown','تاريخ عناصر غير متاح'],['fetched','وقت جلب موثق']])metrics.push(metric(key,label,sum(key),scanned,qualityScope));const epochs=qs.flatMap(q=>[q.minEpoch,q.maxEpoch]).filter(v=>typeof v==='number'&&Number.isFinite(v));if(epochs.length)notes.push('مدى تواريخ العناصر UTC '+new Date(Math.min(...epochs)).toISOString()+' إلى '+new Date(Math.max(...epochs)).toISOString());}else notes.push('مؤشرات حداثة المصدر غير متاحة لهذا التقرير المحفوظ؛ أعد الحساب لتحديثها.');notes.push(r.observer?'المرور فوق الأفق حساب هندسي؛ لا يضمن الرؤية بالعين ولا تشغيل مستشعر.':'المرور داخل الحدود الجغرافية حساب للإسقاط الأرضي؛ لا يثبت التصوير أو الاتصال أو الاستهداف.','الفحص الزمني قد يفوّت مرورًا أقصر من خطوة الحساب. النتائج تقديرات من العناصر المتاحة، وليست أرشيفًا تاريخيًا مرصودًا.');addRef('العناصر المدارية والفهرس CelesTrak','https://celestrak.org/');addRef('الحساب satellite.js','https://github.com/shashwatak/satellite-js');if(!r.observer)addRef('حدود Natural Earth','https://www.naturalearthdata.com/');if(rows.some(x=>x.provenance?.mode==='independent'))addRef('الرصد العلني المستقل McCants','https://mmccants.org/tles/')}
 for(const row of unique){const m=metadata(row);if(!inventory&&https(m.countrySource))addRef('فهرس الهوية SATCAT','https://celestrak.org/satcat/');addRef('مصدر المهمة',m.missionSource)}
-notes.push('هذه مؤشرات اكتمال وحداثة للمعلومات، وليست نسبة لدقة التنبؤ. غياب المعلومة لا يعني غياب القمر أو المهمة.');return{version:VERSION,kind:inventory?'inventory':r.windows?'analysis':r.observer?'observer':'report',executive,metrics,distributions,notes:[...new Set(notes.filter(Boolean))],references:[...refs.values()]}}
+notes.push('هذه مؤشرات اكتمال وحداثة للمعلومات، وليست نسبة لدقة التنبؤ. غياب المعلومة لا يعني غياب القمر أو المهمة.');return{overview:overview(r,rows,total,inventory),version:VERSION,kind:inventory?'inventory':r.windows?'analysis':r.observer?'observer':'report',executive,metrics,distributions,notes:[...new Set(notes.filter(Boolean))],references:[...refs.values()]}}
+function overview(r,rows,total,inventory){
+if(inventory)return['يشمل الحصر '+total+' قمرًا للجهات المسجلة في الفهرس.','نسخة الفهرس UTC '+(r.catalogRetrievedAt||missing)+'.','نسبة الأقمار إلى جهة في الفهرس لا تثبت الملكية القانونية أو التشغيل الحالي.'];
+const out=['رُصدت حسابيًا '+rows.length+' حالة مرور لـ '+total+' قمرًا مختلفًا'+(r.windows?' عبر '+r.windows.length+' فترات.':'.')];
+const longest=rows.filter(x=>Number.isFinite(x.duration)&&x.duration>=0).reduce((a,b)=>!a||b.duration>a.duration?b:a,null);
+if(longest)out.push('أطول مرور '+duration(longest.duration)+' للقمر '+longest.name+'.');
+const sources=[...new Set((r.windows||[r]).flatMap(w=>Object.entries(w.result?.quality?.sources||{}).filter(([,n])=>n>0).map(([label])=>label)))];
+out.push(sources.length?'مصادر الحساب: '+sources.join('، ')+'.':'مصدر العناصر غير موثق في هذا التقرير.');
+const invalid=(r.windows||[r]).reduce((n,w)=>n+(w.result?.invalid||0),0);
+out.push(!rows.length?'لم تُكتشف حالات ضمن عينة الفحص؛ لا تؤكد النتيجة عدم المرور.':invalid?'تعذّر حساب '+invalid+' حالة فحص؛ النتائج تقديرية من العناصر المتاحة.':'النتائج تقديرات مدارية ولا تثبت الرؤية أو التصوير أو الاتصال.');return out}
 function duration(s){return[Math.floor(s/3600),Math.floor(s%3600/60),Math.floor(s%60)].map(v=>String(v).padStart(2,'0')).join(':')}
 root.ReportBrief={build,metric,VERSION};
 })(typeof window!=='undefined'?window:globalThis);
