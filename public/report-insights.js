@@ -8,7 +8,7 @@ function lines(w,offset,stamp,duration){const s=summary(w),q=w.result.quality;re
 'زمن وجود قمر واحد على الأقل داخل الحدود '+duration(s.unionSeconds)+'؛ مجموع مدد الأقمار '+duration(s.sumSeconds)+' (قد تتداخل).',
 s.longest?'أطول مرور '+s.longest.name+' · NORAD '+s.longest.id+' · '+duration(s.longest.duration):'لم تُكتشف حالات مرور؛ النتيجة لا تؤكد عدم المرور.',
 s.peak?.count?'أكثر مقطع ازدحامًا بالدخول: '+stamp(s.peak.start,offset)+' إلى '+stamp(s.peak.end,offset)+' · '+s.peak.count+' دخولًا. المقاطع ساعة من بداية الطلب، والأخير قد يكون أقصر؛ عند التعادل يُعرض الأسبق.':'لا توجد ذروة دخول مكتشفة.',
-'نجح حساب موقع البداية لـ '+(w.result.total-w.result.invalid)+' من '+w.result.total+' قمر؛ تعذّر '+w.result.invalid+' · مرور محصور بحد الفترة '+s.clipped+'.',
+'اكتمل فحص '+(w.result.total-w.result.invalid)+' من '+w.result.total+' قمر دون فشل حسابي؛ تعذّر '+w.result.invalid+' · مرور محصور بحد الفترة '+s.clipped+'.',
 q?'قرب العناصر من كامل الفترة: ضمن 24 ساعة '+q.recent+' · من 24 إلى 72 ساعة '+q.aging+' · أبعد من 72 ساعة '+q.old+' · غير معروف '+q.unknown+'.':'مؤشرات مصدر وحداثة المجموعة غير متاحة لهذا التقرير المحفوظ؛ أعد الحساب لتحديثها.',
 q?.snapshots?.length?'تواريخ النسخ الاحتياطية المستخدمة: '+q.snapshots.join('، ')+'.':'',
 q?'المصادر لكل الأقمار المفحوصة: '+Object.entries(q.sources).map(([k,v])=>k+' '+v).join('، ')+' · وقت الجلب موثق لـ '+q.fetched+' من '+q.total+'.':'',
