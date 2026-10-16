@@ -1538,5 +1538,8 @@
   "أخرى": "Other",
   "تختلف حداثة العناصر بين الأقمار": "Element freshness varies between satellites",
   "حالة المصدر؛ اختر قمرًا لعرض حداثة عناصره وتفاصيله.": "Source status; select a satellite to see its element freshness and details.",
-  "على الجوال تملأ الكرة شاشة التتبع. افتح أيقونة البحث أو التخصيص أو حالة البيانات فوق الكرة لعرض اللوحة السفلية، وأغلقها بزر الإغلاق أو السحب إلى الأسفل. استخدم المجموعات الجاهزة، وافتح «متقدم» لاختيار أنواع محددة؛ اختيارات التقرير والتحليل مستقلة عن الخريطة.": "On mobile, the globe fills the tracking view. Open search, customization or data status above the globe to show the bottom sheet, then close it with the close button or a downward swipe. Use the preset groups, or open “Advanced” to choose specific types; report and analysis selections are independent of the map."
+  "على الجوال تملأ الكرة شاشة التتبع. افتح أيقونة البحث أو التخصيص أو حالة البيانات فوق الكرة لعرض اللوحة السفلية، وأغلقها بزر الإغلاق أو السحب إلى الأسفل. استخدم المجموعات الجاهزة، وافتح «متقدم» لاختيار أنواع محددة؛ اختيارات التقرير والتحليل مستقلة عن الخريطة.": "On mobile, the globe fills the tracking view. Open search, customization or data status above the globe to show the bottom sheet, then close it with the close button or a downward swipe. Use the preset groups, or open “Advanced” to choose specific types; report and analysis selections are independent of the map.",
+  "مستكشف الأقمار": "SATELLITE EXPLORER",
+  "عرض الأرض المباشر": "LIVE EARTH VIEW",
+  "مستكشف الزمن": "TIME EXPLORER"
 }
