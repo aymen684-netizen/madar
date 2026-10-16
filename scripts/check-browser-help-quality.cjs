@@ -11,7 +11,7 @@ async function checkBrowserHelpQuality(browser,url,output){
   page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>requests.push(r.url()));
   try{
    await page.goto(url);await page.waitForFunction(()=>window.RenderQuality&&world&&objects.length===1);await page.evaluate(()=>MadarI18n.ready);
-   const sample=()=>page.evaluate(()=>({ratio:world.renderer().getPixelRatio(),width:world.renderer().domElement.width,height:world.renderer().domElement.height,cssWidth:world.width(),cssHeight:world.height(),count:objects.length,position:position(objects[0],new Date('2026-10-16T12:00:00Z'))}));
+   const sample=async()=>{await page.waitForFunction(()=>{const canvas=world.renderer().domElement,holder=document.getElementById('globe'),ratio=world.renderer().getPixelRatio();return holder.clientWidth>0&&holder.clientHeight>0&&canvas.width===Math.floor(holder.clientWidth*ratio)&&canvas.height===Math.floor(holder.clientHeight*ratio)});await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));return page.evaluate(()=>({ratio:world.renderer().getPixelRatio(),width:world.renderer().domElement.width,height:world.renderer().domElement.height,cssWidth:world.width(),cssHeight:world.height(),count:objects.length,position:position(objects[0],new Date('2026-10-16T12:00:00Z'))}))};
    const automatic=await sample();assert.equal(automatic.ratio,mobile?1.5:2);assert.equal(automatic.width,Math.floor(automatic.cssWidth*automatic.ratio));
    await page.click('#shell-nav-help');await page.locator('#security-guide>summary').click();assert(await page.locator('#security-guide .help-cards').isVisible());
    const arabic=await page.locator('#security-guide').innerText();for(const text of ['ليست مشفّرة','CelesTrak','لا يحذف الملفات','عنوان الشبكة','لا تضمن حماية مطلقة'])assert(arabic.includes(text));
@@ -28,11 +28,11 @@ async function checkBrowserHelpQuality(browser,url,output){
    await page.reload();await page.waitForFunction(()=>world&&objects.length===1);assert.equal(await page.evaluate(()=>RenderQuality.mode),'economy');assert.equal(await page.evaluate(()=>world.renderer().getPixelRatio()),1);
    await page.click('#shell-nav-help');await page.locator('#performance-panel>summary').click();await page.selectOption('#render-quality','detail');
    await page.click('#shell-nav-map');await page.locator('#globe').scrollIntoViewIfNeeded();const detail=await sample();assert.equal(detail.ratio,2);assert.deepEqual(detail.position,automatic.position);
-   await page.evaluate(()=>RenderQuality.setMode('auto'));await page.setViewportSize(mobile?{width:1000,height:900}:{width:390,height:844});await page.waitForFunction(expected=>world.renderer().getPixelRatio()===expected,mobile?2:1.5);
+   await page.evaluate(()=>RenderQuality.setMode('auto'));const settledAutomatic=await sample();assert.equal(settledAutomatic.cssWidth,detail.cssWidth);assert.equal(settledAutomatic.cssHeight,detail.cssHeight);await page.setViewportSize(mobile?{width:1000,height:900}:{width:390,height:844});await page.waitForFunction(expected=>world.renderer().getPixelRatio()===expected,mobile?2:1.5);
    await page.setViewportSize(mobile?{width:390,height:844}:{width:1440,height:1000});await page.waitForFunction(expected=>world.renderer().getPixelRatio()===expected,mobile?1.5:2);
    await page.click('#shell-nav-help');await page.locator('#security-guide>summary').click();await context.setOffline(true);await page.locator('[data-security-setting="public-updates"]').click();assert(await page.locator('#public-updates').isVisible());
    assert(!requests.some(u=>/example\.com|analytics|telemetry/.test(u)));assert.deepEqual(errors,[]);
-   evidence.push({mobile,deviceScaleFactor:3,automatic,economy,detail,pixelReductionVsDetail:1-(automatic.width*automatic.height)/(detail.width*detail.height),note:'Drawing-buffer sizes in Chromium emulation; not physical-device frame-rate or battery measurements.'});
+   evidence.push({mobile,deviceScaleFactor:3,automatic:settledAutomatic,economy,detail,pixelReductionVsDetail:1-(settledAutomatic.width*settledAutomatic.height)/(detail.width*detail.height),note:'Drawing-buffer sizes in Chromium emulation; not physical-device frame-rate or battery measurements.'});
   }finally{await context.close()}
  }
  fs.writeFileSync(output+'/render-quality.json',JSON.stringify(evidence,null,2));
