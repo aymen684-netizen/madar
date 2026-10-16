@@ -1610,5 +1610,8 @@
   "تعذّر تشغيل تجهيز Word. أعد المحاولة.": "Could not start Word preparation. Try again.",
   "أُلغي تجهيز Word. يبقى الحصر متاحًا.": "Word preparation canceled. The inventory remains available.",
   "جارٍ تجهيز نسخة الطباعة…": "Preparing printable inventory…",
-  "تعذّر تجهيز نسخة الطباعة: ": "Could not prepare printable inventory: "
+  "تعذّر تجهيز نسخة الطباعة: ": "Could not prepare printable inventory: ",
+  "الجزء": "Part",
+  "حزمة Word جاهزة؛ ملفاتها تشمل جميع النتائج، بحد أقصى 500 سجل في الجزء.": "Word bundle ready; its files include every result, with at most 500 records per part.",
+  "التصدير الكبير يأتي في حزمة Word حسب الدولة، وبحد أقصى 500 سجل في كل جزء لتخفيف استهلاك الذاكرة. جميع النتائج مشمولة.": "Large exports come in a Word bundle by country, with up to 500 records per part to reduce memory use. All results are included."
 }
