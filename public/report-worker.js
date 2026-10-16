@@ -1,2 +1,2 @@
-importScripts('vendor/satellite.min.js','orbit-data.js?v=19','report-insights.js?v=25','report-engine.js?v=34');
+importScripts('vendor/satellite.min.js','orbit-data.js?v=42','report-insights.js?v=42','report-engine.js?v=34');
 self.onmessage=async e=>{try{const {objects,country,start,end,step,resume,details}=e.data;const result=await ReportEngine.scan(satellite,objects,country,start,end,step,p=>self.postMessage({type:'progress',...p}),resume,{details});self.postMessage({type:'done',result})}catch(err){self.postMessage({type:'error',message:err.message})}};

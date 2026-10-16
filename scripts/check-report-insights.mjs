@@ -8,3 +8,7 @@ assert.equal(I.summary({start:0,end:1000,result:{rows:[]}}).unionSeconds,0);asse
 console.log('PASS: report union vs summed duration, freshness endpoints and thresholds, imported/unknown sources, empty and legacy reports');
 
 assert.equal(I.summary({start:0,end:1000,result:{rows:[{id:1,entry:0,exit:1000,duration:1,metadata:{missionKind:'documented'}}]}}).missions,1,'documented individual missions count as sourced mission descriptions');
+const orbit={module:{exports:{}}};vm.createContext(orbit);vm.runInContext(fs.readFileSync('public/orbit-data.js','utf8'),orbit);const O=orbit.module.exports;
+const snapshots=[{provenance:{mode:'local',snapshot:'2026-10-16'}},{provenance:{mode:'derived',snapshot:'2026-10-13'}},{provenance:{mode:'local',snapshot:'2026-10-16'}},{provenance:{mode:'imported',snapshot:'2099-01-01'}},{provenance:{mode:'local',snapshot:'2026-02-30'}}];
+assert.equal(JSON.stringify(O.snapshotDates(snapshots)),JSON.stringify(['2026-10-13','2026-10-16']));const quality=I.inventory(snapshots,0,0,{epoch:()=>0,snapshotDates:O.snapshotDates});assert.equal(JSON.stringify(quality.snapshots),JSON.stringify(['2026-10-13','2026-10-16']));assert(I.lines({...w,result:{...w.result,quality}},0,String,String).some(l=>l.includes('2026-10-13، 2026-10-16')));
+console.log('PASS: reports retain the actual mixed snapshot dates and ignore imported or invalid date claims');

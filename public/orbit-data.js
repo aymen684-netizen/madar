@@ -39,11 +39,12 @@ function satrec(S,o){return o.omm?S.json2satrec(o.omm):S.twoline2satrec(o.l1,o.l
 function serialize(o){return{id:o.id,name:o.name,...(o.omm?{omm:{...o.omm}}:{l1:o.l1,l2:o.l2}),...(o.provenance?{provenance:{...o.provenance}}:{})}}
 function key(o){if(o?.omm){if(!keys.has(o.omm))keys.set(o.omm,JSON.stringify(o.omm));return keys.get(o.omm)}return(o?.l1||'')+'\n'+(o?.l2||'')}
 function merge(lists){const map=new Map();for(const o of lists.flat()){const previous=map.get(o.id);if(!previous||epoch(o)>epoch(previous))map.set(o.id,o)}return [...map.values()]}
+function snapshotDates(objects){return [...new Set(objects.filter(o=>['local','derived','independent'].includes(o?.provenance?.mode)).map(o=>o.provenance.snapshot).filter(s=>typeof s==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(s)&&Number.isFinite(Date.parse(s))&&new Date(s).toISOString().slice(0,10)===s))].sort()}
 function sourceLabel(o){if(!o?.provenance?.mode)return 'مصدر السجل غير موثق';return o?.provenance?.mode==='independent'?'رصد علني مستقل McCants':o?.provenance?.mode==='imported'?'بيانات مستوردة':'CelesTrak'}
 function freshness(o,time=Date.now()){
  const t=epoch(o),hours=Math.abs(Number(time)-t)/3600000;
  return{epoch:t,hours,level:!Number.isFinite(hours)?'unknown':hours>72?'old':hours>24?'aging':'recent',label:!Number.isFinite(hours)?'تاريخ العناصر غير متاح':hours>72?'العناصر بعيدة زمنيًا عن وقت العرض':hours>24?'تحقّق من عمر العناصر':'العناصر قريبة زمنيًا من وقت العرض'};
 }
-const api={parse,fromOmm,valid,fields,epoch,satrec,serialize,key,merge,sourceLabel,freshness};
+const api={parse,fromOmm,valid,fields,epoch,satrec,serialize,key,merge,sourceLabel,freshness,snapshotDates};
 if(typeof module!=='undefined')module.exports=api;else root.OrbitData=api;
 })(typeof window!=='undefined'?window:globalThis);
