@@ -1769,8 +1769,9 @@
   "تاريخ مراجعة المشغّل": "Operator review date",
   "المالك القانوني": "Legal owner",
   "ملاحظة نسبة الجهة": "Attribution note",
-  "اتصالات وإنترنت واسع النطاق ضمن منظومة Starlink؛ لا يحدد هذا الوصف حمولة كل قمر أو خدمته الحالية": "Broadband internet and communications in the Starlink constellation; this description does not identify each satellite’s payload or current service",
   "اتصالات وإنترنت واسع النطاق ضمن منظومة OneWeb في المدار الأرضي المنخفض": "Broadband internet and communications in the low-Earth-orbit OneWeb constellation",
   "Starlink — التقنية والمنظومة": "Starlink — technology and constellation",
-  "Eutelsat — منظومة OneWeb": "Eutelsat — OneWeb constellation"
+  "Eutelsat — منظومة OneWeb": "Eutelsat — OneWeb constellation",
+  "اتصالات وإنترنت واسع النطاق ضمن منظومة Starlink": "Broadband internet and communications in the Starlink constellation",
+  "وصف المنظومة يوضح غرضها المنشور، ولا يثبت حمولة كل قمر أو استمرار تشغيله.": "A constellation description states its published purpose; it does not establish each satellite’s payload or continued operation."
 }

@@ -16,7 +16,7 @@
     "cso": {"pattern":"^CSO[- ]\\d+$","title":"CSO","mission":"استطلاع وتصوير بصري عسكري ضمن برنامج CSO الفرنسي","source":"https://www.defense.gouv.fr/en/cde/space-capabilities","sourceTitle":"وزارة الجيوش الفرنسية — القدرات الفضائية"},
     "ceres": {"pattern":"^CERES[- ]\\d+$","title":"CERES","mission":"جمع معلومات استخبارية من الإشارات الكهرومغناطيسية ضمن منظومة CERES الفرنسية","source":"https://www.defense.gouv.fr/dga/programme-ceres-capacite-renseignement-electromagnetique-spatiale","sourceTitle":"وزارة الجيوش الفرنسية — برنامج CERES"}
 ,
-    "starlink": {"pattern":"^STARLINK-\\d+$","compact":true,"title":"Starlink","mission":"اتصالات وإنترنت واسع النطاق ضمن منظومة Starlink؛ لا يحدد هذا الوصف حمولة كل قمر أو خدمته الحالية","source":"https://starlink.com/technology","sourceTitle":"Starlink — التقنية والمنظومة","checked":"2026-10-16","operator":"SpaceX","operatorSource":"https://starlink.com/technology"},
+    "starlink": {"pattern":"^STARLINK-\\d+$","compact":true,"title":"Starlink","mission":"اتصالات وإنترنت واسع النطاق ضمن منظومة Starlink","source":"https://starlink.com/technology","sourceTitle":"Starlink — التقنية والمنظومة","checked":"2026-10-16","operator":"SpaceX","operatorSource":"https://starlink.com/technology"},
     "oneweb": {"pattern":"^ONEWEB-\\d+$","compact":true,"title":"OneWeb","mission":"اتصالات وإنترنت واسع النطاق ضمن منظومة OneWeb في المدار الأرضي المنخفض","source":"https://www.eutelsat.com/satellite-network/oneweb-leo-constellation","sourceTitle":"Eutelsat — منظومة OneWeb","checked":"2026-10-16","operator":"Eutelsat","operatorSource":"https://www.eutelsat.com/satellite-network/oneweb-leo-constellation"}
   },
   "individuals": {
