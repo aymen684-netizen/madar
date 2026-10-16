@@ -1749,5 +1749,8 @@
   "اكتمل فحص": "Scans completed for",
   "قمر دون فشل حسابي؛ تعذّر": "satellites without calculation failure; failed",
   "قمرًا تعذّر حسابه أثناء الفحص.": "satellites could not be calculated during scanning.",
-  "لا تعني النتيجة الصفرية تأكيد عدم المرور.": "Zero results do not establish that no pass occurred."
+  "لا تعني النتيجة الصفرية تأكيد عدم المرور.": "Zero results do not establish that no pass occurred.",
+  "حالات فحص تعذّرت عبر الفترات": "Failed satellite scans across periods",
+  "أقمار تعذّر حسابها": "Satellites with failed calculations",
+  "نتائجها مستبعدة من حالات المرور.": "Their results are excluded from the pass list."
 }
