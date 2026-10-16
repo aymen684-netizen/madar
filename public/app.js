@@ -76,6 +76,7 @@ $('catalog-country').onchange=async()=>{$('search').value='';onlySaved=false;$('
 
 let healthKey='',healthDataset=null;
 function renderDataHealth(o,time){
+ const c=window.OrbitService?.connection(o?.provenance?.group||loadedGroup||$('group').value);if($('health-connection'))$('health-connection').textContent=(c?.transport==='server'?'عبر خادم مدار':c?.transport==='direct'?'اتصال مباشر من المتصفح':'لم يُفحص الاتصال بعد')+' · '+({live:'وصلت بيانات من المصدر',cache:'نسخة محفوظة من جلب موثق',blocked:'الاتصال متوقف مؤقتًا',error:'تعذّر الاتصال'}[c?.state]||'بيانات احتياطية أو مستوردة')+(c?.upstreamStatus?' · HTTP '+c.upstreamStatus:'')+(c?.retryAt?' · إعادة المحاولة بعد '+new Date(c.retryAt).toISOString().slice(0,19).replace('T',' ')+' UTC':'');if($('health-count'))$('health-count').textContent=(onlySaved?favorites:globalMode&&globalCatalog?globalCatalog:objects).length.toLocaleString('en-US')+' سجلًا محمّلًا · '+rows().length.toLocaleString('en-US')+' نتيجة بعد التصفية';
  const dataset=rows(),sourceDataset=onlySaved?favorites:globalMode&&globalCatalog?globalCatalog:objects;
  const key=(o?.id||'')+'|'+(o?OrbitData.key(o):'')+'|'+Math.floor(Number(time)/60000)+'|'+JSON.stringify(o?.provenance||{});
  if(key===healthKey&&dataset===healthDataset)return;healthKey=key;healthDataset=dataset;

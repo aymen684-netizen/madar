@@ -17,6 +17,14 @@
         "limit": 10,
         "period": 60
       }
+    },
+    {
+      "name": "ORBIT_LIMITER",
+      "namespace_id": "784392",
+      "simple": {
+        "limit": 30,
+        "period": 60
+      }
     }
   ]
 }
