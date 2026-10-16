@@ -17,3 +17,6 @@ public/vendor/globe.min.js
 test-results/
 
 public/data/mission-profiles.json
+
+public/data/active-omm.json
+public/data/source-snapshot.json

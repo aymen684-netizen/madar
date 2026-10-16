@@ -46,3 +46,7 @@
 #overview-content{overflow-wrap:anywhere}
 /* Keep connection diagnostics from pushing the satellite card below the viewport. */
 .data-health[open]{max-height:min(36vh,320px);overflow:auto;overscroll-behavior:contain}.data-health[open]>summary{position:sticky;top:0;z-index:2;background:#0d1c29}
+
+.source-details{margin-block:16px;padding:12px;border:1px solid #42667a;border-radius:12px;background:#102534}.source-details summary{cursor:pointer;color:#8df1da;font-weight:700}.source-details dl{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;font-size:14px}.source-details dt{color:#afc4d6}.source-details dd{margin:0;overflow-wrap:anywhere;unicode-bidi:plaintext}.source-details h3{font-size:16px;color:#8df1da}.source-details button{width:100%;margin-block:12px}
+
+#source-fields{max-height:480px;overflow:auto;overscroll-behavior:contain;margin-block:12px}

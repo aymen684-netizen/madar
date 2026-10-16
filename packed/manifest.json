@@ -29,7 +29,7 @@
     "parts": [
       "packed/satellite-metadata.json.gz.part00"
     ],
-    "sha256": "76fed3ef773c9373e6c2f5508a81253ca68cf82e767c80f9e651fda64dfcb330"
+    "sha256": "ffeba0161c968b22fb7656c7ae951c87a694019f694326f4615cd9c1a0bcc13f"
   },
   {
     "target": "public/data/starlink.txt",
@@ -64,5 +64,19 @@
       "packed/globe.min.js.gz.part02"
     ],
     "sha256": "983fefdaad2a6d51d84f63b906acb728c32875dc396d33e78fc7c2ff210ed054"
+  },
+  {
+    "target": "public/data/active-omm.json",
+    "parts": [
+      "packed/active-omm.json.gz.part00"
+    ],
+    "sha256": "ff06052405567420ed9537371728ac693c7aab32ba83ee0d6bcd64faa7e24e0d"
+  },
+  {
+    "target": "public/data/source-snapshot.json",
+    "parts": [
+      "packed/source-snapshot.json.gz.part00"
+    ],
+    "sha256": "1f3e59f3bbbd92f7ecf055bc35d7c375370dabf65b0bcd22ef12477f1b32c7f9"
   }
 ]
