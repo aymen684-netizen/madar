@@ -7,7 +7,7 @@ const presets=document.createElement('section');presets.id='map-quick-presets';p
 const rail=document.createElement('div');rail.id='map-floating-tools';rail.innerHTML='<button type="button" id="map-tools-open" aria-label="البحث وأدوات التتبع" title="البحث وأدوات التتبع">⌕</button><button type="button" id="map-filter-open" aria-label="تخصيص الأقمار على الخريطة" title="تخصيص الأقمار على الخريطة">☷</button><button type="button" id="map-data-open" aria-label="حالة بيانات الأقمار" title="حالة بيانات الأقمار">ⓘ</button>';space.append(rail);
 const legend=document.createElement('div');legend.id='orbit-legend';legend.setAttribute('aria-label','ألوان المدارات التقريبية');legend.innerHTML='<span data-orbit="leo">منخفض LEO</span><span data-orbit="meo">متوسط MEO</span><span data-orbit="geo">متزامن GEO</span><span data-orbit="other">أخرى</span>';space.append(legend);
 let opener=null,moved=false;
-function active(){return innerWidth<=700&&MadarShell.current()==='map'}
+function active(){return MadarShell.compact()&&MadarShell.current()==='map'}
 function open(target){if(!active())return;opener=document.activeElement;dialog.showModal();if(target==='filters'){$('map-display').open=true;$('map-display').querySelector('summary').focus();$('map-display').scrollIntoView({block:'start'})}else if(target==='data'){$('data-health').open=true;$('data-health-summary').focus();$('data-health').scrollIntoView({block:'start'})}else $('shell-query').focus()}
 function close(){dialog.close()}
 $('map-tools-open').onclick=()=>open('search');$('map-filter-open').onclick=()=>open('filters');$('map-data-open').onclick=()=>open('data');$('map-tools-close').onclick=close;
