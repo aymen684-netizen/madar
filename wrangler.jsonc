@@ -11,14 +11,6 @@
   },
   "ratelimits": [
     {
-      "name": "WORD_LIMITER",
-      "namespace_id": "784391",
-      "simple": {
-        "limit": 10,
-        "period": 60
-      }
-    },
-    {
       "name": "ORBIT_LIMITER",
       "namespace_id": "784392",
       "simple": {

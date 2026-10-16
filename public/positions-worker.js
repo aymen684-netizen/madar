@@ -1,3 +1,4 @@
+importScripts('network-resources.js?v=43','network-policy.js?v=43');
 importScripts('vendor/satellite.min.js','orbit-data.js?v=19');
 // يحسب مواقع جميع الأقمار في خيط منفصل حتى تبقى الواجهة سلسة مع عشرات الآلاف من الأقمار.
 let recs=[],token=0;

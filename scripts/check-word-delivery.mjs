@@ -19,3 +19,8 @@ for(const kind of ['report','analysis','observer']){
  nodes.get(kind+'-status').textContent='unchanged';root.navigator={};
 }
 console.log('PASS: report-specific sharing status, native sharing, fallback download, cancellation, errors and no stale status after clearing');
+
+const privateBlob=new Blob(['private report']);privateBlob.arrayBuffer=()=>{throw Error('local delivery must not encode or copy the report for upload')};await root.WordDelivery.attach('report',privateBlob,'private.docx');
+let scripts=[];root.document.createElement=()=>({remove(){}});root.document.head={append:s=>scripts.push(s)};root.setTimeout=setTimeout;root.clearTimeout=clearTimeout;
+const one=root.WordDelivery.library(),two=root.WordDelivery.library();assert.equal(scripts.length,1);assert.equal(one,two);root.docx={Packer:{}};scripts[0].onload();assert.equal(await one,root.docx);
+console.log('PASS: local Word attachment avoids upload encoding and lazy Word library loads once');
