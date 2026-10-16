@@ -1,0 +1,33 @@
+{
+  "id": "./",
+  "name": "مدار | مرصدك الفضائي",
+  "short_name": "مدار",
+  "description": "تابع الأقمار الصناعية، استكشف مداراتها واحفظ قائمة متابعتك.",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#080d16",
+  "theme_color": "#102337",
+  "icons": [
+    {
+      "src": "icons/madar-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/madar-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/madar-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
