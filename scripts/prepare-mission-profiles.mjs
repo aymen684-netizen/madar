@@ -11,17 +11,17 @@ for(const file of fs.readdirSync('public/data').filter(f=>f.endsWith('.txt'))){
  }
 }
 for(const o of JSON.parse(fs.readFileSync('public/data/active-omm.json','utf8')))names.set(String(o.NORAD_CAT_ID),o.OBJECT_NAME);
-const satellites={};const programs={};
+const satellites={};const programs={},members={};
 for(const [key,p]of Object.entries(input.programs)){
- const {pattern,...description}=p;assert(new URL(p.source).protocol==='https:');programs[key]=description;
+ const {pattern,compact,...description}=p;assert(new URL(p.source).protocol==='https:');programs[key]=description;
  for(const [id,name]of names)if(base.satellites[id]?.type==='PAY'&&new RegExp(pattern).test(name)){
-  assert(!satellites[id],`Ambiguous program for ${id}`);satellites[id]={name,program:key};
+  assert(!satellites[id]&&!Object.values(members).some(ids=>ids.includes(Number(id))),`Ambiguous program for ${id}`);if(compact)(members[key]??=[]).push(Number(id));else satellites[id]={name,program:key};
  }
 }
 for(const [id,p]of Object.entries(input.individuals)){
  assert.equal(names.get(id),p.name,`Identity mismatch for ${id}`);assert.equal(base.satellites[id]?.type,'PAY');
  assert(new URL(p.source).protocol==='https:');satellites[id]={...p,scope:'individual'};
 }
-fs.writeFileSync('public/data/mission-profiles.json',JSON.stringify({checked:input.checked,identitySnapshot:base.retrieved,programs,satellites}));
-const newlyDescribed=Object.keys(satellites).filter(id=>!base.satellites[id].mission).length;
-console.log(`Prepared ${Object.keys(satellites).length} sourced profiles; ${newlyDescribed} previously lacked a mission description`);
+fs.writeFileSync('public/data/mission-profiles.json',JSON.stringify({checked:input.checked,identitySnapshot:base.retrieved,programs,satellites,members}));
+const ids=[...Object.keys(satellites),...Object.values(members).flat().map(String)];const newlyDescribed=ids.filter(id=>!base.satellites[id].mission).length;
+console.log(`Prepared ${ids.length} sourced profiles; ${newlyDescribed} previously lacked a mission description`);
