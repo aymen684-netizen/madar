@@ -1403,5 +1403,22 @@
   "من «خيارات العرض والوقت» اختر «شكل القمر» ثم «علم الدولة». يظهر العلم داخل جسم رمز القمر مع ألواح شمسية، ويحيط بالقمر المحدد إطار مضيء. العلم يخص الدولة أو الجهة المسجلة للقمر، ولا يدل على البلد الذي يمر فوقه. يظهر الرمز ◇ للجهات المشتركة أو غير المعروفة بدل إسناد علم دولة إليها.": "In “View and time options”, choose “Satellite marker” and then “Country flag”. The flag appears inside a satellite body with solar panels, and a glowing outline marks the selected satellite. It represents the registered country or organization, not the country beneath the satellite. Joint or unknown organizations use ◇ instead of an assigned national flag.",
   "للحفاظ على سرعة العرض، تظهر رموز الأعلام لجميع النتائج عند عرض 180 قمرًا أو أقل. مع الأعداد الأكبر يظهر علم القمر المحدد فقط، وتبقى بقية النقاط قابلة للاختيار. ضيّق التصفية لإظهار أعلام المزيد من الأقمار، أو اختر الدائرة أو رمز القمر الصناعي من شكل القمر.": "To keep the view responsive, all results have flag symbols when 180 satellites or fewer are shown. With larger sets, only the selected satellite has a flag, and all other dots remain selectable. Narrow the filters to show more flag symbols, or choose a circle or satellite symbol from the marker selector.",
   "اضغط أو المس القمر مرة واحدة لفتح بطاقته؛ السحب يدير الكرة. لإضافته إلى المتابعة اضغط زر «إضافة إلى قائمة المتابعة» داخل البطاقة بضغطة مستقلة. استخدم «إظهار كل الأقمار في النطاق» لإعادة ضبط الدولة والمهمة والتوثيق والبحث، مع بقاء المجموعة والتصفية الأخرى كما هي. اختر التاريخ أو عد إلى الوقت الحالي من خيارات العرض والوقت.": "Click or tap a satellite once to open its card; dragging rotates the globe. To follow it, press “Add to watchlist” in the card as a separate action. Use “Show all satellites in this scope” to reset country, mission, evidence and search, keeping the group and other filters. Choose a date or return to the current time through View and time options.",
-  "آخر تحديث للدليل: 16 أكتوبر 2026 · الأعلام وتصفية الخريطة": "Guide updated: 16 October 2026 · Flags and map filters"
+  "آخر تحديث للدليل: 16 أكتوبر 2026 · الأعلام وتصفية الخريطة": "Guide updated: 16 October 2026 · Flags and map filters",
+  "حالة الاتصال": "Connection status",
+  "السجلات المحمّلة والتصفية": "Loaded records and filters",
+  "لم يُفحص الاتصال بعد": "Connection not checked yet",
+  "عبر خادم مدار": "Via the Madar server",
+  "اتصال مباشر من المتصفح": "Direct browser connection",
+  "وصلت بيانات من المصدر": "Data received from the source",
+  "نسخة محفوظة من جلب موثق": "Cached data from a recorded fetch",
+  "الاتصال متوقف مؤقتًا": "Connection temporarily paused",
+  "تعذّر الاتصال": "Connection failed",
+  "بيانات احتياطية أو مستوردة": "Backup or imported data",
+  "إعادة المحاولة بعد": "Retry after",
+  "سجلًا محمّلًا": "loaded records",
+  "نتيجة بعد التصفية": "results after filtering",
+  "وقت جلب البيانات من الخادم غير صالح أو منتهي": "The server fetch timestamp is invalid or expired",
+  "تعذّر الاتصال عبر خادم مدار": "Could not connect through the Madar server",
+  "تُعرض البيانات المحفوظة أو الاحتياطية عند توفرها.": "Cached or backup data is shown when available.",
+  "افتح حداثة البيانات للتفريق بين وقت الموقع المحسوب وتاريخ العناصر وآخر جلب. عمر عناصر يبلغ 23 ساعة لا يعني تأخر الموقع المعروض؛ يُحسب الموقع للوقت الذي تختاره. لمقارنة عدد الأقمار بين جهازين، راجع حالة الاتصال وآخر جلب ناجح والمجموعة، ثم قارن السجلات المحمّلة بالنتائج بعد التصفية. زر تحديث البيانات يعيد فحص النسخة المشتركة عند توفرها، ولا يجبر المصدر على تجاوز فترة التحديث. عند تعذّر الاتصال يبقى المصدر المحفوظ أو الاحتياطي موسومًا بوضوح. المراجعة التلقائية للمصدر بعد ساعتين تتطلب ظهور الصفحة والوقت الحالي. المرور فوق البلد ليس إثباتًا للتصوير أو الاتصال، والنتائج تقديرات من العناصر المتاحة.": "Open data freshness to distinguish the calculated position time, element epoch and last successful fetch. A 23-hour element age does not mean the displayed position is delayed; positions are calculated for the selected time. To compare counts across devices, check connection status, last successful fetch and group, then compare loaded records with filtered results. Refresh rechecks the shared copy when available without bypassing the source update interval. Cached or backup sources remain clearly labelled after connection failures. Automatic source checks after two hours require the page to be visible and current time selected. Passing over a country does not prove imaging or communication; results are estimates from the available elements."
 }

@@ -1,3 +1,4 @@
+import {orbitResponse} from './orbits.js';
 import {secure} from '../security/headers.js';
 import {validDocx} from './docx-validation.js';
 const DOCX_MIME='application/vnd.openxmlformats-officedocument.wordprocessingml.document',MAX_BODY=12000000;
@@ -17,4 +18,4 @@ async function word(request,env,url){
  if(!validDocx(bytes))return reply('Invalid document',400);
  return reply(bytes,200,{'Content-Type':DOCX_MIME,'Content-Disposition':'attachment; filename="'+filename+'"'});
 }
-export default {async fetch(request,env){const url=new URL(request.url);if(['/api/word','/api/word.docx'].includes(url.pathname))return word(request,env,url);if(url.pathname.startsWith('/api/'))return reply('Not found',404);if(request.method!=='GET'&&request.method!=='HEAD')return reply('Method not allowed',405,{Allow:'GET, HEAD'});return secure(await env.ASSETS.fetch(request))}};
+export default {async fetch(request,env){const url=new URL(request.url);if(url.pathname==='/api/orbits')return secure(await orbitResponse(request,env));if(['/api/word','/api/word.docx'].includes(url.pathname))return word(request,env,url);if(url.pathname.startsWith('/api/'))return reply('Not found',404);if(request.method!=='GET'&&request.method!=='HEAD')return reply('Method not allowed',405,{Allow:'GET, HEAD'});return secure(await env.ASSETS.fetch(request))}};
