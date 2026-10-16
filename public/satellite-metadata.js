@@ -1,22 +1,35 @@
 (function(root){'use strict';
-let catalog=null,profiles=null,pending=null;
+let catalog=null,profiles=null,pending=null,details=null,detailsPending=null;
 const names=new Intl.DisplayNames(['ar'],{type:'region'});
 const typeLabels={PAY:'حمولة فضائية',DEB:'حطام مداري','R/B':'مرحلة صاروخية',UNK:'نوع غير محدد'};
 function safeSource(value){try{const u=new URL(value);return u.protocol==='https:'?u.href:''}catch{return ''}}
 function load(){
  if(catalog)return Promise.resolve(catalog);
  if(!pending)pending=Promise.all([
-  fetch('data/satellite-metadata.json?v=41').then(r=>{if(!r.ok)throw Error('metadata unavailable');return r.json()}),
+  fetch('data/satellite-metadata-summary.json?v=42').then(r=>{if(!r.ok)throw Error('metadata unavailable');return r.json()}),
   fetch('data/mission-profiles.json?v=18').then(r=>{if(!r.ok)throw Error('profiles unavailable');return r.json()}).catch(()=>null)
- ]).then(([base,extra])=>{catalog=base;profiles=extra;return catalog}).catch(e=>{pending=null;throw e});
+ ]).then(([base,extra])=>{catalog=base;details=base.sourceDetailsDeferred?null:base;profiles=extra;return catalog}).catch(e=>{pending=null;throw e});
  return pending;
 }
+async function loadDetails(){
+ await load();if(details)return details;
+ if(!detailsPending)detailsPending=(async()=>{
+  const response=await fetch('data/satellite-metadata.json?v=42');if(!response.ok)throw Error('source details unavailable');
+  const text=await response.text();if(text.length>30000000)throw Error('source details too large');
+  const digest=await root.crypto.subtle.digest('SHA-256',new TextEncoder().encode(text));
+  const sha=Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,'0')).join('');
+  if(sha!==catalog.sourceSha256)throw Error('source details snapshot mismatch');
+  const full=JSON.parse(text);if(full.catalogRetrievedAt!==catalog.catalogRetrievedAt||Object.keys(full.satellites).length!==Object.keys(catalog.satellites).length)throw Error('source details snapshot mismatch');
+  details=full;return details;
+ })().catch(e=>{detailsPending=null;throw e});
+ return detailsPending;
+}
 function get(id){
- const key=String(id),r=catalog?.satellites[key],owner=catalog?.owners[r?.owner];
+ const key=String(id),r=catalog?.satellites[key],owner=catalog?.owners[r?.owner],fields=details?.satellites[key]?.catalog||r?.catalog;
  const profile=profiles?.satellites[key],program=profiles?.programs[profile?.program];
  const detail=profile?.scope==='individual'?profile:program;
  const country=owner?.arabic||(owner?.iso2?names.of(owner.iso2):owner?.name)||r?.owner||'غير متاح';
- const identitySource=/^\d{1,6}$/.test(key)?'https://celestrak.org/satcat/records.php?CATNR='+key:'';
+ const identitySource=/^[1-9]\d{0,8}$/.test(key)?'https://celestrak.org/satcat/records.php?CATNR='+key:'';
  let mission=r?.mission||'لم يُعثر على وصف موثق للمهمة في المصادر المراجعة',kind=r?.missionKind||'unknown';
  let missionSource=safeSource(r?.missionSource),missionSourceTitle='مصدر وصف المهمة',missionNote='',checked='';
  if(detail&&r?.type==='PAY'){
@@ -28,8 +41,8 @@ function get(id){
  else if(r?.type==='R/B'){mission='مرحلة صاروخية وليست قمرًا تشغيليًا';kind='object-type';missionSource=identitySource}
  if(kind==='unknown')missionNote='يمكن عرض الهوية والمدار المنشورين حتى عند غياب وصف المهمة. لا تُستنتج مهمة سرية من الاسم أو المدار.';
  const evidenceLabel={documented:'مهمة موثقة',program:'غرض المنظومة موثق',category:'تصنيف عام',unknown:'تفاصيل المهمة غير موثقة','object-type':'نوع الجسم مسجل'}[kind]||'تفاصيل المهمة غير موثقة';
- return {catalog:r?.catalog?{...r.catalog}:null,catalogRetrievedAt:catalog?.catalogRetrievedAt||catalog?.retrieved||'',country,ownerCode:r?.owner||'',mission,missionKind:kind,missionLabel:mission+(kind==='category'?' (تصنيف عام)':kind==='program'?' (وصف المنظومة)':''),countrySource:r?identitySource:'',missionSource,missionSourceTitle,missionNote,evidenceLabel,checked,catalogName:profile?.name||'',program:program?.title||'',objectType:typeLabels[r?.type]||'غير متاح',retrieved:catalog?.retrieved||'',launch:r?.launch||'غير متاح',orbitSource:r?.orbitSource||'CelesTrak',ownerIso2:owner?.iso2||''};
+ return {catalog:fields?{...fields}:null,catalogRetrievedAt:catalog?.catalogRetrievedAt||catalog?.retrieved||'',country,ownerCode:r?.owner||'',mission,missionKind:kind,missionLabel:mission+(kind==='category'?' (تصنيف عام)':kind==='program'?' (وصف المنظومة)':''),countrySource:r?identitySource:'',missionSource,missionSourceTitle,missionNote,evidenceLabel,checked,catalogName:profile?.name||'',program:program?.title||'',objectType:typeLabels[r?.type]||'غير متاح',retrieved:catalog?.retrieved||'',launch:r?.launch||'غير متاح',orbitSource:r?.orbitSource||'CelesTrak',ownerIso2:owner?.iso2||''};
 }
-function use(data,extra=null){catalog=data;profiles=extra;pending=null}
-function owners(){return Object.entries(Object.fromEntries([...new Set([...Object.keys(catalog?.owners||{}),...Object.values(catalog?.satellites||{}).map(r=>r.owner).filter(Boolean)])].map(code=>[code,catalog?.owners?.[code]||{}]))).map(([code,o])=>({code,label:o.arabic||(o.iso2?names.of(o.iso2):o.name)||code})).sort((a,b)=>a.label.localeCompare(b.label,'ar'))}const api={load,get,use,owners};if(typeof module!=='undefined')module.exports=api;else root.SatMetadata=api;
+function use(data,extra=null){catalog=data;details=data;profiles=extra;pending=null;detailsPending=null}
+function owners(){return Object.entries(Object.fromEntries([...new Set([...Object.keys(catalog?.owners||{}),...Object.values(catalog?.satellites||{}).map(r=>r.owner).filter(Boolean)])].map(code=>[code,catalog?.owners?.[code]||{}]))).map(([code,o])=>({code,label:o.arabic||(o.iso2?names.of(o.iso2):o.name)||code})).sort((a,b)=>a.label.localeCompare(b.label,'ar'))}const api={load,loadDetails,detailsLoaded:()=>!!details,get,use,owners};if(typeof module!=='undefined')module.exports=api;else root.SatMetadata=api;
 })(typeof window!=='undefined'?window:globalThis);

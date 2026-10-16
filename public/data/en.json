@@ -325,7 +325,7 @@
   "اتصالات تجريبية": "Experimental communications",
   "جلب مباشر من المصدر": "Fetched from source",
   "نسخة محفوظة": "Cached copy",
-  "نسخة احتياطية": "Fallback copy",
+  "نسخة احتياطية": "Backup snapshot",
   "مستوردة": "Imported",
   "مصدر غير موثق": "Unverified source",
   "وقت مختار": "Selected time",
@@ -1474,5 +1474,11 @@
   "نظرية حساب المدار": "Propagation theory",
   "السطر المداري الأول": "First orbital line",
   "السطر المداري الثاني": "Second orbital line",
-  "من بطاقة معلومات القمر افتح «بيانات المصدر التفصيلية» لعرض حقول SATCAT وعناصر المدار المتاحة، أو نزّل سجل JSON بمصادره وتواريخه. الفراغ يعني أن الحقل غير منشور؛ القيم الفهرسية لا تحل محل الموضع المحسوب الآن. عند تعذّر شبكة خادم مدار يمكن استخدام اتصال المتصفح بالمصدر الرسمي؛ أما رفض المصدر فيوقف الطلبات حتى الموعد الموضح.": "In satellite information, open “Detailed source data” to inspect available SATCAT and orbital fields, or download a JSON record with sources and dates. Missing values are not published. Catalog values are separate from the position calculated now. If the Madar server has a network failure, the browser can contact the official source; a source HTTP denial stops requests until the displayed retry time."
+  "من بطاقة معلومات القمر افتح «بيانات المصدر التفصيلية» لعرض حقول SATCAT وعناصر المدار المتاحة، أو نزّل سجل JSON بمصادره وتواريخه. الفراغ يعني أن الحقل غير منشور؛ القيم الفهرسية لا تحل محل الموضع المحسوب الآن. عند تعذّر شبكة خادم مدار يمكن استخدام اتصال المتصفح بالمصدر الرسمي؛ أما رفض المصدر فيوقف الطلبات حتى الموعد الموضح.": "In satellite information, open “Detailed source data” to inspect available SATCAT and orbital fields, or download a JSON record with sources and dates. Missing values are not published. Catalog values are separate from the position calculated now. If the Madar server has a network failure, the browser can contact the official source; a source HTTP denial stops requests until the displayed retry time.",
+  "تعذّر تحميل تفاصيل المصدر أو التحقق منها. أغلق التفاصيل وافتحها لإعادة المحاولة.": "Could not load or verify source details. Close and reopen the details to retry.",
+  "جارٍ تحميل تفاصيل المصدر والتحقق من بصمتها…": "Loading source details and verifying their checksum…",
+  "تواريخ النسخ الاحتياطية المستخدمة:": "Backup snapshot dates used:",
+  "تُعرض تواريخ النسخ الاحتياطية المستخدمة ضمن مؤشرات البيانات عند توفرها.": "Backup snapshot dates are shown in the data indicators when available.",
+  "تاريخ النسخة غير موثق": "Snapshot date not documented",
+  "تاريخ النسخة": "Snapshot date"
 }
