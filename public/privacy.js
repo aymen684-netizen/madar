@@ -2,7 +2,7 @@
 const preference='madar-save-enabled',signal='madar-reset-signal',generation='madar-data-generation',session=new Map();let enabled=true,busy=false,initialGeneration=null;
 try{enabled=root.localStorage.getItem(preference)!=='false';initialGeneration=root.localStorage.getItem(generation)}catch{enabled=false}
 function persistent(){try{return enabled&&!busy&&root.localStorage.getItem(preference)!=='false'&&root.localStorage.getItem(generation)===initialGeneration}catch{return false}}
-function appKey(key){return key==='orbit-favorites'||key==='madar-draft-v1'||key.startsWith('orbit-cache-')}
+function appKey(key){return key==='madar-inventory-owner'||key==='orbit-favorites'||key==='madar-draft-v1'||key.startsWith('orbit-cache-')}
 function localGet(key){if(!appKey(key))throw Error('Unknown application key');if(!persistent())return session.get(key)||null;return root.localStorage.getItem(key)}
 function localSet(key,value){if(!appKey(key))throw Error('Unknown application key');if(busy)return false;if(!enabled){session.set(key,value);return false}root.localStorage.setItem(key,value);return true}
 async function clear(){busy=true;session.clear();try{root.localStorage.setItem(generation,String(Date.now())+'-'+Math.random());const keys=[];for(let i=0;i<root.localStorage.length;i++){const k=root.localStorage.key(i);if(k&&appKey(k))keys.push(k)}for(const k of keys)root.localStorage.removeItem(k);await root.StateStore?.clearAll();root.localStorage.setItem(signal,String(Date.now()));root.localStorage.removeItem(signal)}finally{busy=false}}
