@@ -1520,5 +1520,22 @@
   "الوضع الحالي: تلقائي للشاشات الواسعة.": "Current mode: automatic for wide screens.",
   "الوضع الحالي: توفير الطاقة.": "Current mode: power saving.",
   "الوضع الحالي: تفاصيل أعلى.": "Current mode: higher detail.",
-  "في الوضع التلقائي تُخفّض دقة الرسم على الشاشات الضيقة لتخفيف العبء. يتوقف رسم الخريطة خارج العرض، وتُعلّق تحديثات المواقع عند إخفاء الصفحة.": "Automatic mode lowers rendering resolution on narrow screens to reduce the workload. Map rendering stops offscreen, and position updates pause when the page is hidden."
+  "في الوضع التلقائي تُخفّض دقة الرسم على الشاشات الضيقة لتخفيف العبء. يتوقف رسم الخريطة خارج العرض، وتُعلّق تحديثات المواقع عند إخفاء الصفحة.": "Automatic mode lowers rendering resolution on narrow screens to reduce the workload. Map rendering stops offscreen, and position updates pause when the page is hidden.",
+  "متقدم · اختيار الأنواع بالتفصيل": "Advanced · detailed satellite types",
+  "مجموعات جاهزة": "Ready-made groups",
+  "المحطات": "Stations",
+  "العسكرية العلنية": "Public military",
+  "الكل": "All",
+  "البحث وأدوات التتبع": "Search and tracking tools",
+  "اسحب إلى الأسفل لإغلاق أدوات الخريطة": "Swipe down to close map tools",
+  "إغلاق أدوات الخريطة": "Close map tools",
+  "تخصيص الأقمار على الخريطة": "Customize satellites on the map",
+  "حالة بيانات الأقمار": "Satellite data status",
+  "ألوان المدارات التقريبية": "Approximate orbit colors",
+  "منخفض LEO": "Low LEO",
+  "متوسط MEO": "Medium MEO",
+  "متزامن GEO": "Synchronous GEO",
+  "أخرى": "Other",
+  "تختلف حداثة العناصر بين الأقمار": "Element freshness varies between satellites",
+  "حالة المصدر؛ اختر قمرًا لعرض حداثة عناصره وتفاصيله.": "Source status; select a satellite to see its element freshness and details."
 }
