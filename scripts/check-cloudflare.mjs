@@ -15,23 +15,6 @@ for(const path of ['/', '/privacy.js', '/downloads/madar-overview.docx']){
  if(path.endsWith('.docx'))assert(Buffer.from(await r.arrayBuffer()).equals(word));
  else await r.arrayBuffer();
 }
-const body=new URLSearchParams({file:word.toString('base64'),name:'madar-overview.docx'});
-for(const origin of [base,'https://example.com',null]){
- const r=await fetch(base+'/api/word.docx',{method:'POST',body,headers:origin?{Origin:origin}:{},signal:AbortSignal.timeout(45000)});
- headers(r);assert.equal(r.status,origin===base?200:403);
- if(origin===base){assert.equal(r.headers.get('cache-control'),'no-store');assert.match(r.headers.get('content-disposition'),/attachment/);assert(Buffer.from(await r.arrayBuffer()).equals(word));}
- else await r.arrayBuffer();
-}
-const invalid=await fetch(base+'/api/word.docx',{method:'POST',body:new URLSearchParams({file:'AAAA',name:'bad.docx'}),headers:{Origin:base}});
-assert.equal(invalid.status,400);headers(invalid);await invalid.arrayBuffer();
-const get=await fetch(base+'/api/word.docx');assert.equal(get.status,405);headers(get);await get.arrayBuffer();
-const results=[];
-// Cloudflare synchronizes local counters asynchronously; allow propagation between requests.
-for(let i=0;i<40;i++){
- const r=await fetch(base+'/api/word.docx',{method:'POST',body:new URLSearchParams({file:'AAAA',name:'bad.docx'}),headers:{Origin:base}});
- headers(r);assert([400,429].includes(r.status));results.push(r.status);await r.arrayBuffer();
- if(r.status===429)break;
- await new Promise(resolve=>setTimeout(resolve,500));
-}
-assert(results.includes(429),'real Cloudflare rate-limit binding must reject excess requests');
-console.log('PASS: live Cloudflare headers, exact Word downloads, origin checks, invalid DOCX, method restriction and real rate limit');
+for(const method of ['GET','POST']){const r=await fetch(base+'/api/word.docx',{method,...(method==='POST'?{body:'privacy probe; no user data'}:{}),signal:AbortSignal.timeout(30000)});headers(r);assert.equal(r.status,410);await r.arrayBuffer()}
+const invalid=await fetch(base+'/api/orbits?id=25544');headers(invalid);assert.equal(invalid.status,400);await invalid.arrayBuffer();
+console.log('PASS: production security headers, static local Word download, removed upload route and no per-satellite API query');

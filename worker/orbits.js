@@ -6,7 +6,7 @@ function boundedJson(body){let size=0,prefix='',tail='',seen=false;return body.p
 export async function orbitResponse(request,env,{fetcher=fetch,cache=globalThis.caches?.default,now=Date.now}={}){
  const url=new URL(request.url);if(request.method!=='GET')return response({error:'method'},405,{Allow:'GET'});
  if(request.headers.get('sec-fetch-site')==='cross-site'||request.headers.get('origin')&&request.headers.get('origin')!==url.origin)return response({error:'origin'},403);
- const entries=[...url.searchParams];if(entries.length!==1)return response({error:'query'},400);const [type,value]=entries[0];if(!(type==='group'&&ORBIT_GROUPS.has(value)||type==='id'&&/^[1-9]\d{0,8}$/.test(value)))return response({error:'query'},400);
+ const entries=[...url.searchParams];if(entries.length!==1)return response({error:'query'},400);const [type,value]=entries[0];if(!(type==='group'&&ORBIT_GROUPS.has(value)))return response({error:'query'},400);
  if(!cache||!env?.ORBIT_LIMITER)return response({error:'unavailable'},503);
  const key=new Request(url.origin+'/api/orbits?'+new URLSearchParams({[type]:value})),stopKey=new Request(url.origin+'/api/orbits?internal=source-stop');
  async function fail(error,status,seconds,upstreamStatus){const retryAt=now()+seconds*1000,body={error,retryAt,...(upstreamStatus?{upstreamStatus}:{})};await cache.put(stopKey,response(body,200,{'Cache-Control':'public, max-age='+seconds}));return response(body,status,{'X-Madar-Error':error,'Retry-After':String(seconds),'X-Madar-Retry-At':String(retryAt),...(upstreamStatus?{'X-Madar-Upstream-Status':String(upstreamStatus)}:{})})}

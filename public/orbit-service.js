@@ -32,6 +32,6 @@ async function fetchGroup(key,parse,fallback,group,options={}){
  if(key==='intelligence')for(const o of data)if(root.SatMetadata?.get(o.id)?.orbitSource?.includes('Independent'))o.provenance.mode='independent';
  return{data,source:mode,note,fetchedAt:null};
 }
-async function fetchObject(id){if(!/^\d{1,9}$/.test(String(id))||Number(id)<1)throw Error('رقم NORAD غير صالح');return request('CATNR-'+id,'https://celestrak.org/NORAD/elements/gp.php?CATNR='+id+'&FORMAT=json')}
+async function fetchObject(id){if(!/^\d{1,9}$/.test(String(id))||Number(id)<1)throw Error('رقم NORAD غير صالح');const result=await root.SatGroups.fetchGroup('active',OrbitData.parse);const object=result.data.find(o=>o.id===Number(id));if(!object)throw Error('لم يُعثر على القمر في الفهرس النشط المتاح');return{...result,data:[object]}}
 root.OrbitService={fetchGroup,fetchObject,interval:INTERVAL,connection};
 })(typeof window!=='undefined'?window:globalThis);

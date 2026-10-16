@@ -10,3 +10,10 @@ const metadataBytes=fs.readFileSync(metadataPath),metadata=JSON.parse(metadataBy
 const summary={...metadata,sourceDetailsDeferred:true,sourceSha256:createHash('sha256').update(metadataBytes).digest('hex'),satellites:Object.fromEntries(Object.entries(metadata.satellites).map(([id,{catalog,...identity}])=>[id,identity]))};
 fs.writeFileSync(new URL('../public/data/satellite-metadata-summary.json',import.meta.url),JSON.stringify(summary));
 console.log('Prepared compact identity catalog; full source fields load on demand');
+
+// A fixed list of public resources; user input is never an allowed URL parameter.
+const {ORBIT_GROUPS}=await import('../worker/orbit-groups.js');
+function publicFiles(dir,prefix=''){return fs.readdirSync(dir,{withFileTypes:true}).flatMap(e=>e.isDirectory()?publicFiles(path.join(dir,e.name),prefix+e.name+'/'):[prefix+e.name])}
+const {fileURLToPath}=await import('node:url');
+const files=[...new Set([...publicFiles(fileURLToPath(new URL('../public',import.meta.url))), 'data/mission-profiles.json','network-resources.js'])].sort();
+fs.writeFileSync(new URL('../public/network-resources.js',import.meta.url),'globalThis.MadarNetworkResources='+JSON.stringify({files,groups:[...ORBIT_GROUPS]})+';\n');

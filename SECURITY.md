@@ -25,3 +25,12 @@ GitHub Pages يطبّق CSP وReferrer-Policy بواسطة meta. لا تتيح �
 إصدارات Wrangler وPlaywright مثبتة مع package-lock.json. يسجل tools/vendor-audit شجرة مرجعية لإصدارات المكتبات المضمّنة في التطبيق ويستخدم npm audit لفحص التنبيهات المعروفة. يتكرر الفحص في طلبات الدمج وجدول أسبوعي، وتفتح Dependabot طلبات تحديث. تحديث سجل الفحص وحده لا يعيد بناء ملفات vendor المضغوطة؛ عند تحديث مكتبة يجب تحديث الحزمة الفعلية وبصمة packed/manifest.json وفحص العرض والتقارير.
 
 الفحوص تشمل الأصل ونوع المحتوى وحجم الطلب المتدفق وبنية DOCX وتحديد الطلبات وحماية الصفحة وحفظ البيانات. لا تمثل هذه الفحوص اختبار اختراق شاملًا أو ضمانًا لعدم وجود ثغرات غير معلنة.
+
+
+## Local-only reports and public read requests (revision 43)
+
+The `/api/word` and `/api/word.docx` upload services have been retired (410); no request body is consumed. Reports, searches, observer coordinates and watchlists remain in browser storage/memory unless the user explicitly exports or shares a file. Forms cannot submit (`form-action 'none'`) and third-party frames are blocked (`frame-src 'none'`). Older upload-service descriptions above are historical and no longer describe the current deployment.
+
+A generated public-resource list restricts application fetch/XHR requests to read-only static resources and fixed public orbital group queries. Arbitrary parameters, per-object NORAD queries, bodies, custom headers, credentials, beacons and sockets are rejected. The same guard runs in the calculation workers; it does not run in propagation loops. This supplements CSP and trusted-code review; it does not protect a compromised browser/device or make same-origin hostile code safe. User-opened external links and user-chosen OS sharing destinations remain outside this guarantee.
+
+Saved data is currently not encrypted by Madar. Updates may be disabled independently of local saving; disabling them does not make initial site/resource loading offline or conceal the network address from the hosting provider.

@@ -1480,5 +1480,14 @@
   "تواريخ النسخ الاحتياطية المستخدمة:": "Backup snapshot dates used:",
   "تُعرض تواريخ النسخ الاحتياطية المستخدمة ضمن مؤشرات البيانات عند توفرها.": "Backup snapshot dates are shown in the data indicators when available.",
   "تاريخ النسخة غير موثق": "Snapshot date not documented",
-  "تاريخ النسخة": "Snapshot date"
+  "تاريخ النسخة": "Snapshot date",
+  "البحث والإحداثيات والمتابعة والتقارير تبقى على جهازك. التنزيل محلي، ولا يوجد رفع للتقارير أو مشغل بث خارجي داخل مدار.": "Searches, coordinates, watchlists and reports stay on your device. Downloads are local; Madar has no report upload or embedded external video player.",
+  "السماح بتحديث مجموعات البيانات العامة": "Allow updates of public datasets",
+  "إيقاف التحديثات يستخدم البيانات المتاحة؛ قد يظل تحميل ملفات الموقع متصلًا بالاستضافة. فتح رابط خارجي ينقلك إلى جهة أخرى، والمشاركة ترسل الملف إلى التطبيق الذي تختاره.": "Turning updates off uses available data; loading site files may still contact the host. External links take you to another provider, and sharing sends the file to the app you choose.",
+  "مفعّل: طلبات تحديث لمجموعات عامة فقط؛ لا يُرسل نص البحث أو الإحداثيات أو التقارير.": "Enabled: public dataset update requests only; search text, coordinates and reports are not sent.",
+  "متوقف: تستخدم المدارات المحفوظة أو الاحتياطية؛ لم تُطلب عناصر جديدة.": "Disabled: cached or backup orbits are used; no new elements are requested.",
+  "منع وضع الخصوصية هذا الاتصال؛ تبقى بيانات العمل على الجهاز.": "Privacy mode blocked this connection; your work stays on this device.",
+  "البث المضمن متوقف لحماية الخصوصية. يمكنك فتح موقع المصدر خارج مدار.": "Embedded video is disabled for privacy. You can open the provider website outside Madar.",
+  "مشاهد الأرض من محطة الفضاء الدولية عبر كاميرا NASA. تفتح المشاهدة في موقع المصدر خارج مدار.": "Earth views from the ISS via NASA cameras. Viewing opens on the provider website outside Madar.",
+  "تعذّر تحميل مكوّن Word. حاول مجددًا.": "Could not load the Word component. Try again."
 }
