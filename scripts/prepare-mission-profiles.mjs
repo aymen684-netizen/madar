@@ -10,6 +10,7 @@ for(const file of fs.readdirSync('public/data').filter(f=>f.endsWith('.txt'))){
   if(name&&!/^[12] /.test(name))names.set(id,name);
  }
 }
+for(const o of JSON.parse(fs.readFileSync('public/data/active-omm.json','utf8')))names.set(String(o.NORAD_CAT_ID),o.OBJECT_NAME);
 const satellites={};const programs={};
 for(const [key,p]of Object.entries(input.programs)){
  const {pattern,...description}=p;assert(new URL(p.source).protocol==='https:');programs[key]=description;
