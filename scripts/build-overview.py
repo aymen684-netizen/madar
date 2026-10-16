@@ -29,9 +29,8 @@ for lang,entries in content.items():
             for run in p.runs:
                 rtl=OxmlElement('w:rtl');rtl.set(qn('w:val'),'1');run._r.get_or_add_rPr().append(rtl)
                 fonts=OxmlElement('w:rFonts');fonts.set(qn('w:cs'),'Arial');run._r.get_or_add_rPr().append(fonts)
-        if text in ['التحليل وموقع الرصد','Comparison and observer-site reports']:p.paragraph_format.page_break_before=True
     path=ROOT/('public/downloads/madar-overview'+('' if ar else '-en')+'.docx')
     doc.core_properties.title=entries[0][0];doc.core_properties.author='Madar';doc.core_properties.subject='Application features and usage'
     doc.save(path)
-    data={'sha256':hashlib.sha256(path.read_bytes()).hexdigest(),'version':'15 أكتوبر 2026' if ar else '15 October 2026','paragraphs':[{'text':t,'heading':bool(h and i)}for i,(t,h)in enumerate(entries)]}
+    data={'sha256':hashlib.sha256(path.read_bytes()).hexdigest(),'version':'16 أكتوبر 2026' if ar else '16 October 2026','paragraphs':[{'text':t,'heading':bool(h and i)}for i,(t,h)in enumerate(entries)]}
     (ROOT/('public/data/program-overview'+('' if ar else '-en')+'.json')).write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n')
