@@ -1,5 +1,6 @@
 (function(root){'use strict';
-const $=id=>document.getElementById(id),space=document.querySelector('.space'),quick=$('shell-quick'),controls=quick.querySelector('.controls'),items=[quick,$('map-display'),$('data-health'),$('status'),document.querySelector('.draft-banner')].filter(Boolean),homes=new Map();
+const $=id=>document.getElementById(id),space=document.querySelector('.space'),quick=$('shell-quick'),controls=quick.querySelector('.controls'),counter=document.querySelector('.scene-top>div:last-child'),items=[counter,quick,$('map-display'),$('data-health'),$('status'),document.querySelector('.draft-banner')].filter(Boolean),homes=new Map();
+counter.id='map-scope-count';
 for(const item of [...items,controls]){const home=document.createComment('map tool position');item.before(home);homes.set(item,home)}
 const dialog=document.createElement('dialog');dialog.id='map-tools-dialog';dialog.setAttribute('aria-labelledby','map-tools-title');dialog.innerHTML='<div class="map-sheet-head"><button type="button" id="map-sheet-handle" aria-label="اسحب إلى الأسفل لإغلاق أدوات الخريطة"><span></span></button><div><h2 id="map-tools-title">البحث وأدوات التتبع</h2><button type="button" id="map-tools-close" aria-label="إغلاق أدوات الخريطة">×</button></div></div><div id="map-sheet-content"></div>';document.body.append(dialog);
 const presets=document.createElement('section');presets.id='map-quick-presets';presets.setAttribute('aria-label','مجموعات جاهزة');TypePicker.mountPresets('catalog',presets);quick.append(presets);
