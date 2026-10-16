@@ -1,5 +1,5 @@
 (function(root){'use strict';
-const INTERVAL=2*3600000,SNAPSHOT='2026-10-13',cache=new Map(),pending=new Map(),connections=new Map();let stop=null;const relay=!!root.location&&/^https?:$/.test(root.location.protocol);
+const INTERVAL=2*3600000,SNAPSHOT='2026-10-13',cache=new Map(),pending=new Map(),connections=new Map();let stop=null;const relay=root.location?.hostname==='madar.aymen684.workers.dev'||root.document?.querySelector?.('meta[name="madar-orbit-relay"]')?.content==='enabled';
 function connection(key){return connections.get(key)||null}
 function status(key,value){connections.set(key,{group:key,checkedAt:Date.now(),...value});root.document?.dispatchEvent(new Event('orbit-connection'))}
 function mark(data,info){return Object.assign(data.map(o=>({...o,provenance:{...o.provenance,...info,format:o.omm?'OMM JSON':'TLE'}})),{rejected:data.rejected||0})}
