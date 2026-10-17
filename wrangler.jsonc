@@ -18,5 +18,17 @@
         "period": 60
       }
     }
-  ]
+  ],
+  "previews": {
+    "ratelimits": [
+      {
+        "name": "ORBIT_LIMITER",
+        "namespace_id": "784393",
+        "simple": {
+          "limit": 30,
+          "period": 60
+        }
+      }
+    ]
+  }
 }
