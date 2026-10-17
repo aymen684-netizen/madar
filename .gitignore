@@ -22,5 +22,6 @@ public/data/active-omm.json
 public/data/source-snapshot.json
 
 public/data/satellite-metadata-summary.json
+public/data/satellite-metadata-compact.json
 
 public/network-resources.js
