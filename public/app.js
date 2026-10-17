@@ -1,22 +1,6 @@
 'use strict';
 const $ = (id) => document.getElementById(id),
   S = window.satellite;
-const satelliteFont = {
-  familyName: 'Madar Satellite',
-  resolution: 1000,
-  boundingBox: { yMin: 0, yMax: 900 },
-  underlineThickness: 0,
-  glyphs: {
-    S: {
-      ha: 1400,
-      x_min: 0,
-      x_max: 1400,
-      o: 'm 0 280 l 430 280 l 430 650 l 0 650 l 0 280 m 500 210 l 900 210 l 900 730 l 500 730 l 500 210 m 970 280 l 1400 280 l 1400 650 l 970 650 l 970 280 m 400 430 l 1000 430 l 1000 500 l 400 500 l 400 430 m 665 720 l 735 720 l 735 900 l 665 900 l 665 720',
-    },
-  },
-};
-let defaultLabelFont = null,
-  renderedMarkerMode = null;
 const selection = SatelliteSelection.create();
 const satelliteCard = SatelliteCard.create({
   document,
@@ -57,6 +41,55 @@ let objects = [],
   fixedTime = null,
   globalCatalog = null,
   globalMode = false;
+const globeScene = GlobeScene.create({
+  document,
+  getGlobe: () => window.Globe,
+  viewport: () => ({ width: innerWidth, height: innerHeight }),
+  observeSize: (callback, holder) => new ResizeObserver(callback).observe(holder),
+  appearance: OrbitAppearance,
+  view: {
+    isSatelliteMode: satelliteMarkers,
+    selectedId: () => selection.current?.id,
+    fleet: () => window.MapFleet,
+  },
+  extensions: () => ({
+    picking: window.GlobePicking,
+    quality: window.RenderQuality,
+    lifecycle: window.RenderLifecycle,
+    draft: window.DraftState,
+  }),
+  particleObject: (point) => Swarm.object(point),
+  events: {
+    world: (value) => {
+      world = value;
+    },
+    candidates: pickableSatellites,
+    select: (object) => mapChoose(object, false),
+    refresh: () => {
+      pathAt = 0;
+      update();
+    },
+    error: (error) => console.error('Globe initialization', error),
+  },
+});
+const timeControls = TimeControls.create({
+  document,
+  getTime: dateNow,
+  getState: () => ({ fixedTime, paused, pausedAt }),
+  setState: (patch) => {
+    if (patch.fixedTime !== undefined) fixedTime = patch.fixedTime;
+    if (patch.paused !== undefined) paused = patch.paused;
+    if (patch.pausedAt !== undefined) pausedAt = patch.pausedAt;
+  },
+  onRefresh: update,
+  onChange: ({ status = sourceMessage, list = false, focus = false }) => {
+    pathAt = 0;
+    setStatus(status);
+    if (list) renderList();
+    update();
+    if (focus) focusSelected();
+  },
+});
 const watchlist = WatchlistState.create({
   orbit: OrbitData,
   privacy: window.Privacy,
@@ -381,10 +414,7 @@ function updateGlobe() {
     return;
   }
   const mode = satelliteMarkers();
-  if (renderedMarkerMode !== mode) {
-    world.labelTypeFace(mode ? satelliteFont : defaultLabelFont);
-    renderedMarkerMode = mode;
-  }
+  globeScene.applyMarkerMode(world, mode);
   const now = dateNow();
   const matches = window.MapFleet?.display(rows()) || rows();
   const dense = matches.length > DETAIL_LIMIT && Swarm.supported();
@@ -473,147 +503,6 @@ function focusSelected() {
   if (world && p)
     world.pointOfView({ lat: p.lat, lng: p.lng, altitude: Math.max(1.8, p.alt + 1.1) }, 850);
 }
-function initGlobe(compat = false) {
-  try {
-    if (!window.Globe) throw Error('المكتبة غير متاحة');
-    const holder = $('globe');
-    world = (
-      compat
-        ? window.Globe({ waitForGlobeReady: false, animateIn: false })(holder)
-        : new window.Globe(holder, { waitForGlobeReady: false, animateIn: false })
-    )
-      .globeImageUrl('assets/earth.jpg')
-      .backgroundImageUrl('assets/stars.png')
-      .backgroundColor('#080d16')
-      .showAtmosphere(true)
-      .atmosphereColor('#63bce7')
-      .atmosphereAltitude(0.16)
-      .pointsMerge(false)
-      .pointLat('lat')
-      .pointLng('lng')
-      .pointAltitude('alt')
-      .pointRadius((d) =>
-        satelliteMarkers()
-          ? 0
-          : d.id === selection.current?.id
-            ? 0.34
-            : window.MapFleet?.has(d.id)
-              ? 0.27
-              : 0.18,
-      )
-      .pointResolution(6)
-      .pointColor(
-        (d) =>
-          window.MapFleet?.color(d.id) ||
-          (d.id === selection.current?.id
-            ? '#e8fff9'
-            : OrbitAppearance.color(OrbitAppearance.category(d.obj))),
-      )
-      .pointLabel((d) => {
-        const el = document.createElement('span');
-        el.textContent = d.name + ' · NORAD ' + d.id;
-        return el;
-      })
-      .onPointClick((d, e) => {
-        if (!window.GlobePicking?.handled(e)) mapChoose(d.obj, false);
-      })
-      .labelRotation((d) => (satelliteMarkers() ? d.bearing : 0))
-      .labelLat('lat')
-      .labelLng('lng')
-      .labelAltitude('alt')
-      .labelText((d) => (satelliteMarkers() ? 'S' : d.name))
-      .labelSize((d) => (satelliteMarkers() ? (d.id === selection.current?.id ? 0.9 : 0.65) : 0.7))
-      .labelColor(
-        (d) =>
-          window.MapFleet?.color(d.id) || (d.id === selection.current?.id ? '#8ecbff' : '#2795ff'),
-      )
-      .labelDotRadius(() => (satelliteMarkers() ? 0 : 0.3))
-      .onLabelClick((d, e) => {
-        if (!window.GlobePicking?.handled(e)) mapChoose(d.obj, false);
-      })
-      .labelResolution(2)
-      .pathPoints((d) => d)
-      .pathPointLat((d) => d[0])
-      .pathPointLng((d) => d[1])
-      .pathPointAlt((d) => d[2])
-      .pathColor((d) => d.fleetColor || '#ffd083')
-      .pathStroke(1.4)
-      .pathResolution(2)
-      .pathTransitionDuration(0)
-      .pointsTransitionDuration(0);
-    if (typeof world.particlesData === 'function')
-      world
-        .particleLat('lat')
-        .particleLng('lng')
-        .particleAltitude('alt')
-        .particlesSize(3)
-        .particlesSizeAttenuation(false)
-        .particlesColor((group) => OrbitAppearance.color(group.regime))
-        .particleLabel((d) => {
-          const o = Swarm.object(d);
-          if (!o) return '';
-          const el = document.createElement('span');
-          el.textContent = o.name + ' · NORAD ' + o.id;
-          return el;
-        })
-        .onParticleClick((d, e) => {
-          const o = Swarm.object(d);
-          if (o && !window.GlobePicking?.handled(e)) mapChoose(o, false);
-        });
-    window.GlobePicking?.install(holder, {
-      world: () => world,
-      candidates: pickableSatellites,
-      select: (o) => mapChoose(o, false),
-    });
-    window.RenderQuality?.attach(world);
-    defaultLabelFont = world.labelTypeFace();
-    renderedMarkerMode = null;
-    world.pointOfView({
-      lat: 22,
-      lng: 45,
-      altitude: innerWidth <= 700 ? Math.max(2, (innerHeight / innerWidth) * 1.4) : 2.6,
-    });
-    world.controls().minDistance = 110;
-    world.controls().maxDistance = 1100;
-    const size = () => {
-      if (holder.clientWidth > 0 && holder.clientHeight > 0)
-        world.width(holder.clientWidth).height(holder.clientHeight);
-    };
-    new ResizeObserver(size).observe(holder);
-    size();
-    window.RenderLifecycle?.attach(world, holder, () => {
-      pathAt = 0;
-      update();
-    });
-    $('map-error').hidden = true;
-    for (const id of ['plus', 'minus', 'reset']) $(id).disabled = false;
-    window.DraftState?.restoreCamera(world);
-  } catch (e) {
-    world = null;
-    if (!compat) {
-      $('globe').replaceChildren();
-      const script = document.createElement('script');
-      script.src = 'vendor/globe-compat.min.js';
-      script.onload = () => {
-        initGlobe(true);
-        pathAt = 0;
-        update();
-      };
-      script.onerror = () => {
-        $('map-error').hidden = false;
-        $('map-error').textContent =
-          'تعذّر تحميل العارض المتوافق. حدّث الصفحة أو افتح التطبيق في متصفح الجهاز.';
-      };
-      document.head.append(script);
-      return;
-    }
-    $('map-error').hidden = false;
-    $('map-error').textContent =
-      'تعذّر إكمال العرض. جرّب إعادة تحميل الصفحة أو فتح التطبيق في متصفح الجهاز.';
-    console.error('Globe initialization', e);
-    for (const id of ['plus', 'minus', 'reset', 'focus']) $(id).disabled = true;
-  }
-}
 $('globe-card-favorite').onclick = $('favorite').onclick = async () => {
   if (!selection.current) return;
   const exists = watchlist.has(selection.current.id);
@@ -661,33 +550,9 @@ for (const id of ['all', 'saved'])
     update();
   };
 $('focus').onclick = focusSelected;
-$('pause').onclick = () => {
-  if (fixedTime) return;
-  paused = !paused;
-  if (paused) pausedAt = new Date();
-  $('pause').textContent = paused ? '▶' : 'Ⅱ';
-  $('pause').setAttribute('aria-label', paused ? 'استئناف التحديث' : 'إيقاف التحديث مؤقتًا');
-  $('pause').classList.toggle('active', paused);
-  setStatus(sourceMessage);
-  pathAt = 0;
-  update();
-};
-function zoom(f) {
-  if (!world) return;
-  const p = world.pointOfView();
-  world.pointOfView({ ...p, altitude: Math.max(0.3, Math.min(9, p.altitude * f)) }, 300);
-}
-$('plus').onclick = () => zoom(0.8);
-$('minus').onclick = () => zoom(1.25);
-$('reset').onclick = () =>
-  world?.pointOfView(
-    {
-      lat: 22,
-      lng: 45,
-      altitude: innerWidth <= 700 ? Math.max(2, (innerHeight / innerWidth) * 1.4) : 2.6,
-    },
-    700,
-  );
+$('plus').onclick = () => globeScene.zoom(world, 0.8);
+$('minus').onclick = () => globeScene.zoom(world, 1.25);
+$('reset').onclick = () => globeScene.reset(world);
 $('clear-search').onclick = () => {
   $('search').value = '';
   $('search').oninput();
@@ -719,123 +584,55 @@ $('catalog-empty-browse').onclick = () => {
 $('catalog-empty-refresh').onclick = () => $('refresh').click();
 $('list-previous').onclick = () => changeListPage(-1);
 $('list-next').onclick = () => changeListPage(1);
-initTime();
-initGlobe();
+timeControls.bind();
+globeScene.initialize();
 renderList();
 load();
 setInterval(() => {
   if (!paused && !fixedTime && window.RenderLifecycle?.pageActive() !== false) update();
 }, 1000);
 
-function fillTime(d) {
-  const shifted = new Date(d.getTime() + Number($('timezone').value) * 3600000);
-  $('date').value = shifted.toISOString().slice(0, 10);
-  $('hour').value = String(shifted.getUTCHours()).padStart(2, '0');
-  $('minute').value = String(shifted.getUTCMinutes()).padStart(2, '0');
-  $('second').value = String(shifted.getUTCSeconds()).padStart(2, '0');
-  showWeekday();
-}
-function readTime() {
-  const ds = $('date').value,
-    fields = ['hour', 'minute', 'second'].map((id) => $(id).value);
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(ds) || fields.some((v) => v.trim() === ''))
-    throw Error('أدخل التاريخ والساعة والدقيقة والثانية.');
-  const [h, m, s] = fields.map(Number);
-  if (![h, m, s].every(Number.isInteger) || h < 0 || h > 23 || m < 0 || m > 59 || s < 0 || s > 59)
-    throw Error('الساعة من 0 إلى 23، والدقائق والثواني من 0 إلى 59.');
-  const offset = Number($('timezone').value),
-    base = new Date(ds + 'T00:00:00Z');
-  if (!Number.isFinite(base.getTime()) || base.toISOString().slice(0, 10) !== ds)
-    throw Error('التاريخ غير صالح.');
-  return new Date(base.getTime() + (h - offset) * 3600000 + m * 60000 + s * 1000);
-}
-function showWeekday() {
-  const d = new Date($('date').value + 'T12:00:00Z');
-  $('weekday').textContent = Number.isFinite(d.getTime())
-    ? 'اليوم: ' + new Intl.DateTimeFormat('ar-SA', { weekday: 'long', timeZone: 'UTC' }).format(d)
-    : '';
-}
-function initTime() {
-  fillTime(new Date());
-  $('date').onchange = showWeekday;
-  $('timezone').onchange = () => {
-    fillTime(dateNow());
-    update();
-  };
-  $('time-form').onsubmit = (e) => {
-    e.preventDefault();
-    try {
-      fixedTime = readTime();
-      paused = false;
-      $('pause').disabled = true;
-      pathAt = 0;
-      $('time-message').textContent =
-        'موضع محسوب من العناصر المتاحة؛ لم يُحمّل أرشيف مداري خاص بالتاريخ المختار.';
-      setStatus('◷ وقت محدد · المواقع تقديرية');
-      renderList();
-      update();
-      focusSelected();
-    } catch (err) {
-      $('time-message').textContent = err.message;
-    }
-  };
-  $('live').onclick = () => {
-    fixedTime = null;
-    paused = false;
-    pausedAt = null;
-    $('pause').disabled = false;
-    $('pause').textContent = 'Ⅱ';
-    $('pause').classList.toggle('active', false);
-    $('pause').setAttribute('aria-label', 'إيقاف التحديث مؤقتًا');
-    pathAt = 0;
-    fillTime(new Date());
-    $('time-message').textContent = '● موضع محسوب بالوقت الحالي';
-    setStatus('● الوقت الحالي · تحديث الحساب كل ثانية، وليس قياسًا جديدًا');
-    renderList();
-    update();
-  };
-  $('search-form').onsubmit = async (e) => {
-    e.preventDefault();
-    const q = $('search').value.trim();
-    if (!q) {
-      $('search-info').textContent = 'اكتب اسم القمر أو رقم NORAD أولًا.';
+$('search-form').onsubmit = async (e) => {
+  e.preventDefault();
+  const q = $('search').value.trim();
+  if (!q) {
+    $('search-info').textContent = 'اكتب اسم القمر أو رقم NORAD أولًا.';
+    return;
+  }
+  const b = $('global-search');
+  b.disabled = true;
+  b.textContent = 'جارٍ البحث…';
+  try {
+    if (window.TypePicker?.selected('catalog').length) {
+      await load();
+      const matches = rows();
+      $('search-info').textContent = matches.length + ' نتيجة ضمن الأنواع المختارة';
+      if (matches.length) choose(matches[0]);
       return;
     }
-    const b = $('global-search');
-    b.disabled = true;
-    b.textContent = 'جارٍ البحث…';
-    try {
-      if (window.TypePicker?.selected('catalog').length) {
-        await load();
-        const matches = rows();
-        $('search-info').textContent = matches.length + ' نتيجة ضمن الأنواع المختارة';
-        if (matches.length) choose(matches[0]);
-        return;
-      }
-      await loadGlobalCatalog();
-      globalMode = true;
-      onlySaved = false;
-      $('all').classList.toggle('active', true);
-      $('saved').classList.toggle('active', false);
-      const matches = rows();
-      $('search-info').textContent =
-        matches.length +
-        ' نتيجة في فهرس ' +
-        globalCatalog.length +
-        ' قمر نشط · ' +
-        describeDataset(globalCatalog);
-      reconcileSelection();
-      renderList();
-      if (matches.length) choose(matches[0]);
-      else update();
-    } catch {
-      $('search-info').textContent = 'تعذّر فتح الفهرس. البحث متاح في المجموعة الحالية.';
-    } finally {
-      b.disabled = false;
-      b.textContent = '⌕ البحث في جميع الأقمار النشطة';
-    }
-  };
-}
+    await loadGlobalCatalog();
+    globalMode = true;
+    onlySaved = false;
+    $('all').classList.toggle('active', true);
+    $('saved').classList.toggle('active', false);
+    const matches = rows();
+    $('search-info').textContent =
+      matches.length +
+      ' نتيجة في فهرس ' +
+      globalCatalog.length +
+      ' قمر نشط · ' +
+      describeDataset(globalCatalog);
+    reconcileSelection();
+    renderList();
+    if (matches.length) choose(matches[0]);
+    else update();
+  } catch {
+    $('search-info').textContent = 'تعذّر فتح الفهرس. البحث متاح في المجموعة الحالية.';
+  } finally {
+    b.disabled = false;
+    b.textContent = '⌕ البحث في جميع الأقمار النشطة';
+  }
+};
 
 window.SatMetadata?.load()
   .then(() => {

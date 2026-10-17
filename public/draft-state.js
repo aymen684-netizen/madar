@@ -127,7 +127,7 @@
       setTimeout(() => root.scrollTo?.({ top: scroll, behavior: 'instant' }), 100);
       for (const prefix of ['catalog', 'report', 'analysis']) root.TypePicker?.sync(prefix);
       reportDay();
-      showWeekday();
+      timeControls.weekday();
       const ft = snapshot.fixedTime ? new Date(snapshot.fixedTime) : null;
       fixedTime = ft && Number.isFinite(+ft) ? ft : null;
       paused = !!snapshot.paused && !fixedTime;
