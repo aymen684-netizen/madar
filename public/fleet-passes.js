@@ -15,6 +15,8 @@
     form = $('fleet-pass-form'),
     list = $('fleet-pass-list'),
     rows = new Map();
+  $('fleet-pass-window').dir = 'ltr';
+  $('fleet-pass-window').dataset.noTranslate = '';
   let worker = null,
     generation = 0,
     pending = null,
@@ -77,7 +79,8 @@
       value = document.createElement('bdi');
     title.textContent = label;
     value.dataset.noTranslate = '';
-    p.append(title, ' · ', value);
+    value.dir = 'ltr';
+    p.append(title, value);
     parent.append(p);
     return value;
   }

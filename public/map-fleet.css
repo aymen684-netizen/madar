@@ -133,6 +133,15 @@
 #fleet-pass-list p {
   margin-block: 6px;
 }
+#fleet-pass-list bdi {
+  display: block;
+  text-align: start;
+  font-variant-numeric: tabular-nums;
+}
+#fleet-pass-window {
+  text-align: start;
+  font-variant-numeric: tabular-nums;
+}
 .fleet-pass-name {
   width: 100%;
   text-align: start;
