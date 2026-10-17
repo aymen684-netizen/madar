@@ -53,6 +53,31 @@ assert(!I.translate('زمن غير منشور', 'en').includes('From'));
 assert.equal(I.translate('عرض 12 من 50 نتيجة', 'en'), 'Showing 12 of 50 results');
 assert.equal(I.translate('عرض 10.2°، طول -3.4°', 'en'), 'Latitude 10.2°, longitude -3.4°');
 assert.equal(I.translate('مدار · تقارير 34', 'en'), 'Madar · Reports 34');
+assert.equal(I.translate('اليوم: Saturday', 'en'), 'Day: Saturday');
+assert.equal(
+  I.translate('عناصر UTC 2026-10-16 12:00:00 · جلب UTC 2026-10-17 00:00:00', 'en'),
+  'Element epoch (UTC) 2026-10-16 12:00:00 · Retrieved at (UTC) 2026-10-17 00:00:00',
+);
+assert.equal(
+  I.translate(
+    'زاوية الذروة درجة / المسافة عند الذروة كم / سمت الدخول درجة / سمت الخروج درجة',
+    'en',
+  ),
+  'Peak elevation (degrees) / Range at peak elevation (km) / Entry azimuth (degrees) / Exit azimuth (degrees)',
+);
+const precisionNote = I.translate(
+  'النتائج تقديرية من العناصر المدارية المتاحة، وليست إثباتًا تاريخيًا للمرور. الحدود تقريبية من Natural Earth، والفحص على فواصل زمنية قد يفوّت مرورًا أقصر من خطوة الفحص. تُصقل أوقات الدخول والخروج إلى ثانية ضمن الفواصل المكتشفة.',
+  'en',
+);
+assert(precisionNote.includes('one-second resolution'));
+assert(precisionNote.includes('not historical evidence'));
+assert(precisionNote.includes('may miss passes'));
+const sharingNote = I.translate(
+  'عند إيقاف التحديثات تستخدم المدارات المحفوظة أو الاحتياطية المتاحة، وقد تتصل ملفات الموقع بالاستضافة. فتح رابط خارجي أو مشاركة ملف ينقلك إلى جهة أخرى تختارها.',
+  'en',
+);
+assert(sharingNote.includes('loading site files may still contact the hosting service'));
+assert(sharingNote.includes('sharing sends the file to the app you choose'));
 const built = regexBuilds;
 assert(built > 0);
 I.translate('مدار · تقارير 35', 'en');
