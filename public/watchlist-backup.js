@@ -94,7 +94,7 @@
     return { items, rejected, duplicates: valid.length - items.length, total: file.items.length };
   }
   function pack(items, time = new Date()) {
-    if (!items.length) throw Error('قائمة المتابعة فارغة.');
+    if (!items.length) throw Error('المفضلة فارغة.');
     if (items.length > MAX_ITEMS) throw Error('القائمة تتجاوز 20,000 سجل.');
     const clean = OrbitData.merge([items.map(record)]).map((o) => {
       const row = OrbitData.serialize(o);
@@ -216,7 +216,7 @@
       staged = read(text);
       preview();
       $('watchlist-preview').hidden = false;
-      status.textContent = 'المعاينة جاهزة. لم تتغير قائمة المتابعة بعد.';
+      status.textContent = 'المعاينة جاهزة. لم تتغير المفضلة بعد.';
     } catch (e) {
       if (revision === token) status.textContent = e.message;
     } finally {
@@ -225,7 +225,7 @@
   };
   $('watchlist-cancel').onclick = () => {
     cancel();
-    status.textContent = 'أُلغيت المعاينة. قائمة المتابعة لم تتغير.';
+    status.textContent = 'أُلغيت المعاينة. المفضلة لم تتغير.';
   };
   $('watchlist-apply').onclick = async () => {
     if (!staged || busy) return;
@@ -251,10 +251,10 @@
           ? ' الاستعادة لهذه الجلسة فقط لأن الحفظ على الجهاز متوقف.'
           : !durable
             ? ' تعذّر الحفظ الدائم؛ القائمة متاحة لهذه الجلسة فقط.'
-            : ' حُفظت قائمة المتابعة.') +
+            : ' حُفظت المفضلة.') +
         ' قد تخفي التصفية بعض الأقمار؛ افتح المتابعة وأعد ضبط التصفية عند الحاجة.';
     } catch {
-      status.textContent = 'تعذّر إكمال الحفظ. راجع قائمة المتابعة وحالة الحفظ على الجهاز.';
+      status.textContent = 'تعذّر إكمال الحفظ. راجع المفضلة وحالة الحفظ على الجهاز.';
     } finally {
       busy = false;
       refresh();

@@ -7,7 +7,7 @@
   function sceneActive() {
     return pageActive() && (!binding || binding.active === true);
   }
-  function attach(renderer, element, onResume) {
+  function attach(renderer, element, onResume, onVisibility = () => {}) {
     binding?.dispose();
     const item = {
       renderer,
@@ -40,6 +40,7 @@
         item.active = next;
         if (next) renderer.resumeAnimation?.();
         else renderer.pauseAnimation?.();
+        onVisibility(next);
       }
       if ((next && changed) || pageReturned)
         root.queueMicrotask(() => {

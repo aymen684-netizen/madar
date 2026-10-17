@@ -143,7 +143,13 @@
         };
         observeSize(size, holder);
         size();
-        ext.lifecycle?.attach(world, holder, events.refresh);
+        ext.lifecycle?.attach(world, holder, events.refresh, () => ext.motion?.sync());
+        ext.motion?.attach(world, holder, {
+          active: () =>
+            (!ext.lifecycle || ext.lifecycle.sceneActive()) &&
+            (!document.body.dataset.shellView || document.body.dataset.shellView === 'map'),
+          tracking: () => view.isTracking(),
+        });
         $('map-error').hidden = true;
         for (const id of ['plus', 'minus', 'reset']) $(id).disabled = false;
         ext.draft?.restoreCamera(world);
@@ -180,6 +186,7 @@
       }
     }
     function zoom(world, factor) {
+      extensions().motion?.interrupt();
       if (!world) return;
       const camera = world.pointOfView();
       world.pointOfView(
@@ -188,6 +195,7 @@
       );
     }
     function reset(world) {
+      extensions().motion?.interrupt();
       world?.pointOfView(initialView(), 700);
     }
     return Object.freeze({ initialize, applyMarkerMode, zoom, reset });

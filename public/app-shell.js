@@ -25,9 +25,8 @@
   nav.id = 'shell-nav';
   nav.setAttribute('aria-label', 'التنقل الرئيسي');
   for (const [id, title] of [
-    ['map', 'التتبع'],
+    ['map', 'الخريطة'],
     ['catalog', 'دليل الأقمار'],
-    ['watchlist', 'المتابعة'],
     ['reports', 'التقارير'],
   ]) {
     const b = el('button', title);
@@ -253,7 +252,7 @@
     view = id;
     body.dataset.shellView = id;
     $('data-health').hidden = !['map', 'catalog', 'watchlist'].includes(id);
-    filters.hidden = id === 'watchlist';
+    filters.hidden = false;
     $('status').hidden = !['map', 'catalog', 'watchlist'].includes(id);
     if (id === 'watchlist' && $('catalog-country').value !== 'all') {
       $('catalog-country').value = 'all';
@@ -266,9 +265,11 @@
     quick.hidden = id !== 'map';
     heading.hidden = id === 'help' || id === 'reports';
     heading.textContent =
-      { map: 'التتبع', catalog: 'دليل الأقمار الصناعية', watchlist: 'قائمة المتابعة' }[id] || '';
+      { map: 'الخريطة', catalog: 'دليل الأقمار الصناعية', watchlist: 'دليل الأقمار الصناعية' }[
+        id
+      ] || '';
     for (const b of document.querySelectorAll('[data-shell-nav]')) {
-      const active = b.dataset.shellNav === id;
+      const active = b.dataset.shellNav === (id === 'watchlist' ? 'catalog' : id);
       b.classList.toggle('active', active);
       if (active) b.setAttribute('aria-current', 'page');
       else b.removeAttribute('aria-current');

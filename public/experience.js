@@ -60,13 +60,11 @@
     'report-run',
     'analysis-run',
     'observer-run',
-    'overview-preview',
     'live-video-play',
     'report-view-apply',
   ])
     $(id)?.classList.add('action-primary');
   for (const id of [
-    'program-overview',
     'report-download',
     'analysis-download',
     'observer-download',

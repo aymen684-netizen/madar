@@ -608,3 +608,52 @@ html[dir='ltr'] .guide-content {
     margin-top: 14px;
   }
 }
+
+/* Equal actions in the information page, including native links. */
+.shell-ready #shell-help .info-actions > :is(button, a),
+.shell-ready #shell-help > .launch {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 11px 16px;
+  font: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.5;
+  text-align: center;
+  border: 1px solid #53748d;
+  border-radius: 9px;
+  background: #142538;
+  color: #d2e8ff;
+  box-shadow: none;
+}
+.shell-ready #shell-help .info-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: 100%;
+}
+.shell-ready #shell-help .info-actions > :is(button, a) {
+  flex: 1 1 180px;
+}
+.shell-ready #shell-help :is(.info-actions > button, .info-actions > a, .launch):hover {
+  border-color: var(--cyan);
+  background: #20394f;
+}
+.globe-rotation-option {
+  flex-basis: 100%;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 14px;
+}
+.globe-rotation-option input {
+  width: auto;
+  margin: 0;
+}
+.globe-rotation-option small {
+  flex-basis: 100%;
+  color: var(--muted);
+}

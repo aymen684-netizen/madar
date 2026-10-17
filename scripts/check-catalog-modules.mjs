@@ -195,7 +195,7 @@ view.render(state);
 view.render({ ...state, dataset: data.slice() });
 assert.equal(node('list-previous').disabled, true, 'new source resets pagination');
 view.render({ ...state, data: [], dataset: [], saved: [], onlySaved: true });
-assert(node('list').children[0].textContent.includes('قائمة المتابعة فارغة'));
+assert(node('list').children[0].textContent.includes('المفضلة فارغة'));
 assert.equal(node('catalog-empty-browse').hidden, false);
 view.render({ ...state, data: [], dataset: [], loading: true });
 assert.equal(node('catalog-empty-actions').hidden, true);

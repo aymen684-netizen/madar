@@ -62,7 +62,7 @@
       for (const id of ['favorite', 'globe-card-favorite']) {
         const button = $(id);
         button.disabled = !object;
-        button.textContent = saved ? '★ إزالة من قائمة المتابعة' : '☆ إضافة إلى قائمة المتابعة';
+        button.textContent = saved ? '★ إزالة من المفضلة' : '☆ إضافة إلى المفضلة';
         button.setAttribute('aria-pressed', String(saved));
       }
     }

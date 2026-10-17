@@ -51,11 +51,13 @@ const globeScene = GlobeScene.create({
     isSatelliteMode: satelliteMarkers,
     selectedId: () => selection.current?.id,
     fleet: () => window.MapFleet,
+    isTracking: () => selection.tracking,
   },
   extensions: () => ({
     picking: window.GlobePicking,
     quality: window.RenderQuality,
     lifecycle: window.RenderLifecycle,
+    motion: window.GlobeMotion,
     draft: window.DraftState,
   }),
   particleObject: (point) => Swarm.object(point),
@@ -311,6 +313,7 @@ let selectionFrame = 0,
   selectionTask = 0;
 function choose(o, focus = true) {
   if (!o) return;
+  window.GlobeMotion?.interrupt();
   selection.select(o);
   showGlobeCard();
   pathAt = 0;
@@ -362,6 +365,7 @@ function changeListPage(delta) {
   catalogList.focusFirst();
 }
 function update({ scene = true } = {}) {
+  window.GlobeMotion?.sync();
   if (window.RenderLifecycle?.pageActive() === false) return;
   const now = dateNow();
   window.MapDisplay?.status(rows());
@@ -502,6 +506,7 @@ function updateGlobe() {
   updateGlobeCard();
 }
 function focusSelected() {
+  window.GlobeMotion?.interrupt();
   const p = position(selection.current);
   if (world && p)
     world.pointOfView({ lat: p.lat, lng: p.lng, altitude: Math.max(1.8, p.alt + 1.1) }, 850);
@@ -515,7 +520,7 @@ $('globe-card-favorite').onclick = $('favorite').onclick = async () => {
   update();
   const durable = await watchlist.save();
   setStatus(
-    (exists ? 'تمت إزالة القمر من قائمة المتابعة.' : '★ أُضيف القمر للمتابعة.') +
+    (exists ? 'تمت إزالة القمر من المفضلة.' : '★ أُضيف القمر إلى المفضلة.') +
       (!window.Privacy.persistent()
         ? ' لهذه الجلسة فقط.'
         : !durable
@@ -657,7 +662,7 @@ $('follow-group').onclick = async () => {
   setStatus(
     '★ أُضيف ' +
       (watchlist.items.length - old) +
-      ' قمر إلى قائمة المتابعة.' +
+      ' قمر إلى المفضلة.' +
       (!window.Privacy.persistent()
         ? ' لهذه الجلسة فقط.'
         : !durable
@@ -722,6 +727,7 @@ window.addEventListener('resize', positionGlobeCard);
 window.addEventListener('scroll', positionGlobeCard, { passive: true });
 $('track-selected').onclick = () => {
   selection.toggleTracking();
+  window.GlobeMotion?.interrupt();
   updateGlobeCard();
   if (selection.tracking) focusSelected();
 };

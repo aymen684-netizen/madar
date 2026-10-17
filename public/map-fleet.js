@@ -24,7 +24,7 @@
   panel.id = 'map-fleet-panel';
   panel.className = 'map-fleet-panel';
   panel.innerHTML =
-    '<summary>متابعة عدة أقمار · حتى 12</summary><p class="muted">أضف قمرًا من بطاقته أو فعّل التحديد بالضغط على الخريطة. لكل قمر لون ثابت؛ تظهر المختارة حتى عند تغيير المجموعة. هذه المتابعة مستقلة عن المفضلة وتصفية الدليل ونطاق التقارير.</p><label><input id="map-fleet-multi" type="checkbox">تحديد عدة أقمار بالضغط على الخريطة</label><label><input id="map-fleet-only" type="checkbox">إظهار المختارة فقط</label><label><input id="map-fleet-paths" type="checkbox" checked>إظهار مسارات المختارة</label><p id="map-fleet-status" class="muted" role="status" aria-live="polite"></p><ol id="map-fleet-list"></ol><button id="map-fleet-clear" type="button">إزالة جميع المختارة</button><p class="muted">المسارات تقديرات للدورة التالية من العناصر المتاحة. قد يكون بعض الأقمار خلف الأرض أو بلا موضع صالح. الحفظ يتبع خيار «حفظ عملي على هذا الجهاز».</p>';
+    '<summary>مجموعة الخريطة · حتى 12</summary><p class="muted">أضف قمرًا من بطاقته أو فعّل التحديد بالضغط على الخريطة. لكل قمر لون ثابت؛ تظهر المختارة حتى عند تغيير المجموعة. هذه المجموعة مستقلة عن المفضلة وتصفية الدليل ونطاق التقارير.</p><label><input id="map-fleet-multi" type="checkbox">تحديد عدة أقمار بالضغط على الخريطة</label><label><input id="map-fleet-only" type="checkbox">إظهار المختارة فقط</label><label><input id="map-fleet-paths" type="checkbox" checked>إظهار مسارات المختارة</label><p id="map-fleet-status" class="muted" role="status" aria-live="polite"></p><ol id="map-fleet-list"></ol><button id="map-fleet-clear" type="button">إزالة جميع المختارة</button><p class="muted">المسارات تقديرات للدورة التالية من العناصر المتاحة. قد يكون بعض الأقمار خلف الأرض أو بلا موضع صالح. الحفظ يتبع خيار «حفظ عملي على هذا الجهاز».</p>';
   $('map-sheet-content').prepend(panel);
   let passesPending = null;
   panel.addEventListener('toggle', () => {
@@ -33,7 +33,7 @@
       for (const file of ['fleet-pass-core.js', 'fleet-passes.js']) {
         await new Promise((resolve, reject) => {
           const script = document.createElement('script');
-          script.src = file + '?v=65';
+          script.src = file + '?v=67';
           script.onload = resolve;
           script.onerror = () => {
             script.remove();
@@ -50,8 +50,8 @@
   const open = document.createElement('button');
   open.id = 'map-fleet-open';
   open.type = 'button';
-  open.title = 'متابعة عدة أقمار';
-  open.setAttribute('aria-label', 'متابعة عدة أقمار');
+  open.title = 'مجموعة الخريطة';
+  open.setAttribute('aria-label', 'مجموعة الخريطة');
   $('map-floating-tools').insertBefore(open, $('map-floating-tools').querySelector('.controls'));
   open.onclick = () => {
     MobileMap.open('search');
@@ -92,10 +92,10 @@
     LiveValues.text(
       pin,
       active
-        ? 'إزالة من متابعة الخريطة'
+        ? 'إزالة من مجموعة الخريطة'
         : model.size === 12
-          ? 'اكتملت متابعة 12 قمرًا؛ أزل قمرًا لإضافة آخر.'
-          : 'إضافة إلى متابعة الخريطة',
+          ? 'اكتملت مجموعة الخريطة: 12 قمرًا؛ أزل قمرًا لإضافة آخر.'
+          : 'إضافة إلى مجموعة الخريطة',
     );
     pin.setAttribute('aria-pressed', String(active));
     pin.style.setProperty('--fleet-color', model.color(o.id) || '#83efd3');
@@ -132,10 +132,10 @@
       remove.type = 'button';
       remove.className = 'fleet-remove';
       remove.textContent = '×';
-      remove.setAttribute('aria-label', T('إزالة من متابعة الخريطة') + ' · ' + entry.object.name);
+      remove.setAttribute('aria-label', T('إزالة من مجموعة الخريطة') + ' · ' + entry.object.name);
       remove.onclick = () => {
         model.remove(entry.object.id);
-        changed('أُزيل القمر من متابعة الخريطة.');
+        changed('أُزيل القمر من مجموعة الخريطة.');
       };
       row.append(name, remove);
       list.append(row);
@@ -164,7 +164,7 @@
       return status;
     }
     changed(
-      status === 'removed' ? 'أُزيل القمر من متابعة الخريطة.' : 'أُضيف القمر إلى متابعة الخريطة.',
+      status === 'removed' ? 'أُزيل القمر من مجموعة الخريطة.' : 'أُضيف القمر إلى مجموعة الخريطة.',
     );
     return status;
   }
@@ -232,7 +232,7 @@
   $('map-fleet-clear').onclick = () => {
     model.clear();
     isolated = false;
-    changed('أُزيلت جميع الأقمار من متابعة الخريطة.');
+    changed('أُزيلت جميع الأقمار من مجموعة الخريطة.');
   };
   root.MapFleet = {
     toggle,

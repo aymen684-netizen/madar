@@ -176,13 +176,6 @@
 .shell-ready #shell-card-slot .globe-card > strong {
   padding-inline-end: 20px;
 }
-.shell-ready[data-shell-view='watchlist'] .catalog > h2 {
-  font-size: 0;
-}
-.shell-ready[data-shell-view='watchlist'] .catalog > h2:after {
-  content: 'الأقمار المحفوظة';
-  font-size: 20px;
-}
 @media (max-width: 900px) {
   .shell-ready .layout {
     grid-template-columns: minmax(0, 1fr) 290px;
