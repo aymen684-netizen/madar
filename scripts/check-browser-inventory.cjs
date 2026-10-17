@@ -61,6 +61,11 @@ async function checkBrowserInventory(browser, url, output) {
       await page.goto(url);
       await page.waitForFunction(() => window.MadarShell && objects.length);
       await page.evaluate(() => MadarI18n.ready);
+      assert.equal(
+        requests.filter((r) => r.url.includes('/satellite-metadata-compact.json')).length,
+        1,
+      );
+      assert(!requests.some((r) => r.url.includes('/satellite-metadata-summary.json')));
       assert(!requests.some((r) => r.url.includes('/satellite-metadata.json')));
       assert.equal(await page.locator('#inventory-owner option').count(), 1);
       await page.click('#shell-nav-reports');

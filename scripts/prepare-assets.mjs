@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { compactMetadata } from './compact-metadata.mjs';
 const data = fs.readFileSync(new URL('../public/assets/flags.bundle.zip', import.meta.url));
 const root = new URL('../public/assets/flags/', import.meta.url);
 let at = 0,
@@ -62,6 +63,11 @@ fs.writeFileSync(
   JSON.stringify(summary),
 );
 console.log('Prepared compact identity catalog; full source fields load on demand');
+fs.writeFileSync(
+  new URL('../public/data/satellite-metadata-compact.json', import.meta.url),
+  JSON.stringify(compactMetadata(summary)),
+);
+console.log('Prepared deduplicated startup identities; legacy summary retained for cached clients');
 
 // A fixed list of public resources; user input is never an allowed URL parameter.
 const { ORBIT_GROUPS } = await import('../worker/orbit-groups.js');

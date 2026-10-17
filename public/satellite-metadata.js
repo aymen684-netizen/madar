@@ -28,11 +28,30 @@
       return '';
     }
   }
+  function validateSummary(base) {
+    if (base.compactVersion == null) return base;
+    if (base.compactVersion !== 1 || !Array.isArray(base.descriptionTemplates))
+      throw Error('unsupported identity catalog');
+    for (const record of Object.values(base.satellites)) {
+      const description = record.description;
+      if (description == null) continue;
+      const template = base.descriptionTemplates[description];
+      if (
+        !Number.isInteger(description) ||
+        description < 0 ||
+        !template ||
+        typeof template !== 'object' ||
+        Array.isArray(template)
+      )
+        throw Error('invalid identity description');
+    }
+    return base;
+  }
   function load() {
     if (catalog) return Promise.resolve(catalog);
     if (!pending)
       pending = Promise.all([
-        fetch('data/satellite-metadata-summary.json?v=42').then((r) => {
+        fetch('data/satellite-metadata-compact.json?v=62').then((r) => {
           if (!r.ok) throw Error('metadata unavailable');
           return r.json();
         }),
@@ -44,7 +63,7 @@
           .catch(() => null),
       ])
         .then(([base, extra]) => {
-          catalog = base;
+          catalog = validateSummary(base);
           details = base.sourceDetailsDeferred ? null : base;
           profiles = extra;
           indexProfiles(extra);
@@ -87,6 +106,10 @@
   function get(id) {
     const key = String(id),
       r = catalog?.satellites[key],
+      description =
+        catalog?.compactVersion === 1 && r?.description != null
+          ? catalog.descriptionTemplates[r.description]
+          : r,
       owner = catalog?.owners[r?.owner],
       fields = details?.satellites[key]?.catalog || r?.catalog;
     const profile = profiles?.satellites?.[key] || membership.get(key),
@@ -97,9 +120,9 @@
     const identitySource = /^[1-9]\d{0,8}$/.test(key)
       ? 'https://celestrak.org/satcat/records.php?CATNR=' + key
       : '';
-    let mission = r?.mission || 'لم يُعثر على وصف موثق للمهمة في المصادر المراجعة',
-      kind = r?.missionKind || 'unknown';
-    let missionSource = safeSource(r?.missionSource),
+    let mission = description?.mission || 'لم يُعثر على وصف موثق للمهمة في المصادر المراجعة',
+      kind = description?.missionKind || 'unknown';
+    let missionSource = safeSource(description?.missionSource),
       missionSourceTitle = 'مصدر وصف المهمة',
       missionNote = '',
       checked = '';
@@ -163,7 +186,7 @@
       objectType: typeLabels[r?.type] || 'غير متاح',
       retrieved: catalog?.retrieved || '',
       launch: r?.launch || 'غير متاح',
-      orbitSource: r?.orbitSource || 'CelesTrak',
+      orbitSource: description?.orbitSource || 'CelesTrak',
       ownerIso2: owner?.iso2 || '',
     };
   }
