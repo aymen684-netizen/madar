@@ -30,6 +30,7 @@ const satelliteCard = SatelliteCard.create({
   describeMetric: (label) => window.MadarGuide?.description(label),
   position: (object) => position(object),
 });
+const dataHealth = DataHealth.create({ document, orbit: OrbitData });
 const markerCache = new Map();
 let objects = [],
   onlySaved = false,
@@ -433,11 +434,6 @@ function update({ scene = true } = {}) {
   if (window.RenderLifecycle?.pageActive() === false) return;
   const now = dateNow();
   window.MapDisplay?.status(rows());
-  if ($('health-display'))
-    $('health-display').textContent =
-      new Date(now).toISOString().slice(0, 19).replace('T', ' ') +
-      ' UTC' +
-      (fixedTime ? ' · وقت مختار' : paused ? ' · متوقف مؤقتًا' : ' · موقع محسوب في الوقت الحالي');
   if (rows() !== lastRenderedRows) {
     reconcileSelection();
     renderList();
@@ -460,7 +456,22 @@ function update({ scene = true } = {}) {
     }).format(now) + (Number($('timezone').value) === 0 ? ' · UTC' : ' · الرياض');
   $('focus').disabled = !selection.current || !world;
   satelliteCard.renderDetails(selection.current, now);
-  renderDataHealth(selection.current, now);
+  dataHealth.render({
+    object: selection.current,
+    time: now,
+    byUser: selection.byUser,
+    fixedTime: !!fixedTime,
+    paused,
+    dataset: rows(),
+    sourceDataset: onlySaved
+      ? watchlist.items
+      : globalMode && globalCatalog
+        ? globalCatalog
+        : objects,
+    connection: window.OrbitService?.connection(
+      selection.current?.provenance?.group || loadedGroup || $('group').value,
+    ),
+  });
   if (scene) updateGlobe();
 }
 function satelliteMarkers() {
@@ -1027,136 +1038,6 @@ $('catalog-country').onchange = async () => {
   window.DraftState?.save();
 };
 
-let healthKey = '',
-  healthDataset = null;
-function renderDataHealth(o, time) {
-  const c = window.OrbitService?.connection(
-    o?.provenance?.group || loadedGroup || $('group').value,
-  );
-  if ($('health-connection'))
-    $('health-connection').textContent =
-      (c?.transport === 'server'
-        ? 'عبر خادم مدار'
-        : c?.transport === 'direct'
-          ? 'اتصال مباشر من المتصفح'
-          : 'لم يُفحص الاتصال بعد') +
-      ' · ' +
-      ({
-        live: 'وصلت بيانات من المصدر',
-        cache: 'نسخة محفوظة من جلب موثق',
-        blocked: 'الاتصال متوقف مؤقتًا',
-        error: 'تعذّر الاتصال',
-      }[c?.state] || 'بيانات احتياطية أو مستوردة') +
-      (c?.upstreamStatus ? ' · HTTP ' + c.upstreamStatus : '') +
-      (c?.retryAt
-        ? ' · إعادة المحاولة بعد ' +
-          new Date(c.retryAt).toISOString().slice(0, 19).replace('T', ' ') +
-          ' UTC'
-        : '');
-  if ($('health-count'))
-    $('health-count').textContent =
-      (onlySaved
-        ? watchlist.items
-        : globalMode && globalCatalog
-          ? globalCatalog
-          : objects
-      ).length.toLocaleString('en-US') +
-      ' سجلًا محمّلًا · ' +
-      rows().length.toLocaleString('en-US') +
-      ' نتيجة بعد التصفية';
-  const dataset = rows(),
-    sourceDataset = onlySaved
-      ? watchlist.items
-      : globalMode && globalCatalog
-        ? globalCatalog
-        : objects;
-  const key =
-    selection.byUser +
-    '|' +
-    (o?.id || '') +
-    '|' +
-    (o ? OrbitData.key(o) : '') +
-    '|' +
-    Math.floor(Number(time) / 60000) +
-    '|' +
-    JSON.stringify(o?.provenance || {});
-  if (key === healthKey && dataset === healthDataset) return;
-  healthKey = key;
-  healthDataset = dataset;
-  const panel = $('data-health');
-  if (!panel) return;
-  const h = o ? OrbitData.freshness(o, time) : null,
-    p = o?.provenance || {};
-  const stamp = (t) =>
-    Number.isFinite(Number(t)) && t != null
-      ? new Date(Number(t)).toISOString().slice(0, 19).replace('T', ' ') + ' UTC'
-      : 'غير متاح';
-  const modes = {
-    live: 'جلب مباشر من المصدر',
-    cache: 'نسخة محفوظة من جلب سابق',
-    local: 'نسخة احتياطية محلية',
-    derived: 'تصنيف تقريبي من النسخة الاحتياطية',
-    independent: 'رصد علني مستقل',
-    imported: 'بيانات مستوردة',
-  };
-  panel.dataset.level = h?.level || 'unknown';
-  const summary = $('data-health-summary');
-  summary.replaceChildren();
-  for (const [kind, text] of [
-    ['name', o && selection.byUser ? 'بيانات ' + o.name : 'حالة بيانات الأقمار'],
-    ['source', o ? modes[p.mode] || 'مصدر غير موثق' : null],
-    ['freshness', selection.byUser ? h?.label : 'تختلف حداثة العناصر بين الأقمار'],
-  ]) {
-    if (!text) continue;
-    const part = document.createElement('span');
-    part.className = 'health-badge health-' + kind;
-    part.textContent = text;
-    summary.append(part);
-  }
-  summary.title = selection.byUser
-    ? 'تفاصيل القمر المحدد: المصدر وتاريخ العناصر وآخر جلب ناجح؛ الحداثة محسوبة بالنسبة إلى وقت العرض.'
-    : 'حالة المصدر؛ اختر قمرًا لعرض حداثة عناصره وتفاصيله.';
-  $('health-source').textContent = o
-    ? OrbitData.sourceLabel(o) + ' · ' + (modes[p.mode] || 'سجل محفوظ دون تاريخ جلب موثق')
-    : '—';
-  $('health-format').textContent = o
-    ? o.omm
-      ? 'OMM JSON · يدعم أرقام NORAD الطويلة'
-      : 'TLE · تنسيق قديم لبيانات منشورة سابقًا'
-    : '—';
-  $('health-epoch').textContent = stamp(h?.epoch);
-  $('health-retrieved').textContent = stamp(p.fetchedAt);
-  $('health-distance').textContent =
-    h && Number.isFinite(h.hours)
-      ? (Number(time) >= h.epoch
-          ? 'تاريخ العناصر يسبق وقت العرض بـ '
-          : 'تاريخ العناصر يلي وقت العرض بـ ') +
-        h.hours.toFixed(1) +
-        ' ساعة؛ هذا عمر النموذج بالنسبة إلى العرض، وليس تأخر موضع القمر.'
-      : 'غير متاح';
-  const age = o && Number.isFinite(h?.epoch) ? (Date.now() - h.epoch) / 3600000 : NaN;
-  $('health-age').textContent = Number.isFinite(age)
-    ? (age >= 0 ? 'قبل الآن بـ ' : 'بعد الآن بـ ') + Math.abs(age).toFixed(1) + ' ساعة'
-    : 'غير متاح';
-  const old = dataset.filter((item) => OrbitData.freshness(item, time).level === 'old').length;
-  $('health-range').textContent =
-    old +
-    ' من ' +
-    dataset.length +
-    ' عنصرًا يبعد أكثر من 3 أيام عن وقت العرض؛ هذا مؤشر حداثة وليس نسبة دقة.';
-  $('health-note').textContent =
-    (p.mode === 'imported'
-      ? 'سجل مستورد من ملف؛ لم يُتحقق من مصدر عناصره ولم يحدث جلب مباشر عند استعادته. '
-      : '') +
-    (p.snapshot ? 'النسخة الاحتياطية: ' + p.snapshot + '. ' : '') +
-    (sourceDataset.note ? sourceDataset.note + ' ' : '') +
-    'يجري تحديث الحساب كل ثانية، ولا تصل قياسات جديدة كل ثانية. الدقة تتأثر بعمر العناصر والمناورات. ' +
-    (fixedTime ? 'لم يُحمّل أرشيف خاص بالتاريخ المختار. ' : '') +
-    'تُراجع بيانات المصدر تلقائيًا بعد انتهاء ساعتين عند ظهور الصفحة وفي الوقت الحالي. قد تبقى العناصر نفسها إذا لم ينشر المصدر نموذجًا أحدث؛ لا تُغيّر تواريخها لإظهار حداثة غير حقيقية.';
-  $('health-invalid').textContent = sourceDataset.rejected
-    ? 'استُبعد ' + sourceDataset.rejected + ' سجلًا غير صالح من الاستجابة.'
-    : '';
-}
 function positionGlobeCard() {
   if (window.MadarShell) {
     window.MadarShell.positionCard();
