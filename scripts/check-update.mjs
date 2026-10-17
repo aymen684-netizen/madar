@@ -88,13 +88,19 @@ const swarmContext = {
 };
 vm.createContext(swarmContext);
 vm.runInContext(fs.readFileSync('public/orbit-appearance.js', 'utf8'), swarmContext);
-assert.match(app, /\bconst\s+Swarm\s*=/);
-vm.runInContext(
-  app.slice(app.search(/\bconst\s+Swarm\s*=/), app.indexOf('\nfunction parse(')) +
-    '\nglobalThis.swarm=Swarm;',
-  swarmContext,
-);
-const swarm = swarmContext.swarm;
+const mapModule = {};
+vm.createContext(mapModule);
+vm.runInContext(fs.readFileSync('public/map-swarm.js', 'utf8'), mapModule);
+let sceneVisible = true;
+const dependencies = {
+  getWorld: () => swarmContext.world,
+  createWorker: () => new FakeWorker(),
+  serialize: groupsContext.OrbitData.serialize,
+  category: swarmContext.OrbitAppearance.category,
+  isSceneActive: () => sceneVisible,
+  onFailure: swarmContext.update,
+};
+const swarm = mapModule.MapSwarm.create(dependencies);
 const a = active.slice(0, 2),
   b = active.slice(2, 4);
 swarm.show(a, new Date(1000));
@@ -108,12 +114,20 @@ fakeWorker.onmessage({
   data: { type: 'positions', token: second, buf: new Float32Array([1, 2, 3, 4, 5, 6]) },
 });
 assert.equal(fakeWorker.messages.at(-1).time, 3000);
-assert.equal(swarm.object(drawn.flat().find((p) => p.i === 1)).id, b[1].id);
+const cachedPoint = drawn.flat().find((p) => p.i === 1);
+assert.equal(swarm.object(cachedPoint).id, b[1].id);
+fakeWorker.onmessage({
+  data: { type: 'positions', token: second, buf: new Float32Array([7, 8, 9, 10, 11, 12]) },
+});
+assert.equal(
+  drawn.flat().find((p) => p.i === 1),
+  cachedPoint,
+  'updates reuse the existing particle object',
+);
+assert.equal(cachedPoint.lat, 10);
 const refresh = b.map((o) => ({ ...o, l1: o.l1 + ' ' }));
 swarm.show(refresh, new Date(3000));
 assert.equal(fakeWorker.messages.at(-2).type, 'set', 'same IDs with new TLE must refresh');
-let sceneVisible = true;
-swarmContext.RenderLifecycle = { sceneActive: () => sceneVisible };
 swarm.show(refresh, new Date(4000));
 const messageCount = fakeWorker.messages.length,
   previousDrawing = drawn,
@@ -134,6 +148,56 @@ assert.equal(
 );
 swarm.show([], new Date(4000));
 assert.equal(drawn.length, 0);
+
+// A second map must not share the first map's worker, selection or failure state.
+let secondDrawing;
+const idle = mapModule.MapSwarm.create({
+  ...dependencies,
+  getWorld: () => ({
+    particlesData: (points) => {
+      secondDrawing = points;
+    },
+  }),
+});
+assert.equal(idle.object({ i: 0 }), undefined);
+idle.show(b, new Date(5000));
+const independentWorker = fakeWorker;
+independentWorker.onmessage({
+  data: {
+    type: 'positions',
+    token: independentWorker.messages[0].token,
+    buf: new Float32Array([1, 2, 3, 4, 5, 6]),
+  },
+});
+assert.equal(secondDrawing.flat().length, 2);
+const independentPoints = secondDrawing;
+assert.equal(mapModule.MapSwarm.create({ ...dependencies, createWorker: null }).supported(), false);
+assert(!mapModule.MapSwarm.create({ ...dependencies, getWorld: () => null }).supported());
+assert(!mapModule.MapSwarm.create({ ...dependencies, getWorld: () => ({}) }).supported());
+let failedCalls = 0;
+const failed = mapModule.MapSwarm.create({ ...dependencies, onFailure: () => failedCalls++ });
+failed.show(a, new Date(5000));
+const failedWorker = fakeWorker;
+failedWorker.onerror();
+assert(failedWorker.terminated);
+assert.equal(failedCalls, 1);
+assert.equal(failed.supported(), false);
+assert(idle.supported(), 'one failed worker must not disable another map instance');
+assert(!independentWorker.terminated);
+assert.equal(secondDrawing, independentPoints, 'one failure must not clear another renderer');
+assert.equal(idle.object({ i: 1 }).id, b[1].id);
+assert.equal(drawn.length, 0);
+const unavailable = mapModule.MapSwarm.create({
+  ...dependencies,
+  createWorker: () => {
+    throw Error('unavailable');
+  },
+});
+unavailable.show(a, new Date(5000));
+assert.equal(unavailable.supported(), false);
+console.log(
+  'PASS: isolated dense-map instances, explicit dependencies, unsupported renderers, worker failures and constructor fallback',
+);
 let keys = ['oneweb', 'analyst'];
 const pickerContext = {
   OrbitData: groupsContext.OrbitData,
