@@ -1,0 +1,38 @@
+(function (root) {
+  'use strict';
+  function next(item, time) {
+    if (item.invalid) return { state: 'invalid', pass: null };
+    const pass = item.rows.find((r) => r.exit > time);
+    return {
+      state: !pass ? 'none' : pass.entry <= time ? 'ongoing' : 'upcoming',
+      pass: pass || null,
+    };
+  }
+  function countdown(pass, time) {
+    const seconds = Math.max(
+      0,
+      Math.ceil(((pass.entry > time ? pass.entry : pass.exit) - time) / 1000),
+    );
+    return [Math.floor(seconds / 3600), Math.floor((seconds % 3600) / 60), seconds % 60]
+      .map((n) => String(n).padStart(2, '0'))
+      .join(':');
+  }
+  async function scan(S, objects, request, progress) {
+    root.ObserverEngine.validate(request);
+    if (
+      !objects.length ||
+      objects.length > 12 ||
+      objects.some((o) => !root.OrbitData.valid(o)) ||
+      new Set(objects.map((o) => Number(o.id))).size !== objects.length
+    )
+      throw Error('اختر من قمر واحد إلى 12 قمرًا صالحًا من متابعة الخريطة.');
+    const items = [];
+    for (const object of objects) {
+      const result = await root.ObserverEngine.scan(S, [object], request);
+      items.push({ id: object.id, invalid: result.invalid > 0, rows: result.rows });
+      progress?.({ done: items.length, total: objects.length });
+    }
+    return { start: request.start, end: request.end, items };
+  }
+  root.FleetPassCore = { next, countdown, scan };
+})(typeof self !== 'undefined' ? self : globalThis);

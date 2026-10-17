@@ -77,13 +77,20 @@
           offset,
           zoneLabel: offset === 3 ? 'الرياض UTC+03:00' : 'UTC',
           step: 10,
-          scopeName: e('scope').value === 'selected' ? 'القمر المحدد' : 'قائمة المتابعة',
+          scopeName:
+            e('scope').value === 'selected'
+              ? 'القمر المحدد'
+              : e('scope').value === 'fleet'
+                ? 'متابعة الخريطة · حتى 12 قمرًا'
+                : 'قائمة المتابعة',
         };
       ObserverEngine.validate(request);
       const data =
         e('scope').value === 'selected'
           ? [selection.current].filter(Boolean)
-          : watchlist.items.slice();
+          : e('scope').value === 'fleet'
+            ? root.MapFleet?.objects() || []
+            : watchlist.items.slice();
       if (!data.length) throw Error('اختر قمرًا أو أضف أقمارًا إلى المتابعة.');
       if (data.length > 500)
         throw Error('الحد الأقصى 500 قمر لهذا الحساب؛ اختر القمر المحدد أو قلّل المتابعة.');
