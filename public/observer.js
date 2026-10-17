@@ -80,7 +80,8 @@
           scopeName: e('scope').value === 'selected' ? 'القمر المحدد' : 'قائمة المتابعة',
         };
       ObserverEngine.validate(request);
-      const data = e('scope').value === 'selected' ? [selected].filter(Boolean) : favorites.slice();
+      const data =
+        e('scope').value === 'selected' ? [selection.current].filter(Boolean) : favorites.slice();
       if (!data.length) throw Error('اختر قمرًا أو أضف أقمارًا إلى المتابعة.');
       if (data.length > 500)
         throw Error('الحد الأقصى 500 قمر لهذا الحساب؛ اختر القمر المحدد أو قلّل المتابعة.');

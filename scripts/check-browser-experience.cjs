@@ -65,7 +65,7 @@ async function checkBrowserExperience(browser, url, output) {
     await page.screenshot({ path: output + '/experience-welcome-en.png' });
     await page.click('#welcome-start');
     assert(await page.locator('#welcome-dialog').isHidden());
-    await page.waitForFunction(() => selected);
+    await page.waitForFunction(() => selection.current);
     assert.equal(await page.locator('#shell-nav-reports').textContent(), 'Reports');
     assert(await page.locator('.brand img').isVisible());
     await page.waitForFunction(

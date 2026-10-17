@@ -21,14 +21,14 @@ async function checkBrowserOrbits(browser, url, output) {
   try {
     await page.goto(url);
     await page.waitForFunction(
-      () => objects.length === 1 && selected?.id === 100001 && selected.rec,
+      () => objects.length === 1 && selection.current?.id === 100001 && selection.current.rec,
     );
     await page.locator('#list button').first().click();
     assert((await page.locator('#globe-card-id').textContent()).includes('100001'));
     await page.locator('#data-health>summary').click();
     assert((await page.locator('#health-format').textContent()).includes('OMM JSON'));
     assert((await page.locator('#health-retrieved').textContent()).includes('UTC'));
-    const fetched = await page.evaluate(() => selected.provenance.fetchedAt);
+    const fetched = await page.evaluate(() => selection.current.provenance.fetchedAt);
     async function visibleCard() {
       await page.waitForFunction(() => {
         const r = document.getElementById('globe-card').getBoundingClientRect();
@@ -62,16 +62,16 @@ async function checkBrowserOrbits(browser, url, output) {
     assert.equal(favorite.l1, undefined);
     await page.reload();
     await page.waitForFunction(
-      () => objects.length === 1 && selected?.id === 100001 && favorites.length === 1,
+      () => objects.length === 1 && selection.current?.id === 100001 && favorites.length === 1,
     );
-    assert.equal(await page.evaluate(() => selected.provenance.fetchedAt), fetched);
+    assert.equal(await page.evaluate(() => selection.current.provenance.fetchedAt), fetched);
     assert.equal(calls, 1, 'reload must use the saved two-hour cache');
     const result = await page.evaluate(
       () =>
         new Promise((resolve, reject) => {
           const w = new Worker('report-worker.js?v=19'),
             start = +dateNow(),
-            p = position(selected),
+            p = position(selection.current),
             country = {
               geometry: {
                 type: 'Polygon',
@@ -107,7 +107,7 @@ async function checkBrowserOrbits(browser, url, output) {
             reject(Error(e.message));
           };
           w.postMessage({
-            objects: [OrbitData.serialize(selected)],
+            objects: [OrbitData.serialize(selection.current)],
             country,
             start,
             end: start + 60000,

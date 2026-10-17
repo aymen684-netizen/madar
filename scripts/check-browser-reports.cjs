@@ -244,8 +244,8 @@ async function checkBrowserReports(page, output) {
   await popup.close();
   await page.evaluate(() => {
     document.getElementById('observer-panel').open = true;
-    window.beforeObserverSelected = selected;
-    selected = observerTestObject;
+    window.beforeObserverSelected = selection.current;
+    selection.restore(observerTestObject, selection.byUser);
     const o = observerTestObject,
       t = OrbitData.epoch(o),
       pv = satellite.propagate(OrbitData.satrec(satellite, o), new Date(t)),
@@ -331,7 +331,7 @@ async function checkBrowserReports(page, output) {
   await page.screenshot({ path: output + '/observer-form-mobile.png' });
   await page.locator('#observer-results').scrollIntoViewIfNeeded();
   await page.screenshot({ path: output + '/observer-mobile.png' });
-  await page.evaluate(() => (selected = beforeObserverSelected));
+  await page.evaluate(() => selection.restore(beforeObserverSelected, selection.byUser));
   console.log(
     'PASS: normalized comparison, BOM CSV for Excel, verified downloadable SHA-256 input archive, PDF print view, real observer worker and Word with overhead geometry, mobile layout',
   );

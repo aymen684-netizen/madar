@@ -71,7 +71,7 @@
     const color = root.MapFleet?.color(d.id);
     n.classList.toggle('is-fleet', !!color);
     n.style.setProperty('--fleet-color', color || 'transparent');
-    n.classList.toggle('is-selected', d.id === selected?.id);
+    n.classList.toggle('is-selected', d.id === selection.current?.id);
     n.style.setProperty('--bearing', (d.bearing || 0) + 'deg');
     return n;
   }
@@ -81,7 +81,7 @@
       ? matches.length <= LIMIT
         ? points
         : points.filter(
-            (p) => root.MapFleet?.has(p.id) || (selectedByUser && p.id === selected?.id),
+            (p) => root.MapFleet?.has(p.id) || (selection.byUser && p.id === selection.current?.id),
           )
       : [];
     const ids = new Set(data.map((d) => d.id));

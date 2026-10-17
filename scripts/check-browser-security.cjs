@@ -52,7 +52,7 @@ async function checkBrowserSecurity(browser, url) {
     assert.equal(cleared.draft, null);
     assert.equal(cleared.seed, null);
     await page.selectOption('#group', 'stations');
-    await page.waitForFunction(() => objects.length < 100 && selected);
+    await page.waitForFunction(() => objects.length < 100 && selection.current);
     await page.locator('#list button').first().click();
     await page.click('#globe-card-favorite');
     await page.evaluate(async () => {

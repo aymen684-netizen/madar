@@ -101,7 +101,7 @@ async function checkBrowserConnection(browser, url, output) {
         path: output + '/source-details-en-' + (mobile ? 'mobile' : 'desktop') + '.png',
       });
       await page.evaluate(() => {
-        selected = null;
+        selection.restore(null, selection.byUser);
         update();
       });
       assert(await page.locator('#source-details').isHidden());
