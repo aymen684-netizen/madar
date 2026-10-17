@@ -41,7 +41,7 @@ async function checkBrowserWatchlist(browser, url, output) {
     await upload(page, 'not JSON');
     await page.waitForFunction(() => $('watchlist-status').textContent.includes('تعذّر قراءة'));
     assert((await page.locator('#watchlist-status').textContent()).includes('تعذّر قراءة'));
-    assert.equal(await page.evaluate(() => favorites.length), 1);
+    assert.equal(await page.evaluate(() => watchlist.items.length), 1);
     assert(await page.locator('#watchlist-preview').isHidden());
     const added = { ...fixture, NORAD_CAT_ID: 100002, OBJECT_NAME: 'TEST BACKUP 100002' },
       payload = JSON.stringify({
@@ -60,24 +60,24 @@ async function checkBrowserWatchlist(browser, url, output) {
       });
     await upload(page, payload);
     await page.waitForFunction(() => !$('watchlist-preview').hidden);
-    assert.equal(await page.evaluate(() => favorites.length), 1);
+    assert.equal(await page.evaluate(() => watchlist.items.length), 1);
     assert(
       (await page.locator('#watchlist-preview-text').textContent()).includes('سجلات مستبعدة: 1'),
     );
     await page.click('#watchlist-cancel');
-    assert.equal(await page.evaluate(() => favorites.length), 1);
+    assert.equal(await page.evaluate(() => watchlist.items.length), 1);
     await upload(page, payload);
     await page.waitForFunction(() => !$('watchlist-preview').hidden);
     await page.click('#watchlist-apply');
-    await page.waitForFunction(() => favorites.length === 2 && $('watchlist-preview').hidden);
+    await page.waitForFunction(() => watchlist.items.length === 2 && $('watchlist-preview').hidden);
     assert.equal(
-      await page.evaluate(() => favorites.find((o) => o.id === 100001).provenance.mode),
+      await page.evaluate(() => watchlist.items.find((o) => o.id === 100001).provenance.mode),
       'live',
     );
     assert.deepEqual(
       await page.evaluate(() => ({
-        mode: favorites.find((o) => o.id === 100002).provenance.mode,
-        fetchedAt: favorites.find((o) => o.id === 100002).provenance.fetchedAt,
+        mode: watchlist.items.find((o) => o.id === 100002).provenance.mode,
+        fetchedAt: watchlist.items.find((o) => o.id === 100002).provenance.fetchedAt,
       })),
       { mode: 'imported', fetchedAt: null },
     );
@@ -88,7 +88,7 @@ async function checkBrowserWatchlist(browser, url, output) {
     await page.keyboard.press('Escape');
     await page.reload();
     await page.waitForFunction(
-      () => favorites.length === 2 && window.WatchlistBackup && !$('restore-notice').hidden,
+      () => watchlist.items.length === 2 && window.WatchlistBackup && !$('restore-notice').hidden,
     );
     await page.keyboard.press('Escape');
     assert.equal(
@@ -126,7 +126,7 @@ async function checkBrowserWatchlist(browser, url, output) {
     await privatePage.waitForFunction(() => !$('watchlist-preview').hidden);
     await privatePage.click('#watchlist-apply');
     await privatePage.waitForFunction(
-      () => $('watchlist-preview').hidden && favorites.length === 1,
+      () => $('watchlist-preview').hidden && watchlist.items.length === 1,
     );
     assert(
       (await privatePage.locator('#watchlist-status').textContent()).includes('لهذه الجلسة فقط'),
@@ -134,7 +134,7 @@ async function checkBrowserWatchlist(browser, url, output) {
     assert.equal(await privatePage.evaluate(() => localStorage.getItem('orbit-favorites')), null);
     await privatePage.reload();
     await privatePage.waitForFunction(() => objects.length === 1);
-    assert.equal(await privatePage.evaluate(() => favorites.length), 0);
+    assert.equal(await privatePage.evaluate(() => watchlist.items.length), 0);
   } finally {
     await privateContext.close();
   }

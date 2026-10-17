@@ -96,7 +96,7 @@ async function checkBrowserMapFleet(browser, url, output) {
       await page.evaluate(() => mapChoose(objects[12], false));
       assert.equal(await page.evaluate(() => MapFleet.size), 12);
       assert((await page.locator('#globe-card-fleet').innerText()).includes('12'));
-      assert.equal(await page.evaluate(() => favorites.length), 0);
+      assert.equal(await page.evaluate(() => watchlist.items.length), 0);
       await page.click('#globe-card-close');
       await page.click('#map-fleet-open');
       await page.uncheck('#map-fleet-multi');

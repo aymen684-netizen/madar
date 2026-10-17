@@ -203,7 +203,7 @@ ae('analysis-form').onsubmit = async (e) => {
     let data;
     if (scope === 'types') data = await TypePicker.load('analysis');
     else if (scope === 'group') data = objects;
-    else if (scope === 'favorites') data = favorites;
+    else if (scope === 'favorites') data = watchlist.items;
     else data = await fetchCatalogGroup(scope);
     if (token !== analyticToken) return;
     if (data.failed?.length)

@@ -62,7 +62,8 @@ async function checkBrowserOrbits(browser, url, output) {
     assert.equal(favorite.l1, undefined);
     await page.reload();
     await page.waitForFunction(
-      () => objects.length === 1 && selection.current?.id === 100001 && favorites.length === 1,
+      () =>
+        objects.length === 1 && selection.current?.id === 100001 && watchlist.items.length === 1,
     );
     assert.equal(await page.evaluate(() => selection.current.provenance.fetchedAt), fetched);
     assert.equal(calls, 1, 'reload must use the saved two-hour cache');

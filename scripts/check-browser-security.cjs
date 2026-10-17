@@ -62,7 +62,7 @@ async function checkBrowserSecurity(browser, url) {
     assert(
       await page.evaluate(
         () =>
-          favorites.length === 1 &&
+          watchlist.items.length === 1 &&
           localStorage.getItem('orbit-favorites') === null &&
           localStorage.getItem('madar-draft-v1') === null,
       ),
@@ -88,7 +88,7 @@ async function checkBrowserSecurity(browser, url) {
     );
     await page.reload();
     await page.waitForFunction(() => typeof Privacy !== 'undefined' && objects.length);
-    assert.equal(await page.evaluate(() => favorites.length), 0);
+    assert.equal(await page.evaluate(() => watchlist.items.length), 0);
     assert.equal(await page.evaluate(() => StateStore.get('security-test')), null);
     await page.locator('#privacy-panel>summary').click();
     assert(!(await page.locator('#save-on-device').isChecked()));

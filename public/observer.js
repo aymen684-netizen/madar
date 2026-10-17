@@ -81,7 +81,9 @@
         };
       ObserverEngine.validate(request);
       const data =
-        e('scope').value === 'selected' ? [selection.current].filter(Boolean) : favorites.slice();
+        e('scope').value === 'selected'
+          ? [selection.current].filter(Boolean)
+          : watchlist.items.slice();
       if (!data.length) throw Error('اختر قمرًا أو أضف أقمارًا إلى المتابعة.');
       if (data.length > 500)
         throw Error('الحد الأقصى 500 قمر لهذا الحساب؛ اختر القمر المحدد أو قلّل المتابعة.');

@@ -135,7 +135,7 @@ reportEl('report-form').onsubmit = async (e) => {
     if (scope === 'types') data = await TypePicker.load('report');
     else if (scope === 'active') data = await loadGlobalCatalog();
     else if (['military', 'intelligence'].includes(scope)) data = await fetchCatalogGroup(scope);
-    else data = scope === 'favorites' ? favorites : objects;
+    else data = scope === 'favorites' ? watchlist.items : objects;
     if (data.failed?.length)
       throw Error('تعذّر تحميل بعض أنواع المجموعة الحالية: ' + data.failed.join('، '));
     if (!data.length) throw Error('قائمة الأقمار المختارة فارغة.');
