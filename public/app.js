@@ -1,7 +1,6 @@
 'use strict';
 const $ = (id) => document.getElementById(id),
   S = window.satellite;
-const liveText = (id, value) => LiveValues.text($(id), value);
 const satelliteFont = {
   familyName: 'Madar Satellite',
   resolution: 1000,
@@ -19,6 +18,18 @@ const satelliteFont = {
 let defaultLabelFont = null,
   renderedMarkerMode = null;
 const selection = SatelliteSelection.create();
+const satelliteCard = SatelliteCard.create({
+  document,
+  orbit: OrbitData,
+  values: LiveValues,
+  getMetadata: (id) => window.SatMetadata?.get(id),
+  sourceDetails: {
+    render: (object, metadata) => window.SourceDetails?.render(object, metadata),
+    clear: () => window.SourceDetails?.clear(),
+  },
+  describeMetric: (label) => window.MadarGuide?.description(label),
+  position: (object) => position(object),
+});
 const markerCache = new Map();
 let objects = [],
   onlySaved = false,
@@ -418,18 +429,6 @@ function changeListPage(delta) {
   $('list').scrollTop = 0;
   $('list').querySelector('button')?.focus({ preventScroll: true });
 }
-function epoch(o) {
-  return new Date(OrbitData.epoch(o));
-}
-function syncFavoriteButtons() {
-  const saved = !!selection.current && watchlist.has(selection.current.id);
-  for (const id of ['favorite', 'globe-card-favorite']) {
-    const button = $(id);
-    button.disabled = !selection.current;
-    button.textContent = saved ? '★ إزالة من قائمة المتابعة' : '☆ إضافة إلى قائمة المتابعة';
-    button.setAttribute('aria-pressed', String(saved));
-  }
-}
 function update({ scene = true } = {}) {
   if (window.RenderLifecycle?.pageActive() === false) return;
   const now = dateNow();
@@ -443,9 +442,10 @@ function update({ scene = true } = {}) {
     reconcileSelection();
     renderList();
   }
-  syncFavoriteButtons();
-  document.querySelector('.sat-identity').hidden = !selection.current;
-  $('epoch').hidden = !selection.current;
+  satelliteCard.syncFavorites(
+    selection.current,
+    !!selection.current && watchlist.has(selection.current.id),
+  );
   if ($('view-mode'))
     $('view-mode').textContent = fixedTime
       ? '◷ عرض في التاريخ والوقت المختارين'
@@ -459,55 +459,8 @@ function update({ scene = true } = {}) {
       timeZone: Number($('timezone').value) === 0 ? 'UTC' : 'Asia/Riyadh',
     }).format(now) + (Number($('timezone').value) === 0 ? ' · UTC' : ' · الرياض');
   $('focus').disabled = !selection.current || !world;
-  if (!selection.current) {
-    window.SourceDetails?.clear();
-    $('name').textContent = 'لا يوجد قمر محدد';
-    $('id').textContent = 'اختر مجموعة أو حدّث البيانات';
-    $('metrics').replaceChildren();
-    $('n2yo').hidden = true;
-    $('globe-card').hidden = true;
-    renderDataHealth(null, now);
-    if (scene) updateGlobe();
-    return;
-  }
-  const o = selection.current,
-    p = position(o);
-  $('name').textContent = o.name;
-  updateSatelliteMetadata(o);
-  $('id').textContent = 'NORAD ID · ' + o.id;
-  $('n2yo').hidden = false;
-  $('n2yo').href = 'https://www.n2yo.com/satellite/?s=' + o.id;
-  const orbital = OrbitData.fields(o),
-    motion = orbital.motion,
-    eccentricity = orbital.ecc,
-    a =
-      motion > 0
-        ? Math.pow(398600.4418 / Math.pow((motion * 2 * Math.PI) / 86400, 2), 1 / 3)
-        : null;
-  const intId = orbital.internationalId;
-  const vals = [
-    ['الارتفاع', p ? p.h.toFixed(1) + ' km' : 'غير متاح'],
-    ['السرعة', p ? p.speed.toFixed(2) + ' km/s' : 'غير متاح'],
-    ['خط العرض', p ? p.lat.toFixed(2) + '°' : '—'],
-    ['خط الطول', p ? p.lng.toFixed(2) + '°' : '—'],
-    ['الميل المداري', orbital.incl.toFixed(4) + '°'],
-    ['زمن الدورة', motion > 0 ? (1440 / motion).toFixed(1) + ' min' : '—'],
-    ['المعرّف الدولي', intId],
-    ['اللامركزية', eccentricity.toFixed(7)],
-    ['الحضيض التقريبي', a ? (a * (1 - eccentricity) - 6371).toFixed(1) + ' km' : '—'],
-    ['الأوج التقريبي', a ? (a * (1 + eccentricity) - 6371).toFixed(1) + ' km' : '—'],
-    ['الدورات في اليوم', motion.toFixed(5)],
-    ['المصدر', OrbitData.sourceLabel(o)],
-  ];
-  LiveValues.render($('metrics'), vals, (label) => window.MadarGuide?.description(label));
-  renderDataHealth(o, now);
-  const e = epoch(o),
-    age = Math.abs(now - e) / 864e5;
-  $('epoch').textContent =
-    'تاريخ العناصر: ' +
-    e.toISOString().slice(0, 16).replace('T', ' ') +
-    ' UTC' +
-    (age > 3 ? ' · الوقت المطلوب بعيد عن تاريخ العناصر بأكثر من 3 أيام؛ التقدير أقل دقة.' : '');
+  satelliteCard.renderDetails(selection.current, now);
+  renderDataHealth(selection.current, now);
   if (scene) updateGlobe();
 }
 function satelliteMarkers() {
@@ -975,59 +928,12 @@ function initTime() {
   };
 }
 
-function renderMetadataSources(links, m) {
-  if (!links) return;
-  const mode = selection.current?.provenance?.mode,
-    orbitUrl =
-      mode === 'independent'
-        ? 'https://mmccants.org/tles/'
-        : mode && mode !== 'imported'
-          ? 'https://celestrak.org/NORAD/elements/gp.php?CATNR=' +
-            encodeURIComponent(selection.current.id) +
-            '&FORMAT=json'
-          : '';
-  const entries = [
-      ['مصدر الهوية', m?.countrySource],
-      [m?.missionSourceTitle || 'مصدر المهمة', m?.missionSource],
-      ['مصدر مشغّل المنظومة', m?.operatorSource],
-      ['مصدر المدار', orbitUrl],
-    ],
-    key = JSON.stringify(entries);
-  if (links.dataset.sources === key) return;
-  links.dataset.sources = key;
-  links.replaceChildren();
-  for (const [label, url] of entries) {
-    if (!url) continue;
-    const a = document.createElement('a');
-    a.textContent = label + ' ↗';
-    a.href = url;
-    a.target = '_blank';
-    a.rel = 'noopener noreferrer';
-    links.append(a);
-  }
-}
-function updateSatelliteMetadata(o) {
-  const m = window.SatMetadata?.get(o.id);
-  liveText('sat-operator', m?.operator || 'غير موثق في المصادر المراجعة');
-  liveText('sat-owner-note', m?.ownerNote || '');
-  liveText('sat-country', m?.country || 'غير متاح');
-  liveText('sat-mission', m?.missionLabel || 'غير متاح');
-  liveText(
-    'sat-evidence',
-    (m?.evidenceLabel || 'جارٍ تحميل المعلومات') + (m?.checked ? ' · مراجعة ' + m.checked : ''),
-  );
-  liveText('sat-profile-note', m?.missionNote || '');
-  liveText('sat-launch', m?.launch || 'غير متاح');
-  liveText('sat-identity-date', m?.retrieved ? 'هوية الفهرس: ' + m.retrieved : '');
-  renderMetadataSources($('sat-meta-sources'), m);
-  window.SourceDetails?.render(o, m);
-}
 window.SatMetadata?.load()
   .then(() => {
-    if (selection.current) updateSatelliteMetadata(selection.current);
+    if (selection.current) satelliteCard.renderMetadata(selection.current);
   })
   .catch(() => {
-    if (selection.current) updateSatelliteMetadata(selection.current);
+    if (selection.current) satelliteCard.renderMetadata(selection.current);
   });
 
 $('follow-group').onclick = async () => {
@@ -1085,55 +991,20 @@ function motionBearing(a, b) {
   );
 }
 function showGlobeCard() {
-  if (!selection.current) return;
-  const card = $('globe-card');
-  if (card) {
-    card.hidden = false;
+  if (satelliteCard.show(selection.current)) {
     positionGlobeCard();
     updateGlobeCard();
   }
 }
 function updateGlobeCard() {
   if (selection.current) window.MapFleet?.card(selection.current);
-  const card = $('globe-card');
-  if (!card || card.hidden || !selection.current) return;
-  const m = window.SatMetadata?.get(selection.current.id),
-    p = position(selection.current);
-  liveText('globe-card-name', selection.current.name);
-  liveText(
-    'globe-card-id',
-    'NORAD ' + selection.current.id + ' · ' + OrbitData.fields(selection.current).internationalId,
-  );
-  liveText('globe-card-country', 'الدولة أو الجهة: ' + (m?.country || 'غير متاح'));
-  liveText('globe-card-mission', 'المهمة: ' + (m?.missionLabel || 'غير متاحة'));
-  liveText(
-    'globe-card-evidence',
-    (m?.evidenceLabel || 'جارٍ تحميل المعلومات') + (m?.checked ? ' · ' + m.checked : ''),
-  );
-  renderMetadataSources($('globe-card-sources'), m);
-  liveText(
-    'globe-card-data-status',
-    OrbitData.freshness(selection.current, dateNow()).label +
-      ' · ' +
-      (selection.current.omm ? 'OMM JSON' : 'TLE'),
-  );
-  liveText(
-    'globe-card-motion',
-    p ? 'الارتفاع ' + p.h.toFixed(1) + ' km · السرعة ' + p.speed.toFixed(2) + ' km/s' : '',
-  );
-  const flag = $('globe-card-flag');
-  flag.hidden = !m?.ownerIso2;
-  if (m?.ownerIso2) flag.src = 'assets/flags/' + m.ownerIso2.toLowerCase() + '.png';
-  $('track-selected').textContent = selection.tracking
-    ? 'إيقاف متابعة الحركة'
-    : 'متابعة حركة القمر';
-  $('track-selected').setAttribute('aria-pressed', String(selection.tracking));
+  satelliteCard.renderFloating(selection.current, { now: dateNow(), tracking: selection.tracking });
 }
 $('globe-card-close').onclick = () => {
-  $('globe-card').hidden = true;
+  satelliteCard.hide();
 };
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') $('globe-card').hidden = true;
+  if (e.key === 'Escape') satelliteCard.hide();
 });
 window.addEventListener('resize', positionGlobeCard);
 window.addEventListener('scroll', positionGlobeCard, { passive: true });

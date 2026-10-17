@@ -50,7 +50,7 @@ async function checkBrowserPicking(browser, url, output) {
             ]);
           }
           paused = true;
-          pausedAt = epoch(objects[0]);
+          pausedAt = new Date(OrbitData.epoch(objects[0]));
           choose(objects[1], false);
           $('globe-card').hidden = true;
           const p = position(objects[0]);
