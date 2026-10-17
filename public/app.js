@@ -22,7 +22,6 @@ const selection = SatelliteSelection.create();
 const markerCache = new Map();
 let objects = [],
   onlySaved = false,
-  favorites = [],
   world = null,
   paused = false,
   pausedAt = null,
@@ -33,39 +32,11 @@ let objects = [],
   fixedTime = null,
   globalCatalog = null,
   globalMode = false;
-try {
-  const v = JSON.parse(window.Privacy.localGet('orbit-favorites') || '[]');
-  favorites = Array.isArray(v)
-    ? v.filter((o) => o && typeof o.name === 'string' && OrbitData.valid(o))
-    : [];
-} catch {}
-let favoriteRevision = 0;
-const favoritesReady = (async () => {
-  try {
-    const record = await window.StateStore?.get('orbit-favorites-v2'),
-      localRevision = Number(window.Privacy.localGet('orbit-cache-favorites-revision') || 0);
-    if (record?.version === 2 && Array.isArray(record.items) && record.updated >= localRevision) {
-      favorites = record.items.filter((o) => o && typeof o.name === 'string' && OrbitData.valid(o));
-      favoriteRevision = record.updated;
-    } else favoriteRevision = localRevision;
-  } catch {}
-})();
-async function saveFavorites() {
-  const items = favorites.map(OrbitData.serialize),
-    updated = (favoriteRevision = Math.max(Date.now(), favoriteRevision + 1));
-  let local = false;
-  try {
-    window.Privacy.localSet('orbit-favorites', JSON.stringify(items));
-    window.Privacy.localSet('orbit-cache-favorites-revision', String(updated));
-    local = window.Privacy.persistent();
-  } catch {}
-  const durable = await window.StateStore?.put('orbit-favorites-v2', {
-    version: 2,
-    updated,
-    items,
-  });
-  return local || durable === true;
-}
+const watchlist = WatchlistState.create({
+  orbit: OrbitData,
+  privacy: window.Privacy,
+  store: window.StateStore,
+});
 // عرض جميع الأقمار على الكرة: المواقع تُحسب في خيط منفصل وتُرسم كنقاط خفيفة.
 const DETAIL_LIMIT = 1500;
 const Swarm = MapSwarm.create({
@@ -178,26 +149,10 @@ function describeDataset(data) {
   );
 }
 function refreshFavorites(data) {
-  const byId = new Map(data.map((o) => [o.id, o]));
-  let changed = false;
-  favorites = favorites.map((old) => {
-    const next = byId.get(old.id);
-    if (
-      next &&
-      OrbitData.epoch(next) >= OrbitData.epoch(old) &&
-      (OrbitData.key(next) !== OrbitData.key(old) ||
-        (next.provenance?.fetchedAt || 0) > (old.provenance?.fetchedAt || 0) ||
-        (!old.provenance && next.provenance))
-    ) {
-      changed = true;
-      return OrbitData.serialize(next);
-    }
-    return old;
-  });
-  if (changed) saveFavorites();
+  if (watchlist.refresh(data)) watchlist.save();
 }
 async function loadSingle(force = false) {
-  await favoritesReady;
+  await watchlist.ready;
   const token = ++requestId,
     group = $('group').value;
   await window.SatMetadata?.load().catch(() => null);
@@ -232,7 +187,7 @@ async function loadSingle(force = false) {
   if (selection.current && selection.byUser) focusSelected();
 }
 async function load(force = false) {
-  await favoritesReady;
+  await watchlist.ready;
   await window.SatMetadata?.load().catch(() => null);
   if (!window.TypePicker?.selected('catalog').length) return loadSingle(force);
   const token = ++requestId;
@@ -292,7 +247,7 @@ function rows() {
     age = $('catalog-freshness')?.value || 'all',
     sort = $('catalog-sort')?.value || 'original',
     time = +dateNow(),
-    dataset = onlySaved ? favorites : globalMode && globalCatalog ? globalCatalog : objects,
+    dataset = onlySaved ? watchlist.items : globalMode && globalCatalog ? globalCatalog : objects,
     key = JSON.stringify([query, country, onlySaved, age, sort, window.MapDisplay?.key()]),
     same = rowCache?.dataset === dataset && rowCache.key === key;
   if (same && (age === 'all' || (time >= rowCache.time && time < rowCache.until)))
@@ -361,7 +316,11 @@ function renderList() {
   list.replaceChildren();
   const data = rows();
   lastRenderedRows = data;
-  const dataset = onlySaved ? favorites : globalMode && globalCatalog ? globalCatalog : objects,
+  const dataset = onlySaved
+      ? watchlist.items
+      : globalMode && globalCatalog
+        ? globalCatalog
+        : objects,
     context = JSON.stringify([
       $('search').value,
       $('catalog-country').value,
@@ -378,7 +337,7 @@ function renderList() {
   const pages = Math.max(1, Math.ceil(data.length / LIST_SIZE));
   listPage = Math.min(listPage, pages - 1);
   const start = listPage * LIST_SIZE;
-  $('saved').textContent = '☆ المتابعة (' + favorites.length + ')';
+  $('saved').textContent = '☆ المتابعة (' + watchlist.items.length + ')';
   $('results-summary').textContent = data.length
     ? 'عرض ' +
       (start + 1) +
@@ -400,8 +359,8 @@ function renderList() {
   window.WatchlistBackup?.refresh();
   $('catalog-empty-actions').hidden = data.length > 0 || catalogLoading;
   $('catalog-empty-reset').hidden =
-    (!onlySaved && !dataset.length) || (onlySaved && !favorites.length);
-  $('catalog-empty-browse').hidden = !onlySaved || favorites.length > 0;
+    (!onlySaved && !dataset.length) || (onlySaved && !watchlist.items.length);
+  $('catalog-empty-browse').hidden = !onlySaved || watchlist.items.length > 0;
   $('catalog-empty-refresh').hidden = onlySaved || dataset.length > 0;
   if (!data.length) {
     const p = document.createElement('p');
@@ -409,7 +368,7 @@ function renderList() {
     p.textContent = catalogLoading
       ? 'جارٍ تحميل بيانات الأقمار…'
       : onlySaved
-        ? favorites.length
+        ? watchlist.items.length
           ? 'لا توجد نتائج ضمن متابعتك مع البحث والدولة وحداثة العناصر الحالية. أعد ضبط التصفية لإظهار المتابعة.'
           : 'قائمة المتابعة فارغة. أضف قمرًا من زر المتابعة.'
         : !dataset.length
@@ -418,7 +377,7 @@ function renderList() {
     list.append(p);
     return;
   }
-  const savedIds = new Set(favorites.map((o) => o.id)),
+  const savedIds = new Set(watchlist.items.map((o) => o.id)),
     now = dateNow();
   for (const o of data.slice(start, start + LIST_SIZE)) {
     const b = document.createElement('button');
@@ -463,7 +422,7 @@ function epoch(o) {
   return new Date(OrbitData.epoch(o));
 }
 function syncFavoriteButtons() {
-  const saved = !!selection.current && favorites.some((f) => f.id === selection.current.id);
+  const saved = !!selection.current && watchlist.has(selection.current.id);
   for (const id of ['favorite', 'globe-card-favorite']) {
     const button = $(id);
     button.disabled = !selection.current;
@@ -795,14 +754,12 @@ function initGlobe(compat = false) {
 }
 $('globe-card-favorite').onclick = $('favorite').onclick = async () => {
   if (!selection.current) return;
-  const exists = favorites.some((f) => f.id === selection.current.id);
-  favorites = exists
-    ? favorites.filter((f) => f.id !== selection.current.id)
-    : [...favorites, OrbitData.serialize(selection.current)];
+  const exists = watchlist.has(selection.current.id);
+  watchlist.toggle(selection.current);
   reconcileSelection();
   renderList();
   update();
-  const durable = await saveFavorites();
+  const durable = await watchlist.save();
   setStatus(
     (exists ? 'تمت إزالة القمر من قائمة المتابعة.' : '★ أُضيف القمر للمتابعة.') +
       (!window.Privacy.persistent()
@@ -1074,14 +1031,14 @@ window.SatMetadata?.load()
   });
 
 $('follow-group').onclick = async () => {
-  const old = favorites.length;
-  favorites = OrbitData.merge([favorites, objects]).map(OrbitData.serialize);
+  const old = watchlist.items.length;
+  watchlist.merge(objects);
   renderList();
   update();
-  const durable = await saveFavorites();
+  const durable = await watchlist.save();
   setStatus(
     '★ أُضيف ' +
-      (favorites.length - old) +
+      (watchlist.items.length - old) +
       ' قمر إلى قائمة المتابعة.' +
       (!window.Privacy.persistent()
         ? ' لهذه الجلسة فقط.'
@@ -1228,7 +1185,7 @@ function renderDataHealth(o, time) {
   if ($('health-count'))
     $('health-count').textContent =
       (onlySaved
-        ? favorites
+        ? watchlist.items
         : globalMode && globalCatalog
           ? globalCatalog
           : objects
@@ -1237,7 +1194,11 @@ function renderDataHealth(o, time) {
       rows().length.toLocaleString('en-US') +
       ' نتيجة بعد التصفية';
   const dataset = rows(),
-    sourceDataset = onlySaved ? favorites : globalMode && globalCatalog ? globalCatalog : objects;
+    sourceDataset = onlySaved
+      ? watchlist.items
+      : globalMode && globalCatalog
+        ? globalCatalog
+        : objects;
   const key =
     selection.byUser +
     '|' +

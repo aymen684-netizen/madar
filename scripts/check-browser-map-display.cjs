@@ -71,7 +71,7 @@ async function checkBrowserMapDisplay(browser, url, output) {
       await page.waitForFunction(
         () => !document.getElementById('globe-card').hidden && selection.current.id === 100001,
       );
-      assert.equal(await page.evaluate(() => favorites.length), 0);
+      assert.equal(await page.evaluate(() => watchlist.items.length), 0);
       await page.click('#globe-card-close');
       await page.locator('#map-display>summary').click();
       await page.selectOption('#map-owner', 'US');

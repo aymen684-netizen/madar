@@ -109,7 +109,7 @@ async function checkBrowserPicking(browser, url, output) {
           paint: pickTiming.paint - pickTiming.start,
           listPreserved: listBeforePick === $('list').firstChild,
           listRenders: pickListRenders,
-          favorites: favorites.length,
+          favorites: watchlist.items.length,
         }));
         assert(result.listPreserved, JSON.stringify(result));
         assert.equal(

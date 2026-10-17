@@ -148,7 +148,7 @@ async function checkBrowserCatalog(browser, url, output) {
     assert.equal(await page.evaluate(() => rows().length), 301);
     assert.equal(await page.inputValue('#catalog-freshness'), 'all');
     assert.equal(await page.inputValue('#catalog-sort'), 'original');
-    assert.equal(await page.evaluate(() => favorites.length), 1);
+    assert.equal(await page.evaluate(() => watchlist.items.length), 1);
     await page.click('#saved');
     await page.selectOption('#catalog-freshness', 'recent');
     assert.equal(await page.evaluate(() => rows().length), 0);

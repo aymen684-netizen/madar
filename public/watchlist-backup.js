@@ -152,7 +152,7 @@
   }
   function preview() {
     if (!staged) return;
-    const p = plan(favorites, staged.items);
+    const p = plan(watchlist.items, staged.items);
     $('watchlist-preview-text').textContent =
       staged.items.length +
       ' قمرًا صالحًا · جديد: ' +
@@ -168,8 +168,8 @@
       '. سيبقى كل ما في قائمتك الحالية.';
   }
   function refresh() {
-    if (exportSnapshot && exportSnapshot !== favorites) clearDownload();
-    $('watchlist-export').disabled = !ready || busy || !favorites.length;
+    if (exportSnapshot && exportSnapshot !== watchlist.items) clearDownload();
+    $('watchlist-export').disabled = !ready || busy || !watchlist.items.length;
     fileInput.disabled = !ready || busy;
     $('watchlist-apply').disabled = !ready || busy || !staged;
     if (staged) preview();
@@ -185,9 +185,9 @@
   $('watchlist-export').onclick = () => {
     try {
       clearDownload();
-      const text = pack(favorites);
+      const text = pack(watchlist.items);
       url = URL.createObjectURL(new Blob([text], { type: 'application/json;charset=utf-8' }));
-      exportSnapshot = favorites;
+      exportSnapshot = watchlist.items;
       const link = $('watchlist-download');
       link.href = url;
       link.download = 'madar-watchlist-' + new Date().toISOString().slice(0, 10) + '-UTC.json';
@@ -195,7 +195,7 @@
       link.click();
       status.textContent =
         'جُهزت نسخة كاملة من ' +
-        favorites.length +
+        watchlist.items.length +
         ' قمرًا. إذا لم يبدأ التنزيل، استخدم رابط تنزيل النسخة الجاهزة.';
     } catch (e) {
       status.textContent = e.message;
@@ -232,12 +232,12 @@
     busy = true;
     refresh();
     try {
-      const p = plan(favorites, staged.items);
-      favorites = p.items;
+      const p = plan(watchlist.items, staged.items);
+      watchlist.replace(p.items);
       reconcileSelection();
       renderList();
       update();
-      const durable = await saveFavorites();
+      const durable = await watchlist.save();
       cancel();
       status.textContent =
         'دُمجت النسخة: ' +
@@ -260,7 +260,7 @@
       refresh();
     }
   };
-  favoritesReady.then(() => {
+  watchlist.ready.then(() => {
     ready = true;
     refresh();
   });
