@@ -163,6 +163,7 @@ Object.assign(c, {
   localStorage: { getItem: () => null, setItem: () => {} },
   MutationObserver: class {
     observe() {}
+    disconnect() {}
   },
   CustomEvent: class {},
   Event: class {},

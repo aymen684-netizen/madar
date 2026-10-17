@@ -50,7 +50,45 @@ const server = http.createServer((req, res) => {
       page.on('pageerror', (e) => errors.push(e.message));
       await context.addInitScript(() => {
         localStorage.setItem('madar-started', '1');
-        window.__lab = { longTasks: [], cls: 0, lcp: null };
+        window.__lab = {
+          longTasks: [],
+          cls: 0,
+          lcp: null,
+          arabicTranslationCallbacks: 0,
+          arabicTranslationRecords: 0,
+          dictionaryDecodedAt: null,
+          translationSetupMs: null,
+        };
+        const nativeFetch = window.fetch.bind(window);
+        window.fetch = async (...args) => {
+          const response = await nativeFetch(...args);
+          if (String(args[0]?.url || args[0]).includes('/data/en.json')) {
+            const json = response.json.bind(response);
+            response.json = async () => {
+              const value = await json();
+              __lab.dictionaryDecodedAt = performance.now();
+              return value;
+            };
+          }
+          return response;
+        };
+        document.addEventListener('madar-language', () => {
+          if (__lab.dictionaryDecodedAt != null && __lab.translationSetupMs == null)
+            __lab.translationSetupMs = performance.now() - __lab.dictionaryDecodedAt;
+        });
+        const NativeObserver = window.MutationObserver;
+        window.MutationObserver = class extends NativeObserver {
+          constructor(callback) {
+            const translation = new Error().stack?.includes('/i18n.js');
+            super((records, observer) => {
+              if (translation && document.documentElement.lang === 'ar') {
+                __lab.arabicTranslationCallbacks++;
+                __lab.arabicTranslationRecords += records.length;
+              }
+              callback(records, observer);
+            });
+          }
+        };
         for (const type of ['longtask', 'layout-shift', 'largest-contentful-paint'])
           try {
             new PerformanceObserver((list) => {
@@ -159,6 +197,8 @@ const server = http.createServer((req, res) => {
         assert.equal(result.eagerModelBuilds, 0);
         assert.equal(result.metricNodesAdded, 0);
         assert.equal(result.metricRowsRemoved, 0);
+        assert.equal(result.lab.arabicTranslationCallbacks, 0);
+        assert.equal(result.lab.arabicTranslationRecords, 0);
       }
       assert(result.modelPositionIdentical);
       assert.equal(result.metricRows, 12);
@@ -166,6 +206,7 @@ const server = http.createServer((req, res) => {
       assert(result.pixelRatio <= 1.5);
       assert.equal(await page.evaluate(() => document.body.scrollWidth), 390);
       assert.deepEqual(errors, []);
+      assert(Number.isFinite(result.lab.translationSetupMs));
       if (candidate) {
         assert(result.startupIdentityBytes > 0 && result.startupIdentityBytes < 1500000);
         assert.equal(result.startupFullCatalogRequests, 0);
@@ -179,6 +220,7 @@ const server = http.createServer((req, res) => {
       medianUpdateMs: median(samples.map((sample) => sample.medianUpdateMs)),
       prepareMs: median(samples.map((sample) => sample.prepareMs)),
       startupIdentityBytes: samples[0].startupIdentityBytes,
+      medianTranslationSetupMs: median(samples.map((sample) => sample.lab.translationSetupMs)),
       samples,
     };
     fs.mkdirSync(path.dirname(output), { recursive: true });
@@ -191,9 +233,12 @@ const server = http.createServer((req, res) => {
         medianUpdateMs: result.medianUpdateMs,
         prepareMs: result.prepareMs,
         startupIdentityBytes: result.startupIdentityBytes,
+        medianTranslationSetupMs: result.medianTranslationSetupMs,
         eagerModelBuilds: samples.map((sample) => sample.eagerModelBuilds),
         metricNodesAdded: samples.map((sample) => sample.metricNodesAdded),
         metricRowsRemoved: samples.map((sample) => sample.metricRowsRemoved),
+        arabicTranslationCallbacks: samples.map((sample) => sample.lab.arabicTranslationCallbacks),
+        arabicTranslationRecords: samples.map((sample) => sample.lab.arabicTranslationRecords),
         physicalPhone: false,
       }),
     );
