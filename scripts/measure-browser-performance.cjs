@@ -50,7 +50,26 @@ const server = http.createServer((req, res) => {
       page.on('pageerror', (e) => errors.push(e.message));
       await context.addInitScript(() => {
         localStorage.setItem('madar-started', '1');
-        window.__lab = { longTasks: [], cls: 0, lcp: null };
+        window.__lab = {
+          longTasks: [],
+          cls: 0,
+          lcp: null,
+          arabicTranslationCallbacks: 0,
+          arabicTranslationRecords: 0,
+        };
+        const NativeObserver = window.MutationObserver;
+        window.MutationObserver = class extends NativeObserver {
+          constructor(callback) {
+            const translation = new Error().stack?.includes('/i18n.js');
+            super((records, observer) => {
+              if (translation && document.documentElement.lang === 'ar') {
+                __lab.arabicTranslationCallbacks++;
+                __lab.arabicTranslationRecords += records.length;
+              }
+              callback(records, observer);
+            });
+          }
+        };
         for (const type of ['longtask', 'layout-shift', 'largest-contentful-paint'])
           try {
             new PerformanceObserver((list) => {
@@ -159,6 +178,8 @@ const server = http.createServer((req, res) => {
         assert.equal(result.eagerModelBuilds, 0);
         assert.equal(result.metricNodesAdded, 0);
         assert.equal(result.metricRowsRemoved, 0);
+        assert.equal(result.lab.arabicTranslationCallbacks, 0);
+        assert.equal(result.lab.arabicTranslationRecords, 0);
       }
       assert(result.modelPositionIdentical);
       assert.equal(result.metricRows, 12);
@@ -194,6 +215,8 @@ const server = http.createServer((req, res) => {
         eagerModelBuilds: samples.map((sample) => sample.eagerModelBuilds),
         metricNodesAdded: samples.map((sample) => sample.metricNodesAdded),
         metricRowsRemoved: samples.map((sample) => sample.metricRowsRemoved),
+        arabicTranslationCallbacks: samples.map((sample) => sample.lab.arabicTranslationCallbacks),
+        arabicTranslationRecords: samples.map((sample) => sample.lab.arabicTranslationRecords),
         physicalPhone: false,
       }),
     );

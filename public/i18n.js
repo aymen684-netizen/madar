@@ -5,14 +5,34 @@
     lang = localStorage.getItem('madar-language') === 'en' ? 'en' : 'ar';
   } catch {}
   let dictionary = {},
-    patterns = [],
-    ready = false;
+    patterns = null,
+    ready = false,
+    appliedLanguage = null;
   const originals = new WeakMap(),
     attributes = new WeakMap(),
     translations = new Map();
+  function translationPatterns() {
+    if (!patterns)
+      patterns = Object.entries(dictionary)
+        .filter(([key]) => key.length > 1)
+        .sort((a, b) => b[0].length - a[0].length)
+        .map(([a, b]) => {
+          const escape = a.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\s+/g, '\\s+');
+          return [
+            new RegExp(
+              (/^[\u0620-\u064a]/.test(a) ? '(?<![\u0620-\u064a])' : '') +
+                escape +
+                (/[\u0620-\u064a]$/.test(a) ? '(?![\u0620-\u064a])' : ''),
+              'g',
+            ),
+            b,
+          ];
+        });
+    return patterns;
+  }
   function translate(value, to = lang) {
     const text = String(value ?? '');
-    if (to !== 'en' || !/[\u0600-\u06ff]/.test(text)) return text;
+    if (to !== 'en' || !ready || !/[\u0600-\u06ff]/.test(text)) return text;
     if (translations.has(text)) return translations.get(text);
     const trim = text.trim();
     if (dictionary[trim]) return text.replace(trim, dictionary[trim]);
@@ -22,7 +42,7 @@
     let out = text
       .replace(/(^|[\s/])ف(?=\d)/g, '$1P')
       .replace(/عرض (-?\d+(?:\.\d+)?)°، طول /g, 'Latitude $1°, longitude ');
-    for (const [a, b] of patterns) out = out.replace(a, () => b);
+    for (const [a, b] of translationPatterns()) out = out.replace(a, () => b);
     if (translations.size >= 2000) translations.delete(translations.keys().next().value);
     translations.set(text, out);
     return out;
@@ -37,6 +57,7 @@
     if (text !== next) n.nodeValue = next;
   }
   function scan(node) {
+    if (lang === 'en' && !ready) return;
     if (node.nodeType === 3) {
       if (!node.parentElement?.closest('script,style,textarea,[data-no-translate],svg'))
         nodeText(node);
@@ -85,17 +106,29 @@
     return out;
   }
   function setLanguage(value) {
+    const previous = appliedLanguage;
     lang = value === 'en' ? 'en' : 'ar';
     try {
       localStorage.setItem('madar-language', lang);
     } catch {}
     document.documentElement.lang = lang;
     document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-    scan(document.documentElement);
+    observer.disconnect();
+    if ((lang === 'en' && ready) || previous === 'en') scan(document.documentElement);
+    appliedLanguage = lang === 'en' && ready ? 'en' : 'ar';
+    if (appliedLanguage === 'en')
+      observer.observe(document.documentElement, {
+        subtree: true,
+        childList: true,
+        characterData: true,
+        attributes: true,
+        attributeFilter: ['placeholder', 'aria-label', 'title'],
+      });
     document.dispatchEvent(new CustomEvent('madar-language', { detail: lang }));
     return lang;
   }
   const observer = new MutationObserver((records) => {
+    if (lang !== 'en' || !ready) return;
     for (const r of records) {
       if (r.type === 'characterData') scan(r.target);
       else if (r.type === 'attributes') scan(r.target);
@@ -103,13 +136,6 @@
     }
   });
   function start() {
-    observer.observe(document.documentElement, {
-      subtree: true,
-      childList: true,
-      characterData: true,
-      attributes: true,
-      attributeFilter: ['placeholder', 'aria-label', 'title'],
-    });
     setLanguage(lang);
   }
   const promise = fetch('data/en.json?v=52')
@@ -119,21 +145,6 @@
     })
     .then((d) => {
       dictionary = d;
-      patterns = Object.entries(d)
-        .filter(([k]) => k.length > 1)
-        .sort((a, b) => b[0].length - a[0].length)
-        .map(([a, b]) => {
-          const escape = a.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\s+/g, '\\s+');
-          return [
-            new RegExp(
-              (/^[\u0620-\u064a]/.test(a) ? '(?<![\u0620-\u064a])' : '') +
-                escape +
-                (/[\u0620-\u064a]$/.test(a) ? '(?![\u0620-\u064a])' : ''),
-              'g',
-            ),
-            b,
-          ];
-        });
       ready = true;
       start();
     })
@@ -149,7 +160,11 @@
     }
   function original(n) {
     if (!n) return '';
-    if (n.nodeType === 3) return originals.get(n)?.ar || n.nodeValue;
+    if (n.nodeType === 3) {
+      const entry = originals.get(n),
+        text = n.nodeValue;
+      return entry && (text === entry.ar || text === entry.en) ? entry.ar : text;
+    }
     return Array.from(n.childNodes || [])
       .map(original)
       .join('');

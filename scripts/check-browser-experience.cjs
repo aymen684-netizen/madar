@@ -54,6 +54,62 @@ async function checkBrowserExperience(browser, url, output) {
         window.MadarI18n && window.MadarShell && window.MadarDataRefresh && objects.length === 1,
     );
     await page.evaluate(() => MadarI18n.ready);
+    const translationProbe = await page.evaluate(async () => {
+      const host = document.createElement('span'),
+        node = document.createTextNode('إنشاء التقرير'),
+        native = Object.getOwnPropertyDescriptor(Node.prototype, 'nodeValue'),
+        settle = () => new Promise((resolve) => setTimeout(resolve, 0));
+      let reads = 0;
+      Object.defineProperty(node, 'nodeValue', {
+        get() {
+          reads++;
+          return native.get.call(node);
+        },
+        set(value) {
+          native.set.call(node, value);
+        },
+      });
+      host.append(node);
+      document.body.append(host);
+      await settle();
+      const arabicReads = reads;
+      MadarI18n.setLanguage('en');
+      await settle();
+      const englishInitial = native.get.call(node);
+      reads = 0;
+      node.nodeValue = 'جارٍ تجهيز Word…';
+      await settle();
+      const englishReads = reads,
+        englishDynamic = native.get.call(node);
+      MadarI18n.setLanguage('ar');
+      await settle();
+      const restored = native.get.call(node);
+      reads = 0;
+      node.nodeValue = 'إنشاء التقرير';
+      await settle();
+      const returnedArabicReads = reads,
+        original = MadarI18n.original(node);
+      host.remove();
+      return {
+        arabicReads,
+        englishInitial,
+        englishReads,
+        englishDynamic,
+        restored,
+        returnedArabicReads,
+        original,
+      };
+    });
+    assert.equal(translationProbe.arabicReads, 0);
+    assert.equal(translationProbe.englishInitial, 'Generate report');
+    assert(translationProbe.englishReads > 0);
+    assert.equal(translationProbe.englishDynamic, 'Preparing Word…');
+    assert.equal(translationProbe.restored, 'جارٍ تجهيز Word…');
+    assert.equal(translationProbe.returnedArabicReads, 0);
+    assert.equal(translationProbe.original, 'إنشاء التقرير');
+    console.log(
+      'PASS: real DOM translation probe is idle in Arabic, translates dynamic English and restores current Arabic originals',
+    );
     assert(await page.locator('#welcome-dialog').isVisible());
     assert.equal(await page.locator('#welcome-title').count(), 0);
     assert(!(await page.locator('#welcome-dialog').textContent()).includes('جاهز للاستكشاف'));
