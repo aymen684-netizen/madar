@@ -73,3 +73,25 @@ assert(
     /[\u0620-\u064a]/,
   ),
 );
+
+// Translation must follow displayed words, not the source formatter's wrapping.
+const inventoryIntro =
+  'تقرير بالأقمار المنسوبة إلى كل دولة أو جهة في الفهرس العام، مع تاريخ الإطلاق ورقم القمر والمدار والمهمة وتوثيقها.';
+const wrappedIntro = inventoryIntro.replaceAll(' ', '\n    ');
+assert.equal(I.translate(wrappedIntro, 'en'), I.translate(inventoryIntro, 'en'));
+assert(!/[\u0620-\u064a]/.test(I.translate(wrappedIntro, 'en')));
+assert.equal(I.translate(wrappedIntro, 'ar'), wrappedIntro);
+const dynamicLine = 'عناصر ضمن 24 ساعة من كامل الفترة 12 / 20';
+assert.equal(
+  I.translate(dynamicLine.replaceAll(' ', '\n  '), 'en').replace(/\s+/g, ' '),
+  I.translate(dynamicLine, 'en'),
+);
+assert(
+  I.translate('CUSTOM-LINE-1\nCUSTOM-LINE-2 المهمة', 'en').includes('\n'),
+  'Unknown line structure remains intact',
+);
+console.log(
+  'PASS: wrapped static and dynamic UI phrases translate completely without flattening unrelated line breaks or changing Arabic originals',
+);
+
+assert(!/[\u0620-\u064a]/.test(I.translate(dynamicLine.replaceAll(' ', '\n  '), 'en')));

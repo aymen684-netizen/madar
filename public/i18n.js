@@ -16,6 +16,9 @@
     if (translations.has(text)) return translations.get(text);
     const trim = text.trim();
     if (dictionary[trim]) return text.replace(trim, dictionary[trim]);
+    // HTML source formatting can wrap a single displayed sentence across lines.
+    const normalized = trim.replace(/\s+/g, ' ');
+    if (dictionary[normalized]) return text.replace(trim, dictionary[normalized]);
     let out = text
       .replace(/(^|[\s/])ف(?=\d)/g, '$1P')
       .replace(/عرض (-?\d+(?:\.\d+)?)°، طول /g, 'Latitude $1°, longitude ');
@@ -120,7 +123,7 @@
         .filter(([k]) => k.length > 1)
         .sort((a, b) => b[0].length - a[0].length)
         .map(([a, b]) => {
-          const escape = a.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+          const escape = a.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\s+/g, '\\s+');
           return [
             new RegExp(
               (/^[\u0620-\u064a]/.test(a) ? '(?<![\u0620-\u064a])' : '') +
