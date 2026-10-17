@@ -108,8 +108,26 @@ async function checkBrowserSecurity(browser, url) {
     assert.equal(await page.evaluate(() => localStorage.getItem('orbit-cache-test')), null);
     assert.equal(await page.evaluate(() => StateStore.get('security-test')), null);
     assert.equal(await page.evaluate(() => localStorage.getItem('other-app-data')), 'keep');
+    const staleWrite = await page.evaluate(async () => {
+      // Simulate the gap before a tab handles another tab's storage/reload event.
+      localStorage.setItem('madar-data-generation', 'security-test-cleared-generation');
+      const local = Privacy.localSet('orbit-cache-stale-test', 'must stay in memory');
+      const durable = await StateStore.put('stale-test', { private: true });
+      return {
+        local,
+        durable,
+        stored: localStorage.getItem('orbit-cache-stale-test'),
+        session: Privacy.localGet('orbit-cache-stale-test'),
+      };
+    });
+    assert.deepEqual(staleWrite, {
+      local: false,
+      durable: false,
+      stored: null,
+      session: 'must stay in memory',
+    });
     console.log(
-      'PASS: CSP blocks eval/inline scripts, no external fonts, scoped clearing and private mode survives reload without saved data',
+      'PASS: CSP blocks eval/inline scripts, no external fonts, scoped clearing, stale-tab writes stay in memory and private mode survives reload without saved data',
     );
   } finally {
     await context.close();

@@ -41,7 +41,8 @@
   function localSet(key, value) {
     if (!appKey(key)) throw Error('Unknown application key');
     if (busy) return false;
-    if (!enabled) {
+    // Another tab may have cleared data before this tab receives its reload event.
+    if (!persistent()) {
       session.set(key, value);
       return false;
     }

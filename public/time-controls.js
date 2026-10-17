@@ -10,6 +10,14 @@
     onRefresh,
   }) {
     const $ = (id) => document.getElementById(id);
+    function sync() {
+      const state = getState(),
+        paused = !!state.paused && !state.fixedTime;
+      $('pause').disabled = !!state.fixedTime;
+      $('pause').textContent = paused ? '▶' : 'Ⅱ';
+      $('pause').classList.toggle('active', paused);
+      $('pause').setAttribute('aria-label', paused ? 'استئناف التحديث' : 'إيقاف التحديث مؤقتًا');
+    }
     function fill(d) {
       const shifted = new Date(d.getTime() + Number($('timezone').value) * 3600000);
       $('date').value = shifted.toISOString().slice(0, 10);
@@ -49,6 +57,7 @@
     }
     function bind() {
       fill(new Date(now()));
+      sync();
       $('date').onchange = weekday;
       $('timezone').onchange = () => {
         fill(getTime());
@@ -57,8 +66,8 @@
       $('time-form').onsubmit = (event) => {
         event.preventDefault();
         try {
-          setState({ fixedTime: read(), paused: false });
-          $('pause').disabled = true;
+          setState({ fixedTime: read(), paused: false, pausedAt: null });
+          sync();
           $('time-message').textContent =
             'موضع محسوب من العناصر المتاحة؛ لم يُحمّل أرشيف مداري خاص بالتاريخ المختار.';
           onChange({ status: '◷ وقت محدد · المواقع تقديرية', list: true, focus: true });
@@ -68,10 +77,7 @@
       };
       $('live').onclick = () => {
         setState({ fixedTime: null, paused: false, pausedAt: null });
-        $('pause').disabled = false;
-        $('pause').textContent = 'Ⅱ';
-        $('pause').classList.toggle('active', false);
-        $('pause').setAttribute('aria-label', 'إيقاف التحديث مؤقتًا');
+        sync();
         fill(new Date(now()));
         $('time-message').textContent = '● موضع محسوب بالوقت الحالي';
         onChange({
@@ -84,13 +90,11 @@
         if (state.fixedTime) return;
         const paused = !state.paused;
         setState({ paused, ...(paused ? { pausedAt: new Date(now()) } : {}) });
-        $('pause').textContent = paused ? '▶' : 'Ⅱ';
-        $('pause').setAttribute('aria-label', paused ? 'استئناف التحديث' : 'إيقاف التحديث مؤقتًا');
-        $('pause').classList.toggle('active', paused);
+        sync();
         onChange({ list: false });
       };
     }
-    return Object.freeze({ bind, fill, read, weekday });
+    return Object.freeze({ bind, fill, read, weekday, sync });
   }
   const api = Object.freeze({ create });
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
