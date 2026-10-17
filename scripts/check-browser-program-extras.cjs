@@ -21,6 +21,7 @@ async function checkBrowserProgramExtras(browser, url, output) {
     }),
   );
   try {
+    await page.clock.install();
     await page.goto(url);
     await page.waitForFunction(
       () => window.MadarDataRefresh && objects.length === 1 && selection.current,
@@ -100,6 +101,31 @@ async function checkBrowserProgramExtras(browser, url, output) {
     await page.click('#shell-nav-catalog');
     await page.waitForFunction(() => !document.querySelector('#live-video-frame iframe'));
     assert(await page.locator('#live-video-panel').isHidden());
+    const frozen = await page.evaluate(() => {
+      fixedTime = new Date(OrbitData.epoch(selection.current));
+      update();
+      return { time: +dateNow(), points: world.pointsData().map(({ lat, lng }) => [lat, lng]) };
+    });
+    const sourceRequests = requests.filter(
+      (u) => u.includes('celestrak.org') || u.includes('/api/orbits'),
+    ).length;
+    await page.clock.fastForward(6 * 60000);
+    assert((await page.locator('#health-age').textContent()).includes('23.1'));
+    assert((await page.locator('#health-distance').textContent()).includes('0.0'));
+    assert.deepEqual(
+      await page.evaluate(() => ({
+        time: +dateNow(),
+        points: world.pointsData().map(({ lat, lng }) => [lat, lng]),
+      })),
+      frozen,
+    );
+    assert.equal(
+      requests.filter((u) => u.includes('celestrak.org') || u.includes('/api/orbits')).length,
+      sourceRequests,
+    );
+    console.log(
+      'PASS: fixed display keeps orbital positions frozen while the minute timer refreshes real element age without source requests',
+    );
     assert.deepEqual(errors, []);
     console.log(
       'PASS: 23-hour epoch is not display delay, current/fixed time separation, approved overview preview/download and modal focus, no embedded third-party video, explicit external source, unload on navigation and responsive layouts',

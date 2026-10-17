@@ -387,9 +387,13 @@ function update({ scene = true } = {}) {
     }).format(now) + (Number($('timezone').value) === 0 ? ' · UTC' : ' · الرياض');
   $('focus').disabled = !selection.current || !world;
   satelliteCard.renderDetails(selection.current, now);
+  refreshDataHealth(now);
+  if (scene) updateGlobe();
+}
+function refreshDataHealth(time = dateNow()) {
   dataHealth.render({
     object: selection.current,
-    time: now,
+    time,
     byUser: selection.byUser,
     fixedTime: !!fixedTime,
     paused,
@@ -403,7 +407,6 @@ function update({ scene = true } = {}) {
       selection.current?.provenance?.group || loadedGroup || $('group').value,
     ),
   });
-  if (scene) updateGlobe();
 }
 function satelliteMarkers() {
   return $('marker-style')?.value === 'satellite';
@@ -591,6 +594,9 @@ load();
 setInterval(() => {
   if (!paused && !fixedTime && window.RenderLifecycle?.pageActive() !== false) update();
 }, 1000);
+setInterval(() => {
+  if ((paused || fixedTime) && window.RenderLifecycle?.pageActive() !== false) refreshDataHealth();
+}, 60000);
 
 $('search-form').onsubmit = async (e) => {
   e.preventDefault();
