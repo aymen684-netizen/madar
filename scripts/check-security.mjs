@@ -104,6 +104,13 @@ const ctx = {
 vm.createContext(ctx);
 vm.runInContext(fs.readFileSync('public/privacy.js', 'utf8'), ctx);
 const privacy = ctx.window.Privacy;
+const staleContext = {
+  window: { localStorage: ls, addEventListener: () => {} },
+  document: { readyState: 'loading', addEventListener: () => {} },
+};
+vm.createContext(staleContext);
+vm.runInContext(fs.readFileSync('public/privacy.js', 'utf8'), staleContext);
+const stalePrivacy = staleContext.window.Privacy;
 assert(privacy.persistent());
 await privacy.setEnabled(false);
 assert.equal(data.get('other-app-data'), 'keep');
@@ -111,6 +118,14 @@ assert(!data.has('orbit-favorites'));
 assert(!data.has('madar-draft-v1'));
 assert(!data.has('orbit-cache-active'));
 assert(!privacy.persistent());
+assert(!stalePrivacy.persistent());
+assert.equal(stalePrivacy.localSet('madar-draft-v1', 'late draft'), false);
+assert.equal(data.get('madar-draft-v1'), undefined, 'an old tab cannot undo opt-out');
+data.set('madar-save-enabled', 'true');
+assert.equal(stalePrivacy.localSet('orbit-favorites', 'late favorites'), false);
+assert.equal(data.get('orbit-favorites'), undefined, 'generation blocks writes after clear');
+assert.equal(stalePrivacy.localGet('orbit-favorites'), 'late favorites');
+data.set('madar-save-enabled', 'false');
 privacy.localSet('orbit-favorites', 'temporary');
 assert.equal(privacy.localGet('orbit-favorites'), 'temporary');
 assert(!data.has('orbit-favorites'));

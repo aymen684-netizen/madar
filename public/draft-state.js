@@ -133,7 +133,7 @@
       paused = !!snapshot.paused && !fixedTime;
       pausedAt = snapshot.pausedAt ? new Date(snapshot.pausedAt) : null;
       if (paused && (!pausedAt || !Number.isFinite(+pausedAt))) pausedAt = new Date();
-      $('pause').disabled = !!fixedTime;
+      timeControls.sync();
       await load();
       onlySaved = !!snapshot.onlySaved;
       $('all').classList.toggle('active', !onlySaved);

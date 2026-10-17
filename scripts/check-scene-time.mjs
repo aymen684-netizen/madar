@@ -119,6 +119,19 @@ ui.node('hour').value = '99';
 ui.node('time-form').onsubmit({ preventDefault() {} });
 assert.equal(state.fixedTime, null);
 assert(ui.node('time-message').textContent.includes('الساعة من 0'));
+state = { fixedTime: null, paused: true, pausedAt: clock };
+time.sync();
+assert.equal(ui.node('pause').disabled, false);
+assert.equal(ui.node('pause').textContent, '▶');
+assert.equal(ui.node('pause').classList.active, true);
+assert.equal(ui.node('pause').attributes.get('aria-label'), 'استئناف التحديث');
+time.fill(clock);
+ui.node('time-form').onsubmit({ preventDefault() {} });
+assert.equal(state.pausedAt, null);
+assert.equal(ui.node('pause').disabled, true);
+assert.equal(ui.node('pause').textContent, 'Ⅱ');
+assert.equal(ui.node('pause').classList.active, false);
+assert.equal(ui.node('pause').attributes.get('aria-label'), 'إيقاف التحديث مؤقتًا');
 
 function renderer() {
   const calls = new Map(),

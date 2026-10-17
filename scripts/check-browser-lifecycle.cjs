@@ -134,6 +134,23 @@ async function checkBrowserLifecycle(browser, url, output) {
       mobileTicks,
     );
     assert.equal(await page.evaluate(() => document.body.scrollWidth), 390);
+    const renderCalls = await page.evaluate(() => __renderCounts);
+    await page.click('#pause');
+    const restoredPauseTime = await page.evaluate(() => {
+      DraftState.save();
+      return +dateNow();
+    });
+    await page.reload();
+    await page.waitForFunction(
+      () => paused && world && !document.getElementById('restore-notice').hidden,
+    );
+    assert.equal(await page.evaluate(() => +dateNow()), restoredPauseTime);
+    assert.equal(await page.getAttribute('#pause', 'aria-label'), 'استئناف التحديث');
+    assert.equal(await page.locator('#pause').textContent(), '▶');
+    assert(await page.locator('#pause').evaluate((button) => button.classList.contains('active')));
+    await page.click('#pause');
+    assert.equal(await page.evaluate(() => paused), false);
+    assert.equal(await page.getAttribute('#pause', 'aria-label'), 'إيقاف التحديث مؤقتًا');
     const result = {
       visibleWorkerTicks: visibleTicks,
       offscreenAdditionalTicks: 0,
@@ -141,9 +158,10 @@ async function checkBrowserLifecycle(browser, url, output) {
       hiddenAdditionalMainPropagations: 0,
       mobileOffscreenAdditionalTicks: 0,
       manualPauseTimePreserved: true,
+      restoredPauseControlMatchesState: true,
       fixedTimePreserved: true,
       backgroundVisibilitySimulated: true,
-      renderCalls: await page.evaluate(() => __renderCounts),
+      renderCalls,
     };
     fs.writeFileSync(output + '/render-lifecycle.json', JSON.stringify(result, null, 2));
     assert.deepEqual(errors, []);
