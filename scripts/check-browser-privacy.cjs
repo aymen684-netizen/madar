@@ -1,9 +1,137 @@
-const fs=require('fs'),assert=require('assert/strict');
-async function checkBrowserPrivacy(browser,url,output){for(const mobile of [false,true]){const context=await browser.newContext({viewport:mobile?{width:390,height:844}:{width:1440,height:1000},isMobile:mobile,hasTouch:mobile}),page=await context.newPage(),requests=[],errors=[],canary='MADAR_PRIVATE_TEST_24.7136123';const fixture={...JSON.parse(fs.readFileSync('scripts/fixtures/omm-six-digit.json')),EPOCH:new Date().toISOString()};page.on('request',r=>requests.push({url:r.url(),method:r.method(),body:r.postData()}));page.on('pageerror',e=>errors.push(e.message));await page.route('**/api/orbits?*',r=>r.fulfill({contentType:'application/json',headers:{'X-Madar-Fetched-At':String(Date.now()),'X-Madar-Connection':'upstream'},body:JSON.stringify([fixture])}));await page.route('https://celestrak.org/**',r=>r.fulfill({contentType:'application/json',body:JSON.stringify([fixture])}));try{
-await page.goto(url);await page.waitForFunction(()=>window.NetworkPolicy&&window.MadarShell&&objects.length===1);await page.evaluate(()=>MadarI18n.ready);assert.equal(await page.evaluate(()=>!!window.docx),false);assert(!requests.some(r=>r.url.includes('/vendor/docx.js')));
-const blocked=await page.evaluate(async canary=>{const result=[];for(const [u,options]of [['https://example.com/?q='+canary,{}],['/api/word.docx',{method:'POST',body:canary}],['/api/orbits?group=active&q='+canary,{}]]){try{await fetch(u,options);result.push(false)}catch{result.push(true)}}result.push(navigator.sendBeacon('https://example.com/',canary)===false);return result},canary);assert(blocked.every(Boolean));
-await page.route('**/privacy-probe-worker.js',r=>r.fulfill({contentType:'text/javascript',body:"importScripts('network-resources.js?v=43','network-policy.js?v=43');self.onmessage=async e=>{try{await fetch('/api/orbits?group=active&q='+e.data);postMessage(false)}catch{postMessage(true)}}"}));const workerBlocked=await page.evaluate(canary=>new Promise((resolve,reject)=>{const w=new Worker('privacy-probe-worker.js');w.onmessage=e=>{w.terminate();resolve(e.data)};w.onerror=e=>{w.terminate();reject(Error(e.message))};w.postMessage(canary)}),canary);assert(workerBlocked);
-await page.fill('#shell-query',canary);await page.locator('#shell-quick button[type=submit]').click();await page.fill('#search','');await page.evaluate(()=>{reconcileSelection();renderList();update()});await page.click('#shell-nav-reports');await page.click('#shell-report-observer');await page.fill('#observer-name',canary);await page.fill('#observer-lat','24.7136123');await page.fill('#observer-lon','46.6753123');await page.locator('#observer-form button[type=submit]').click();await page.waitForFunction(()=>ObserverUI.result&&document.getElementById('observer-progress').value===100);assert.equal(await page.evaluate(()=>!!window.docx),false);await page.click('#observer-word');await page.waitForFunction(()=>!document.getElementById('observer-download').hidden);const download=page.waitForEvent('download');await page.click('#observer-download');const file=await download;const {validDocx}=await import('../worker/docx-validation.js');assert(validDocx(fs.readFileSync(await file.path())));assert.equal(requests.filter(r=>r.url.includes('/vendor/docx.js')).length,1);
-await page.click('#shell-nav-help');await page.locator('#privacy-panel>summary').click();await page.locator('#public-updates').uncheck();const before=requests.filter(r=>r.url.includes('/api/orbits')||r.url.includes('celestrak.org')).length;await page.evaluate(()=>load(true));assert.equal(requests.filter(r=>r.url.includes('/api/orbits')||r.url.includes('celestrak.org')).length,before);assert((await page.locator('#network-status').textContent()).includes('متوقف'));assert.equal(await page.locator('iframe').count(),0);if(mobile)assert.equal(await page.evaluate(()=>document.body.scrollWidth),390);await page.locator('#privacy-panel').screenshot({path:output+'/private-local-'+(mobile?'mobile':'desktop')+'.png'});assert(!JSON.stringify(requests).includes(canary));assert(!JSON.stringify(requests).includes('46.6753123'));assert(requests.every(r=>r.method==='GET'&&!r.body));assert.deepEqual(errors,[]);
-}finally{await context.close()}}console.log('PASS: desktop/mobile canary searches and observer coordinates stay local, worker report and Word download use no uploads, Word loads lazily once, public updates switch off and no third-party embeds')}
-module.exports={checkBrowserPrivacy};
+const fs = require('fs'),
+  assert = require('assert/strict');
+async function checkBrowserPrivacy(browser, url, output) {
+  for (const mobile of [false, true]) {
+    const context = await browser.newContext({
+        viewport: mobile ? { width: 390, height: 844 } : { width: 1440, height: 1000 },
+        isMobile: mobile,
+        hasTouch: mobile,
+      }),
+      page = await context.newPage(),
+      requests = [],
+      errors = [],
+      canary = 'MADAR_PRIVATE_TEST_24.7136123';
+    const fixture = {
+      ...JSON.parse(fs.readFileSync('scripts/fixtures/omm-six-digit.json')),
+      EPOCH: new Date().toISOString(),
+    };
+    page.on('request', (r) =>
+      requests.push({ url: r.url(), method: r.method(), body: r.postData() }),
+    );
+    page.on('pageerror', (e) => errors.push(e.message));
+    await page.route('**/api/orbits?*', (r) =>
+      r.fulfill({
+        contentType: 'application/json',
+        headers: { 'X-Madar-Fetched-At': String(Date.now()), 'X-Madar-Connection': 'upstream' },
+        body: JSON.stringify([fixture]),
+      }),
+    );
+    await page.route('https://celestrak.org/**', (r) =>
+      r.fulfill({ contentType: 'application/json', body: JSON.stringify([fixture]) }),
+    );
+    try {
+      await page.goto(url);
+      await page.waitForFunction(
+        () => window.NetworkPolicy && window.MadarShell && objects.length === 1,
+      );
+      await page.evaluate(() => MadarI18n.ready);
+      assert.equal(await page.evaluate(() => !!window.docx), false);
+      assert(!requests.some((r) => r.url.includes('/vendor/docx.js')));
+      const blocked = await page.evaluate(async (canary) => {
+        const result = [];
+        for (const [u, options] of [
+          ['https://example.com/?q=' + canary, {}],
+          ['/api/word.docx', { method: 'POST', body: canary }],
+          ['/api/orbits?group=active&q=' + canary, {}],
+        ]) {
+          try {
+            await fetch(u, options);
+            result.push(false);
+          } catch {
+            result.push(true);
+          }
+        }
+        result.push(navigator.sendBeacon('https://example.com/', canary) === false);
+        return result;
+      }, canary);
+      assert(blocked.every(Boolean));
+      await page.route('**/privacy-probe-worker.js', (r) =>
+        r.fulfill({
+          contentType: 'text/javascript',
+          body: "importScripts('network-resources.js?v=43','network-policy.js?v=43');self.onmessage=async e=>{try{await fetch('/api/orbits?group=active&q='+e.data);postMessage(false)}catch{postMessage(true)}}",
+        }),
+      );
+      const workerBlocked = await page.evaluate(
+        (canary) =>
+          new Promise((resolve, reject) => {
+            const w = new Worker('privacy-probe-worker.js');
+            w.onmessage = (e) => {
+              w.terminate();
+              resolve(e.data);
+            };
+            w.onerror = (e) => {
+              w.terminate();
+              reject(Error(e.message));
+            };
+            w.postMessage(canary);
+          }),
+        canary,
+      );
+      assert(workerBlocked);
+      await page.fill('#shell-query', canary);
+      await page.locator('#shell-quick button[type=submit]').click();
+      await page.fill('#search', '');
+      await page.evaluate(() => {
+        reconcileSelection();
+        renderList();
+        update();
+      });
+      await page.click('#shell-nav-reports');
+      await page.click('#shell-report-observer');
+      await page.fill('#observer-name', canary);
+      await page.fill('#observer-lat', '24.7136123');
+      await page.fill('#observer-lon', '46.6753123');
+      await page.locator('#observer-form button[type=submit]').click();
+      await page.waitForFunction(
+        () => ObserverUI.result && document.getElementById('observer-progress').value === 100,
+      );
+      assert.equal(await page.evaluate(() => !!window.docx), false);
+      await page.click('#observer-word');
+      await page.waitForFunction(() => !document.getElementById('observer-download').hidden);
+      const download = page.waitForEvent('download');
+      await page.click('#observer-download');
+      const file = await download;
+      const { validDocx } = await import('../worker/docx-validation.js');
+      assert(validDocx(fs.readFileSync(await file.path())));
+      assert.equal(requests.filter((r) => r.url.includes('/vendor/docx.js')).length, 1);
+      await page.click('#shell-nav-help');
+      await page.locator('#privacy-panel>summary').click();
+      await page.locator('#public-updates').uncheck();
+      const before = requests.filter(
+        (r) => r.url.includes('/api/orbits') || r.url.includes('celestrak.org'),
+      ).length;
+      await page.evaluate(() => load(true));
+      assert.equal(
+        requests.filter((r) => r.url.includes('/api/orbits') || r.url.includes('celestrak.org'))
+          .length,
+        before,
+      );
+      assert((await page.locator('#network-status').textContent()).includes('متوقف'));
+      assert.equal(await page.locator('iframe').count(), 0);
+      if (mobile) assert.equal(await page.evaluate(() => document.body.scrollWidth), 390);
+      await page.locator('#privacy-panel').screenshot({
+        path: output + '/private-local-' + (mobile ? 'mobile' : 'desktop') + '.png',
+      });
+      assert(!JSON.stringify(requests).includes(canary));
+      assert(!JSON.stringify(requests).includes('46.6753123'));
+      assert(requests.every((r) => r.method === 'GET' && !r.body));
+      assert.deepEqual(errors, []);
+    } finally {
+      await context.close();
+    }
+  }
+  console.log(
+    'PASS: desktop/mobile canary searches and observer coordinates stay local, worker report and Word download use no uploads, Word loads lazily once, public updates switch off and no third-party embeds',
+  );
+}
+module.exports = { checkBrowserPrivacy };

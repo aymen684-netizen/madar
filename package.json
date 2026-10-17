@@ -8,10 +8,13 @@
     "deploy": "node scripts/prepare-security.mjs && node scripts/prepare-assets.mjs && node scripts/prepare-mission-profiles.mjs && wrangler deploy",
     "check": "node scripts/prepare-security.mjs && node scripts/prepare-assets.mjs && node scripts/prepare-mission-profiles.mjs && node scripts/check.mjs && node scripts/check-update.mjs && node scripts/check-security.mjs && node scripts/check-metadata.mjs && node scripts/check-orbits.mjs && node scripts/check-report-tools.mjs && node scripts/check-report-insights.mjs && node scripts/check-catalog.mjs && node scripts/check-watchlist.mjs && node scripts/check-render-lifecycle.mjs && node scripts/check-word-delivery.mjs && node scripts/check-country-report.mjs && node scripts/check-data-refresh.mjs && node scripts/check-program-overview.mjs && node scripts/check-i18n.mjs && node scripts/check-globe-picking.mjs && node scripts/check-orbit-connection.mjs && node scripts/check-source-details.mjs && node scripts/check-metadata-loading.mjs && node scripts/check-network-policy.mjs && node scripts/check-country-inventory.mjs && node --max-old-space-size=512 scripts/check-inventory-word.mjs && node scripts/check-report-quality.mjs && node scripts/check-live-values.mjs && node scripts/check-map-fleet.mjs",
     "build": "node scripts/prepare-security.mjs && node scripts/prepare-assets.mjs && node scripts/prepare-mission-profiles.mjs",
-    "audit": "npm audit --audit-level=high && npm --prefix tools/vendor-audit audit --audit-level=high"
+    "audit": "npm audit --audit-level=high && npm --prefix tools/vendor-audit audit --audit-level=high",
+    "format": "prettier --write \"public/*.{js,css,html}\" \"worker/**/*.js\" \"security/**/*.js\" \"scripts/*.{mjs,cjs}\" \"*.md\" \".prettierrc.json\" \"package.json\"",
+    "format:check": "prettier --check \"public/*.{js,css,html}\" \"worker/**/*.js\" \"security/**/*.js\" \"scripts/*.{mjs,cjs}\" \"*.md\" \".prettierrc.json\" \"package.json\""
   },
   "devDependencies": {
-    "wrangler": "4.151.0",
-    "playwright": "1.64.0"
+    "playwright": "1.64.0",
+    "prettier": "3.9.10",
+    "wrangler": "4.151.0"
   }
 }

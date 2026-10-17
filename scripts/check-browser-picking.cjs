@@ -1,4 +1,142 @@
-const fs=require('fs'),assert=require('assert/strict');
-async function checkBrowserPicking(browser,url,output){for(const mobile of [false,true]){const context=await browser.newContext({viewport:mobile?{width:390,height:844}:{width:1440,height:1000},hasTouch:mobile,isMobile:mobile}),page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));const base={...JSON.parse(fs.readFileSync('scripts/fixtures/omm-six-digit.json')),EPOCH:new Date().toISOString()},other={...base,NORAD_CAT_ID:100002,OBJECT_NAME:'BACK SATELLITE',MEAN_ANOMALY:(base.MEAN_ANOMALY+180)%360};await page.route('https://celestrak.org/**',r=>r.fulfill({contentType:'application/json',body:JSON.stringify([base,other])}));try{await page.goto(url);await page.waitForFunction(()=>world&&objects.length===2&&window.GlobePicking);await page.evaluate(()=>MadarI18n.ready);await page.waitForTimeout(900);await page.evaluate(()=>{window.pickListRenders=[];const original=renderList;renderList=function(){pickListRenders.push(new Error().stack);return original(...arguments)}});for(const dense of [false,true]){await page.evaluate(dense=>{if(dense){const seed=objects[1];objects=prepare([OrbitData.serialize(objects[0]),...Array.from({length:1600},(_,i)=>({...OrbitData.serialize(seed),id:100002+i,omm:{...seed.omm,NORAD_CAT_ID:100002+i,OBJECT_NAME:'BACK '+i}}))])}paused=true;pausedAt=epoch(objects[0]);choose(objects[1],false);$('globe-card').hidden=true;const p=position(objects[0]);world.pointOfView({lat:p.lat,lng:p.lng,altitude:2.6},0);window.listBeforePick=$('list').firstChild;update()},dense);await page.locator('#globe').scrollIntoViewIfNeeded();await page.waitForFunction(dense=>dense?world.particlesData()[0]?.length>1500:world.pointsData().length===2,dense);await page.waitForTimeout(120);await page.evaluate(()=>{$('globe-card').hidden=true;window.pickTiming={};pickListRenders=[];const card=$('globe-card');window.pickObserver?.disconnect();window.pickObserver=new MutationObserver(()=>{if(!card.hidden&&!pickTiming.visible){pickTiming.visible=performance.now();requestAnimationFrame(()=>requestAnimationFrame(()=>{pickTiming.paint=performance.now()}))}});pickObserver.observe(card,{attributes:true,attributeFilter:['hidden']});document.getElementById('globe').addEventListener('pointerdown',()=>{window.listBeforePick=$('list').firstChild;pickTiming.start=performance.now()},{once:true,capture:true})});const target=await page.evaluate(()=>{const p=position(objects[0]),q=world.getScreenCoords(p.lat,p.lng,p.alt),r=$('globe').getBoundingClientRect();return{x:r.left+q.x+5,y:r.top+q.y+2}});if(mobile)await page.touchscreen.tap(target.x,target.y);else await page.mouse.click(target.x,target.y);await page.waitForFunction(()=>!$('globe-card').hidden&&selected.id===100001&&pickTiming.paint,{},{timeout:5000});const result=await page.evaluate(()=>({selection:pickTiming.visible-pickTiming.start,paint:pickTiming.paint-pickTiming.start,listPreserved:listBeforePick===$('list').firstChild,listRenders:pickListRenders,favorites:favorites.length}));assert(result.listPreserved,JSON.stringify(result));assert.equal(result.favorites,0,'A satellite tap must not activate the newly revealed favorite button');assert(result.selection<500,JSON.stringify(result));assert(result.paint<5000,JSON.stringify(result));// Software WebGL in CI can take several seconds per frame; selection itself must stay below 500 ms.
-console.log('Real globe selection latency',{mobile,dense,...result});await page.screenshot({path:output+'/pick-'+(mobile?'mobile':'desktop')+'-'+(dense?'dense':'points')+'.png'});}assert.deepEqual(errors,[])}finally{await context.close()}}console.log('PASS: real mouse/touch canvas taps, small and 1601-satellite catalogs, immediate card, retained list nodes and responsive mobile layouts')}
-module.exports={checkBrowserPicking};
+const fs = require('fs'),
+  assert = require('assert/strict');
+async function checkBrowserPicking(browser, url, output) {
+  for (const mobile of [false, true]) {
+    const context = await browser.newContext({
+        viewport: mobile ? { width: 390, height: 844 } : { width: 1440, height: 1000 },
+        hasTouch: mobile,
+        isMobile: mobile,
+      }),
+      page = await context.newPage(),
+      errors = [];
+    page.on('pageerror', (e) => errors.push(e.message));
+    const base = {
+        ...JSON.parse(fs.readFileSync('scripts/fixtures/omm-six-digit.json')),
+        EPOCH: new Date().toISOString(),
+      },
+      other = {
+        ...base,
+        NORAD_CAT_ID: 100002,
+        OBJECT_NAME: 'BACK SATELLITE',
+        MEAN_ANOMALY: (base.MEAN_ANOMALY + 180) % 360,
+      };
+    await page.route('https://celestrak.org/**', (r) =>
+      r.fulfill({ contentType: 'application/json', body: JSON.stringify([base, other]) }),
+    );
+    try {
+      await page.goto(url);
+      await page.waitForFunction(() => world && objects.length === 2 && window.GlobePicking);
+      await page.evaluate(() => MadarI18n.ready);
+      await page.waitForTimeout(900);
+      await page.evaluate(() => {
+        window.pickListRenders = [];
+        const original = renderList;
+        renderList = function () {
+          pickListRenders.push(new Error().stack);
+          return original(...arguments);
+        };
+      });
+      for (const dense of [false, true]) {
+        await page.evaluate((dense) => {
+          if (dense) {
+            const seed = objects[1];
+            objects = prepare([
+              OrbitData.serialize(objects[0]),
+              ...Array.from({ length: 1600 }, (_, i) => ({
+                ...OrbitData.serialize(seed),
+                id: 100002 + i,
+                omm: { ...seed.omm, NORAD_CAT_ID: 100002 + i, OBJECT_NAME: 'BACK ' + i },
+              })),
+            ]);
+          }
+          paused = true;
+          pausedAt = epoch(objects[0]);
+          choose(objects[1], false);
+          $('globe-card').hidden = true;
+          const p = position(objects[0]);
+          world.pointOfView({ lat: p.lat, lng: p.lng, altitude: 2.6 }, 0);
+          window.listBeforePick = $('list').firstChild;
+          update();
+        }, dense);
+        await page.locator('#globe').scrollIntoViewIfNeeded();
+        await page.waitForFunction(
+          (dense) =>
+            dense ? world.particlesData()[0]?.length > 1500 : world.pointsData().length === 2,
+          dense,
+        );
+        await page.waitForTimeout(120);
+        await page.evaluate(() => {
+          $('globe-card').hidden = true;
+          window.pickTiming = {};
+          pickListRenders = [];
+          const card = $('globe-card');
+          window.pickObserver?.disconnect();
+          window.pickObserver = new MutationObserver(() => {
+            if (!card.hidden && !pickTiming.visible) {
+              pickTiming.visible = performance.now();
+              requestAnimationFrame(() =>
+                requestAnimationFrame(() => {
+                  pickTiming.paint = performance.now();
+                }),
+              );
+            }
+          });
+          pickObserver.observe(card, { attributes: true, attributeFilter: ['hidden'] });
+          document.getElementById('globe').addEventListener(
+            'pointerdown',
+            () => {
+              window.listBeforePick = $('list').firstChild;
+              pickTiming.start = performance.now();
+            },
+            { once: true, capture: true },
+          );
+        });
+        const target = await page.evaluate(() => {
+          const p = position(objects[0]),
+            q = world.getScreenCoords(p.lat, p.lng, p.alt),
+            r = $('globe').getBoundingClientRect();
+          return { x: r.left + q.x + 5, y: r.top + q.y + 2 };
+        });
+        if (mobile) await page.touchscreen.tap(target.x, target.y);
+        else await page.mouse.click(target.x, target.y);
+        await page.waitForFunction(
+          () => !$('globe-card').hidden && selected.id === 100001 && pickTiming.paint,
+          {},
+          { timeout: 5000 },
+        );
+        const result = await page.evaluate(() => ({
+          selection: pickTiming.visible - pickTiming.start,
+          paint: pickTiming.paint - pickTiming.start,
+          listPreserved: listBeforePick === $('list').firstChild,
+          listRenders: pickListRenders,
+          favorites: favorites.length,
+        }));
+        assert(result.listPreserved, JSON.stringify(result));
+        assert.equal(
+          result.favorites,
+          0,
+          'A satellite tap must not activate the newly revealed favorite button',
+        );
+        assert(result.selection < 500, JSON.stringify(result));
+        assert(result.paint < 5000, JSON.stringify(result)); // Software WebGL in CI can take several seconds per frame; selection itself must stay below 500 ms.
+        console.log('Real globe selection latency', { mobile, dense, ...result });
+        await page.screenshot({
+          path:
+            output +
+            '/pick-' +
+            (mobile ? 'mobile' : 'desktop') +
+            '-' +
+            (dense ? 'dense' : 'points') +
+            '.png',
+        });
+      }
+      assert.deepEqual(errors, []);
+    } finally {
+      await context.close();
+    }
+  }
+  console.log(
+    'PASS: real mouse/touch canvas taps, small and 1601-satellite catalogs, immediate card, retained list nodes and responsive mobile layouts',
+  );
+}
+module.exports = { checkBrowserPicking };

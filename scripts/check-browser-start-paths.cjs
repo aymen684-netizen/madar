@@ -1,5 +1,130 @@
-const assert=require('node:assert/strict'),fs=require('node:fs');
-const identity=JSON.parse(fs.readFileSync('public/data/satellite-metadata-summary.json'));function SatOwner(id){return identity.satellites[id].owner}
+const assert = require('node:assert/strict'),
+  fs = require('node:fs');
+const identity = JSON.parse(fs.readFileSync('public/data/satellite-metadata-summary.json'));
+function SatOwner(id) {
+  return identity.satellites[id].owner;
+}
 
-async function checkBrowserStartPaths(browser,url,output){const profiles=JSON.parse(fs.readFileSync('public/data/mission-profiles.json')),ids=new Set(profiles.members.starlink),fixture=JSON.parse(fs.readFileSync('public/data/active-omm.json')).find(o=>ids.has(o.NORAD_CAT_ID));assert(fixture);for(const mobile of [false,true])for(const path of ['track','country','report']){const context=await browser.newContext({viewport:mobile?{width:390,height:844}:{width:1440,height:1000},isMobile:mobile,hasTouch:mobile,madarWelcome:true}),page=await context.newPage(),requests=[],errors=[];await context.addInitScript(en=>{if(en)localStorage.setItem('madar-language','en')},!mobile);page.on('request',r=>requests.push({url:r.url(),method:r.method(),body:r.postData()}));page.on('pageerror',e=>errors.push(e.message));await page.route('https://celestrak.org/**',r=>r.fulfill({contentType:'application/json',body:JSON.stringify([fixture])}));await page.route('**/api/orbits?*',r=>r.fulfill({contentType:'application/json',headers:{'X-Madar-Fetched-At':String(Date.now()),'X-Madar-Connection':'upstream'},body:JSON.stringify([fixture])}));try{await page.goto(url);await page.waitForFunction(()=>window.MadarShell&&objects.length===1);await page.evaluate(()=>MadarI18n.ready);assert(await page.locator('#welcome-dialog').isVisible());assert.equal(await page.locator('.welcome-paths button').count(),3);for(const button of await page.locator('.welcome-paths button').all()){const rect=await button.boundingBox();assert(rect.height>=44)}if(path==='track')await page.screenshot({path:output+'/start-paths-'+(mobile?'ar-mobile':'en-desktop')+'.png'});await page.click('#welcome-'+path);assert(await page.locator('#welcome-dialog').isHidden());assert.equal(await page.evaluate(()=>localStorage.getItem('madar-started')),'1');if(path==='track'){assert.equal(await page.evaluate(()=>MadarShell.current()),'catalog');assert.equal(await page.evaluate(()=>document.activeElement.id),'search');await page.locator('#list button').first().click();await page.waitForFunction(()=>!document.getElementById('globe-card').hidden);if(mobile)await page.click('#shell-card-expand');await page.click('#globe-card-source');await page.waitForFunction(()=>SatMetadata.detailsLoaded());assert.equal(await page.locator('#sat-operator').innerText(),'SpaceX');assert((await page.locator('#sat-owner-note').innerText()).includes(mobile?'المالك القانوني':'legal owner'));const nodes=await page.evaluate(()=>{const first=document.querySelector('#metrics>.metric');for(let i=0;i<5;i++)update({scene:false});return document.querySelector('#metrics>.metric')===first});assert(nodes);const download=page.waitForEvent('download');await page.click('#source-json');const exported=JSON.parse(fs.readFileSync(await(await download).path()));assert.equal(exported.attribution.operator,'SpaceX');assert.equal(exported.attribution.operatorScope,'program');assert.equal(exported.attribution.legalOwner,null);assert.equal(exported.attribution.catalogOwnerCode,SatOwner(fixture.NORAD_CAT_ID));await page.locator('.sat-identity').scrollIntoViewIfNeeded();await page.screenshot({path:output+'/attribution-'+(mobile?'ar-mobile':'en-desktop')+'.png'});await page.click('#language-toggle');await page.waitForFunction(language=>document.documentElement.lang===language,mobile?'en':'ar');assert((await page.locator('#sat-owner-note').innerText()).includes(mobile?'legal owner':'المالك القانوني'));}else{assert.equal(await page.evaluate(()=>MadarShell.current()),'reports');if(path==='country'){assert.equal(await page.evaluate(()=>MadarShell.report()),'inventory');await page.waitForFunction(()=>document.getElementById('inventory-owner').options.length>100);assert.equal(await page.evaluate(()=>document.activeElement.id),'inventory-owner');assert(!requests.some(r=>r.url.includes('/satellite-metadata.json')),'exploring the country selector must keep expanded catalog deferred')}else assert.equal(await page.evaluate(()=>document.activeElement.id),'shell-report-country')}assert.equal(await page.evaluate(()=>document.body.scrollWidth),mobile?390:1440);assert(requests.every(r=>r.method==='GET'&&!r.body));assert.deepEqual(errors,[])}finally{await context.close()}}console.log('PASS: three first-visit paths, focused destinations, lazy country catalog, sourced operator/owner distinction, stable live detail nodes, bilingual mobile and desktop, zero uploads')}
-module.exports={checkBrowserStartPaths};
+async function checkBrowserStartPaths(browser, url, output) {
+  const profiles = JSON.parse(fs.readFileSync('public/data/mission-profiles.json')),
+    ids = new Set(profiles.members.starlink),
+    fixture = JSON.parse(fs.readFileSync('public/data/active-omm.json')).find((o) =>
+      ids.has(o.NORAD_CAT_ID),
+    );
+  assert(fixture);
+  for (const mobile of [false, true])
+    for (const path of ['track', 'country', 'report']) {
+      const context = await browser.newContext({
+          viewport: mobile ? { width: 390, height: 844 } : { width: 1440, height: 1000 },
+          isMobile: mobile,
+          hasTouch: mobile,
+          madarWelcome: true,
+        }),
+        page = await context.newPage(),
+        requests = [],
+        errors = [];
+      await context.addInitScript((en) => {
+        if (en) localStorage.setItem('madar-language', 'en');
+      }, !mobile);
+      page.on('request', (r) =>
+        requests.push({ url: r.url(), method: r.method(), body: r.postData() }),
+      );
+      page.on('pageerror', (e) => errors.push(e.message));
+      await page.route('https://celestrak.org/**', (r) =>
+        r.fulfill({ contentType: 'application/json', body: JSON.stringify([fixture]) }),
+      );
+      await page.route('**/api/orbits?*', (r) =>
+        r.fulfill({
+          contentType: 'application/json',
+          headers: { 'X-Madar-Fetched-At': String(Date.now()), 'X-Madar-Connection': 'upstream' },
+          body: JSON.stringify([fixture]),
+        }),
+      );
+      try {
+        await page.goto(url);
+        await page.waitForFunction(() => window.MadarShell && objects.length === 1);
+        await page.evaluate(() => MadarI18n.ready);
+        assert(await page.locator('#welcome-dialog').isVisible());
+        assert.equal(await page.locator('.welcome-paths button').count(), 3);
+        for (const button of await page.locator('.welcome-paths button').all()) {
+          const rect = await button.boundingBox();
+          assert(rect.height >= 44);
+        }
+        if (path === 'track')
+          await page.screenshot({
+            path: output + '/start-paths-' + (mobile ? 'ar-mobile' : 'en-desktop') + '.png',
+          });
+        await page.click('#welcome-' + path);
+        assert(await page.locator('#welcome-dialog').isHidden());
+        assert.equal(await page.evaluate(() => localStorage.getItem('madar-started')), '1');
+        if (path === 'track') {
+          assert.equal(await page.evaluate(() => MadarShell.current()), 'catalog');
+          assert.equal(await page.evaluate(() => document.activeElement.id), 'search');
+          await page.locator('#list button').first().click();
+          await page.waitForFunction(() => !document.getElementById('globe-card').hidden);
+          if (mobile) await page.click('#shell-card-expand');
+          await page.click('#globe-card-source');
+          await page.waitForFunction(() => SatMetadata.detailsLoaded());
+          assert.equal(await page.locator('#sat-operator').innerText(), 'SpaceX');
+          assert(
+            (await page.locator('#sat-owner-note').innerText()).includes(
+              mobile ? 'المالك القانوني' : 'legal owner',
+            ),
+          );
+          const nodes = await page.evaluate(() => {
+            const first = document.querySelector('#metrics>.metric');
+            for (let i = 0; i < 5; i++) update({ scene: false });
+            return document.querySelector('#metrics>.metric') === first;
+          });
+          assert(nodes);
+          const download = page.waitForEvent('download');
+          await page.click('#source-json');
+          const exported = JSON.parse(fs.readFileSync(await (await download).path()));
+          assert.equal(exported.attribution.operator, 'SpaceX');
+          assert.equal(exported.attribution.operatorScope, 'program');
+          assert.equal(exported.attribution.legalOwner, null);
+          assert.equal(exported.attribution.catalogOwnerCode, SatOwner(fixture.NORAD_CAT_ID));
+          await page.locator('.sat-identity').scrollIntoViewIfNeeded();
+          await page.screenshot({
+            path: output + '/attribution-' + (mobile ? 'ar-mobile' : 'en-desktop') + '.png',
+          });
+          await page.click('#language-toggle');
+          await page.waitForFunction(
+            (language) => document.documentElement.lang === language,
+            mobile ? 'en' : 'ar',
+          );
+          assert(
+            (await page.locator('#sat-owner-note').innerText()).includes(
+              mobile ? 'legal owner' : 'المالك القانوني',
+            ),
+          );
+        } else {
+          assert.equal(await page.evaluate(() => MadarShell.current()), 'reports');
+          if (path === 'country') {
+            assert.equal(await page.evaluate(() => MadarShell.report()), 'inventory');
+            await page.waitForFunction(
+              () => document.getElementById('inventory-owner').options.length > 100,
+            );
+            assert.equal(await page.evaluate(() => document.activeElement.id), 'inventory-owner');
+            assert(
+              !requests.some((r) => r.url.includes('/satellite-metadata.json')),
+              'exploring the country selector must keep expanded catalog deferred',
+            );
+          } else
+            assert.equal(
+              await page.evaluate(() => document.activeElement.id),
+              'shell-report-country',
+            );
+        }
+        assert.equal(await page.evaluate(() => document.body.scrollWidth), mobile ? 390 : 1440);
+        assert(requests.every((r) => r.method === 'GET' && !r.body));
+        assert.deepEqual(errors, []);
+      } finally {
+        await context.close();
+      }
+    }
+  console.log(
+    'PASS: three first-visit paths, focused destinations, lazy country catalog, sourced operator/owner distinction, stable live detail nodes, bilingual mobile and desktop, zero uploads',
+  );
+}
+module.exports = { checkBrowserStartPaths };

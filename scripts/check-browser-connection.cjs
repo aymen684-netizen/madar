@@ -1,3 +1,117 @@
-const fs=require('fs'),assert=require('assert/strict');
-async function checkBrowserConnection(browser,url,output){const fetchedAt=Date.now()-120000,base=JSON.parse(fs.readFileSync('scripts/fixtures/omm-six-digit.json')),records=Array.from({length:3},(_,i)=>({...base,NORAD_CAT_ID:100001+i,OBJECT_NAME:'CONNECTION TEST '+i,EPOCH:new Date().toISOString(),CLASSIFICATION_TYPE:'U',REV_AT_EPOCH:123}));let reference;for(const mobile of [false,true]){const ctx=await browser.newContext({viewport:mobile?{width:390,height:844}:{width:1440,height:1000},hasTouch:mobile,isMobile:mobile}),page=await ctx.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));let calls=0,down=false;await page.route('https://celestrak.org/**',()=>{throw Error('Relay failure must not trigger a direct upstream retry')});await page.route('**/api/orbits?*',r=>{calls++;return r.fulfill({status:down?503:200,contentType:'application/json',headers:{'X-Madar-Fetched-At':String(fetchedAt),'X-Madar-Connection':calls>1?'edge-cache':'upstream','X-Madar-Upstream-Status':down?'403':'','Retry-After':'7200'},body:JSON.stringify(down?{error:'upstream-http'}:records)})});try{await page.goto(url);await page.waitForFunction(()=>objects.length===3&&objects[0].provenance.transport==='server');await page.evaluate(()=>MadarI18n.ready);const current=await page.evaluate(()=>({count:objects.length,fetched:objects[0].provenance.fetchedAt}));if(reference)assert.deepEqual(current,reference);reference=current;assert.equal(current.fetched,fetchedAt);await page.evaluate(()=>load(true));await page.waitForFunction(()=>objects.length===3&&OrbitService.connection('active').state==='cache');assert.equal(calls,2);assert.equal(await page.evaluate(()=>objects[0].provenance.fetchedAt),fetchedAt);down=true;await page.evaluate(()=>load(true));await page.waitForFunction(()=>OrbitService.connection('active').state==='blocked');assert.equal(calls,3);assert.equal(await page.evaluate(()=>objects.length),3);await page.evaluate(()=>load(true));assert.equal(calls,3);assert((await page.locator('#health-connection').textContent()).includes('403'));assert((await page.locator('#health-count').textContent()).startsWith('3 '));await page.locator('#data-health').evaluate(e=>e.open=true);await page.locator('#health-connection').scrollIntoViewIfNeeded();await page.screenshot({path:output+'/connection-'+(mobile?'mobile':'desktop')+'.png'});assert.equal(await page.evaluate(()=>SatMetadata.detailsLoaded()),false);await page.evaluate(()=>choose(objects[0],false));if(mobile)await page.click('#shell-card-expand');await page.click('#globe-card-source');await page.waitForFunction(()=>document.querySelector('#source-fields').textContent.includes('123'));const downloadEvent=page.waitForEvent('download');await page.click('#source-json');const download=await downloadEvent;const downloadPath=output+'/source-'+(mobile?'mobile':'desktop')+'.json';await download.saveAs(downloadPath);const exported=JSON.parse(fs.readFileSync(downloadPath));assert.equal(exported.noradId,100001);assert.equal(exported.orbit.fields.REV_AT_EPOCH,123);assert.equal(exported.orbitProvenance.fetchedAt,fetchedAt);assert(exported.catalog);await page.locator('#source-details').screenshot({path:output+'/source-details-ar-'+(mobile?'mobile':'desktop')+'.png'});await page.evaluate(()=>MadarI18n.setLanguage('en'));await page.waitForTimeout(100);assert(!(await page.locator('#health-connection').textContent()).match(/[\u0600-\u06ff]/));assert(!(await page.locator('#source-details').textContent()).match(/[\u0600-\u06ff]/));await page.locator('#source-details').screenshot({path:output+'/source-details-en-'+(mobile?'mobile':'desktop')+'.png'});await page.evaluate(()=>{selected=null;update()});assert(await page.locator('#source-details').isHidden());assert.deepEqual(errors,[])}finally{await ctx.close()}}console.log('PASS: same-origin browser connection on desktop/mobile, shared count and server fetch timestamp, manual edge-cache recheck, honest retained data after HTTP 403 and no alternate retries')}
-module.exports={checkBrowserConnection};
+const fs = require('fs'),
+  assert = require('assert/strict');
+async function checkBrowserConnection(browser, url, output) {
+  const fetchedAt = Date.now() - 120000,
+    base = JSON.parse(fs.readFileSync('scripts/fixtures/omm-six-digit.json')),
+    records = Array.from({ length: 3 }, (_, i) => ({
+      ...base,
+      NORAD_CAT_ID: 100001 + i,
+      OBJECT_NAME: 'CONNECTION TEST ' + i,
+      EPOCH: new Date().toISOString(),
+      CLASSIFICATION_TYPE: 'U',
+      REV_AT_EPOCH: 123,
+    }));
+  let reference;
+  for (const mobile of [false, true]) {
+    const ctx = await browser.newContext({
+        viewport: mobile ? { width: 390, height: 844 } : { width: 1440, height: 1000 },
+        hasTouch: mobile,
+        isMobile: mobile,
+      }),
+      page = await ctx.newPage(),
+      errors = [];
+    page.on('pageerror', (e) => errors.push(e.message));
+    let calls = 0,
+      down = false;
+    await page.route('https://celestrak.org/**', () => {
+      throw Error('Relay failure must not trigger a direct upstream retry');
+    });
+    await page.route('**/api/orbits?*', (r) => {
+      calls++;
+      return r.fulfill({
+        status: down ? 503 : 200,
+        contentType: 'application/json',
+        headers: {
+          'X-Madar-Fetched-At': String(fetchedAt),
+          'X-Madar-Connection': calls > 1 ? 'edge-cache' : 'upstream',
+          'X-Madar-Upstream-Status': down ? '403' : '',
+          'Retry-After': '7200',
+        },
+        body: JSON.stringify(down ? { error: 'upstream-http' } : records),
+      });
+    });
+    try {
+      await page.goto(url);
+      await page.waitForFunction(
+        () => objects.length === 3 && objects[0].provenance.transport === 'server',
+      );
+      await page.evaluate(() => MadarI18n.ready);
+      const current = await page.evaluate(() => ({
+        count: objects.length,
+        fetched: objects[0].provenance.fetchedAt,
+      }));
+      if (reference) assert.deepEqual(current, reference);
+      reference = current;
+      assert.equal(current.fetched, fetchedAt);
+      await page.evaluate(() => load(true));
+      await page.waitForFunction(
+        () => objects.length === 3 && OrbitService.connection('active').state === 'cache',
+      );
+      assert.equal(calls, 2);
+      assert.equal(await page.evaluate(() => objects[0].provenance.fetchedAt), fetchedAt);
+      down = true;
+      await page.evaluate(() => load(true));
+      await page.waitForFunction(() => OrbitService.connection('active').state === 'blocked');
+      assert.equal(calls, 3);
+      assert.equal(await page.evaluate(() => objects.length), 3);
+      await page.evaluate(() => load(true));
+      assert.equal(calls, 3);
+      assert((await page.locator('#health-connection').textContent()).includes('403'));
+      assert((await page.locator('#health-count').textContent()).startsWith('3 '));
+      await page.locator('#data-health').evaluate((e) => (e.open = true));
+      await page.locator('#health-connection').scrollIntoViewIfNeeded();
+      await page.screenshot({
+        path: output + '/connection-' + (mobile ? 'mobile' : 'desktop') + '.png',
+      });
+      assert.equal(await page.evaluate(() => SatMetadata.detailsLoaded()), false);
+      await page.evaluate(() => choose(objects[0], false));
+      if (mobile) await page.click('#shell-card-expand');
+      await page.click('#globe-card-source');
+      await page.waitForFunction(() =>
+        document.querySelector('#source-fields').textContent.includes('123'),
+      );
+      const downloadEvent = page.waitForEvent('download');
+      await page.click('#source-json');
+      const download = await downloadEvent;
+      const downloadPath = output + '/source-' + (mobile ? 'mobile' : 'desktop') + '.json';
+      await download.saveAs(downloadPath);
+      const exported = JSON.parse(fs.readFileSync(downloadPath));
+      assert.equal(exported.noradId, 100001);
+      assert.equal(exported.orbit.fields.REV_AT_EPOCH, 123);
+      assert.equal(exported.orbitProvenance.fetchedAt, fetchedAt);
+      assert(exported.catalog);
+      await page.locator('#source-details').screenshot({
+        path: output + '/source-details-ar-' + (mobile ? 'mobile' : 'desktop') + '.png',
+      });
+      await page.evaluate(() => MadarI18n.setLanguage('en'));
+      await page.waitForTimeout(100);
+      assert(!(await page.locator('#health-connection').textContent()).match(/[\u0600-\u06ff]/));
+      assert(!(await page.locator('#source-details').textContent()).match(/[\u0600-\u06ff]/));
+      await page.locator('#source-details').screenshot({
+        path: output + '/source-details-en-' + (mobile ? 'mobile' : 'desktop') + '.png',
+      });
+      await page.evaluate(() => {
+        selected = null;
+        update();
+      });
+      assert(await page.locator('#source-details').isHidden());
+      assert.deepEqual(errors, []);
+    } finally {
+      await ctx.close();
+    }
+  }
+  console.log(
+    'PASS: same-origin browser connection on desktop/mobile, shared count and server fetch timestamp, manual edge-cache recheck, honest retained data after HTTP 403 and no alternate retries',
+  );
+}
+module.exports = { checkBrowserConnection };

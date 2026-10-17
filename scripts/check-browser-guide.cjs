@@ -1,22 +1,102 @@
-const assert=require('assert/strict'),fs=require('fs');
-async function checkBrowserGuide(browser,url,output){
- const context=await browser.newContext({viewport:{width:1440,height:1000}}),page=await context.newPage(),errors=[];
- const fixture={...JSON.parse(fs.readFileSync('scripts/fixtures/omm-six-digit.json','utf8')),EPOCH:new Date().toISOString()};
- page.on('pageerror',e=>errors.push(e.message));await page.route('https://celestrak.org/**',r=>r.fulfill({status:200,contentType:'application/json',body:JSON.stringify([fixture])}));
- try{
-  await page.goto(url);await page.waitForFunction(()=>window.MadarGuide&&objects.length===1);
-  assert.equal(await page.locator('#program-guide').count(),1);assert.equal(await page.locator('.overview-bar #program-guide').count(),0);assert.equal(await page.locator('#guide-panel>summary#program-guide').count(),1);assert.equal(await page.locator('#guide-panel').getAttribute('open'),null);await page.click('#program-guide');await page.waitForFunction(()=>document.getElementById('program-guide').getAttribute('aria-expanded')==='true');assert.equal(await page.locator('#program-guide').getAttribute('aria-expanded'),'true');
-  await page.click('#program-guide');assert.equal(await page.locator('#guide-panel').getAttribute('open'),null);await page.focus('#program-guide');await page.keyboard.press('Enter');await page.waitForFunction(()=>document.getElementById('guide-panel').open);assert.equal(await page.locator('.guide-term').count(),21);assert((await page.locator('.guide-steps').textContent()).includes('Word'));await page.evaluate(()=>MadarI18n.ready);const mapGuide=page.locator('.guide-step').nth(1);const mapText=await mapGuide.textContent();for(const text of ['علم الدولة','180','◇','نطاق التقارير','بضغطة مستقلة'])assert(mapText.includes(text),text);await mapGuide.screenshot({path:output+'/guide-map-ar-desktop.png'});await page.evaluate(()=>MadarI18n.setLanguage('en'));await page.waitForTimeout(100);assert(!(await mapGuide.textContent()).match(/[\u0600-\u06ff]/));assert((await mapGuide.textContent()).includes('180'));await mapGuide.screenshot({path:output+'/guide-map-en-desktop.png'});await page.setViewportSize({width:390,height:844});await mapGuide.screenshot({path:output+'/guide-map-en-mobile.png'});await page.evaluate(()=>MadarI18n.setLanguage('ar'));await mapGuide.screenshot({path:output+'/guide-map-ar-mobile.png'});await page.setViewportSize({width:1440,height:1000});
-  const reportGuide=await page.locator('.guide-step').nth(2).textContent(),exportGuide=await page.locator('.guide-step').nth(3).textContent();assert(reportGuide.includes('حصر أقمار الدول'));for(const text of ['ZIP','500','Word'])assert(exportGuide.includes(text),text);
-  await page.fill('#guide-search','SGP4');assert.equal(await page.locator('.guide-term:visible').count(),1);assert((await page.locator('.guide-term:visible').textContent()).includes('Simplified General Perturbations 4'));
-  await page.fill('#guide-search','الرَّادار');assert((await page.locator('.guide-term:visible').textContent()).includes('Synthetic Aperture Radar'));
-  await page.fill('#guide-search','<img src=x onerror=alert(1)>');assert(await page.locator('#guide-empty').isVisible());assert.equal(await page.locator('.guide-term:visible').count(),0);
-  await page.fill('#guide-search','');assert.equal(await page.locator('.guide-term:visible').count(),21);
-  assert((await page.locator('.guide-step').nth(4).textContent()).includes('ليس إثباتًا للتصوير'));assert((await page.locator('#metrics span[title]').allTextContents()).includes('اللامركزية'));
-  await page.evaluate(()=>{pausedAt=new Date(dateNow());paused=true;world?.pauseAnimation()});await page.locator('.guide-terms').scrollIntoViewIfNeeded();await page.screenshot({path:output+'/guide-desktop.png'});
-  await context.setOffline(true);await page.setViewportSize({width:390,height:844});await page.fill('#guide-search','UTC');assert.equal(await page.locator('.guide-term:visible').count(),1);await page.locator('#guide-search').scrollIntoViewIfNeeded();assert.equal(await page.evaluate(()=>document.body.scrollWidth),390);await page.screenshot({path:output+'/guide-mobile.png'});
-  await page.click('#guide-close');assert.equal(await page.locator('#guide-panel').getAttribute('open'),null);assert.equal(await page.locator('#program-guide').getAttribute('aria-expanded'),'false');assert.equal(await page.evaluate(()=>document.activeElement.id),'program-guide');assert.deepEqual(errors,[]);
-  console.log('PASS: Arabic guide, 21 expanded definitions, safe bilingual search, offline use, desktop/mobile layout and focus returned on close');
- }finally{await context.close()}
+const assert = require('assert/strict'),
+  fs = require('fs');
+async function checkBrowserGuide(browser, url, output) {
+  const context = await browser.newContext({ viewport: { width: 1440, height: 1000 } }),
+    page = await context.newPage(),
+    errors = [];
+  const fixture = {
+    ...JSON.parse(fs.readFileSync('scripts/fixtures/omm-six-digit.json', 'utf8')),
+    EPOCH: new Date().toISOString(),
+  };
+  page.on('pageerror', (e) => errors.push(e.message));
+  await page.route('https://celestrak.org/**', (r) =>
+    r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify([fixture]) }),
+  );
+  try {
+    await page.goto(url);
+    await page.waitForFunction(() => window.MadarGuide && objects.length === 1);
+    assert.equal(await page.locator('#program-guide').count(), 1);
+    assert.equal(await page.locator('.overview-bar #program-guide').count(), 0);
+    assert.equal(await page.locator('#guide-panel>summary#program-guide').count(), 1);
+    assert.equal(await page.locator('#guide-panel').getAttribute('open'), null);
+    await page.click('#program-guide');
+    await page.waitForFunction(
+      () => document.getElementById('program-guide').getAttribute('aria-expanded') === 'true',
+    );
+    assert.equal(await page.locator('#program-guide').getAttribute('aria-expanded'), 'true');
+    await page.click('#program-guide');
+    assert.equal(await page.locator('#guide-panel').getAttribute('open'), null);
+    await page.focus('#program-guide');
+    await page.keyboard.press('Enter');
+    await page.waitForFunction(() => document.getElementById('guide-panel').open);
+    assert.equal(await page.locator('.guide-term').count(), 21);
+    assert((await page.locator('.guide-steps').textContent()).includes('Word'));
+    await page.evaluate(() => MadarI18n.ready);
+    const mapGuide = page.locator('.guide-step').nth(1);
+    const mapText = await mapGuide.textContent();
+    for (const text of ['علم الدولة', '180', '◇', 'نطاق التقارير', 'بضغطة مستقلة'])
+      assert(mapText.includes(text), text);
+    await mapGuide.screenshot({ path: output + '/guide-map-ar-desktop.png' });
+    await page.evaluate(() => MadarI18n.setLanguage('en'));
+    await page.waitForTimeout(100);
+    assert(!(await mapGuide.textContent()).match(/[\u0600-\u06ff]/));
+    assert((await mapGuide.textContent()).includes('180'));
+    await mapGuide.screenshot({ path: output + '/guide-map-en-desktop.png' });
+    await page.setViewportSize({ width: 390, height: 844 });
+    await mapGuide.screenshot({ path: output + '/guide-map-en-mobile.png' });
+    await page.evaluate(() => MadarI18n.setLanguage('ar'));
+    await mapGuide.screenshot({ path: output + '/guide-map-ar-mobile.png' });
+    await page.setViewportSize({ width: 1440, height: 1000 });
+    const reportGuide = await page.locator('.guide-step').nth(2).textContent(),
+      exportGuide = await page.locator('.guide-step').nth(3).textContent();
+    assert(reportGuide.includes('حصر أقمار الدول'));
+    for (const text of ['ZIP', '500', 'Word']) assert(exportGuide.includes(text), text);
+    await page.fill('#guide-search', 'SGP4');
+    assert.equal(await page.locator('.guide-term:visible').count(), 1);
+    assert(
+      (await page.locator('.guide-term:visible').textContent()).includes(
+        'Simplified General Perturbations 4',
+      ),
+    );
+    await page.fill('#guide-search', 'الرَّادار');
+    assert(
+      (await page.locator('.guide-term:visible').textContent()).includes(
+        'Synthetic Aperture Radar',
+      ),
+    );
+    await page.fill('#guide-search', '<img src=x onerror=alert(1)>');
+    assert(await page.locator('#guide-empty').isVisible());
+    assert.equal(await page.locator('.guide-term:visible').count(), 0);
+    await page.fill('#guide-search', '');
+    assert.equal(await page.locator('.guide-term:visible').count(), 21);
+    assert(
+      (await page.locator('.guide-step').nth(4).textContent()).includes('ليس إثباتًا للتصوير'),
+    );
+    assert((await page.locator('#metrics span[title]').allTextContents()).includes('اللامركزية'));
+    await page.evaluate(() => {
+      pausedAt = new Date(dateNow());
+      paused = true;
+      world?.pauseAnimation();
+    });
+    await page.locator('.guide-terms').scrollIntoViewIfNeeded();
+    await page.screenshot({ path: output + '/guide-desktop.png' });
+    await context.setOffline(true);
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.fill('#guide-search', 'UTC');
+    assert.equal(await page.locator('.guide-term:visible').count(), 1);
+    await page.locator('#guide-search').scrollIntoViewIfNeeded();
+    assert.equal(await page.evaluate(() => document.body.scrollWidth), 390);
+    await page.screenshot({ path: output + '/guide-mobile.png' });
+    await page.click('#guide-close');
+    assert.equal(await page.locator('#guide-panel').getAttribute('open'), null);
+    assert.equal(await page.locator('#program-guide').getAttribute('aria-expanded'), 'false');
+    assert.equal(await page.evaluate(() => document.activeElement.id), 'program-guide');
+    assert.deepEqual(errors, []);
+    console.log(
+      'PASS: Arabic guide, 21 expanded definitions, safe bilingual search, offline use, desktop/mobile layout and focus returned on close',
+    );
+  } finally {
+    await context.close();
+  }
 }
-module.exports={checkBrowserGuide};
+module.exports = { checkBrowserGuide };

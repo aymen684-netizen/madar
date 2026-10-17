@@ -1,10 +1,240 @@
-(function(root){'use strict';
-function unwrapRing(r){let prev=r[0][0];return r.map(([lng,lat],i)=>{let x=lng;if(i)while(x-prev>180)x-=360;while(x-prev< -180)x+=360;prev=x;return[x,lat]})}
-function prepareCountry(feature){const polys=feature.geometry.type==='Polygon'?[feature.geometry.coordinates]:feature.geometry.coordinates;return polys.map(poly=>{const rings=poly.map(unwrapRing),xs=rings[0].map(p=>p[0]),ys=rings[0].map(p=>p[1]);return{rings,minX:Math.min(...xs),maxX:Math.max(...xs),minY:Math.min(...ys),maxY:Math.max(...ys)}})}
-function inRing(x,y,ring){let inside=false;for(let i=0,j=ring.length-1;i<ring.length;j=i++){const a=ring[i],b=ring[j];if((a[1]>y)!==(b[1]>y)&&x<(b[0]-a[0])*(y-a[1])/(b[1]-a[1])+a[0])inside=!inside}return inside}
-function contains(polys,lng,lat){return polys.some(p=>{if(lat<p.minY||lat>p.maxY)return false;const x=lng+360*Math.round(((p.minX+p.maxX)/2-lng)/360);if(x<p.minX||x>p.maxX||!inRing(x,lat,p.rings[0]))return false;return !p.rings.slice(1).some(r=>inRing(x,lat,r))})}
-function point(S,rec,t){try{const pv=S.propagate(rec,new Date(t));if(!pv?.position)return null;const g=S.eciToGeodetic(pv.position,S.gstime(new Date(t)));if(!Number.isFinite(g.height)||g.height<0)return null;return{lng:g.longitude*180/Math.PI,lat:g.latitude*180/Math.PI,h:g.height,speed:pv.velocity&&[pv.velocity.x,pv.velocity.y,pv.velocity.z].every(Number.isFinite)?Math.hypot(pv.velocity.x,pv.velocity.y,pv.velocity.z):null}}catch{return null}}
-function epoch(o){return (root.OrbitData||globalThis.OrbitData).epoch(o)}
-async function scan(S,objects,feature,start,end,step,onProgress,resume=null,options={}){if(!Number.isFinite(step)||step<=0||end<=start)throw Error('فترة الحساب غير صالحة');const O=root.OrbitData||globalThis.OrbitData;const quality=(root.ReportInsights||globalThis.ReportInsights).inventory(objects,start,end,O);const polygons=prepareCountry(feature),rows=resume?.rows?[...resume.rows]:[];let invalid=resume?.invalid||0,stale=resume?.stale||0;for(let idx=resume?.next||0;idx<objects.length;idx++){const o=objects[idx];let rec;try{rec=O.satrec(S,o)}catch{invalid++;continue}if(Math.max(Math.abs(start-epoch(o)),Math.abs(end-epoch(o)))>3*864e5)stale++;const rowStart=rows.length;let failed=false;const inside=t=>{const p=point(S,rec,t);if(!p)failed=true;return p&&contains(polygons,p.lng,p.lat)};const refine=(a,b,state)=>{while(b-a>1000){const mid=Math.floor((a+b)/2);if(Boolean(inside(mid))===state)a=mid;else b=mid}return Math.round(b/1000)*1000};let prev=start,p=point(S,rec,start);if(!p){invalid++;continue}let was=contains(polygons,p.lng,p.lat),entry=was?start:null,clippedStart=was;for(let t=Math.min(start+step,end);;t=Math.min(t+step,end)){p=point(S,rec,t);if(!p){failed=true;break}const is=Boolean(p&&contains(polygons,p.lng,p.lat));if(!was&&is){entry=refine(prev,t,false);clippedStart=false}if(was&&!is){const exit=refine(prev,t,true),at=point(S,rec,entry);if(!at)failed=true;rows.push({name:o.name,id:o.id,entry,exit,duration:Math.max(0,(exit-entry)/1000),height:at?.h??null,speed:at?.speed??null,epoch:epoch(o),provenance:o.provenance||null,clippedStart,clippedEnd:false})}if(t===end){if(is&&entry!==null){const at=point(S,rec,entry);if(!at)failed=true;rows.push({name:o.name,id:o.id,entry,exit:end,duration:(end-entry)/1000,height:at?.h??null,speed:at?.speed??null,epoch:epoch(o),provenance:o.provenance||null,clippedStart,clippedEnd:true})}break}was=is;prev=t}if(failed){rows.splice(rowStart);invalid++}if(idx%20===0){onProgress?.({done:idx+1,total:objects.length,passes:rows.length,...(idx%500===0?{checkpoint:{next:idx+1,rows:[...rows],invalid,stale}}:{})});await new Promise(r=>setTimeout(r,0))}}rows.sort((a,b)=>a.entry-b.entry||a.id-b.id);const byId=new Map(objects.map(o=>[o.id,o]));if(options.details&&rows.length>50000)throw Error('تجاوزت النتائج 50000 حالة؛ قلّل الفترة أو نطاق الأقمار.');for(const row of options.details?rows:rows.slice(0,40)){try{const rec=O.satrec(S,byId.get(row.id));row.track=[];for(let i=0;i<=60;i++){const p=point(S,rec,row.entry+(row.exit-row.entry)*i/60);if(p)row.track.push([p.lng,p.lat])}if(options.details){let distance=0;for(let i=1;i<row.track.length;i++){const a=row.track[i-1],b=row.track[i],rad=Math.PI/180,dlat=(b[1]-a[1])*rad,dlon=(b[0]-a[0])*rad,h=Math.sin(dlat/2)**2+Math.cos(a[1]*rad)*Math.cos(b[1]*rad)*Math.sin(dlon/2)**2;distance+=12742*Math.asin(Math.sqrt(Math.min(1,h)))}row.groundDistance=row.track.length===61?distance:null}}catch{row.track=[];row.groundDistance=null}}return{rows,quality,invalid,stale,total:objects.length,unique:new Set(rows.map(r=>r.id)).size}}
-const api={prepareCountry,contains,point,scan};if(typeof module!=='undefined')module.exports=api;else root.ReportEngine=api;
-})(typeof self!=='undefined'?self:globalThis);
+(function (root) {
+  'use strict';
+  function unwrapRing(r) {
+    let prev = r[0][0];
+    return r.map(([lng, lat], i) => {
+      let x = lng;
+      if (i) while (x - prev > 180) x -= 360;
+      while (x - prev < -180) x += 360;
+      prev = x;
+      return [x, lat];
+    });
+  }
+  function prepareCountry(feature) {
+    const polys =
+      feature.geometry.type === 'Polygon'
+        ? [feature.geometry.coordinates]
+        : feature.geometry.coordinates;
+    return polys.map((poly) => {
+      const rings = poly.map(unwrapRing),
+        xs = rings[0].map((p) => p[0]),
+        ys = rings[0].map((p) => p[1]);
+      return {
+        rings,
+        minX: Math.min(...xs),
+        maxX: Math.max(...xs),
+        minY: Math.min(...ys),
+        maxY: Math.max(...ys),
+      };
+    });
+  }
+  function inRing(x, y, ring) {
+    let inside = false;
+    for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+      const a = ring[i],
+        b = ring[j];
+      if (a[1] > y !== b[1] > y && x < ((b[0] - a[0]) * (y - a[1])) / (b[1] - a[1]) + a[0])
+        inside = !inside;
+    }
+    return inside;
+  }
+  function contains(polys, lng, lat) {
+    return polys.some((p) => {
+      if (lat < p.minY || lat > p.maxY) return false;
+      const x = lng + 360 * Math.round(((p.minX + p.maxX) / 2 - lng) / 360);
+      if (x < p.minX || x > p.maxX || !inRing(x, lat, p.rings[0])) return false;
+      return !p.rings.slice(1).some((r) => inRing(x, lat, r));
+    });
+  }
+  function point(S, rec, t) {
+    try {
+      const pv = S.propagate(rec, new Date(t));
+      if (!pv?.position) return null;
+      const g = S.eciToGeodetic(pv.position, S.gstime(new Date(t)));
+      if (!Number.isFinite(g.height) || g.height < 0) return null;
+      return {
+        lng: (g.longitude * 180) / Math.PI,
+        lat: (g.latitude * 180) / Math.PI,
+        h: g.height,
+        speed:
+          pv.velocity && [pv.velocity.x, pv.velocity.y, pv.velocity.z].every(Number.isFinite)
+            ? Math.hypot(pv.velocity.x, pv.velocity.y, pv.velocity.z)
+            : null,
+      };
+    } catch {
+      return null;
+    }
+  }
+  function epoch(o) {
+    return (root.OrbitData || globalThis.OrbitData).epoch(o);
+  }
+  async function scan(
+    S,
+    objects,
+    feature,
+    start,
+    end,
+    step,
+    onProgress,
+    resume = null,
+    options = {},
+  ) {
+    if (!Number.isFinite(step) || step <= 0 || end <= start) throw Error('فترة الحساب غير صالحة');
+    const O = root.OrbitData || globalThis.OrbitData;
+    const quality = (root.ReportInsights || globalThis.ReportInsights).inventory(
+      objects,
+      start,
+      end,
+      O,
+    );
+    const polygons = prepareCountry(feature),
+      rows = resume?.rows ? [...resume.rows] : [];
+    let invalid = resume?.invalid || 0,
+      stale = resume?.stale || 0;
+    for (let idx = resume?.next || 0; idx < objects.length; idx++) {
+      const o = objects[idx];
+      let rec;
+      try {
+        rec = O.satrec(S, o);
+      } catch {
+        invalid++;
+        continue;
+      }
+      if (Math.max(Math.abs(start - epoch(o)), Math.abs(end - epoch(o))) > 3 * 864e5) stale++;
+      const rowStart = rows.length;
+      let failed = false;
+      const inside = (t) => {
+        const p = point(S, rec, t);
+        if (!p) failed = true;
+        return p && contains(polygons, p.lng, p.lat);
+      };
+      const refine = (a, b, state) => {
+        while (b - a > 1000) {
+          const mid = Math.floor((a + b) / 2);
+          if (Boolean(inside(mid)) === state) a = mid;
+          else b = mid;
+        }
+        return Math.round(b / 1000) * 1000;
+      };
+      let prev = start,
+        p = point(S, rec, start);
+      if (!p) {
+        invalid++;
+        continue;
+      }
+      let was = contains(polygons, p.lng, p.lat),
+        entry = was ? start : null,
+        clippedStart = was;
+      for (let t = Math.min(start + step, end); ; t = Math.min(t + step, end)) {
+        p = point(S, rec, t);
+        if (!p) {
+          failed = true;
+          break;
+        }
+        const is = Boolean(p && contains(polygons, p.lng, p.lat));
+        if (!was && is) {
+          entry = refine(prev, t, false);
+          clippedStart = false;
+        }
+        if (was && !is) {
+          const exit = refine(prev, t, true),
+            at = point(S, rec, entry);
+          if (!at) failed = true;
+          rows.push({
+            name: o.name,
+            id: o.id,
+            entry,
+            exit,
+            duration: Math.max(0, (exit - entry) / 1000),
+            height: at?.h ?? null,
+            speed: at?.speed ?? null,
+            epoch: epoch(o),
+            provenance: o.provenance || null,
+            clippedStart,
+            clippedEnd: false,
+          });
+        }
+        if (t === end) {
+          if (is && entry !== null) {
+            const at = point(S, rec, entry);
+            if (!at) failed = true;
+            rows.push({
+              name: o.name,
+              id: o.id,
+              entry,
+              exit: end,
+              duration: (end - entry) / 1000,
+              height: at?.h ?? null,
+              speed: at?.speed ?? null,
+              epoch: epoch(o),
+              provenance: o.provenance || null,
+              clippedStart,
+              clippedEnd: true,
+            });
+          }
+          break;
+        }
+        was = is;
+        prev = t;
+      }
+      if (failed) {
+        rows.splice(rowStart);
+        invalid++;
+      }
+      if (idx % 20 === 0) {
+        onProgress?.({
+          done: idx + 1,
+          total: objects.length,
+          passes: rows.length,
+          ...(idx % 500 === 0
+            ? { checkpoint: { next: idx + 1, rows: [...rows], invalid, stale } }
+            : {}),
+        });
+        await new Promise((r) => setTimeout(r, 0));
+      }
+    }
+    rows.sort((a, b) => a.entry - b.entry || a.id - b.id);
+    const byId = new Map(objects.map((o) => [o.id, o]));
+    if (options.details && rows.length > 50000)
+      throw Error('تجاوزت النتائج 50000 حالة؛ قلّل الفترة أو نطاق الأقمار.');
+    for (const row of options.details ? rows : rows.slice(0, 40)) {
+      try {
+        const rec = O.satrec(S, byId.get(row.id));
+        row.track = [];
+        for (let i = 0; i <= 60; i++) {
+          const p = point(S, rec, row.entry + ((row.exit - row.entry) * i) / 60);
+          if (p) row.track.push([p.lng, p.lat]);
+        }
+        if (options.details) {
+          let distance = 0;
+          for (let i = 1; i < row.track.length; i++) {
+            const a = row.track[i - 1],
+              b = row.track[i],
+              rad = Math.PI / 180,
+              dlat = (b[1] - a[1]) * rad,
+              dlon = (b[0] - a[0]) * rad,
+              h =
+                Math.sin(dlat / 2) ** 2 +
+                Math.cos(a[1] * rad) * Math.cos(b[1] * rad) * Math.sin(dlon / 2) ** 2;
+            distance += 12742 * Math.asin(Math.sqrt(Math.min(1, h)));
+          }
+          row.groundDistance = row.track.length === 61 ? distance : null;
+        }
+      } catch {
+        row.track = [];
+        row.groundDistance = null;
+      }
+    }
+    return {
+      rows,
+      quality,
+      invalid,
+      stale,
+      total: objects.length,
+      unique: new Set(rows.map((r) => r.id)).size,
+    };
+  }
+  const api = { prepareCountry, contains, point, scan };
+  if (typeof module !== 'undefined') module.exports = api;
+  else root.ReportEngine = api;
+})(typeof self !== 'undefined' ? self : globalThis);

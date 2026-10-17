@@ -1,5 +1,21 @@
-import fs from 'node:fs';import {CSP,SECURITY_HEADERS} from '../security/headers.js';
-const path=new URL('../public/index.html',import.meta.url),html=fs.readFileSync(path,'utf8');
-if(!html.includes('http-equiv="Content-Security-Policy"'))throw Error('CSP meta missing');
-fs.writeFileSync(path,html.replace(/(<meta http-equiv="Content-Security-Policy" content=")[^"]*(">)/,'$1'+CSP+'$2'));
-fs.writeFileSync(new URL('../public/_headers',import.meta.url),'/*\n'+Object.entries(SECURITY_HEADERS).map(([k,v])=>'  '+k+': '+v).join('\n')+'\n');
+import fs from 'node:fs';
+import { CSP, SECURITY_HEADERS } from '../security/headers.js';
+
+const pagePath = new URL('../public/index.html', import.meta.url);
+const html = fs.readFileSync(pagePath, 'utf8');
+// Attribute order and line wrapping must not affect the security policy update.
+const policyMeta =
+  /(<meta\b(?=[^>]*\bhttp-equiv="Content-Security-Policy")[^>]*\bcontent=")[^"]*(")/i;
+if (!policyMeta.test(html)) throw Error('CSP meta missing or malformed');
+fs.writeFileSync(
+  pagePath,
+  html.replace(policyMeta, (_, before, after) => before + CSP + after),
+);
+fs.writeFileSync(
+  new URL('../public/_headers', import.meta.url),
+  '/*\n' +
+    Object.entries(SECURITY_HEADERS)
+      .map(([key, value]) => '  ' + key + ': ' + value)
+      .join('\n') +
+    '\n',
+);

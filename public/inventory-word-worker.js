@@ -1,7 +1,180 @@
-importScripts('network-resources.js?v=43','network-policy.js?v=43');
-importScripts('vendor/docx.js','inventory-zip.js?v=47','report-layout.js?v=49');
-self.onmessage=async e=>{try{const {title,notes,headers,groups,language,brief,brandBytes,detail='full'}=e.data,D=docx,rtl=language!=='en',align=D.AlignmentType.START;
-const paragraph=(text,opts={})=>new D.Paragraph({bidirectional:rtl,alignment:align,spacing:{after:90,line:250},children:String(text??'').split('\n').map((line,i)=>new D.TextRun({text:line,break:i?1:0,font:'Arial',size:19,rightToLeft:rtl,...opts}))});
-const cell=(value,i,header=false,index=0)=>new D.TableCell({width:{size:[2200,1900,2800,4600,2900][i],type:D.WidthType.DXA},verticalAlign:D.VerticalAlign.CENTER,margins:{top:100,bottom:100,left:100,right:100},shading:{fill:header?'DDEAF1':index%2?'F4F6F8':'FFFFFF'},children:[paragraph(typeof value==='object'?value.text:value,{bold:header}),...(value?.links||[]).filter(l=>/^https:\/\//.test(l.url)).map(l=>new D.Paragraph({bidirectional:rtl,alignment:align,children:[new D.ExternalHyperlink({link:l.url,children:[new D.TextRun({text:l.label,style:'Hyperlink',size:18,font:'Arial'})]})]}))]});
-async function part(group,rows,index,total){const children=[];let b=group.brief||brief;if(total>1){const count=(e.data.partLabel||'Part')+' '+index+' / '+total;children.push(paragraph(count));b={...b,executive:[...b.executive,e.data.scopeNote||'Summary covers the full country selection; this document contains one part.']}}if(detail!=='brief'){children.push(...notes.map(t=>paragraph(t)),new D.Paragraph({text:group.label,heading:D.HeadingLevel.HEADING_1,bidirectional:rtl,alignment:align}),new D.Table({visuallyRightToLeft:rtl,width:{size:14400,type:D.WidthType.DXA},columnWidths:[2200,1900,2800,4600,2900],borders:Object.fromEntries(['top','bottom','left','right','insideHorizontal','insideVertical'].map(k=>[k,{style:D.BorderStyle.SINGLE,size:4,color:'D9D9D9'}])),rows:[new D.TableRow({tableHeader:true,children:headers.map((v,i)=>cell(v,i,true))}),...rows.map((row,index)=>new D.TableRow({cantSplit:true,children:row.map((v,i)=>cell(v,i,false,index))}))]}));const urls=new Set(rows.flatMap(row=>row.flatMap(v=>v?.links||[]).map(l=>l.url)));b={...b,references:b.references.filter((ref,i)=>i<2||urls.has(ref.url))}}const r={brandBytes,createdAt:e.data.createdAt};const document=ReportLayout.document(D,r,children,{title:group.title||title,language,landscape:detail!=='brief',brief:b,detail});return D.Packer.toBlob(document)}
-const count=detail==='brief'?1:groups.reduce((n,g)=>n+Math.ceil(g.rows.length/500),0),files=[];let done=0;if(detail==='brief')files.push({name:'madar-inventory-brief.docx',blob:await part({label:title},[],1,1)});else for(const group of groups)for(let i=0;i<group.rows.length;i+=500){const rows=group.rows.slice(i,i+500),blob=await part(group,rows,Math.floor(i/500)+1,Math.ceil(group.rows.length/500));files.push({name:'madar-inventory-'+String(group.code||'country').replace(/[^a-zA-Z0-9_-]/g,'_')+'-'+String(Math.floor(i/500)+1).padStart(3,'0')+'.docx',blob});done+=rows.length;self.postMessage({type:'progress',done})}if(!files.length)files.push({name:'madar-inventory-empty.docx',blob:await part({label:title},[],1,1)});const bundled=count>1,documentCount=files.length;if(bundled)files.push({name:'README.txt',blob:new Blob([title+'\n'+notes.join('\n')+'\n\n'+files.map(f=>f.name).join('\n')],{type:'text/plain;charset=utf-8'})});const blob=bundled?await InventoryZip.pack(files):files[0].blob;self.postMessage({type:'done',blob,extension:bundled?'zip':'docx',files:documentCount})}catch(err){self.postMessage({type:'error',message:err.message})}};
+importScripts('network-resources.js?v=43', 'network-policy.js?v=43');
+importScripts('vendor/docx.js', 'inventory-zip.js?v=47', 'report-layout.js?v=49');
+self.onmessage = async (e) => {
+  try {
+    const { title, notes, headers, groups, language, brief, brandBytes, detail = 'full' } = e.data,
+      D = docx,
+      rtl = language !== 'en',
+      align = D.AlignmentType.START;
+    const paragraph = (text, opts = {}) =>
+      new D.Paragraph({
+        bidirectional: rtl,
+        alignment: align,
+        spacing: { after: 90, line: 250 },
+        children: String(text ?? '')
+          .split('\n')
+          .map(
+            (line, i) =>
+              new D.TextRun({
+                text: line,
+                break: i ? 1 : 0,
+                font: 'Arial',
+                size: 19,
+                rightToLeft: rtl,
+                ...opts,
+              }),
+          ),
+      });
+    const cell = (value, i, header = false, index = 0) =>
+      new D.TableCell({
+        width: { size: [2200, 1900, 2800, 4600, 2900][i], type: D.WidthType.DXA },
+        verticalAlign: D.VerticalAlign.CENTER,
+        margins: { top: 100, bottom: 100, left: 100, right: 100 },
+        shading: { fill: header ? 'DDEAF1' : index % 2 ? 'F4F6F8' : 'FFFFFF' },
+        children: [
+          paragraph(typeof value === 'object' ? value.text : value, { bold: header }),
+          ...(value?.links || [])
+            .filter((l) => /^https:\/\//.test(l.url))
+            .map(
+              (l) =>
+                new D.Paragraph({
+                  bidirectional: rtl,
+                  alignment: align,
+                  children: [
+                    new D.ExternalHyperlink({
+                      link: l.url,
+                      children: [
+                        new D.TextRun({
+                          text: l.label,
+                          style: 'Hyperlink',
+                          size: 18,
+                          font: 'Arial',
+                        }),
+                      ],
+                    }),
+                  ],
+                }),
+            ),
+        ],
+      });
+    async function part(group, rows, index, total) {
+      const children = [];
+      let b = group.brief || brief;
+      if (total > 1) {
+        const count = (e.data.partLabel || 'Part') + ' ' + index + ' / ' + total;
+        children.push(paragraph(count));
+        b = {
+          ...b,
+          executive: [
+            ...b.executive,
+            e.data.scopeNote ||
+              'Summary covers the full country selection; this document contains one part.',
+          ],
+        };
+      }
+      if (detail !== 'brief') {
+        children.push(
+          ...notes.map((t) => paragraph(t)),
+          new D.Paragraph({
+            text: group.label,
+            heading: D.HeadingLevel.HEADING_1,
+            bidirectional: rtl,
+            alignment: align,
+          }),
+          new D.Table({
+            visuallyRightToLeft: rtl,
+            width: { size: 14400, type: D.WidthType.DXA },
+            columnWidths: [2200, 1900, 2800, 4600, 2900],
+            borders: Object.fromEntries(
+              ['top', 'bottom', 'left', 'right', 'insideHorizontal', 'insideVertical'].map((k) => [
+                k,
+                { style: D.BorderStyle.SINGLE, size: 4, color: 'D9D9D9' },
+              ]),
+            ),
+            rows: [
+              new D.TableRow({
+                tableHeader: true,
+                children: headers.map((v, i) => cell(v, i, true)),
+              }),
+              ...rows.map(
+                (row, index) =>
+                  new D.TableRow({
+                    cantSplit: true,
+                    children: row.map((v, i) => cell(v, i, false, index)),
+                  }),
+              ),
+            ],
+          }),
+        );
+        const urls = new Set(
+          rows.flatMap((row) => row.flatMap((v) => v?.links || []).map((l) => l.url)),
+        );
+        b = { ...b, references: b.references.filter((ref, i) => i < 2 || urls.has(ref.url)) };
+      }
+      const r = { brandBytes, createdAt: e.data.createdAt };
+      const document = ReportLayout.document(D, r, children, {
+        title: group.title || title,
+        language,
+        landscape: detail !== 'brief',
+        brief: b,
+        detail,
+      });
+      return D.Packer.toBlob(document);
+    }
+    const count =
+        detail === 'brief' ? 1 : groups.reduce((n, g) => n + Math.ceil(g.rows.length / 500), 0),
+      files = [];
+    let done = 0;
+    if (detail === 'brief')
+      files.push({
+        name: 'madar-inventory-brief.docx',
+        blob: await part({ label: title }, [], 1, 1),
+      });
+    else
+      for (const group of groups)
+        for (let i = 0; i < group.rows.length; i += 500) {
+          const rows = group.rows.slice(i, i + 500),
+            blob = await part(
+              group,
+              rows,
+              Math.floor(i / 500) + 1,
+              Math.ceil(group.rows.length / 500),
+            );
+          files.push({
+            name:
+              'madar-inventory-' +
+              String(group.code || 'country').replace(/[^a-zA-Z0-9_-]/g, '_') +
+              '-' +
+              String(Math.floor(i / 500) + 1).padStart(3, '0') +
+              '.docx',
+            blob,
+          });
+          done += rows.length;
+          self.postMessage({ type: 'progress', done });
+        }
+    if (!files.length)
+      files.push({
+        name: 'madar-inventory-empty.docx',
+        blob: await part({ label: title }, [], 1, 1),
+      });
+    const bundled = count > 1,
+      documentCount = files.length;
+    if (bundled)
+      files.push({
+        name: 'README.txt',
+        blob: new Blob(
+          [title + '\n' + notes.join('\n') + '\n\n' + files.map((f) => f.name).join('\n')],
+          { type: 'text/plain;charset=utf-8' },
+        ),
+      });
+    const blob = bundled ? await InventoryZip.pack(files) : files[0].blob;
+    self.postMessage({
+      type: 'done',
+      blob,
+      extension: bundled ? 'zip' : 'docx',
+      files: documentCount,
+    });
+  } catch (err) {
+    self.postMessage({ type: 'error', message: err.message });
+  }
+};

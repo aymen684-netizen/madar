@@ -1,7 +1,187 @@
-(function(root){'use strict';
-const angle=n=>n==null?'— قرب الرأس':n.toFixed(1)+'°';
-function lines(r){const a=r.observer,q=r.result.quality;return['الموقع '+a.name+' · خط العرض '+a.lat.toFixed(6)+' · خط الطول '+a.lon.toFixed(6)+' · ارتفاع الموقع '+a.height+' مترًا فوق مرجع WGS84.','الفترة '+ReportDocument.stamp(r.start,r.offset)+' إلى '+ReportDocument.stamp(r.end,r.offset)+' · '+r.zoneLabel+' · الحد الأدنى لزاوية الارتفاع '+a.minElevation+'° · خطوة الفحص '+r.step+' ثوانٍ.',r.result.rows.length+' مرورًا فوق حد الزاوية · '+r.result.unique+' قمرًا مختلفًا من '+r.result.total+' · تعذّر حساب '+r.result.invalid+' قمرًا واستُبعدت نتائجه.','حداثة العناصر لكامل الفترة: ضمن 24 ساعة '+q.recent+' · ضمن 24–72 ساعة '+q.aging+' · أبعد من 72 ساعة '+q.old+' · غير معروف '+q.unknown+'.','عند زاوية 89.9° فأعلى يُحجب السمت لعدم استقراره قرب نقطة الرأس. زاوية الارتفاع فوق الأفق؛ السمت من الشمال باتجاه عقارب الساعة (شرق 90°، جنوب 180°). المسافة المائلة عند الذروة محسوبة بالكيلومترات. الذروة تقديرية بصقل محلي حول أعلى عينة، والأوقات قد تكون محصورة بحد الفترة.',...(q.snapshots?.length?['تواريخ النسخ الاحتياطية المستخدمة: '+q.snapshots.join('، ')+'.']:[]),'المصادر: '+Object.entries(q.sources).map(([k,v])=>k+' '+v).join('، ')+'؛ وقت الجلب موثق لـ '+q.fetched+' من '+q.total+'.','خط رؤية هندسي باستخدام SGP4 وWGS84، دون انكسار جوي أو تضاريس أو مبانٍ. لا يُحسب ضوء الشمس أو ظل الأرض أو السطوع والطقس؛ وجود القمر فوق الأفق لا يضمن رؤيته بالعين أو تشغيل مستشعره. الفحص قد يفوّت مرورًا أقصر من خطوة الحساب؛ العناصر المتاحة ليست أرشيفًا تاريخيًا.']}
-function rows(r){return [['القمر وNORAD','الدخول','الخروج','الذروة','زاوية الذروة °','سمت الذروة °','المسافة عند الذروة كم','سمت الدخول °','سمت الخروج °','المدة ثانية'],...r.result.rows.map(p=>[p.name+' · '+p.id,ReportDocument.stamp(p.entry,r.offset)+(p.clippedStart?' *':''),ReportDocument.stamp(p.exit,r.offset)+(p.clippedEnd?' *':''),ReportDocument.stamp(p.peakTime,r.offset),p.elevation.toFixed(2),angle(p.azimuth),p.range.toFixed(1),angle(p.entryAzimuth),angle(p.exitAzimuth),p.duration.toFixed(1)]) ]}
-function create(D,r){D=root.MadarI18n?.wordLibrary(D)||D;if(root.ReportLayout.mode('observer')==='brief')return root.ReportLayout.document(D,r,[],{title:'تقرير مرور الأقمار من موقع الرصد',detail:'brief'});const {Document,Paragraph,TextRun,Table,TableRow,TableCell,WidthType,BorderStyle,VerticalAlign}=D,p=(t,size=22)=>new Paragraph({bidirectional:true,alignment:D.AlignmentType.START,spacing:{after:140},children:String(t).split('\n').map((line,i)=>new TextRun({text:line,break:i?1:0,font:'Arial',size}))}),widths=[1800,2200,1800,1500,1060,1000];const data=[['القمر وNORAD','الدخول والخروج','الذروة وزاويتها','السمت عند الدخول / الذروة / الخروج','المسافة كم','المدة ثانية'],...r.result.rows.map(v=>[v.name+'\n'+v.id,ReportDocument.stamp(v.entry,r.offset)+(v.clippedStart?' *':'')+'\n'+ReportDocument.stamp(v.exit,r.offset)+(v.clippedEnd?' *':''),ReportDocument.stamp(v.peakTime,r.offset)+'\n'+v.elevation.toFixed(2)+'°',[v.entryAzimuth,v.azimuth,v.exitAzimuth].map(angle).join(' / '),v.range.toFixed(1),v.duration.toFixed(1)])];const children=[new Paragraph({text:'تقرير مرور الأقمار من موقع الرصد',bidirectional:true,heading:'Heading1'}),...lines(r).slice(4).map(t=>p(t)),p(ReportArchive.text(r)),new Table({width:{size:9360,type:WidthType.DXA},columnWidths:widths,visuallyRightToLeft:true,borders:Object.fromEntries(['top','bottom','left','right','insideHorizontal','insideVertical'].map(k=>[k,{style:BorderStyle.SINGLE,size:4,color:'D9D9D9'}])),rows:data.map((values,i)=>new TableRow({tableHeader:i===0,cantSplit:true,children:values.map((v,j)=>new TableCell({width:{size:widths[j],type:WidthType.DXA},verticalAlign:VerticalAlign.CENTER,margins:{top:100,bottom:100,left:90,right:90},shading:{fill:i===0?'DCE6EF':i%2?'FFFFFF':'F4F6F8'},children:[p(v,19)]}))}))}),p('* وقت محصور ضمن بداية أو نهاية فترة البحث. جميع المصادر وتواريخ العناصر مضمنة في CSV ولقطة JSON. المرجع الحسابي https://github.com/shashwatak/satellite-js')];return root.ReportLayout.document(D,r,children.slice(1),{title:'تقرير مرور الأقمار من موقع الرصد',detail:root.ReportLayout.mode('observer')})}
-root.ObserverReport={lines,rows,create};
+(function (root) {
+  'use strict';
+  const angle = (n) => (n == null ? '— قرب الرأس' : n.toFixed(1) + '°');
+  function lines(r) {
+    const a = r.observer,
+      q = r.result.quality;
+    return [
+      'الموقع ' +
+        a.name +
+        ' · خط العرض ' +
+        a.lat.toFixed(6) +
+        ' · خط الطول ' +
+        a.lon.toFixed(6) +
+        ' · ارتفاع الموقع ' +
+        a.height +
+        ' مترًا فوق مرجع WGS84.',
+      'الفترة ' +
+        ReportDocument.stamp(r.start, r.offset) +
+        ' إلى ' +
+        ReportDocument.stamp(r.end, r.offset) +
+        ' · ' +
+        r.zoneLabel +
+        ' · الحد الأدنى لزاوية الارتفاع ' +
+        a.minElevation +
+        '° · خطوة الفحص ' +
+        r.step +
+        ' ثوانٍ.',
+      r.result.rows.length +
+        ' مرورًا فوق حد الزاوية · ' +
+        r.result.unique +
+        ' قمرًا مختلفًا من ' +
+        r.result.total +
+        ' · تعذّر حساب ' +
+        r.result.invalid +
+        ' قمرًا واستُبعدت نتائجه.',
+      'حداثة العناصر لكامل الفترة: ضمن 24 ساعة ' +
+        q.recent +
+        ' · ضمن 24–72 ساعة ' +
+        q.aging +
+        ' · أبعد من 72 ساعة ' +
+        q.old +
+        ' · غير معروف ' +
+        q.unknown +
+        '.',
+      'عند زاوية 89.9° فأعلى يُحجب السمت لعدم استقراره قرب نقطة الرأس. زاوية الارتفاع فوق الأفق؛ السمت من الشمال باتجاه عقارب الساعة (شرق 90°، جنوب 180°). المسافة المائلة عند الذروة محسوبة بالكيلومترات. الذروة تقديرية بصقل محلي حول أعلى عينة، والأوقات قد تكون محصورة بحد الفترة.',
+      ...(q.snapshots?.length
+        ? ['تواريخ النسخ الاحتياطية المستخدمة: ' + q.snapshots.join('، ') + '.']
+        : []),
+      'المصادر: ' +
+        Object.entries(q.sources)
+          .map(([k, v]) => k + ' ' + v)
+          .join('، ') +
+        '؛ وقت الجلب موثق لـ ' +
+        q.fetched +
+        ' من ' +
+        q.total +
+        '.',
+      'خط رؤية هندسي باستخدام SGP4 وWGS84، دون انكسار جوي أو تضاريس أو مبانٍ. لا يُحسب ضوء الشمس أو ظل الأرض أو السطوع والطقس؛ وجود القمر فوق الأفق لا يضمن رؤيته بالعين أو تشغيل مستشعره. الفحص قد يفوّت مرورًا أقصر من خطوة الحساب؛ العناصر المتاحة ليست أرشيفًا تاريخيًا.',
+    ];
+  }
+  function rows(r) {
+    return [
+      [
+        'القمر وNORAD',
+        'الدخول',
+        'الخروج',
+        'الذروة',
+        'زاوية الذروة °',
+        'سمت الذروة °',
+        'المسافة عند الذروة كم',
+        'سمت الدخول °',
+        'سمت الخروج °',
+        'المدة ثانية',
+      ],
+      ...r.result.rows.map((p) => [
+        p.name + ' · ' + p.id,
+        ReportDocument.stamp(p.entry, r.offset) + (p.clippedStart ? ' *' : ''),
+        ReportDocument.stamp(p.exit, r.offset) + (p.clippedEnd ? ' *' : ''),
+        ReportDocument.stamp(p.peakTime, r.offset),
+        p.elevation.toFixed(2),
+        angle(p.azimuth),
+        p.range.toFixed(1),
+        angle(p.entryAzimuth),
+        angle(p.exitAzimuth),
+        p.duration.toFixed(1),
+      ]),
+    ];
+  }
+  function create(D, r) {
+    D = root.MadarI18n?.wordLibrary(D) || D;
+    if (root.ReportLayout.mode('observer') === 'brief')
+      return root.ReportLayout.document(D, r, [], {
+        title: 'تقرير مرور الأقمار من موقع الرصد',
+        detail: 'brief',
+      });
+    const {
+        Document,
+        Paragraph,
+        TextRun,
+        Table,
+        TableRow,
+        TableCell,
+        WidthType,
+        BorderStyle,
+        VerticalAlign,
+      } = D,
+      p = (t, size = 22) =>
+        new Paragraph({
+          bidirectional: true,
+          alignment: D.AlignmentType.START,
+          spacing: { after: 140 },
+          children: String(t)
+            .split('\n')
+            .map((line, i) => new TextRun({ text: line, break: i ? 1 : 0, font: 'Arial', size })),
+        }),
+      widths = [1800, 2200, 1800, 1500, 1060, 1000];
+    const data = [
+      [
+        'القمر وNORAD',
+        'الدخول والخروج',
+        'الذروة وزاويتها',
+        'السمت عند الدخول / الذروة / الخروج',
+        'المسافة كم',
+        'المدة ثانية',
+      ],
+      ...r.result.rows.map((v) => [
+        v.name + '\n' + v.id,
+        ReportDocument.stamp(v.entry, r.offset) +
+          (v.clippedStart ? ' *' : '') +
+          '\n' +
+          ReportDocument.stamp(v.exit, r.offset) +
+          (v.clippedEnd ? ' *' : ''),
+        ReportDocument.stamp(v.peakTime, r.offset) + '\n' + v.elevation.toFixed(2) + '°',
+        [v.entryAzimuth, v.azimuth, v.exitAzimuth].map(angle).join(' / '),
+        v.range.toFixed(1),
+        v.duration.toFixed(1),
+      ]),
+    ];
+    const children = [
+      new Paragraph({
+        text: 'تقرير مرور الأقمار من موقع الرصد',
+        bidirectional: true,
+        heading: 'Heading1',
+      }),
+      ...lines(r)
+        .slice(4)
+        .map((t) => p(t)),
+      p(ReportArchive.text(r)),
+      new Table({
+        width: { size: 9360, type: WidthType.DXA },
+        columnWidths: widths,
+        visuallyRightToLeft: true,
+        borders: Object.fromEntries(
+          ['top', 'bottom', 'left', 'right', 'insideHorizontal', 'insideVertical'].map((k) => [
+            k,
+            { style: BorderStyle.SINGLE, size: 4, color: 'D9D9D9' },
+          ]),
+        ),
+        rows: data.map(
+          (values, i) =>
+            new TableRow({
+              tableHeader: i === 0,
+              cantSplit: true,
+              children: values.map(
+                (v, j) =>
+                  new TableCell({
+                    width: { size: widths[j], type: WidthType.DXA },
+                    verticalAlign: VerticalAlign.CENTER,
+                    margins: { top: 100, bottom: 100, left: 90, right: 90 },
+                    shading: { fill: i === 0 ? 'DCE6EF' : i % 2 ? 'FFFFFF' : 'F4F6F8' },
+                    children: [p(v, 19)],
+                  }),
+              ),
+            }),
+        ),
+      }),
+      p(
+        '* وقت محصور ضمن بداية أو نهاية فترة البحث. جميع المصادر وتواريخ العناصر مضمنة في CSV ولقطة JSON. المرجع الحسابي https://github.com/shashwatak/satellite-js',
+      ),
+    ];
+    return root.ReportLayout.document(D, r, children.slice(1), {
+      title: 'تقرير مرور الأقمار من موقع الرصد',
+      detail: root.ReportLayout.mode('observer'),
+    });
+  }
+  root.ObserverReport = { lines, rows, create };
 })(window);

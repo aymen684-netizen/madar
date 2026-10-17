@@ -1,34 +1,443 @@
-import fs from 'node:fs';import vm from 'node:vm';import assert from 'node:assert/strict';import {createRequire} from 'node:module';import path from 'node:path';
-const {docxXml}=createRequire(import.meta.url)('./check-browser-inventory.cjs');
-const c={Intl,URL,Blob,TextEncoder,TextDecoder,Uint8Array,setTimeout,clearTimeout};c.window=c;c.self=c;vm.createContext(c);
-for(const file of ['vendor/docx.js','satellite-metadata.js','country-inventory-core.js','report-insights.js','report-archive.js','report-brief.js','report-layout.js','report-document.js','observer-report.js','analysis-core.js','analysis-document.js'])vm.runInContext(fs.readFileSync('public/'+file,'utf8'),c);
-c.SatMetadata.use(JSON.parse(fs.readFileSync('public/data/satellite-metadata.json')),JSON.parse(fs.readFileSync('public/data/mission-profiles.json')));
-const B=c.ReportBrief,L=c.ReportLayout,records=c.SatMetadata.inventoryRecords('SAUD').slice(0,3),inventory=c.CountryInventoryCore.build(records,c.SatMetadata.inventoryInfo(),'SAUD');
-const t=Date.parse('2026-10-16T00:00:00Z'),row={id:1,name:'QA Alpha',entry:t,exit:t+60000,duration:60,epoch:t,provenance:{mode:'imported'},height:500,metadata:{ownerCode:'TEST',country:'Test',launch:'2020-01-01',missionKind:'category',missionSource:'https://example.com/category'}};
-const window={start:t,end:t+3600000,day:'QA',result:{rows:[row,{...row,entry:t+120000,exit:t+180000}],unique:1,total:3,invalid:1,stale:1,quality:{total:3,recent:1,aging:0,old:1,unknown:1,fetched:2,sources:{'بيانات مستوردة':3},snapshots:[]}}};
-let b=B.build(window);assert(b.executive.some(s=>s.includes('أقمار تعذّر حسابها 1')));assert.equal(b.metrics.find(m=>m.key==='launch').count,1);assert.equal(b.metrics.find(m=>m.key==='launch').total,1);assert.equal(b.metrics.find(m=>m.key==='mission').count,0,'a general category is not documented mission evidence');assert(Math.abs(b.metrics.find(m=>m.key==='old').percent-100/3)<1e-8);assert.equal(b.metrics.find(m=>m.key==='old').total,3,'scan scope stays separate from result scope');assert.equal(b.executive.filter(s=>s.includes('00:02:00')).length,1,'union and summed durations use the selected rows');
-const empty={...window,result:{...window.result,rows:[],unique:0,total:0,quality:{total:0,recent:0,aging:0,old:0,unknown:0,fetched:0}}};b=B.build(empty);assert(b.metrics.every(m=>m.percent===null));assert(b.executive.some(s=>s.includes('لا تؤكد')));
-const legacy={...window,result:{...window.result,quality:null}};assert(!B.build(legacy).metrics.some(m=>m.key==='recent'));assert(B.build(legacy).notes.some(s=>s.includes('أعد الحساب')));
-const samples=[{...row,metadata:{...row.metadata,missionKind:'documented',missionSource:'javascript:alert(1)',launch:'2026-02-30'}},{...row,id:2,metadata:{...row.metadata,missionKind:'program',missionSource:'https://example.com/program',launch:'غير متاح'}}];b=B.build({...window,result:{...window.result,rows:samples}});assert.equal(b.metrics.find(m=>m.key==='launch').count,0);assert.equal(b.metrics.find(m=>m.key==='mission').count,1);assert(!b.references.some(r=>r.url.startsWith('javascript:')));assert.equal(b.distributions[0].items.reduce((n,x)=>n+x.count,0),2);
-const comparison={...window,countryName:'QA region',country:{id:'QA'},scopeName:'QA scope',offset:0,zoneLabel:'UTC',step:10,tolerance:5,windows:[window,{...window,start:t+86400000,end:t+90000000}],analysis:c.AnalysisCore.analyze([window,window],0,5)};b=B.build(comparison);assert.equal(b.metrics.find(m=>m.key==='launch').total,1);assert.equal(b.metrics.find(m=>m.key==='old').total,6);assert(b.metrics.find(m=>m.key==='old').scope.includes('قد يتكرر'));
-assert.equal(B.build(inventory).metrics.find(m=>m.key==='launch').total,3);assert.equal(B.build(inventory).distributions[0].items.reduce((n,x)=>n+x.count,0),3);
-const dictionary=JSON.parse(fs.readFileSync('public/data/en.json'));const fake={nodeType:1,childNodes:[],matches:()=>false,getAttribute:()=>null};Object.assign(c,{fetch:async()=>({ok:true,json:async()=>dictionary}),localStorage:{getItem:()=>null,setItem:()=>{}},MutationObserver:class{observe(){}},CustomEvent:class{},Event:class{},document:{documentElement:fake,dispatchEvent(){}}});vm.runInContext(fs.readFileSync('public/i18n.js','utf8'),c);await c.MadarI18n.ready;
-const country={...window,countryName:'QA region',country:{id:'QA'},offset:0,zoneLabel:'UTC',scopeName:'QA scope',day:'QA',step:10},observer={...country,observer:{name:'QA site',lat:24.7,lon:46.7,height:600,minElevation:10},result:{...window.result,rows:[{...row,peakTime:t+30000,elevation:75,azimuth:45,range:600,entryAzimuth:30,exitAzimuth:60}]}};
-const reports={inventory,report:country,analysis:comparison,observer};const qa=new Set(['inventory-full-ar','inventory-brief-en','report-full-ar','report-brief-en','analysis-brief-ar','analysis-full-ar','observer-full-en']);
-for(const lang of ['ar','en']){c.MadarI18n.setLanguage(lang);for(const [kind,r]of Object.entries(reports)){r.brandBytes=new Uint8Array(fs.readFileSync('public/icons/madar-192.png'));for(const detail of ['full','brief']){L.setMode(kind,detail);const brief=B.build(r);if(lang==='en'){for(const text of [...brief.overview,...brief.executive,...brief.notes,...brief.metrics.map(L.metricText),...brief.distributions.map(L.distributionText)]){const translated=c.MadarI18n.translate(text);assert(!/[\u0620-\u064a]/.test(translated),translated)}}const D=c.docx,document=kind==='inventory'?L.document(D,r,[],{title:'QA inventory',brief:L.translated(brief),language:lang,detail,landscape:true}):kind==='report'?c.ReportDocument.createReport(D,r):kind==='analysis'?c.AnalysisDocument.create(D,r):c.ObserverReport.create(D,r),bytes=Buffer.from(await (await D.Packer.toBlob(document)).arrayBuffer()),xml=docxXml(bytes);if(lang==='en')assert(!/[\u0620-\u064a]/.test(xml),kind+' '+detail+' '+(xml.match(/<w:t(?:\s[^>]*)?>[^<]*[\u0620-\u064a][^<]*<\/w:t>/g)||[]).join('; '));assert(xml.includes(lang==='ar'?'الملخص التنفيذي':'Executive summary'));assert(xml.includes(lang==='ar'?'اكتمال البيانات وحداثتها':'Data completeness and freshness'));assert.equal(xml.includes('<w:tbl>'),detail==='full'&&kind!=='inventory');const label=kind+'-'+detail+'-'+lang;if(process.env.MADAR_REPORT_QA_DIR&&qa.has(label)){fs.mkdirSync(process.env.MADAR_REPORT_QA_DIR,{recursive:true});fs.writeFileSync(path.join(process.env.MADAR_REPORT_QA_DIR,label+'.docx'),bytes)}}}}
-console.log('PASS: deduplicated result metrics, scan denominators, zero/legacy/unknown data, mission evidence, overlapping-period scope, safe references, bilingual full and brief Word documents');
+import fs from 'node:fs';
+import vm from 'node:vm';
+import assert from 'node:assert/strict';
+import { createRequire } from 'node:module';
+import path from 'node:path';
+const { docxXml } = createRequire(import.meta.url)('./check-browser-inventory.cjs');
+const c = { Intl, URL, Blob, TextEncoder, TextDecoder, Uint8Array, setTimeout, clearTimeout };
+c.window = c;
+c.self = c;
+vm.createContext(c);
+for (const file of [
+  'vendor/docx.js',
+  'satellite-metadata.js',
+  'country-inventory-core.js',
+  'report-insights.js',
+  'report-archive.js',
+  'report-brief.js',
+  'report-layout.js',
+  'report-document.js',
+  'observer-report.js',
+  'analysis-core.js',
+  'analysis-document.js',
+])
+  vm.runInContext(fs.readFileSync('public/' + file, 'utf8'), c);
+c.SatMetadata.use(
+  JSON.parse(fs.readFileSync('public/data/satellite-metadata.json')),
+  JSON.parse(fs.readFileSync('public/data/mission-profiles.json')),
+);
+const B = c.ReportBrief,
+  L = c.ReportLayout,
+  records = c.SatMetadata.inventoryRecords('SAUD').slice(0, 3),
+  inventory = c.CountryInventoryCore.build(records, c.SatMetadata.inventoryInfo(), 'SAUD');
+const t = Date.parse('2026-10-16T00:00:00Z'),
+  row = {
+    id: 1,
+    name: 'QA Alpha',
+    entry: t,
+    exit: t + 60000,
+    duration: 60,
+    epoch: t,
+    provenance: { mode: 'imported' },
+    height: 500,
+    metadata: {
+      ownerCode: 'TEST',
+      country: 'Test',
+      launch: '2020-01-01',
+      missionKind: 'category',
+      missionSource: 'https://example.com/category',
+    },
+  };
+const window = {
+  start: t,
+  end: t + 3600000,
+  day: 'QA',
+  result: {
+    rows: [row, { ...row, entry: t + 120000, exit: t + 180000 }],
+    unique: 1,
+    total: 3,
+    invalid: 1,
+    stale: 1,
+    quality: {
+      total: 3,
+      recent: 1,
+      aging: 0,
+      old: 1,
+      unknown: 1,
+      fetched: 2,
+      sources: { 'بيانات مستوردة': 3 },
+      snapshots: [],
+    },
+  },
+};
+let b = B.build(window);
+assert(b.executive.some((s) => s.includes('أقمار تعذّر حسابها 1')));
+assert.equal(b.metrics.find((m) => m.key === 'launch').count, 1);
+assert.equal(b.metrics.find((m) => m.key === 'launch').total, 1);
+assert.equal(
+  b.metrics.find((m) => m.key === 'mission').count,
+  0,
+  'a general category is not documented mission evidence',
+);
+assert(Math.abs(b.metrics.find((m) => m.key === 'old').percent - 100 / 3) < 1e-8);
+assert.equal(
+  b.metrics.find((m) => m.key === 'old').total,
+  3,
+  'scan scope stays separate from result scope',
+);
+assert.equal(
+  b.executive.filter((s) => s.includes('00:02:00')).length,
+  1,
+  'union and summed durations use the selected rows',
+);
+const empty = {
+  ...window,
+  result: {
+    ...window.result,
+    rows: [],
+    unique: 0,
+    total: 0,
+    quality: { total: 0, recent: 0, aging: 0, old: 0, unknown: 0, fetched: 0 },
+  },
+};
+b = B.build(empty);
+assert(b.metrics.every((m) => m.percent === null));
+assert(b.executive.some((s) => s.includes('لا تؤكد')));
+const legacy = { ...window, result: { ...window.result, quality: null } };
+assert(!B.build(legacy).metrics.some((m) => m.key === 'recent'));
+assert(B.build(legacy).notes.some((s) => s.includes('أعد الحساب')));
+const samples = [
+  {
+    ...row,
+    metadata: {
+      ...row.metadata,
+      missionKind: 'documented',
+      missionSource: 'javascript:alert(1)',
+      launch: '2026-02-30',
+    },
+  },
+  {
+    ...row,
+    id: 2,
+    metadata: {
+      ...row.metadata,
+      missionKind: 'program',
+      missionSource: 'https://example.com/program',
+      launch: 'غير متاح',
+    },
+  },
+];
+b = B.build({ ...window, result: { ...window.result, rows: samples } });
+assert.equal(b.metrics.find((m) => m.key === 'launch').count, 0);
+assert.equal(b.metrics.find((m) => m.key === 'mission').count, 1);
+assert(!b.references.some((r) => r.url.startsWith('javascript:')));
+assert.equal(
+  b.distributions[0].items.reduce((n, x) => n + x.count, 0),
+  2,
+);
+const comparison = {
+  ...window,
+  countryName: 'QA region',
+  country: { id: 'QA' },
+  scopeName: 'QA scope',
+  offset: 0,
+  zoneLabel: 'UTC',
+  step: 10,
+  tolerance: 5,
+  windows: [window, { ...window, start: t + 86400000, end: t + 90000000 }],
+  analysis: c.AnalysisCore.analyze([window, window], 0, 5),
+};
+b = B.build(comparison);
+assert.equal(b.metrics.find((m) => m.key === 'launch').total, 1);
+assert.equal(b.metrics.find((m) => m.key === 'old').total, 6);
+assert(b.metrics.find((m) => m.key === 'old').scope.includes('قد يتكرر'));
+assert.equal(B.build(inventory).metrics.find((m) => m.key === 'launch').total, 3);
+assert.equal(
+  B.build(inventory).distributions[0].items.reduce((n, x) => n + x.count, 0),
+  3,
+);
+const dictionary = JSON.parse(fs.readFileSync('public/data/en.json'));
+const fake = { nodeType: 1, childNodes: [], matches: () => false, getAttribute: () => null };
+Object.assign(c, {
+  fetch: async () => ({ ok: true, json: async () => dictionary }),
+  localStorage: { getItem: () => null, setItem: () => {} },
+  MutationObserver: class {
+    observe() {}
+  },
+  CustomEvent: class {},
+  Event: class {},
+  document: { documentElement: fake, dispatchEvent() {} },
+});
+vm.runInContext(fs.readFileSync('public/i18n.js', 'utf8'), c);
+await c.MadarI18n.ready;
+const country = {
+    ...window,
+    countryName: 'QA region',
+    country: { id: 'QA' },
+    offset: 0,
+    zoneLabel: 'UTC',
+    scopeName: 'QA scope',
+    day: 'QA',
+    step: 10,
+  },
+  observer = {
+    ...country,
+    observer: { name: 'QA site', lat: 24.7, lon: 46.7, height: 600, minElevation: 10 },
+    result: {
+      ...window.result,
+      rows: [
+        {
+          ...row,
+          peakTime: t + 30000,
+          elevation: 75,
+          azimuth: 45,
+          range: 600,
+          entryAzimuth: 30,
+          exitAzimuth: 60,
+        },
+      ],
+    },
+  };
+const reports = { inventory, report: country, analysis: comparison, observer };
+const qa = new Set([
+  'inventory-full-ar',
+  'inventory-brief-en',
+  'report-full-ar',
+  'report-brief-en',
+  'analysis-brief-ar',
+  'analysis-full-ar',
+  'observer-full-en',
+]);
+for (const lang of ['ar', 'en']) {
+  c.MadarI18n.setLanguage(lang);
+  for (const [kind, r] of Object.entries(reports)) {
+    r.brandBytes = new Uint8Array(fs.readFileSync('public/icons/madar-192.png'));
+    for (const detail of ['full', 'brief']) {
+      L.setMode(kind, detail);
+      const brief = B.build(r);
+      if (lang === 'en') {
+        for (const text of [
+          ...brief.overview,
+          ...brief.executive,
+          ...brief.notes,
+          ...brief.metrics.map(L.metricText),
+          ...brief.distributions.map(L.distributionText),
+        ]) {
+          const translated = c.MadarI18n.translate(text);
+          assert(!/[\u0620-\u064a]/.test(translated), translated);
+        }
+      }
+      const D = c.docx,
+        document =
+          kind === 'inventory'
+            ? L.document(D, r, [], {
+                title: 'QA inventory',
+                brief: L.translated(brief),
+                language: lang,
+                detail,
+                landscape: true,
+              })
+            : kind === 'report'
+              ? c.ReportDocument.createReport(D, r)
+              : kind === 'analysis'
+                ? c.AnalysisDocument.create(D, r)
+                : c.ObserverReport.create(D, r),
+        bytes = Buffer.from(await (await D.Packer.toBlob(document)).arrayBuffer()),
+        xml = docxXml(bytes);
+      if (lang === 'en')
+        assert(
+          !/[\u0620-\u064a]/.test(xml),
+          kind +
+            ' ' +
+            detail +
+            ' ' +
+            (xml.match(/<w:t(?:\s[^>]*)?>[^<]*[\u0620-\u064a][^<]*<\/w:t>/g) || []).join('; '),
+        );
+      assert(xml.includes(lang === 'ar' ? 'الملخص التنفيذي' : 'Executive summary'));
+      assert(
+        xml.includes(
+          lang === 'ar' ? 'اكتمال البيانات وحداثتها' : 'Data completeness and freshness',
+        ),
+      );
+      assert.equal(xml.includes('<w:tbl>'), detail === 'full' && kind !== 'inventory');
+      const label = kind + '-' + detail + '-' + lang;
+      if (process.env.MADAR_REPORT_QA_DIR && qa.has(label)) {
+        fs.mkdirSync(process.env.MADAR_REPORT_QA_DIR, { recursive: true });
+        fs.writeFileSync(path.join(process.env.MADAR_REPORT_QA_DIR, label + '.docx'), bytes);
+      }
+    }
+  }
+}
+console.log(
+  'PASS: deduplicated result metrics, scan denominators, zero/legacy/unknown data, mission evidence, overlapping-period scope, safe references, bilingual full and brief Word documents',
+);
 // Exercise the production inventory worker in both modes, including the empty report.
-async function inventoryWord(r,lang,detail){let finish;const done=new Promise(resolve=>finish=resolve),worker={Blob,TextEncoder,TextDecoder,Uint8Array,URL,setTimeout,clearTimeout};worker.self=worker;vm.createContext(worker);worker.importScripts=(...files)=>{for(const file of files){const name=file.split('?')[0];if(['vendor/docx.js','inventory-zip.js','report-layout.js'].includes(name))vm.runInContext(fs.readFileSync('public/'+name,'utf8'),worker)}};worker.postMessage=m=>{if(m.type!=='progress')finish(m)};vm.runInContext(fs.readFileSync('public/inventory-word-worker.js','utf8'),worker);c.MadarI18n.setLanguage(lang);const translate=v=>typeof v==='object'?{text:c.MadarI18n.translate(v.text),links:v.links.map(l=>({...l,label:c.MadarI18n.translate(l.label)}))}:c.MadarI18n.translate(v);worker.onmessage({data:{title:lang==='ar'?'حصر أقمار جهة الاختبار':'Test organization satellite inventory',detail,language:lang,createdAt:r.createdAt,brandBytes:r.brandBytes,brief:L.translated(B.build(r)),notes:[],headers:c.CountryInventoryCore.tableHeaders.map(x=>c.MadarI18n.translate(x)),groups:r.groups.map(g=>({code:g.code,label:c.MadarI18n.translate(g.label),brief:L.translated(B.build({...r,rows:g.rows,stats:{...r.stats,owners:1}})),rows:c.CountryInventoryCore.tableRows(g).map(row=>row.map(translate))}))}});const message=await done;assert.equal(message.type,'done',message.message);assert.equal(message.extension,'docx');const bytes=Buffer.from(await message.blob.arrayBuffer()),xml=docxXml(bytes);assert.equal((xml.match(/<w:tr(?:\s[^>]*)?>/g)||[]).length,detail==='full'?r.rows.length+1:0);if(lang==='en')assert(!/[\u0620-\u064a]/.test(xml),'English inventory Word must be fully translated');if(detail==='full'){const size=xml.match(/<w:pgSz w:w="(\d+)" w:h="(\d+)"/);assert(Number(size[1])>Number(size[2]),'landscape page must actually fit all columns')}assert(xml.includes(detail==='full'?'tblHeader':lang==='ar'?'مختصر للإحاطة':'Executive brief'));return bytes}
-for(const [lang,detail]of [['ar','full'],['en','full'],['en','brief']]){const bytes=await inventoryWord(inventory,lang,detail);if(process.env.MADAR_REPORT_QA_DIR)fs.writeFileSync(path.join(process.env.MADAR_REPORT_QA_DIR,'inventory-'+detail+'-'+lang+'.docx'),bytes)}
-const none=c.CountryInventoryCore.build([],{},'NONE');const bytes=await inventoryWord(none,'ar','brief');assert(docxXml(bytes).includes('لا توجد حمولات'));
-console.log('PASS: production inventory worker renders full and brief documents with complete record rows, repeated headers and an honest empty summary');
+async function inventoryWord(r, lang, detail) {
+  let finish;
+  const done = new Promise((resolve) => (finish = resolve)),
+    worker = { Blob, TextEncoder, TextDecoder, Uint8Array, URL, setTimeout, clearTimeout };
+  worker.self = worker;
+  vm.createContext(worker);
+  worker.importScripts = (...files) => {
+    for (const file of files) {
+      const name = file.split('?')[0];
+      if (['vendor/docx.js', 'inventory-zip.js', 'report-layout.js'].includes(name))
+        vm.runInContext(fs.readFileSync('public/' + name, 'utf8'), worker);
+    }
+  };
+  worker.postMessage = (m) => {
+    if (m.type !== 'progress') finish(m);
+  };
+  vm.runInContext(fs.readFileSync('public/inventory-word-worker.js', 'utf8'), worker);
+  c.MadarI18n.setLanguage(lang);
+  const translate = (v) =>
+    typeof v === 'object'
+      ? {
+          text: c.MadarI18n.translate(v.text),
+          links: v.links.map((l) => ({ ...l, label: c.MadarI18n.translate(l.label) })),
+        }
+      : c.MadarI18n.translate(v);
+  worker.onmessage({
+    data: {
+      title: lang === 'ar' ? 'حصر أقمار جهة الاختبار' : 'Test organization satellite inventory',
+      detail,
+      language: lang,
+      createdAt: r.createdAt,
+      brandBytes: r.brandBytes,
+      brief: L.translated(B.build(r)),
+      notes: [],
+      headers: c.CountryInventoryCore.tableHeaders.map((x) => c.MadarI18n.translate(x)),
+      groups: r.groups.map((g) => ({
+        code: g.code,
+        label: c.MadarI18n.translate(g.label),
+        brief: L.translated(B.build({ ...r, rows: g.rows, stats: { ...r.stats, owners: 1 } })),
+        rows: c.CountryInventoryCore.tableRows(g).map((row) => row.map(translate)),
+      })),
+    },
+  });
+  const message = await done;
+  assert.equal(message.type, 'done', message.message);
+  assert.equal(message.extension, 'docx');
+  const bytes = Buffer.from(await message.blob.arrayBuffer()),
+    xml = docxXml(bytes);
+  assert.equal(
+    (xml.match(/<w:tr(?:\s[^>]*)?>/g) || []).length,
+    detail === 'full' ? r.rows.length + 1 : 0,
+  );
+  if (lang === 'en')
+    assert(!/[\u0620-\u064a]/.test(xml), 'English inventory Word must be fully translated');
+  if (detail === 'full') {
+    const size = xml.match(/<w:pgSz w:w="(\d+)" w:h="(\d+)"/);
+    assert(Number(size[1]) > Number(size[2]), 'landscape page must actually fit all columns');
+  }
+  assert(
+    xml.includes(
+      detail === 'full' ? 'tblHeader' : lang === 'ar' ? 'مختصر للإحاطة' : 'Executive brief',
+    ),
+  );
+  return bytes;
+}
+for (const [lang, detail] of [
+  ['ar', 'full'],
+  ['en', 'full'],
+  ['en', 'brief'],
+]) {
+  const bytes = await inventoryWord(inventory, lang, detail);
+  if (process.env.MADAR_REPORT_QA_DIR)
+    fs.writeFileSync(
+      path.join(process.env.MADAR_REPORT_QA_DIR, 'inventory-' + detail + '-' + lang + '.docx'),
+      bytes,
+    );
+}
+const none = c.CountryInventoryCore.build([], {}, 'NONE');
+const bytes = await inventoryWord(none, 'ar', 'brief');
+assert(docxXml(bytes).includes('لا توجد حمولات'));
+console.log(
+  'PASS: production inventory worker renders full and brief documents with complete record rows, repeated headers and an honest empty summary',
+);
 
-c.MadarI18n.setLanguage('en');for(const r of [{...country,result:empty.result},{...observer,result:empty.result},{...comparison,windows:[empty,empty],analysis:c.AnalysisCore.analyze([empty,empty],0,5)}]){const brief=B.build(r);for(const text of [...brief.overview,...brief.executive,...brief.notes,...brief.metrics.map(L.metricText)])assert(!/[\u0620-\u064a]/.test(c.MadarI18n.translate(text)),text)}
-L.setMode('report','full');const emptyWord=Buffer.from(await(await c.docx.Packer.toBlob(c.ReportDocument.createReport(c.docx,{...country,result:empty.result}))).arrayBuffer());assert(!/[\u0620-\u064a]/.test(docxXml(emptyWord)),'Empty English report is fully translated');console.log('PASS: empty country observer and comparison summaries and empty English Word are fully translated');
+c.MadarI18n.setLanguage('en');
+for (const r of [
+  { ...country, result: empty.result },
+  { ...observer, result: empty.result },
+  {
+    ...comparison,
+    windows: [empty, empty],
+    analysis: c.AnalysisCore.analyze([empty, empty], 0, 5),
+  },
+]) {
+  const brief = B.build(r);
+  for (const text of [
+    ...brief.overview,
+    ...brief.executive,
+    ...brief.notes,
+    ...brief.metrics.map(L.metricText),
+  ])
+    assert(!/[\u0620-\u064a]/.test(c.MadarI18n.translate(text)), text);
+}
+L.setMode('report', 'full');
+const emptyWord = Buffer.from(
+  await (
+    await c.docx.Packer.toBlob(
+      c.ReportDocument.createReport(c.docx, { ...country, result: empty.result }),
+    )
+  ).arrayBuffer(),
+);
+assert(!/[\u0620-\u064a]/.test(docxXml(emptyWord)), 'Empty English report is fully translated');
+console.log(
+  'PASS: empty country observer and comparison summaries and empty English Word are fully translated',
+);
 
-assert.equal(L.rate(B.metric('test','test',16792,16799,'test'),'en'),'over 99.9%');assert.equal(L.rate(B.metric('test','test',1,16799,'test'),'en'),'under 0.1%');assert.equal(L.rate(B.metric('test','test',16799,16799,'test'),'en'),'100%');assert(B.metric('test','test',16792,16799,'test').percent<100);console.log('PASS: incomplete datasets never round to full completeness and nonzero small shares remain explicit');
+assert.equal(L.rate(B.metric('test', 'test', 16792, 16799, 'test'), 'en'), 'over 99.9%');
+assert.equal(L.rate(B.metric('test', 'test', 1, 16799, 'test'), 'en'), 'under 0.1%');
+assert.equal(L.rate(B.metric('test', 'test', 16799, 16799, 'test'), 'en'), '100%');
+assert(B.metric('test', 'test', 16792, 16799, 'test').percent < 100);
+console.log(
+  'PASS: incomplete datasets never round to full completeness and nonzero small shares remain explicit',
+);
 
-const sourcedInventory=c.CountryInventoryCore.build(c.SatMetadata.inventoryRecords('US').filter(r=>r.operator==='SpaceX').slice(0,2),c.SatMetadata.inventoryInfo(),'US');assert.equal(sourcedInventory.rows.length,2);sourcedInventory.brandBytes=new Uint8Array(fs.readFileSync('public/icons/madar-192.png'));for(const lang of ['ar','en']){const bytes=await inventoryWord(sourcedInventory,lang,'full');const xml=docxXml(bytes);assert(xml.includes('SpaceX'));assert(xml.includes(lang==='ar'?'مشغّل المنظومة':'Constellation operator'));if(process.env.MADAR_REPORT_QA_DIR)fs.writeFileSync(path.join(process.env.MADAR_REPORT_QA_DIR,'operator-inventory-'+lang+'.docx'),bytes)}console.log('PASS: inventory Word keeps sourced constellation operators separate from catalog attribution in both languages');
+const sourcedInventory = c.CountryInventoryCore.build(
+  c.SatMetadata.inventoryRecords('US')
+    .filter((r) => r.operator === 'SpaceX')
+    .slice(0, 2),
+  c.SatMetadata.inventoryInfo(),
+  'US',
+);
+assert.equal(sourcedInventory.rows.length, 2);
+sourcedInventory.brandBytes = new Uint8Array(fs.readFileSync('public/icons/madar-192.png'));
+for (const lang of ['ar', 'en']) {
+  const bytes = await inventoryWord(sourcedInventory, lang, 'full');
+  const xml = docxXml(bytes);
+  assert(xml.includes('SpaceX'));
+  assert(xml.includes(lang === 'ar' ? 'مشغّل المنظومة' : 'Constellation operator'));
+  if (process.env.MADAR_REPORT_QA_DIR)
+    fs.writeFileSync(
+      path.join(process.env.MADAR_REPORT_QA_DIR, 'operator-inventory-' + lang + '.docx'),
+      bytes,
+    );
+}
+console.log(
+  'PASS: inventory Word keeps sourced constellation operators separate from catalog attribution in both languages',
+);
 
-for(const r of [...Object.values(reports),empty,legacy]){const b=B.build(r);assert(b.overview.length>=3&&b.overview.length<=4);assert(b.executive.length>0)}
-const backup=B.build({...country,result:{...country.result,quality:{...country.result.quality,sources:{"CelesTrak · نسخة احتياطية":3,"بيانات مستوردة":0}}}});assert(backup.overview.some(x=>x.includes("نسخة احتياطية")));assert(!backup.overview.some(x=>x.includes("بيانات مستوردة")));assert(backup.overview.some(x=>x.includes("00:01:00")));console.log("PASS: executive overview stays within 3–4 sentences with actual nonzero sources, longest pass, calculation failures and honest empty results");
+for (const r of [...Object.values(reports), empty, legacy]) {
+  const b = B.build(r);
+  assert(b.overview.length >= 3 && b.overview.length <= 4);
+  assert(b.executive.length > 0);
+}
+const backup = B.build({
+  ...country,
+  result: {
+    ...country.result,
+    quality: {
+      ...country.result.quality,
+      sources: { 'CelesTrak · نسخة احتياطية': 3, 'بيانات مستوردة': 0 },
+    },
+  },
+});
+assert(backup.overview.some((x) => x.includes('نسخة احتياطية')));
+assert(!backup.overview.some((x) => x.includes('بيانات مستوردة')));
+assert(backup.overview.some((x) => x.includes('00:01:00')));
+console.log(
+  'PASS: executive overview stays within 3–4 sentences with actual nonzero sources, longest pass, calculation failures and honest empty results',
+);

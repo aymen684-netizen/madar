@@ -1,2 +1,10 @@
-importScripts('network-resources.js?v=43','network-policy.js?v=43');
-importScripts('analysis-core.js');self.onmessage=e=>{try{const {windows,offset,tolerance}=e.data;self.postMessage({analysis:AnalysisCore.analyze(windows,offset,tolerance)})}catch(err){self.postMessage({error:err.message})}};
+importScripts('network-resources.js?v=43', 'network-policy.js?v=43');
+importScripts('analysis-core.js');
+self.onmessage = (e) => {
+  try {
+    const { windows, offset, tolerance } = e.data;
+    self.postMessage({ analysis: AnalysisCore.analyze(windows, offset, tolerance) });
+  } catch (err) {
+    self.postMessage({ error: err.message });
+  }
+};

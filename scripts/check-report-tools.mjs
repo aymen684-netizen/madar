@@ -1,12 +1,92 @@
-import fs from 'node:fs';import vm from 'node:vm';import assert from 'node:assert/strict';import {webcrypto} from 'node:crypto';
-const c={Date,setTimeout,crypto:webcrypto,TextEncoder,Uint8Array};vm.createContext(c);c.window=c;for(const n of ['vendor/satellite.min.js','orbit-data.js','report-insights.js','analysis-core.js','report-archive.js','report-exports.js','observer-engine.js'])vm.runInContext(fs.readFileSync('public/'+n,'utf8'),c);
-const O=c.OrbitData,S=c.satellite,o=O.fromOmm(JSON.parse(fs.readFileSync('scripts/fixtures/omm-six-digit.json'))),t=O.epoch(o),state=S.propagate(O.satrec(S,o),new Date(t)),g=S.eciToGeodetic(state.position,S.gstime(new Date(t))),request={observer:{lat:g.latitude*180/Math.PI,lon:g.longitude*180/Math.PI,height:0,minElevation:10},start:t,end:t+600000,step:10};
-const look=c.ObserverEngine.look(S,O.satrec(S,o),t,request.observer);assert(Math.abs(look.elevation-90)<1e-6);assert(Math.abs(look.range-g.height)<0.001);
-const result=await c.ObserverEngine.scan(S,[o],request);assert.equal(result.invalid,0);assert.equal(result.rows.length,1);assert(result.rows[0].clippedStart);assert(result.rows[0].elevation>89.99);assert(result.rows[0].duration>0);assert(result.rows[0].exit<=request.end);assert.equal(result.rows[0].azimuth,null,'azimuth at zenith must not imply a reliable direction');
-for(const observer of [{...request.observer,lat:91},{...request.observer,height:NaN}])assert.throws(()=>c.ObserverEngine.validate({...request,observer}));
-await assert.rejects(c.ObserverEngine.scan(S,[o],{...request,end:t+864e5+1}));
-const bad=await c.ObserverEngine.scan({...S,propagate:()=>null},[o],request);assert.equal(bad.invalid,1);assert.equal(bad.rows.length,0);
-const a=await c.ReportArchive.capture('observer',[o],request);const bytes=new TextEncoder().encode(JSON.stringify(a.payload));assert.equal(a.sha256,Buffer.from(await webcrypto.subtle.digest('SHA-256',bytes)).toString('hex'));const original=a.payload.objects[0].name;o.name='changed';assert.equal(a.payload.objects[0].name,original);assert(c.ReportArchive.text({archive:a}).includes(a.id));
-const n=c.AnalysisCore.normalized({start:0,end:36e5,result:{rows:[{entry:0,exit:1800e3,duration:1800},{entry:900e3,exit:2700e3,duration:1800,clippedStart:true}]}});assert.equal(n.perHour,2);assert.equal(n.coveragePercent,75);assert.equal(n.clipped,1);assert.equal(c.AnalysisCore.normalized({start:0,end:72e5,result:{rows:[{entry:0,exit:1800e3,duration:1800}]}}).perHour,0.5);
-for(const dangerous of ['=1+1',' +2','\t@SUM(1)','-cmd'])assert(c.ReportExports.csv([[dangerous]]).includes("'"+dangerous));assert(c.ReportExports.csv([['قمر "اختبار"']]).includes('""اختبار""'));assert(c.ReportExports.csv([['سطر\nثان']]).includes('سطر\nثان'));
-console.log('PASS: independent overhead geometry, real SGP4 observer pass, failed propagation exclusions, parameter bounds, exact SHA-256 snapshots, defensive clones, normalized period metrics and CSV formula protection');
+import fs from 'node:fs';
+import vm from 'node:vm';
+import assert from 'node:assert/strict';
+import { webcrypto } from 'node:crypto';
+const c = { Date, setTimeout, crypto: webcrypto, TextEncoder, Uint8Array };
+vm.createContext(c);
+c.window = c;
+for (const n of [
+  'vendor/satellite.min.js',
+  'orbit-data.js',
+  'report-insights.js',
+  'analysis-core.js',
+  'report-archive.js',
+  'report-exports.js',
+  'observer-engine.js',
+])
+  vm.runInContext(fs.readFileSync('public/' + n, 'utf8'), c);
+const O = c.OrbitData,
+  S = c.satellite,
+  o = O.fromOmm(JSON.parse(fs.readFileSync('scripts/fixtures/omm-six-digit.json'))),
+  t = O.epoch(o),
+  state = S.propagate(O.satrec(S, o), new Date(t)),
+  g = S.eciToGeodetic(state.position, S.gstime(new Date(t))),
+  request = {
+    observer: {
+      lat: (g.latitude * 180) / Math.PI,
+      lon: (g.longitude * 180) / Math.PI,
+      height: 0,
+      minElevation: 10,
+    },
+    start: t,
+    end: t + 600000,
+    step: 10,
+  };
+const look = c.ObserverEngine.look(S, O.satrec(S, o), t, request.observer);
+assert(Math.abs(look.elevation - 90) < 1e-6);
+assert(Math.abs(look.range - g.height) < 0.001);
+const result = await c.ObserverEngine.scan(S, [o], request);
+assert.equal(result.invalid, 0);
+assert.equal(result.rows.length, 1);
+assert(result.rows[0].clippedStart);
+assert(result.rows[0].elevation > 89.99);
+assert(result.rows[0].duration > 0);
+assert(result.rows[0].exit <= request.end);
+assert.equal(result.rows[0].azimuth, null, 'azimuth at zenith must not imply a reliable direction');
+for (const observer of [
+  { ...request.observer, lat: 91 },
+  { ...request.observer, height: NaN },
+])
+  assert.throws(() => c.ObserverEngine.validate({ ...request, observer }));
+await assert.rejects(c.ObserverEngine.scan(S, [o], { ...request, end: t + 864e5 + 1 }));
+const bad = await c.ObserverEngine.scan({ ...S, propagate: () => null }, [o], request);
+assert.equal(bad.invalid, 1);
+assert.equal(bad.rows.length, 0);
+const a = await c.ReportArchive.capture('observer', [o], request);
+const bytes = new TextEncoder().encode(JSON.stringify(a.payload));
+assert.equal(
+  a.sha256,
+  Buffer.from(await webcrypto.subtle.digest('SHA-256', bytes)).toString('hex'),
+);
+const original = a.payload.objects[0].name;
+o.name = 'changed';
+assert.equal(a.payload.objects[0].name, original);
+assert(c.ReportArchive.text({ archive: a }).includes(a.id));
+const n = c.AnalysisCore.normalized({
+  start: 0,
+  end: 36e5,
+  result: {
+    rows: [
+      { entry: 0, exit: 1800e3, duration: 1800 },
+      { entry: 900e3, exit: 2700e3, duration: 1800, clippedStart: true },
+    ],
+  },
+});
+assert.equal(n.perHour, 2);
+assert.equal(n.coveragePercent, 75);
+assert.equal(n.clipped, 1);
+assert.equal(
+  c.AnalysisCore.normalized({
+    start: 0,
+    end: 72e5,
+    result: { rows: [{ entry: 0, exit: 1800e3, duration: 1800 }] },
+  }).perHour,
+  0.5,
+);
+for (const dangerous of ['=1+1', ' +2', '\t@SUM(1)', '-cmd'])
+  assert(c.ReportExports.csv([[dangerous]]).includes("'" + dangerous));
+assert(c.ReportExports.csv([['قمر "اختبار"']]).includes('""اختبار""'));
+assert(c.ReportExports.csv([['سطر\nثان']]).includes('سطر\nثان'));
+console.log(
+  'PASS: independent overhead geometry, real SGP4 observer pass, failed propagation exclusions, parameter bounds, exact SHA-256 snapshots, defensive clones, normalized period metrics and CSV formula protection',
+);
