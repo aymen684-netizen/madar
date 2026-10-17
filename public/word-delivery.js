@@ -1,1 +1,106 @@
-(function(root){'use strict';const ready=new Map(),versions=new Map(),MIME='application/vnd.openxmlformats-officedocument.wordprocessingml.document';async function attach(kind,blob,filename){const version=(versions.get(kind)||0)+1;versions.set(kind,version);const file=typeof root.File==='function'?new root.File([blob],filename,{type:blob.type||MIME}):blob;ready.set(kind,{file,blob,filename});await root.StateStore?.put(kind+'-word',{blob,filename,edition:root.ReportBrief?.VERSION||null,language:root.MadarI18n?.language||'ar',detail:root.ReportLayout?.mode(kind)||'full'});if(versions.get(kind)!==version)return false;const button=document.getElementById(kind+'-share');if(button){button.hidden=false;button.disabled=false;button.onclick=()=>share(kind)}}function clear(kind){versions.set(kind,(versions.get(kind)||0)+1);ready.delete(kind);const b=document.getElementById(kind+'-share');if(b)b.hidden=true;const f=document.getElementById(kind+'-download-form');if(f)f.hidden=true;root.StateStore?.remove(kind+'-word')}async function share(kind){const r=ready.get(kind);if(!r)return;const status=document.getElementById(kind+'-status'),version=versions.get(kind);const say=text=>{if(versions.get(kind)===version&&status)status.textContent=text};try{if(root.navigator?.share&&root.navigator.canShare?.({files:[r.file]})){await root.navigator.share({files:[r.file],title:'تقرير مدار'});say('تم فتح قائمة مشاركة الملف. اختر «حفظ في الملفات» أو تطبيق Word.');return}say('قائمة حفظ الملفات غير مدعومة في هذا العارض. استخدم رابط التنزيل المباشر.');const link=document.getElementById(kind+'-download');if(link?.href)link.click()}catch(e){say(e.name==='AbortError'?'أُغلقت قائمة المشاركة. الملف متاح ويمكن فتحها مجددًا.':'تعذّر فتح المشاركة في هذا العارض. استخدم رابط تنزيل الملف.')}}async function restore(kind){const r=await root.StateStore?.get(kind+'-word');if(r?.blob&&r.filename){if(root.ReportBrief&&(r.edition!==root.ReportBrief.VERSION||r.language!==(root.MadarI18n?.language||'ar')))return null;root.ReportLayout?.setMode(kind,r.detail);const select=document.getElementById(kind+'-export-detail');if(select)select.value=root.ReportLayout?.mode(kind)||'full';await attach(kind,r.blob,r.filename);return r}return null}let libraryPending=null;function library(){if(root.docx)return Promise.resolve(root.docx);if(!libraryPending)libraryPending=new Promise((resolve,reject)=>{const script=document.createElement('script');script.src='vendor/docx.js';let timer;function fail(){clearTimeout(timer);script.remove();libraryPending=null;reject(Error('تعذّر تحميل مكوّن Word. حاول مجددًا.'))}script.onerror=fail;script.onload=()=>{clearTimeout(timer);if(root.docx)resolve(root.docx);else fail()};timer=setTimeout(fail,20000);document.head.append(script)});return libraryPending}root.WordDelivery={attach,clear,share,restore,library}})(window);
+(function (root) {
+  'use strict';
+  const ready = new Map(),
+    versions = new Map(),
+    MIME = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+  async function attach(kind, blob, filename) {
+    const version = (versions.get(kind) || 0) + 1;
+    versions.set(kind, version);
+    const file =
+      typeof root.File === 'function'
+        ? new root.File([blob], filename, { type: blob.type || MIME })
+        : blob;
+    ready.set(kind, { file, blob, filename });
+    await root.StateStore?.put(kind + '-word', {
+      blob,
+      filename,
+      edition: root.ReportBrief?.VERSION || null,
+      language: root.MadarI18n?.language || 'ar',
+      detail: root.ReportLayout?.mode(kind) || 'full',
+    });
+    if (versions.get(kind) !== version) return false;
+    const button = document.getElementById(kind + '-share');
+    if (button) {
+      button.hidden = false;
+      button.disabled = false;
+      button.onclick = () => share(kind);
+    }
+  }
+  function clear(kind) {
+    versions.set(kind, (versions.get(kind) || 0) + 1);
+    ready.delete(kind);
+    const b = document.getElementById(kind + '-share');
+    if (b) b.hidden = true;
+    const f = document.getElementById(kind + '-download-form');
+    if (f) f.hidden = true;
+    root.StateStore?.remove(kind + '-word');
+  }
+  async function share(kind) {
+    const r = ready.get(kind);
+    if (!r) return;
+    const status = document.getElementById(kind + '-status'),
+      version = versions.get(kind);
+    const say = (text) => {
+      if (versions.get(kind) === version && status) status.textContent = text;
+    };
+    try {
+      if (root.navigator?.share && root.navigator.canShare?.({ files: [r.file] })) {
+        await root.navigator.share({ files: [r.file], title: 'تقرير مدار' });
+        say('تم فتح قائمة مشاركة الملف. اختر «حفظ في الملفات» أو تطبيق Word.');
+        return;
+      }
+      say('قائمة حفظ الملفات غير مدعومة في هذا العارض. استخدم رابط التنزيل المباشر.');
+      const link = document.getElementById(kind + '-download');
+      if (link?.href) link.click();
+    } catch (e) {
+      say(
+        e.name === 'AbortError'
+          ? 'أُغلقت قائمة المشاركة. الملف متاح ويمكن فتحها مجددًا.'
+          : 'تعذّر فتح المشاركة في هذا العارض. استخدم رابط تنزيل الملف.',
+      );
+    }
+  }
+  async function restore(kind) {
+    const r = await root.StateStore?.get(kind + '-word');
+    if (r?.blob && r.filename) {
+      if (
+        root.ReportBrief &&
+        (r.edition !== root.ReportBrief.VERSION ||
+          r.language !== (root.MadarI18n?.language || 'ar'))
+      )
+        return null;
+      root.ReportLayout?.setMode(kind, r.detail);
+      const select = document.getElementById(kind + '-export-detail');
+      if (select) select.value = root.ReportLayout?.mode(kind) || 'full';
+      await attach(kind, r.blob, r.filename);
+      return r;
+    }
+    return null;
+  }
+  let libraryPending = null;
+  function library() {
+    if (root.docx) return Promise.resolve(root.docx);
+    if (!libraryPending)
+      libraryPending = new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = 'vendor/docx.js';
+        let timer;
+        function fail() {
+          clearTimeout(timer);
+          script.remove();
+          libraryPending = null;
+          reject(Error('تعذّر تحميل مكوّن Word. حاول مجددًا.'));
+        }
+        script.onerror = fail;
+        script.onload = () => {
+          clearTimeout(timer);
+          if (root.docx) resolve(root.docx);
+          else fail();
+        };
+        timer = setTimeout(fail, 20000);
+        document.head.append(script);
+      });
+    return libraryPending;
+  }
+  root.WordDelivery = { attach, clear, share, restore, library };
+})(window);

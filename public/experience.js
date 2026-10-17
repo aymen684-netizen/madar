@@ -1,11 +1,123 @@
-(function(){'use strict';const $=id=>document.getElementById(id),make=(tag,text)=>{const n=document.createElement(tag);if(text)n.textContent=text;return n};
-const brand=document.querySelector('.brand'),mark=make('img');mark.src='madar-mark.svg';mark.alt='';mark.width=54;mark.height=54;mark.className='madar-mark';brand.querySelector('.logo')?.replaceWith(mark);brand.setAttribute('aria-label','مدار');
-const language=make('button');language.type='button';language.id='language-toggle';language.dataset.noTranslate='';language.setAttribute('aria-label','Switch to English');language.onclick=()=>MadarI18n.setLanguage(MadarI18n.language==='ar'?'en':'ar');document.querySelector('header .top').prepend(language);
-function languageState(){const en=MadarI18n.language==='en';for(const b of [language,$('welcome-language')])if(b){b.textContent=en?'العربية':'English';b.setAttribute('aria-label',en?'التبديل إلى العربية':'Switch to English')}document.title=en?'Madar | Satellite explorer':'مدار | مرصدك الفضائي';if($('welcome-language'))$('welcome-language').lang=en?'ar':'en'}document.addEventListener('madar-language',languageState);MadarI18n.ready.then(languageState);
-$('shell-nav-help').innerHTML='<span aria-hidden="true">ⓘ</span><span class="help-button-label">النبذة والمساعدة</span>';
-const reportForm=$('report-form'),scope=make('fieldset');scope.className='report-step';scope.id='report-scope-step';scope.append(make('legend','حدد نطاق التقرير'),reportForm.querySelector('.report-grid'));$('report-builder').after(scope);const actionTitle=make('h3','احسب وراجع ثم صدّر');actionTitle.id='report-action-title';scope.after(actionTitle);const hint=make('p','الحقول الملوّنة مخصصة للإدخال.');hint.className='report-form-hint';reportForm.before(hint);
-for(const id of ['report-country','report-start-date','report-start-time','report-end-date','report-end-time'])$(id).setAttribute('aria-required','true');
-for(const id of ['report-run','analysis-run','observer-run','overview-preview','live-video-play','report-view-apply'])$(id)?.classList.add('action-primary');for(const id of ['program-overview','report-download','analysis-download','observer-download','watchlist-export'])$(id)?.classList.add('action-download');for(const id of ['report-cancel','analysis-cancel','observer-cancel','clear-private-data'])$(id)?.classList.add('action-caution');
-const welcome=make('dialog');welcome.id='welcome-dialog';welcome.setAttribute('aria-labelledby','welcome-brand');welcome.innerHTML='<div class="welcome-orbit"><img src="madar-mark.svg" width="160" height="160" alt=""></div><p id="welcome-brand" class="welcome-kicker" data-no-translate>MADAR · مدار</p><p class="welcome-intro">تتبّع الأقمار وافهم مداراتها وأنشئ تقريرك في مكان واحد.</p><div class="welcome-paths" aria-label="اختر طريقة البداية"><button type="button" id="welcome-track"><strong>تتبّع قمرًا</strong><span>ابحث بالاسم أو رقم NORAD</span></button><button type="button" id="welcome-country"><strong>استكشف دولة</strong><span>اعرض أقمارها وبياناتها المنشورة</span></button><button type="button" id="welcome-report"><strong>أنشئ تقريرًا</strong><span>اختر نوع التقرير ونطاقه</span></button></div><button type="button" id="welcome-start" class="action-primary">تشغيل برنامج مدار</button><p class="welcome-note">يمكنك تغيير اللغة الآن أو لاحقًا من أعلى الصفحة. ستتجاوز هذه الشاشة في زياراتك التالية على هذا الجهاز.</p><button type="button" id="welcome-language" data-no-translate>English</button>';document.body.append(welcome);
-function start(route='map'){try{localStorage.setItem('madar-started','1')}catch{}welcome.close();MadarShell.show(route,{focus:true});window.dispatchEvent(new Event('resize'))}$('welcome-start').onclick=()=>start();$('welcome-track').onclick=()=>{start('catalog');$('search').focus()};$('welcome-country').onclick=()=>{MadarShell.selectReport('inventory');start('reports');$('inventory-owner').focus()};$('welcome-report').onclick=()=>{start('reports');$('shell-report-'+MadarShell.report()).focus()};$('welcome-language').onclick=language.onclick;welcome.addEventListener('cancel',()=>{try{localStorage.setItem('madar-started','1')}catch{}});const reopen=make('button','العودة إلى شاشة البداية');reopen.id='welcome-reopen';reopen.type='button';reopen.onclick=()=>welcome.showModal();$('shell-help').append(reopen);let visited=false;try{visited=localStorage.getItem('madar-started')==='1'}catch{}if(!visited&&!location.hash)welcome.showModal();languageState();
+(function () {
+  'use strict';
+  const $ = (id) => document.getElementById(id),
+    make = (tag, text) => {
+      const n = document.createElement(tag);
+      if (text) n.textContent = text;
+      return n;
+    };
+  const brand = document.querySelector('.brand'),
+    mark = make('img');
+  mark.src = 'madar-mark.svg';
+  mark.alt = '';
+  mark.width = 54;
+  mark.height = 54;
+  mark.className = 'madar-mark';
+  brand.querySelector('.logo')?.replaceWith(mark);
+  brand.setAttribute('aria-label', 'مدار');
+  const language = make('button');
+  language.type = 'button';
+  language.id = 'language-toggle';
+  language.dataset.noTranslate = '';
+  language.setAttribute('aria-label', 'Switch to English');
+  language.onclick = () => MadarI18n.setLanguage(MadarI18n.language === 'ar' ? 'en' : 'ar');
+  document.querySelector('header .top').prepend(language);
+  function languageState() {
+    const en = MadarI18n.language === 'en';
+    for (const b of [language, $('welcome-language')])
+      if (b) {
+        b.textContent = en ? 'العربية' : 'English';
+        b.setAttribute('aria-label', en ? 'التبديل إلى العربية' : 'Switch to English');
+      }
+    document.title = en ? 'Madar | Satellite explorer' : 'مدار | مرصدك الفضائي';
+    if ($('welcome-language')) $('welcome-language').lang = en ? 'ar' : 'en';
+  }
+  document.addEventListener('madar-language', languageState);
+  MadarI18n.ready.then(languageState);
+  $('shell-nav-help').innerHTML =
+    '<span aria-hidden="true">ⓘ</span><span class="help-button-label">النبذة والمساعدة</span>';
+  const reportForm = $('report-form'),
+    scope = make('fieldset');
+  scope.className = 'report-step';
+  scope.id = 'report-scope-step';
+  scope.append(make('legend', 'حدد نطاق التقرير'), reportForm.querySelector('.report-grid'));
+  $('report-builder').after(scope);
+  const actionTitle = make('h3', 'احسب وراجع ثم صدّر');
+  actionTitle.id = 'report-action-title';
+  scope.after(actionTitle);
+  const hint = make('p', 'الحقول الملوّنة مخصصة للإدخال.');
+  hint.className = 'report-form-hint';
+  reportForm.before(hint);
+  for (const id of [
+    'report-country',
+    'report-start-date',
+    'report-start-time',
+    'report-end-date',
+    'report-end-time',
+  ])
+    $(id).setAttribute('aria-required', 'true');
+  for (const id of [
+    'report-run',
+    'analysis-run',
+    'observer-run',
+    'overview-preview',
+    'live-video-play',
+    'report-view-apply',
+  ])
+    $(id)?.classList.add('action-primary');
+  for (const id of [
+    'program-overview',
+    'report-download',
+    'analysis-download',
+    'observer-download',
+    'watchlist-export',
+  ])
+    $(id)?.classList.add('action-download');
+  for (const id of ['report-cancel', 'analysis-cancel', 'observer-cancel', 'clear-private-data'])
+    $(id)?.classList.add('action-caution');
+  const welcome = make('dialog');
+  welcome.id = 'welcome-dialog';
+  welcome.setAttribute('aria-labelledby', 'welcome-brand');
+  welcome.innerHTML =
+    '<div class="welcome-orbit"><img src="madar-mark.svg" width="160" height="160" alt=""></div><p id="welcome-brand" class="welcome-kicker" data-no-translate>MADAR · مدار</p><p class="welcome-intro">تتبّع الأقمار وافهم مداراتها وأنشئ تقريرك في مكان واحد.</p><div class="welcome-paths" aria-label="اختر طريقة البداية"><button type="button" id="welcome-track"><strong>تتبّع قمرًا</strong><span>ابحث بالاسم أو رقم NORAD</span></button><button type="button" id="welcome-country"><strong>استكشف دولة</strong><span>اعرض أقمارها وبياناتها المنشورة</span></button><button type="button" id="welcome-report"><strong>أنشئ تقريرًا</strong><span>اختر نوع التقرير ونطاقه</span></button></div><button type="button" id="welcome-start" class="action-primary">تشغيل برنامج مدار</button><p class="welcome-note">يمكنك تغيير اللغة الآن أو لاحقًا من أعلى الصفحة. ستتجاوز هذه الشاشة في زياراتك التالية على هذا الجهاز.</p><button type="button" id="welcome-language" data-no-translate>English</button>';
+  document.body.append(welcome);
+  function start(route = 'map') {
+    try {
+      localStorage.setItem('madar-started', '1');
+    } catch {}
+    welcome.close();
+    MadarShell.show(route, { focus: true });
+    window.dispatchEvent(new Event('resize'));
+  }
+  $('welcome-start').onclick = () => start();
+  $('welcome-track').onclick = () => {
+    start('catalog');
+    $('search').focus();
+  };
+  $('welcome-country').onclick = () => {
+    MadarShell.selectReport('inventory');
+    start('reports');
+    $('inventory-owner').focus();
+  };
+  $('welcome-report').onclick = () => {
+    start('reports');
+    $('shell-report-' + MadarShell.report()).focus();
+  };
+  $('welcome-language').onclick = language.onclick;
+  welcome.addEventListener('cancel', () => {
+    try {
+      localStorage.setItem('madar-started', '1');
+    } catch {}
+  });
+  const reopen = make('button', 'العودة إلى شاشة البداية');
+  reopen.id = 'welcome-reopen';
+  reopen.type = 'button';
+  reopen.onclick = () => welcome.showModal();
+  $('shell-help').append(reopen);
+  let visited = false;
+  try {
+    visited = localStorage.getItem('madar-started') === '1';
+  } catch {}
+  if (!visited && !location.hash) welcome.showModal();
+  languageState();
 })();

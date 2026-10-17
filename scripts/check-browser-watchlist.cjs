@@ -1,21 +1,145 @@
-const assert=require('assert/strict'),fs=require('fs');
-async function checkBrowserWatchlist(browser,url,output){
- const fixture={...JSON.parse(fs.readFileSync('scripts/fixtures/omm-six-digit.json','utf8')),EPOCH:new Date().toISOString()},context=await browser.newContext({viewport:{width:1440,height:1000}}),page=await context.newPage(),errors=[],posts=[];
- page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>{if(r.method()==='POST')posts.push(r.url())});await page.route('https://celestrak.org/**',r=>r.fulfill({status:200,contentType:'application/json',body:JSON.stringify([fixture])}));let original;
- const upload=(target,text)=>target.locator('#watchlist-file').setInputFiles({name:'madar-backup.json',mimeType:'application/json',buffer:Buffer.from(text)});
- try{
-  await page.goto(url);await page.waitForFunction(()=>objects.length===1&&window.WatchlistBackup);await page.locator('#list button').first().click();await page.click('#globe-card-favorite');await page.keyboard.press('Escape');await page.locator('#watchlist-backup>summary').click();
-  const download=page.waitForEvent('download');await page.click('#watchlist-export');const file=await download;original=fs.readFileSync(await file.path(),'utf8');const parsed=JSON.parse(original);assert.equal(parsed.items.length,1);assert.equal(parsed.items[0].id,100001);assert(!parsed.items[0].provenance);
-  await upload(page,'not JSON');await page.waitForFunction(()=>$('watchlist-status').textContent.includes('تعذّر قراءة'));assert((await page.locator('#watchlist-status').textContent()).includes('تعذّر قراءة'));assert.equal(await page.evaluate(()=>favorites.length),1);assert(await page.locator('#watchlist-preview').isHidden());
-  const added={...fixture,NORAD_CAT_ID:100002,OBJECT_NAME:'TEST BACKUP 100002'},payload=JSON.stringify({format:'madar-watchlist',version:1,items:[{...parsed.items[0],omm:{...parsed.items[0].omm,EPOCH:'2000-06-27T18:50:19Z'}},{id:100002,name:added.OBJECT_NAME,omm:added,provenance:{mode:'live',fetchedAt:Date.now()}},{id:99}]});
-  await upload(page,payload);await page.waitForFunction(()=>!$('watchlist-preview').hidden);assert.equal(await page.evaluate(()=>favorites.length),1);assert((await page.locator('#watchlist-preview-text').textContent()).includes('سجلات مستبعدة: 1'));await page.click('#watchlist-cancel');assert.equal(await page.evaluate(()=>favorites.length),1);
-  await upload(page,payload);await page.waitForFunction(()=>!$('watchlist-preview').hidden);await page.click('#watchlist-apply');await page.waitForFunction(()=>favorites.length===2&&$('watchlist-preview').hidden);assert.equal(await page.evaluate(()=>favorites.find(o=>o.id===100001).provenance.mode),'live');assert.deepEqual(await page.evaluate(()=>({mode:favorites.find(o=>o.id===100002).provenance.mode,fetchedAt:favorites.find(o=>o.id===100002).provenance.fetchedAt})),{mode:'imported',fetchedAt:null});
-  await page.click('#saved');await page.locator('#list button').filter({hasText:'NORAD 100002'}).click();assert((await page.locator('#health-source').textContent()).includes('بيانات مستوردة'));assert((await page.locator('#health-note').textContent()).includes('لم يُتحقق'));await page.keyboard.press('Escape');
-  await page.reload();await page.waitForFunction(()=>favorites.length===2&&window.WatchlistBackup&&!$('restore-notice').hidden);await page.keyboard.press('Escape');assert.equal(await page.evaluate(async()=>(await StateStore.get('orbit-favorites-v2')).items.length),2);await page.locator('#watchlist-backup>summary').click();await page.evaluate(()=>{pausedAt=new Date(dateNow());paused=true;world?.pauseAnimation()});await page.locator('#watchlist-backup').scrollIntoViewIfNeeded();await page.screenshot({path:output+'/watchlist-desktop.png'});
-  await page.setViewportSize({width:390,height:844});await page.locator('#watchlist-backup').scrollIntoViewIfNeeded();assert.equal(await page.evaluate(()=>document.body.scrollWidth),390);await page.screenshot({path:output+'/watchlist-mobile.png'});assert.deepEqual(posts,[],'backup files must never be uploaded');assert.deepEqual(errors,[]);
- }finally{await context.close()}
- const privateContext=await browser.newContext();await privateContext.addInitScript(()=>localStorage.setItem('madar-save-enabled','false'));const privatePage=await privateContext.newPage();await privatePage.route('https://celestrak.org/**',r=>r.fulfill({status:200,contentType:'application/json',body:JSON.stringify([fixture])}));
- try{await privatePage.goto(url);await privatePage.waitForFunction(()=>window.WatchlistBackup&&objects.length===1);await privatePage.locator('#watchlist-backup>summary').click();await upload(privatePage,original);await privatePage.waitForFunction(()=>!$('watchlist-preview').hidden);await privatePage.click('#watchlist-apply');await privatePage.waitForFunction(()=>$('watchlist-preview').hidden&&favorites.length===1);assert((await privatePage.locator('#watchlist-status').textContent()).includes('لهذه الجلسة فقط'));assert.equal(await privatePage.evaluate(()=>localStorage.getItem('orbit-favorites')),null);await privatePage.reload();await privatePage.waitForFunction(()=>objects.length===1);assert.equal(await privatePage.evaluate(()=>favorites.length),0)}finally{await privateContext.close()}
- console.log('PASS: real backup download, invalid-file/cancel leave favorites intact, preview/merge preserve newer data, imported provenance, persisted reload, zero uploads, mobile layout and session-only restore');
+const assert = require('assert/strict'),
+  fs = require('fs');
+async function checkBrowserWatchlist(browser, url, output) {
+  const fixture = {
+      ...JSON.parse(fs.readFileSync('scripts/fixtures/omm-six-digit.json', 'utf8')),
+      EPOCH: new Date().toISOString(),
+    },
+    context = await browser.newContext({ viewport: { width: 1440, height: 1000 } }),
+    page = await context.newPage(),
+    errors = [],
+    posts = [];
+  page.on('pageerror', (e) => errors.push(e.message));
+  page.on('request', (r) => {
+    if (r.method() === 'POST') posts.push(r.url());
+  });
+  await page.route('https://celestrak.org/**', (r) =>
+    r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify([fixture]) }),
+  );
+  let original;
+  const upload = (target, text) =>
+    target.locator('#watchlist-file').setInputFiles({
+      name: 'madar-backup.json',
+      mimeType: 'application/json',
+      buffer: Buffer.from(text),
+    });
+  try {
+    await page.goto(url);
+    await page.waitForFunction(() => objects.length === 1 && window.WatchlistBackup);
+    await page.locator('#list button').first().click();
+    await page.click('#globe-card-favorite');
+    await page.keyboard.press('Escape');
+    await page.locator('#watchlist-backup>summary').click();
+    const download = page.waitForEvent('download');
+    await page.click('#watchlist-export');
+    const file = await download;
+    original = fs.readFileSync(await file.path(), 'utf8');
+    const parsed = JSON.parse(original);
+    assert.equal(parsed.items.length, 1);
+    assert.equal(parsed.items[0].id, 100001);
+    assert(!parsed.items[0].provenance);
+    await upload(page, 'not JSON');
+    await page.waitForFunction(() => $('watchlist-status').textContent.includes('تعذّر قراءة'));
+    assert((await page.locator('#watchlist-status').textContent()).includes('تعذّر قراءة'));
+    assert.equal(await page.evaluate(() => favorites.length), 1);
+    assert(await page.locator('#watchlist-preview').isHidden());
+    const added = { ...fixture, NORAD_CAT_ID: 100002, OBJECT_NAME: 'TEST BACKUP 100002' },
+      payload = JSON.stringify({
+        format: 'madar-watchlist',
+        version: 1,
+        items: [
+          { ...parsed.items[0], omm: { ...parsed.items[0].omm, EPOCH: '2000-06-27T18:50:19Z' } },
+          {
+            id: 100002,
+            name: added.OBJECT_NAME,
+            omm: added,
+            provenance: { mode: 'live', fetchedAt: Date.now() },
+          },
+          { id: 99 },
+        ],
+      });
+    await upload(page, payload);
+    await page.waitForFunction(() => !$('watchlist-preview').hidden);
+    assert.equal(await page.evaluate(() => favorites.length), 1);
+    assert(
+      (await page.locator('#watchlist-preview-text').textContent()).includes('سجلات مستبعدة: 1'),
+    );
+    await page.click('#watchlist-cancel');
+    assert.equal(await page.evaluate(() => favorites.length), 1);
+    await upload(page, payload);
+    await page.waitForFunction(() => !$('watchlist-preview').hidden);
+    await page.click('#watchlist-apply');
+    await page.waitForFunction(() => favorites.length === 2 && $('watchlist-preview').hidden);
+    assert.equal(
+      await page.evaluate(() => favorites.find((o) => o.id === 100001).provenance.mode),
+      'live',
+    );
+    assert.deepEqual(
+      await page.evaluate(() => ({
+        mode: favorites.find((o) => o.id === 100002).provenance.mode,
+        fetchedAt: favorites.find((o) => o.id === 100002).provenance.fetchedAt,
+      })),
+      { mode: 'imported', fetchedAt: null },
+    );
+    await page.click('#saved');
+    await page.locator('#list button').filter({ hasText: 'NORAD 100002' }).click();
+    assert((await page.locator('#health-source').textContent()).includes('بيانات مستوردة'));
+    assert((await page.locator('#health-note').textContent()).includes('لم يُتحقق'));
+    await page.keyboard.press('Escape');
+    await page.reload();
+    await page.waitForFunction(
+      () => favorites.length === 2 && window.WatchlistBackup && !$('restore-notice').hidden,
+    );
+    await page.keyboard.press('Escape');
+    assert.equal(
+      await page.evaluate(async () => (await StateStore.get('orbit-favorites-v2')).items.length),
+      2,
+    );
+    await page.locator('#watchlist-backup>summary').click();
+    await page.evaluate(() => {
+      pausedAt = new Date(dateNow());
+      paused = true;
+      world?.pauseAnimation();
+    });
+    await page.locator('#watchlist-backup').scrollIntoViewIfNeeded();
+    await page.screenshot({ path: output + '/watchlist-desktop.png' });
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.locator('#watchlist-backup').scrollIntoViewIfNeeded();
+    assert.equal(await page.evaluate(() => document.body.scrollWidth), 390);
+    await page.screenshot({ path: output + '/watchlist-mobile.png' });
+    assert.deepEqual(posts, [], 'backup files must never be uploaded');
+    assert.deepEqual(errors, []);
+  } finally {
+    await context.close();
+  }
+  const privateContext = await browser.newContext();
+  await privateContext.addInitScript(() => localStorage.setItem('madar-save-enabled', 'false'));
+  const privatePage = await privateContext.newPage();
+  await privatePage.route('https://celestrak.org/**', (r) =>
+    r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify([fixture]) }),
+  );
+  try {
+    await privatePage.goto(url);
+    await privatePage.waitForFunction(() => window.WatchlistBackup && objects.length === 1);
+    await privatePage.locator('#watchlist-backup>summary').click();
+    await upload(privatePage, original);
+    await privatePage.waitForFunction(() => !$('watchlist-preview').hidden);
+    await privatePage.click('#watchlist-apply');
+    await privatePage.waitForFunction(
+      () => $('watchlist-preview').hidden && favorites.length === 1,
+    );
+    assert(
+      (await privatePage.locator('#watchlist-status').textContent()).includes('لهذه الجلسة فقط'),
+    );
+    assert.equal(await privatePage.evaluate(() => localStorage.getItem('orbit-favorites')), null);
+    await privatePage.reload();
+    await privatePage.waitForFunction(() => objects.length === 1);
+    assert.equal(await privatePage.evaluate(() => favorites.length), 0);
+  } finally {
+    await privateContext.close();
+  }
+  console.log(
+    'PASS: real backup download, invalid-file/cancel leave favorites intact, preview/merge preserve newer data, imported provenance, persisted reload, zero uploads, mobile layout and session-only restore',
+  );
 }
-module.exports={checkBrowserWatchlist};
+module.exports = { checkBrowserWatchlist };

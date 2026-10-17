@@ -1,14 +1,141 @@
-(function(root){'use strict';
-const preference='madar-save-enabled',signal='madar-reset-signal',generation='madar-data-generation',session=new Map();let enabled=true,busy=false,initialGeneration=null;
-try{enabled=root.localStorage.getItem(preference)!=='false';initialGeneration=root.localStorage.getItem(generation)}catch{enabled=false}
-function persistent(){try{return enabled&&!busy&&root.localStorage.getItem(preference)!=='false'&&root.localStorage.getItem(generation)===initialGeneration}catch{return false}}
-function appKey(key){return key==='madar-inventory-owner'||key==='orbit-favorites'||key==='madar-draft-v1'||key.startsWith('orbit-cache-')}
-function localGet(key){if(!appKey(key))throw Error('Unknown application key');if(!persistent())return session.get(key)||null;return root.localStorage.getItem(key)}
-function localSet(key,value){if(!appKey(key))throw Error('Unknown application key');if(busy)return false;if(!enabled){session.set(key,value);return false}root.localStorage.setItem(key,value);return true}
-async function clear(){busy=true;session.clear();try{root.localStorage.setItem(generation,String(Date.now())+'-'+Math.random());const keys=[];for(let i=0;i<root.localStorage.length;i++){const k=root.localStorage.key(i);if(k&&appKey(k))keys.push(k)}for(const k of keys)root.localStorage.removeItem(k);await root.StateStore?.clearAll();root.localStorage.setItem(signal,String(Date.now()));root.localStorage.removeItem(signal)}finally{busy=false}}
-async function setEnabled(value){enabled=!!value;root.localStorage.setItem(preference,String(enabled));if(!enabled)await clear()}
-root.Privacy={persistent,localGet,localSet,clear,setEnabled};
-function init(){const updates=document.getElementById('public-updates'),networkStatus=document.getElementById('network-status');function networkState(){updates.checked=root.NetworkPolicy.updatesEnabled();networkStatus.textContent=updates.checked?'التحديثات مفعّلة: تُطلب مجموعات مدارية عامة فقط، دون إرسال البحث أو الإحداثيات أو التقارير.':'التحديثات متوقفة: يستخدم مدار البيانات المحفوظة أو الاحتياطية المتاحة، دون طلب مدارات جديدة.'}root.document.addEventListener('madar-network-policy',networkState);updates.onchange=()=>{root.NetworkPolicy.setUpdatesEnabled(updates.checked);networkState()};networkState();const checkbox=document.getElementById('save-on-device'),button=document.getElementById('clear-device-data'),status=document.getElementById('privacy-status');checkbox.checked=enabled;status.textContent=enabled?'الحفظ مفعّل: يحتفظ هذا المتصفح بالمتابعة والمدخلات والنتائج القابلة للاستعادة.':'الحفظ متوقف: يبقى العمل الجديد مؤقتًا حتى إعادة تحميل الصفحة.';checkbox.onchange=async()=>{if(!checkbox.checked&&!root.confirm('سيُمسح عمل مدار المحفوظ في هذا المتصفح، وستُعاد الصفحة مع إيقاف الحفظ. لن تُحذف الملفات التي نزّلتها. هل تريد المتابعة؟')){checkbox.checked=enabled;return}checkbox.disabled=button.disabled=true;try{await setEnabled(checkbox.checked);root.location.reload()}catch{checkbox.disabled=button.disabled=false;checkbox.checked=enabled;status.textContent='تعذّر تغيير إعداد الحفظ أو إكمال المسح. راجع إعدادات المتصفح، ثم أعد المحاولة.'}};button.onclick=async()=>{if(!root.confirm('هل تريد مسح عمل مدار المحفوظ في هذا المتصفح وإعادة تحميل الصفحة؟ لن تُحذف ملفات التنزيل أو النسخ الموجودة في متصفح آخر.'))return;checkbox.disabled=button.disabled=true;try{await clear();root.location.reload()}catch{checkbox.disabled=button.disabled=false;status.textContent='لم يكتمل مسح بيانات مدار. أغلق علامات مدار الأخرى، ثم أعد المحاولة.'}}}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
-root.addEventListener('storage',e=>{if(e.key===preference||(e.key===signal&&e.newValue))root.location.reload()});
+(function (root) {
+  'use strict';
+  const preference = 'madar-save-enabled',
+    signal = 'madar-reset-signal',
+    generation = 'madar-data-generation',
+    session = new Map();
+  let enabled = true,
+    busy = false,
+    initialGeneration = null;
+  try {
+    enabled = root.localStorage.getItem(preference) !== 'false';
+    initialGeneration = root.localStorage.getItem(generation);
+  } catch {
+    enabled = false;
+  }
+  function persistent() {
+    try {
+      return (
+        enabled &&
+        !busy &&
+        root.localStorage.getItem(preference) !== 'false' &&
+        root.localStorage.getItem(generation) === initialGeneration
+      );
+    } catch {
+      return false;
+    }
+  }
+  function appKey(key) {
+    return (
+      key === 'madar-inventory-owner' ||
+      key === 'orbit-favorites' ||
+      key === 'madar-draft-v1' ||
+      key.startsWith('orbit-cache-')
+    );
+  }
+  function localGet(key) {
+    if (!appKey(key)) throw Error('Unknown application key');
+    if (!persistent()) return session.get(key) || null;
+    return root.localStorage.getItem(key);
+  }
+  function localSet(key, value) {
+    if (!appKey(key)) throw Error('Unknown application key');
+    if (busy) return false;
+    if (!enabled) {
+      session.set(key, value);
+      return false;
+    }
+    root.localStorage.setItem(key, value);
+    return true;
+  }
+  async function clear() {
+    busy = true;
+    session.clear();
+    try {
+      root.localStorage.setItem(generation, String(Date.now()) + '-' + Math.random());
+      const keys = [];
+      for (let i = 0; i < root.localStorage.length; i++) {
+        const k = root.localStorage.key(i);
+        if (k && appKey(k)) keys.push(k);
+      }
+      for (const k of keys) root.localStorage.removeItem(k);
+      await root.StateStore?.clearAll();
+      root.localStorage.setItem(signal, String(Date.now()));
+      root.localStorage.removeItem(signal);
+    } finally {
+      busy = false;
+    }
+  }
+  async function setEnabled(value) {
+    enabled = !!value;
+    root.localStorage.setItem(preference, String(enabled));
+    if (!enabled) await clear();
+  }
+  root.Privacy = { persistent, localGet, localSet, clear, setEnabled };
+  function init() {
+    const updates = document.getElementById('public-updates'),
+      networkStatus = document.getElementById('network-status');
+    function networkState() {
+      updates.checked = root.NetworkPolicy.updatesEnabled();
+      networkStatus.textContent = updates.checked
+        ? 'التحديثات مفعّلة: تُطلب مجموعات مدارية عامة فقط، دون إرسال البحث أو الإحداثيات أو التقارير.'
+        : 'التحديثات متوقفة: يستخدم مدار البيانات المحفوظة أو الاحتياطية المتاحة، دون طلب مدارات جديدة.';
+    }
+    root.document.addEventListener('madar-network-policy', networkState);
+    updates.onchange = () => {
+      root.NetworkPolicy.setUpdatesEnabled(updates.checked);
+      networkState();
+    };
+    networkState();
+    const checkbox = document.getElementById('save-on-device'),
+      button = document.getElementById('clear-device-data'),
+      status = document.getElementById('privacy-status');
+    checkbox.checked = enabled;
+    status.textContent = enabled
+      ? 'الحفظ مفعّل: يحتفظ هذا المتصفح بالمتابعة والمدخلات والنتائج القابلة للاستعادة.'
+      : 'الحفظ متوقف: يبقى العمل الجديد مؤقتًا حتى إعادة تحميل الصفحة.';
+    checkbox.onchange = async () => {
+      if (
+        !checkbox.checked &&
+        !root.confirm(
+          'سيُمسح عمل مدار المحفوظ في هذا المتصفح، وستُعاد الصفحة مع إيقاف الحفظ. لن تُحذف الملفات التي نزّلتها. هل تريد المتابعة؟',
+        )
+      ) {
+        checkbox.checked = enabled;
+        return;
+      }
+      checkbox.disabled = button.disabled = true;
+      try {
+        await setEnabled(checkbox.checked);
+        root.location.reload();
+      } catch {
+        checkbox.disabled = button.disabled = false;
+        checkbox.checked = enabled;
+        status.textContent =
+          'تعذّر تغيير إعداد الحفظ أو إكمال المسح. راجع إعدادات المتصفح، ثم أعد المحاولة.';
+      }
+    };
+    button.onclick = async () => {
+      if (
+        !root.confirm(
+          'هل تريد مسح عمل مدار المحفوظ في هذا المتصفح وإعادة تحميل الصفحة؟ لن تُحذف ملفات التنزيل أو النسخ الموجودة في متصفح آخر.',
+        )
+      )
+        return;
+      checkbox.disabled = button.disabled = true;
+      try {
+        await clear();
+        root.location.reload();
+      } catch {
+        checkbox.disabled = button.disabled = false;
+        status.textContent = 'لم يكتمل مسح بيانات مدار. أغلق علامات مدار الأخرى، ثم أعد المحاولة.';
+      }
+    };
+  }
+  if (document.readyState === 'loading')
+    document.addEventListener('DOMContentLoaded', init, { once: true });
+  else init();
+  root.addEventListener('storage', (e) => {
+    if (e.key === preference || (e.key === signal && e.newValue)) root.location.reload();
+  });
 })(window);

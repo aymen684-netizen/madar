@@ -1,0 +1,12 @@
+# Generated or third-party files retain their original bytes/checksums.
+node_modules/
+public/vendor/
+public/assets/
+public/data/
+public/downloads/
+public/network-resources.js
+packed/
+data/
+scripts/fixtures/
+test-results/
+package-lock.json

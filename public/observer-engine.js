@@ -1,7 +1,163 @@
-(function(root){'use strict';
-const RAD=Math.PI/180;
-function validate(p){const a=p.observer;if(!a||![a.lat,a.lon,a.height,a.minElevation,p.start,p.end,p.step].every(Number.isFinite)||Math.abs(a.lat)>90||Math.abs(a.lon)>180||a.height< -500||a.height>9000||a.minElevation<0||a.minElevation>89||p.end<=p.start||p.end-p.start>864e5||p.step<1||p.step>60)throw Error('تحقق من الإحداثيات والارتفاع والفترة؛ الحد الأقصى 24 ساعة.');return a}
-function look(S,rec,t,a){try{const d=new Date(t),pv=S.propagate(rec,d);if(!pv?.position)return null;const height=S.eciToGeodetic(pv.position,S.gstime(d)).height;if(!Number.isFinite(height)||height<0)return null;const q=S.ecfToLookAngles({latitude:a.lat*RAD,longitude:a.lon*RAD,height:a.height/1000},S.eciToEcf(pv.position,S.gstime(d)));return [q.elevation,q.azimuth,q.rangeSat].every(Number.isFinite)?{elevation:q.elevation/RAD,azimuth:(q.azimuth/RAD+360)%360,range:q.rangeSat}:null}catch{return null}}
-async function scan(S,objects,p,progress){const a=validate(p),O=root.OrbitData,rows=[];let invalid=0;for(let i=0;i<objects.length;i++){const o=objects[i],local=[];try{const rec=O.satrec(S,o),at=t=>{const v=look(S,rec,t,a);if(!v)throw Error('invalid propagation');return v},above=t=>at(t).elevation>=a.minElevation,refine=(l,r,state)=>{while(r-l>500){const m=(l+r)/2;if(above(m)===state)l=m;else r=m}return Math.max(p.start,Math.min(p.end,Math.round((l+r)/2/1000)*1000))};let prev=p.start,was=above(prev),entry=was?prev:null,clipped=was,peakTime=prev,peak=at(prev);const finish=(exit,clippedEnd)=>{let best=peak,bestT=peakTime,l=Math.max(entry,peakTime-p.step*1000),r=Math.min(exit,peakTime+p.step*1000);for(let n=0;n<16&&r-l>100;n++){const t1=l+(r-l)/3,t2=r-(r-l)/3,v1=at(t1),v2=at(t2);if(v1.elevation>best.elevation){best=v1;bestT=t1}if(v2.elevation>best.elevation){best=v2;bestT=t2}if(v1.elevation<v2.elevation)l=t1;else r=t2}const first=at(entry),last=at(exit);local.push({name:o.name,id:o.id,entry,exit,duration:(exit-entry)/1000,clippedStart:clipped,clippedEnd,peakTime:Math.round(bestT),elevation:best.elevation,azimuth:best.elevation>=89.9?null:best.azimuth,range:best.range,entryAzimuth:first.elevation>=89.9?null:first.azimuth,exitAzimuth:last.elevation>=89.9?null:last.azimuth,epoch:O.epoch(o),provenance:o.provenance||null})};for(let t=Math.min(prev+p.step*1000,p.end);;t=Math.min(t+p.step*1000,p.end)){const v=at(t),is=v.elevation>=a.minElevation;if(!was&&is){entry=refine(prev,t,false);clipped=false;peakTime=t;peak=v}if(is&&v.elevation>peak.elevation){peak=v;peakTime=t}if(was&&!is)finish(refine(prev,t,true),false);if(t===p.end){if(is){if(!was&&entry===null)entry=t;finish(p.end,true)}break}was=is;prev=t}rows.push(...local)}catch{invalid++}if(i%10===0){progress?.({done:i+1,total:objects.length});await new Promise(r=>setTimeout(r,0))}}rows.sort((a,b)=>a.entry-b.entry||a.id-b.id);return{rows,total:objects.length,invalid,unique:new Set(rows.map(r=>r.id)).size,quality:root.ReportInsights.inventory(objects,p.start,p.end,O)}}
-root.ObserverEngine={validate,look,scan};
-})(typeof self!=='undefined'?self:globalThis);
+(function (root) {
+  'use strict';
+  const RAD = Math.PI / 180;
+  function validate(p) {
+    const a = p.observer;
+    if (
+      !a ||
+      ![a.lat, a.lon, a.height, a.minElevation, p.start, p.end, p.step].every(Number.isFinite) ||
+      Math.abs(a.lat) > 90 ||
+      Math.abs(a.lon) > 180 ||
+      a.height < -500 ||
+      a.height > 9000 ||
+      a.minElevation < 0 ||
+      a.minElevation > 89 ||
+      p.end <= p.start ||
+      p.end - p.start > 864e5 ||
+      p.step < 1 ||
+      p.step > 60
+    )
+      throw Error('تحقق من الإحداثيات والارتفاع والفترة؛ الحد الأقصى 24 ساعة.');
+    return a;
+  }
+  function look(S, rec, t, a) {
+    try {
+      const d = new Date(t),
+        pv = S.propagate(rec, d);
+      if (!pv?.position) return null;
+      const height = S.eciToGeodetic(pv.position, S.gstime(d)).height;
+      if (!Number.isFinite(height) || height < 0) return null;
+      const q = S.ecfToLookAngles(
+        { latitude: a.lat * RAD, longitude: a.lon * RAD, height: a.height / 1000 },
+        S.eciToEcf(pv.position, S.gstime(d)),
+      );
+      return [q.elevation, q.azimuth, q.rangeSat].every(Number.isFinite)
+        ? {
+            elevation: q.elevation / RAD,
+            azimuth: (q.azimuth / RAD + 360) % 360,
+            range: q.rangeSat,
+          }
+        : null;
+    } catch {
+      return null;
+    }
+  }
+  async function scan(S, objects, p, progress) {
+    const a = validate(p),
+      O = root.OrbitData,
+      rows = [];
+    let invalid = 0;
+    for (let i = 0; i < objects.length; i++) {
+      const o = objects[i],
+        local = [];
+      try {
+        const rec = O.satrec(S, o),
+          at = (t) => {
+            const v = look(S, rec, t, a);
+            if (!v) throw Error('invalid propagation');
+            return v;
+          },
+          above = (t) => at(t).elevation >= a.minElevation,
+          refine = (l, r, state) => {
+            while (r - l > 500) {
+              const m = (l + r) / 2;
+              if (above(m) === state) l = m;
+              else r = m;
+            }
+            return Math.max(p.start, Math.min(p.end, Math.round((l + r) / 2 / 1000) * 1000));
+          };
+        let prev = p.start,
+          was = above(prev),
+          entry = was ? prev : null,
+          clipped = was,
+          peakTime = prev,
+          peak = at(prev);
+        const finish = (exit, clippedEnd) => {
+          let best = peak,
+            bestT = peakTime,
+            l = Math.max(entry, peakTime - p.step * 1000),
+            r = Math.min(exit, peakTime + p.step * 1000);
+          for (let n = 0; n < 16 && r - l > 100; n++) {
+            const t1 = l + (r - l) / 3,
+              t2 = r - (r - l) / 3,
+              v1 = at(t1),
+              v2 = at(t2);
+            if (v1.elevation > best.elevation) {
+              best = v1;
+              bestT = t1;
+            }
+            if (v2.elevation > best.elevation) {
+              best = v2;
+              bestT = t2;
+            }
+            if (v1.elevation < v2.elevation) l = t1;
+            else r = t2;
+          }
+          const first = at(entry),
+            last = at(exit);
+          local.push({
+            name: o.name,
+            id: o.id,
+            entry,
+            exit,
+            duration: (exit - entry) / 1000,
+            clippedStart: clipped,
+            clippedEnd,
+            peakTime: Math.round(bestT),
+            elevation: best.elevation,
+            azimuth: best.elevation >= 89.9 ? null : best.azimuth,
+            range: best.range,
+            entryAzimuth: first.elevation >= 89.9 ? null : first.azimuth,
+            exitAzimuth: last.elevation >= 89.9 ? null : last.azimuth,
+            epoch: O.epoch(o),
+            provenance: o.provenance || null,
+          });
+        };
+        for (
+          let t = Math.min(prev + p.step * 1000, p.end);
+          ;
+          t = Math.min(t + p.step * 1000, p.end)
+        ) {
+          const v = at(t),
+            is = v.elevation >= a.minElevation;
+          if (!was && is) {
+            entry = refine(prev, t, false);
+            clipped = false;
+            peakTime = t;
+            peak = v;
+          }
+          if (is && v.elevation > peak.elevation) {
+            peak = v;
+            peakTime = t;
+          }
+          if (was && !is) finish(refine(prev, t, true), false);
+          if (t === p.end) {
+            if (is) {
+              if (!was && entry === null) entry = t;
+              finish(p.end, true);
+            }
+            break;
+          }
+          was = is;
+          prev = t;
+        }
+        rows.push(...local);
+      } catch {
+        invalid++;
+      }
+      if (i % 10 === 0) {
+        progress?.({ done: i + 1, total: objects.length });
+        await new Promise((r) => setTimeout(r, 0));
+      }
+    }
+    rows.sort((a, b) => a.entry - b.entry || a.id - b.id);
+    return {
+      rows,
+      total: objects.length,
+      invalid,
+      unique: new Set(rows.map((r) => r.id)).size,
+      quality: root.ReportInsights.inventory(objects, p.start, p.end, O),
+    };
+  }
+  root.ObserverEngine = { validate, look, scan };
+})(typeof self !== 'undefined' ? self : globalThis);

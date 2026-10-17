@@ -1,4 +1,58 @@
-import vm from 'node:vm';import fs from 'node:fs';import assert from 'node:assert/strict';
-const root={};vm.createContext(root);vm.runInContext(fs.readFileSync('public/data-refresh.js','utf8'),root);let time=100,visible=true,busy=false,calls=0,release,records=[{provenance:{mode:'cache',fetchedAt:0}}];const r=root.DataRefresh.create({now:()=>time,visible:()=>visible,busy:()=>busy,records:()=>records,interval:2000,refresh:async()=>{calls++;await new Promise(resolve=>release=resolve);records=[{provenance:{mode:'live',fetchedAt:time}}]}});assert.equal(r.nextAt,2000);time=2000;visible=false;assert.equal(await r.tick(),false);visible=true;busy=true;assert.equal(await r.tick(),false);busy=false;const pending=r.tick();assert.equal(await r.tick(),false);assert.equal(calls,1);release();await pending;assert.equal(r.nextAt,4000);time=3999;assert.equal(await r.tick(),false);records=[{provenance:{mode:'imported',fetchedAt:0}}];r.mark();assert.equal(r.nextAt,5999);
-const bad=root.DataRefresh.create({now:()=>time,interval:1000,refresh:async()=>{throw Error('offline')}});time+=1000;await assert.rejects(bad.tick());assert.equal(bad.running,false);assert.equal(await bad.tick(),false);assert.equal(bad.nextAt,time+1000);
-console.log('PASS: source-cache expiry scheduling, visible/current-time gating, single in-flight refresh, unchanged upstream interval and failure backoff');
+import vm from 'node:vm';
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+const root = {};
+vm.createContext(root);
+vm.runInContext(fs.readFileSync('public/data-refresh.js', 'utf8'), root);
+let time = 100,
+  visible = true,
+  busy = false,
+  calls = 0,
+  release,
+  records = [{ provenance: { mode: 'cache', fetchedAt: 0 } }];
+const r = root.DataRefresh.create({
+  now: () => time,
+  visible: () => visible,
+  busy: () => busy,
+  records: () => records,
+  interval: 2000,
+  refresh: async () => {
+    calls++;
+    await new Promise((resolve) => (release = resolve));
+    records = [{ provenance: { mode: 'live', fetchedAt: time } }];
+  },
+});
+assert.equal(r.nextAt, 2000);
+time = 2000;
+visible = false;
+assert.equal(await r.tick(), false);
+visible = true;
+busy = true;
+assert.equal(await r.tick(), false);
+busy = false;
+const pending = r.tick();
+assert.equal(await r.tick(), false);
+assert.equal(calls, 1);
+release();
+await pending;
+assert.equal(r.nextAt, 4000);
+time = 3999;
+assert.equal(await r.tick(), false);
+records = [{ provenance: { mode: 'imported', fetchedAt: 0 } }];
+r.mark();
+assert.equal(r.nextAt, 5999);
+const bad = root.DataRefresh.create({
+  now: () => time,
+  interval: 1000,
+  refresh: async () => {
+    throw Error('offline');
+  },
+});
+time += 1000;
+await assert.rejects(bad.tick());
+assert.equal(bad.running, false);
+assert.equal(await bad.tick(), false);
+assert.equal(bad.nextAt, time + 1000);
+console.log(
+  'PASS: source-cache expiry scheduling, visible/current-time gating, single in-flight refresh, unchanged upstream interval and failure backoff',
+);

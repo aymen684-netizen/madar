@@ -1,17 +1,211 @@
-(function(root){'use strict';
-const catalogFields={OBJECT_NAME:'اسم الجسم المسجل',OBJECT_ID:'المعرّف الدولي',NORAD_CAT_ID:'رقم NORAD',OBJECT_TYPE:'نوع الجسم المسجل',OPS_STATUS_CODE:'الحالة التشغيلية المسجلة',OWNER:'رمز الجهة المسجلة',LAUNCH_DATE:'تاريخ الإطلاق المسجل',LAUNCH_SITE:'رمز موقع الإطلاق',DECAY_DATE:'تاريخ الخروج من المدار المسجل',PERIOD:'مدة الدورة الفهرسية (دقيقة)',INCLINATION:'الميل الفهرسي (درجة)',APOGEE:'الأوج الفهرسي (كم)',PERIGEE:'الحضيض الفهرسي (كم)',RCS:'المقطع الراداري (م²)',DATA_STATUS_CODE:'حالة توفر العناصر',ORBIT_CENTER:'مركز المدار المسجل',ORBIT_TYPE:'نوع المدار المسجل'};
-const orbitFields={EPOCH:'تاريخ العناصر UTC',MEAN_MOTION:'متوسط الحركة (دورة/يوم)',ECCENTRICITY:'اللامركزية',INCLINATION:'الميل المداري (درجة)',RA_OF_ASC_NODE:'زاوية العقدة الصاعدة (درجة)',ARG_OF_PERICENTER:'زاوية الحضيض (درجة)',MEAN_ANOMALY:'الشذوذ المتوسط (درجة)',BSTAR:'معامل السحب BSTAR',MEAN_MOTION_DOT:'معامل تغير الحركة الأول المنشور',MEAN_MOTION_DDOT:'معامل تغير الحركة الثاني المنشور',CLASSIFICATION_TYPE:'رمز التصنيف المنشور',EPHEMERIS_TYPE:'نوع العناصر المنشور',ELEMENT_SET_NO:'رقم مجموعة العناصر',REV_AT_EPOCH:'رقم الدورة عند تاريخ العناصر',CENTER_NAME:'مركز المدار',REF_FRAME:'الإطار المرجعي',TIME_SYSTEM:'نظام الوقت',MEAN_ELEMENT_THEORY:'نظرية حساب المدار'};
-const statuses={'+':'تشغيلي مسجل','-':'غير تشغيلي مسجل',P:'تشغيل جزئي',B:'احتياطي أو استعداد',S:'قمر احتياط لم يُفعّل بالكامل',X:'مهمة ممتدة',D:'خرج من المدار','?':'حالة غير معروفة'};
-function value(k,v){if(v==null||v==='')return 'غير منشور';if(k==='OPS_STATUS_CODE'&&statuses[v])return statuses[v]+' ('+v+')';if(k==='DATA_STATUS_CODE')return({NCE:'لا توجد عناصر حديثة',NIE:'لا توجد عناصر أولية',NEA:'لا توجد عناصر متاحة'})[v]||String(v);return String(v)}
-function record(o,m={}){const mode=o?.provenance?.mode,url=mode==='independent'?'https://mmccants.org/tles/':mode&&mode!=='imported'?'https://celestrak.org/NORAD/elements/gp.php?CATNR='+o.id+'&FORMAT=json':null;return{schema:'madar-source-record-v1',noradId:o.id,name:o.name,catalog:m.catalog||null,catalogSource:m.catalog?m.countrySource:null,catalogRetrievedAt:m.catalog?m.catalogRetrievedAt:null,orbit:o.omm?{format:'OMM JSON',fields:{...o.omm}}:{format:'TLE',line1:o.l1,line2:o.l2},orbitSource:url,orbitProvenance:o.provenance||null,attribution:{catalogOwnerCode:m.ownerCode||null,catalogOwnerLabel:m.country||null,legalOwner:null,operator:m.operator||null,operatorScope:m.operatorScope||'unknown',operatorSource:m.operatorSource||null,operatorChecked:m.operatorChecked||null,note:m.ownerNote||null},mission:{description:m.mission||null,evidence:m.missionKind||'unknown',source:m.missionSource||null,checked:m.checked||null}}}
-const api={catalogFields,orbitFields,value,record};if(typeof module!=='undefined'){module.exports=api;return}
-let last='',current=null,currentObject=null;const panel=document.getElementById('source-details'),status=document.getElementById('source-status');function failure(){status.textContent='تعذّر تحميل تفاصيل المصدر أو التحقق منها. أغلق التفاصيل وافتحها لإعادة المحاولة.'}async function ensure(){if(!root.SatMetadata.detailsLoaded()){status.textContent='جارٍ تحميل تفاصيل المصدر والتحقق من بصمتها…';await root.SatMetadata.loadDetails()}status.textContent='';if(currentObject)render(currentObject,root.SatMetadata.get(currentObject.id))}function clear(){panel.hidden=true;if(!current)return;last='';current=null;currentObject=null;panel.hidden=true;status.textContent='';document.getElementById('source-fields').replaceChildren()}function render(o,m){panel.hidden=false;currentObject=o;current=record(o,m);const key=JSON.stringify(current)+root.SatMetadata.detailsLoaded();if(key===last)return;last=key;const area=document.getElementById('source-fields');area.replaceChildren();function section(title,fields,data){const h=document.createElement('h3');h.textContent=title;const dl=document.createElement('dl');for(const [k,label]of Object.entries(fields)){const dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=label;dt.title=k;dd.textContent=value(k,data?.[k]);dl.append(dt,dd)}area.append(h,dl)}if(root.SatMetadata.detailsLoaded()){section('بيانات الفهرس SATCAT',catalogFields,m?.catalog);section('مصدر وتاريخ الفهرس',{'source':'مصدر الهوية','retrieved':'تاريخ جلب الفهرس UTC'},{source:m?.catalog?m.countrySource:null,retrieved:m?.catalog?m.catalogRetrievedAt:null})}if(o.omm)section('عناصر المدار المنشورة',orbitFields,o.omm);else section('عناصر المدار المنشورة',{'line1':'السطر المداري الأول','line2':'السطر المداري الثاني'},{line1:o.l1,line2:o.l2});if(panel.open&&!root.SatMetadata.detailsLoaded())ensure().catch(failure);}
-api.render=render;api.clear=clear;root.SourceDetails=api;
-panel.addEventListener('toggle',()=>{if(panel.open&&currentObject)ensure().catch(failure)});
-document.getElementById('source-json').onclick=async()=>{
- if(!current)return;const initial=current,button=document.getElementById('source-json');button.disabled=true;
- try{await ensure();const metadata=root.SatMetadata.get(initial.noradId),exported={...initial,catalog:metadata.catalog,catalogSource:metadata.catalog?metadata.countrySource:null,catalogRetrievedAt:metadata.catalog?metadata.catalogRetrievedAt:null};
- const url=URL.createObjectURL(new Blob([JSON.stringify(exported,null,2)],{type:'application/json;charset=utf-8'})),a=document.createElement('a');a.href=url;a.download='madar-'+exported.noradId+'-source.json';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);
- }catch{failure()}finally{button.disabled=false}
-};
-})(typeof window!=='undefined'?window:globalThis);
+(function (root) {
+  'use strict';
+  const catalogFields = {
+    OBJECT_NAME: 'اسم الجسم المسجل',
+    OBJECT_ID: 'المعرّف الدولي',
+    NORAD_CAT_ID: 'رقم NORAD',
+    OBJECT_TYPE: 'نوع الجسم المسجل',
+    OPS_STATUS_CODE: 'الحالة التشغيلية المسجلة',
+    OWNER: 'رمز الجهة المسجلة',
+    LAUNCH_DATE: 'تاريخ الإطلاق المسجل',
+    LAUNCH_SITE: 'رمز موقع الإطلاق',
+    DECAY_DATE: 'تاريخ الخروج من المدار المسجل',
+    PERIOD: 'مدة الدورة الفهرسية (دقيقة)',
+    INCLINATION: 'الميل الفهرسي (درجة)',
+    APOGEE: 'الأوج الفهرسي (كم)',
+    PERIGEE: 'الحضيض الفهرسي (كم)',
+    RCS: 'المقطع الراداري (م²)',
+    DATA_STATUS_CODE: 'حالة توفر العناصر',
+    ORBIT_CENTER: 'مركز المدار المسجل',
+    ORBIT_TYPE: 'نوع المدار المسجل',
+  };
+  const orbitFields = {
+    EPOCH: 'تاريخ العناصر UTC',
+    MEAN_MOTION: 'متوسط الحركة (دورة/يوم)',
+    ECCENTRICITY: 'اللامركزية',
+    INCLINATION: 'الميل المداري (درجة)',
+    RA_OF_ASC_NODE: 'زاوية العقدة الصاعدة (درجة)',
+    ARG_OF_PERICENTER: 'زاوية الحضيض (درجة)',
+    MEAN_ANOMALY: 'الشذوذ المتوسط (درجة)',
+    BSTAR: 'معامل السحب BSTAR',
+    MEAN_MOTION_DOT: 'معامل تغير الحركة الأول المنشور',
+    MEAN_MOTION_DDOT: 'معامل تغير الحركة الثاني المنشور',
+    CLASSIFICATION_TYPE: 'رمز التصنيف المنشور',
+    EPHEMERIS_TYPE: 'نوع العناصر المنشور',
+    ELEMENT_SET_NO: 'رقم مجموعة العناصر',
+    REV_AT_EPOCH: 'رقم الدورة عند تاريخ العناصر',
+    CENTER_NAME: 'مركز المدار',
+    REF_FRAME: 'الإطار المرجعي',
+    TIME_SYSTEM: 'نظام الوقت',
+    MEAN_ELEMENT_THEORY: 'نظرية حساب المدار',
+  };
+  const statuses = {
+    '+': 'تشغيلي مسجل',
+    '-': 'غير تشغيلي مسجل',
+    P: 'تشغيل جزئي',
+    B: 'احتياطي أو استعداد',
+    S: 'قمر احتياط لم يُفعّل بالكامل',
+    X: 'مهمة ممتدة',
+    D: 'خرج من المدار',
+    '?': 'حالة غير معروفة',
+  };
+  function value(k, v) {
+    if (v == null || v === '') return 'غير منشور';
+    if (k === 'OPS_STATUS_CODE' && statuses[v]) return statuses[v] + ' (' + v + ')';
+    if (k === 'DATA_STATUS_CODE')
+      return (
+        { NCE: 'لا توجد عناصر حديثة', NIE: 'لا توجد عناصر أولية', NEA: 'لا توجد عناصر متاحة' }[v] ||
+        String(v)
+      );
+    return String(v);
+  }
+  function record(o, m = {}) {
+    const mode = o?.provenance?.mode,
+      url =
+        mode === 'independent'
+          ? 'https://mmccants.org/tles/'
+          : mode && mode !== 'imported'
+            ? 'https://celestrak.org/NORAD/elements/gp.php?CATNR=' + o.id + '&FORMAT=json'
+            : null;
+    return {
+      schema: 'madar-source-record-v1',
+      noradId: o.id,
+      name: o.name,
+      catalog: m.catalog || null,
+      catalogSource: m.catalog ? m.countrySource : null,
+      catalogRetrievedAt: m.catalog ? m.catalogRetrievedAt : null,
+      orbit: o.omm
+        ? { format: 'OMM JSON', fields: { ...o.omm } }
+        : { format: 'TLE', line1: o.l1, line2: o.l2 },
+      orbitSource: url,
+      orbitProvenance: o.provenance || null,
+      attribution: {
+        catalogOwnerCode: m.ownerCode || null,
+        catalogOwnerLabel: m.country || null,
+        legalOwner: null,
+        operator: m.operator || null,
+        operatorScope: m.operatorScope || 'unknown',
+        operatorSource: m.operatorSource || null,
+        operatorChecked: m.operatorChecked || null,
+        note: m.ownerNote || null,
+      },
+      mission: {
+        description: m.mission || null,
+        evidence: m.missionKind || 'unknown',
+        source: m.missionSource || null,
+        checked: m.checked || null,
+      },
+    };
+  }
+  const api = { catalogFields, orbitFields, value, record };
+  if (typeof module !== 'undefined') {
+    module.exports = api;
+    return;
+  }
+  let last = '',
+    current = null,
+    currentObject = null;
+  const panel = document.getElementById('source-details'),
+    status = document.getElementById('source-status');
+  function failure() {
+    status.textContent =
+      'تعذّر تحميل تفاصيل المصدر أو التحقق منها. أغلق التفاصيل وافتحها لإعادة المحاولة.';
+  }
+  async function ensure() {
+    if (!root.SatMetadata.detailsLoaded()) {
+      status.textContent = 'جارٍ تحميل تفاصيل المصدر والتحقق من بصمتها…';
+      await root.SatMetadata.loadDetails();
+    }
+    status.textContent = '';
+    if (currentObject) render(currentObject, root.SatMetadata.get(currentObject.id));
+  }
+  function clear() {
+    panel.hidden = true;
+    if (!current) return;
+    last = '';
+    current = null;
+    currentObject = null;
+    panel.hidden = true;
+    status.textContent = '';
+    document.getElementById('source-fields').replaceChildren();
+  }
+  function render(o, m) {
+    panel.hidden = false;
+    currentObject = o;
+    current = record(o, m);
+    const key = JSON.stringify(current) + root.SatMetadata.detailsLoaded();
+    if (key === last) return;
+    last = key;
+    const area = document.getElementById('source-fields');
+    area.replaceChildren();
+    function section(title, fields, data) {
+      const h = document.createElement('h3');
+      h.textContent = title;
+      const dl = document.createElement('dl');
+      for (const [k, label] of Object.entries(fields)) {
+        const dt = document.createElement('dt'),
+          dd = document.createElement('dd');
+        dt.textContent = label;
+        dt.title = k;
+        dd.textContent = value(k, data?.[k]);
+        dl.append(dt, dd);
+      }
+      area.append(h, dl);
+    }
+    if (root.SatMetadata.detailsLoaded()) {
+      section('بيانات الفهرس SATCAT', catalogFields, m?.catalog);
+      section(
+        'مصدر وتاريخ الفهرس',
+        { source: 'مصدر الهوية', retrieved: 'تاريخ جلب الفهرس UTC' },
+        {
+          source: m?.catalog ? m.countrySource : null,
+          retrieved: m?.catalog ? m.catalogRetrievedAt : null,
+        },
+      );
+    }
+    if (o.omm) section('عناصر المدار المنشورة', orbitFields, o.omm);
+    else
+      section(
+        'عناصر المدار المنشورة',
+        { line1: 'السطر المداري الأول', line2: 'السطر المداري الثاني' },
+        { line1: o.l1, line2: o.l2 },
+      );
+    if (panel.open && !root.SatMetadata.detailsLoaded()) ensure().catch(failure);
+  }
+  api.render = render;
+  api.clear = clear;
+  root.SourceDetails = api;
+  panel.addEventListener('toggle', () => {
+    if (panel.open && currentObject) ensure().catch(failure);
+  });
+  document.getElementById('source-json').onclick = async () => {
+    if (!current) return;
+    const initial = current,
+      button = document.getElementById('source-json');
+    button.disabled = true;
+    try {
+      await ensure();
+      const metadata = root.SatMetadata.get(initial.noradId),
+        exported = {
+          ...initial,
+          catalog: metadata.catalog,
+          catalogSource: metadata.catalog ? metadata.countrySource : null,
+          catalogRetrievedAt: metadata.catalog ? metadata.catalogRetrievedAt : null,
+        };
+      const url = URL.createObjectURL(
+          new Blob([JSON.stringify(exported, null, 2)], { type: 'application/json;charset=utf-8' }),
+        ),
+        a = document.createElement('a');
+      a.href = url;
+      a.download = 'madar-' + exported.noradId + '-source.json';
+      document.body.append(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 60000);
+    } catch {
+      failure();
+    } finally {
+      button.disabled = false;
+    }
+  };
+})(typeof window !== 'undefined' ? window : globalThis);
