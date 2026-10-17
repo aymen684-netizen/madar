@@ -6,7 +6,12 @@ async function checkBrowserFleetPasses(browser, baseUrl, output) {
       ...seed,
       NORAD_CAT_ID: 100001 + i,
       OBJECT_NAME: 'PASS TEST ' + i,
-      EPOCH: '2026-10-16T00:00:00Z',
+      EPOCH:
+        i === 1
+          ? '2026-10-14T00:00:00Z'
+          : i === 2
+            ? '2026-10-12T00:00:00Z'
+            : '2026-10-16T00:00:00Z',
     }));
   for (const mobile of [false, true]) {
     const context = await browser.newContext({
@@ -90,6 +95,16 @@ async function checkBrowserFleetPasses(browser, baseUrl, output) {
       await first.scrollIntoViewIfNeeded();
       await page.waitForFunction(() => document.documentElement.lang === 'en');
       assert(!/[\u0620-\u064a]/.test(await page.locator('#fleet-passes').innerText()));
+      assert(
+        (await page.locator('#fleet-pass-list').innerText()).includes(
+          'Check the age of the orbital elements',
+        ),
+      );
+      assert(
+        (await page.locator('#fleet-pass-list').innerText()).includes(
+          'Elements are far from display time',
+        ),
+      );
       assert.equal(await page.locator('#fleet-pass-list li').count(), 12);
       await page.screenshot({
         path: output + '/fleet-passes-en-' + (mobile ? 'mobile' : 'desktop') + '.png',

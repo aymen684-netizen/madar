@@ -1834,5 +1834,7 @@
   "مرور جارٍ عند وقت الخريطة": "Pass in progress at the map time",
   "مرور قادم بعد وقت الخريطة": "Upcoming pass after the map time",
   "وقت الخريطة خارج نافذة الحساب؛ أعد حساب المرور.": "Map time is outside the calculation window. Recalculate passes.",
-  "متابعة الخريطة · حتى 12 قمرًا": "Map selection · up to 12 satellites"
+  "متابعة الخريطة · حتى 12 قمرًا": "Map selection · up to 12 satellites",
+  "تحقّق من عمر العناصر": "Check the age of the orbital elements",
+  "العناصر بعيدة زمنيًا عن وقت العرض": "Elements are far from display time"
 }
