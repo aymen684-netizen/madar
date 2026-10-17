@@ -118,7 +118,7 @@
     if (source && target && target.value !== source.value) target.value = source.value;
   }
   function refresh() {
-    rowCache = null;
+    catalogRows.invalidate();
     reconcileSelection();
     pathAt = 0;
     renderList();

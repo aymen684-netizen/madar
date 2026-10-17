@@ -31,6 +31,19 @@ const satelliteCard = SatelliteCard.create({
   position: (object) => position(object),
 });
 const dataHealth = DataHealth.create({ document, orbit: OrbitData });
+const catalogRows = CatalogRows.create({
+  search: CatalogSearch,
+  orbit: OrbitData,
+  prepare,
+  getMetadata: (id) => window.SatMetadata?.get(id),
+  matchesDisplay: (object) => !window.MapDisplay || MapDisplay.matches(object),
+});
+const catalogList = CatalogList.create({
+  document,
+  orbit: OrbitData,
+  getMetadata: (id) => window.SatMetadata?.get(id),
+  onChoose: (object) => choose(object),
+});
 const markerCache = new Map();
 let objects = [],
   onlySaved = false,
@@ -241,51 +254,21 @@ async function load(force = false) {
     }
   }
 }
-function countryMatches(o) {
-  const value = $('catalog-country')?.value || 'all';
-  if (value === 'all') return true;
-  const meta = window.SatMetadata?.get(o.id);
-  if (value === 'unknown') return !meta?.ownerCode;
-  if (value.startsWith('owner:')) return meta?.ownerCode === value.slice(6);
-  if (value === 'CIS') return meta?.ownerCode === 'CIS';
-  if (value === 'other')
-    return meta?.ownerCode && !['US', 'CIS', 'PRC', 'IND', 'ISRO'].includes(meta.ownerCode);
-  return meta?.ownerIso2 === value;
+function catalogDataset() {
+  return onlySaved ? watchlist.items : globalMode && globalCatalog ? globalCatalog : objects;
 }
-var rowCache, lastRenderedRows;
 function rows() {
-  const query = $('search').value.trim(),
-    country = $('catalog-country')?.value || 'all',
-    age = $('catalog-freshness')?.value || 'all',
-    sort = $('catalog-sort')?.value || 'original',
-    time = +dateNow(),
-    dataset = onlySaved ? watchlist.items : globalMode && globalCatalog ? globalCatalog : objects,
-    key = JSON.stringify([query, country, onlySaved, age, sort, window.MapDisplay?.key()]),
-    same = rowCache?.dataset === dataset && rowCache.key === key;
-  if (same && (age === 'all' || (time >= rowCache.time && time < rowCache.until)))
-    return rowCache.data;
-  let base;
-  if (same) base = rowCache.base;
-  else {
-    const matches = CatalogSearch.compile(query);
-    base = (onlySaved ? prepare(dataset) : dataset).filter((o) => {
-      if (!countryMatches(o) || (window.MapDisplay && !MapDisplay.matches(o))) return false;
-      if (!query) return true;
-      const meta = window.SatMetadata?.get(o.id);
-      return matches(o, {
-        catalogName: [meta?.catalogName, OrbitData.fields(o).internationalId].join(' '),
-        program: meta?.program,
-      });
-    });
-  }
-  const { data, until } = CatalogSearch.refine(base, { age, sort, time }, OrbitData.epoch);
-  rowCache = { dataset, key, base, data, time, until };
-  return data;
+  return catalogRows.rows({
+    dataset: catalogDataset(),
+    query: $('search').value.trim(),
+    country: $('catalog-country')?.value || 'all',
+    onlySaved,
+    age: $('catalog-freshness')?.value || 'all',
+    sort: $('catalog-sort')?.value || 'original',
+    time: +dateNow(),
+    displayKey: window.MapDisplay?.key(),
+  });
 }
-const LIST_SIZE = 100;
-let listPage = 0,
-  listContext = '',
-  listDataset = null;
 function reconcileSelection() {
   const data = rows();
   if (selection.reconcile(data)) pathAt = 0;
@@ -298,11 +281,7 @@ function choose(o, focus = true) {
   selection.select(o);
   showGlobeCard();
   pathAt = 0;
-  for (const button of $('list').querySelectorAll('button[data-satellite-id]')) {
-    const active = button.dataset.satelliteId === String(o.id);
-    button.classList.toggle('selected', active);
-    button.setAttribute('aria-pressed', String(active));
-  }
+  catalogList.select(o.id);
   update({ scene: false });
   cancelAnimationFrame(selectionFrame);
   clearTimeout(selectionTask);
@@ -324,117 +303,36 @@ function* pickableSatellites() {
 }
 
 function renderList() {
-  const list = $('list');
-  list.replaceChildren();
-  const data = rows();
-  lastRenderedRows = data;
-  const dataset = onlySaved
-      ? watchlist.items
-      : globalMode && globalCatalog
-        ? globalCatalog
-        : objects,
-    context = JSON.stringify([
+  catalogList.render({
+    data: rows(),
+    dataset: catalogDataset(),
+    context: JSON.stringify([
       $('search').value,
       $('catalog-country').value,
       onlySaved,
       $('catalog-freshness').value,
       $('catalog-sort').value,
       window.MapDisplay?.key(),
-    ]);
-  if (context !== listContext || dataset !== listDataset) {
-    listPage = 0;
-    listContext = context;
-    listDataset = dataset;
-  }
-  const pages = Math.max(1, Math.ceil(data.length / LIST_SIZE));
-  listPage = Math.min(listPage, pages - 1);
-  const start = listPage * LIST_SIZE;
-  $('saved').textContent = '☆ المتابعة (' + watchlist.items.length + ')';
-  $('results-summary').textContent = data.length
-    ? 'عرض ' +
-      (start + 1) +
-      '–' +
-      Math.min(start + LIST_SIZE, data.length) +
-      ' من ' +
-      data.length.toLocaleString('en-US') +
-      ' نتيجة'
-    : catalogLoading
-      ? 'جارٍ تحميل النتائج…'
-      : !onlySaved && !dataset.length
-        ? 'لا تتوفر بيانات في النطاق الحالي'
-        : 'لا توجد نتائج مطابقة';
-  $('list-pagination').hidden = data.length <= LIST_SIZE;
-  $('list-page').textContent = 'الصفحة ' + (listPage + 1) + ' من ' + pages;
-  $('list-previous').disabled = listPage === 0;
-  $('list-next').disabled = listPage === pages - 1;
-  $('clear-search').disabled = !$('search').value;
+    ]),
+    onlySaved,
+    saved: watchlist.items,
+    query: $('search').value,
+    loading: catalogLoading,
+    time: dateNow(),
+    selectedId: selection.current?.id,
+  });
   window.WatchlistBackup?.refresh();
-  $('catalog-empty-actions').hidden = data.length > 0 || catalogLoading;
-  $('catalog-empty-reset').hidden =
-    (!onlySaved && !dataset.length) || (onlySaved && !watchlist.items.length);
-  $('catalog-empty-browse').hidden = !onlySaved || watchlist.items.length > 0;
-  $('catalog-empty-refresh').hidden = onlySaved || dataset.length > 0;
-  if (!data.length) {
-    const p = document.createElement('p');
-    p.className = 'muted';
-    p.textContent = catalogLoading
-      ? 'جارٍ تحميل بيانات الأقمار…'
-      : onlySaved
-        ? watchlist.items.length
-          ? 'لا توجد نتائج ضمن متابعتك مع البحث والدولة وحداثة العناصر الحالية. أعد ضبط التصفية لإظهار المتابعة.'
-          : 'قائمة المتابعة فارغة. أضف قمرًا من زر المتابعة.'
-        : !dataset.length
-          ? 'لا توجد بيانات أقمار في النطاق الحالي. أعد تحميل البيانات أو اختر مجموعة أخرى.'
-          : 'لا توجد نتائج مع البحث والدولة وحداثة العناصر الحالية. أعد ضبط التصفية أو ابحث في جميع الأقمار النشطة.';
-    list.append(p);
-    return;
-  }
-  const savedIds = new Set(watchlist.items.map((o) => o.id)),
-    now = dateNow();
-  for (const o of data.slice(start, start + LIST_SIZE)) {
-    const b = document.createElement('button');
-    b.type = 'button';
-    b.dataset.satelliteId = String(o.id);
-    b.className = 'sat' + (selection.current?.id === o.id ? ' selected' : '');
-    b.setAttribute('aria-pressed', String(selection.current?.id === o.id));
-    const dot = document.createElement('span');
-    dot.className = 'dot';
-    const body = document.createElement('span'),
-      name = document.createElement('b'),
-      meta = document.createElement('small'),
-      quality = document.createElement('small');
-    name.textContent = o.name;
-    meta.textContent = 'NORAD ' + o.id + (savedIds.has(o.id) ? ' · ★' : '');
-    const freshness = OrbitData.freshness(o, now),
-      labels = {
-        recent: 'عناصر ضمن 24 ساعة',
-        aging: 'عناصر بين 24 و72 ساعة',
-        old: 'عناصر أبعد من 72 ساعة',
-        unknown: 'تاريخ العناصر غير متاح',
-      },
-      mission = window.SatMetadata?.get(o.id);
-    quality.className = 'catalog-quality';
-    quality.dataset.level = freshness.level;
-    quality.textContent = labels[freshness.level] + (mission ? ' · ' + mission.evidenceLabel : '');
-    quality.title =
-      'الفارق المطلق بين تاريخ العناصر ووقت العرض؛ لا يمثل ضمان دقة. توثيق المهمة مستقل عن حداثة المدار.';
-    body.append(name, meta, quality);
-    b.append(dot, body);
-    b.onclick = () => choose(o);
-    list.append(b);
-  }
 }
 function changeListPage(delta) {
-  listPage += delta;
+  catalogList.changePage(delta);
   renderList();
-  $('list').scrollTop = 0;
-  $('list').querySelector('button')?.focus({ preventScroll: true });
+  catalogList.focusFirst();
 }
 function update({ scene = true } = {}) {
   if (window.RenderLifecycle?.pageActive() === false) return;
   const now = dateNow();
   window.MapDisplay?.status(rows());
-  if (rows() !== lastRenderedRows) {
+  if (rows() !== catalogList.lastRows) {
     reconcileSelection();
     renderList();
   }
