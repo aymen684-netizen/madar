@@ -111,7 +111,7 @@ async function checkBrowserMapDisplay(browser, url, output) {
             omm: { ...seed.omm, NORAD_CAT_ID: 100001 + i },
           })),
         );
-        rowCache = null;
+        catalogRows.invalidate();
         reconcileSelection();
         renderList();
         update();
