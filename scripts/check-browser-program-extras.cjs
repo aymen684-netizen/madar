@@ -38,6 +38,17 @@ async function checkBrowserProgramExtras(browser, url, output) {
     assert((await page.locator('#health-next').textContent()).includes('UTC'));
     await page.screenshot({ path: output + '/time-freshness-desktop.png' });
     await page.evaluate(() => {
+      fixedTime = new Date(dateNow());
+      update();
+    });
+    assert((await page.locator('#health-note').textContent()).includes('لم يُحمّل أرشيف'));
+    await page.evaluate(() => {
+      fixedTime = null;
+      update();
+    });
+    assert(!(await page.locator('#health-note').textContent()).includes('لم يُحمّل أرشيف'));
+
+    await page.evaluate(() => {
       fixedTime = new Date(OrbitData.epoch(selection.current));
       update();
     });
