@@ -45,7 +45,7 @@
   pin.setAttribute('aria-pressed', 'false');
   $('globe-card-favorite').after(pin);
   pin.onclick = () => {
-    if (selected) toggle(selected);
+    if (selection.current) toggle(selection.current);
   };
   function save() {
     try {
@@ -119,7 +119,7 @@
       row.append(name, remove);
       list.append(row);
     }
-    if (selected) card(selected);
+    if (selection.current) card(selection.current);
   }
   function changed(message) {
     pathRevision = -1;

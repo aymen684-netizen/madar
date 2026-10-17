@@ -65,8 +65,8 @@
       panels,
       scroll: root.scrollY || 0,
       onlySaved: typeof onlySaved !== 'undefined' && onlySaved,
-      selectedByUser: typeof selectedByUser !== 'undefined' && selectedByUser,
-      selected: typeof selected !== 'undefined' && selected ? OrbitData.serialize(selected) : null,
+      selectedByUser: selection.byUser,
+      selected: selection.current ? OrbitData.serialize(selection.current) : null,
       fixedTime: typeof fixedTime !== 'undefined' && fixedTime ? fixedTime.toISOString() : null,
       paused: typeof paused !== 'undefined' && paused,
       pausedAt: typeof pausedAt !== 'undefined' && pausedAt ? pausedAt.toISOString() : null,
@@ -144,8 +144,7 @@
         if (candidate) {
           if (snapshot.selectedByUser === true) choose(candidate, false);
           else {
-            selected = candidate;
-            selectedByUser = false;
+            selection.restore(candidate);
           }
         }
       }

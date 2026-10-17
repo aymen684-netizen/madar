@@ -17,12 +17,10 @@ const satelliteFont = {
   },
 };
 let defaultLabelFont = null,
-  renderedMarkerMode = null,
-  trackingSelected = false,
-  selectedByUser = false;
+  renderedMarkerMode = null;
+const selection = SatelliteSelection.create();
 const markerCache = new Map();
 let objects = [],
-  selected = null,
   onlySaved = false,
   favorites = [],
   world = null,
@@ -219,21 +217,19 @@ async function loadSingle(force = false) {
   if (token !== requestId) return;
   $('defense-note').hidden = !['military', 'intelligence'].includes(group);
   $('follow-group').hidden = !['military', 'intelligence'].includes(group);
-  const old = selected?.id;
   objects = prepare(data);
   refreshFavorites(objects);
   loadedGroup = group;
-  selected = objects.find((o) => o.id === old) || objects[0] || null;
-  if (selected?.id !== old) selectedByUser = false;
+  selection.refreshCatalog(objects);
   $('count').textContent = objects.length.toLocaleString('en-US');
   setStatus(source);
   setCatalogLoading(false);
   pathAt = 0;
   const filtered = rows();
-  if (!filtered.some((o) => o.id === selected?.id)) selected = filtered[0] || null;
+  selection.reconcile(filtered, { preserveIntent: true });
   renderList();
   update();
-  if (selected && selectedByUser) focusSelected();
+  if (selection.current && selection.byUser) focusSelected();
 }
 async function load(force = false) {
   await favoritesReady;
@@ -246,10 +242,8 @@ async function load(force = false) {
   try {
     const data = await TypePicker.load('catalog', force);
     if (token !== requestId) return;
-    const old = selected?.id;
     objects = prepare(data);
-    selected = objects.find((o) => o.id === old) || objects[0] || null;
-    if (selected?.id !== old) selectedByUser = false;
+    selection.refreshCatalog(objects);
     loadedGroup = 'types';
     $('count').textContent = objects.length.toLocaleString('en-US');
     $('search-info').textContent = 'الأنواع: ' + TypePicker.name(TypePicker.selected('catalog'));
@@ -264,7 +258,7 @@ async function load(force = false) {
     );
     pathAt = 0;
     const filtered = rows();
-    if (!filtered.some((o) => o.id === selected?.id)) selected = filtered[0] || null;
+    selection.reconcile(filtered, { preserveIntent: true });
     renderList();
     update();
   } catch (e) {
@@ -327,20 +321,14 @@ let listPage = 0,
   listDataset = null;
 function reconcileSelection() {
   const data = rows();
-  if (!data.some((o) => o.id === selected?.id)) {
-    selectedByUser = false;
-    selected = data[0] || null;
-    trackingSelected = false;
-    pathAt = 0;
-  }
+  if (selection.reconcile(data)) pathAt = 0;
   return data;
 }
 let selectionFrame = 0,
   selectionTask = 0;
 function choose(o, focus = true) {
   if (!o) return;
-  selectedByUser = true;
-  selected = o;
+  selection.select(o);
   showGlobeCard();
   pathAt = 0;
   for (const button of $('list').querySelectorAll('button[data-satellite-id]')) {
@@ -436,8 +424,8 @@ function renderList() {
     const b = document.createElement('button');
     b.type = 'button';
     b.dataset.satelliteId = String(o.id);
-    b.className = 'sat' + (selected?.id === o.id ? ' selected' : '');
-    b.setAttribute('aria-pressed', String(selected?.id === o.id));
+    b.className = 'sat' + (selection.current?.id === o.id ? ' selected' : '');
+    b.setAttribute('aria-pressed', String(selection.current?.id === o.id));
     const dot = document.createElement('span');
     dot.className = 'dot';
     const body = document.createElement('span'),
@@ -475,10 +463,10 @@ function epoch(o) {
   return new Date(OrbitData.epoch(o));
 }
 function syncFavoriteButtons() {
-  const saved = !!selected && favorites.some((f) => f.id === selected.id);
+  const saved = !!selection.current && favorites.some((f) => f.id === selection.current.id);
   for (const id of ['favorite', 'globe-card-favorite']) {
     const button = $(id);
-    button.disabled = !selected;
+    button.disabled = !selection.current;
     button.textContent = saved ? '★ إزالة من قائمة المتابعة' : '☆ إضافة إلى قائمة المتابعة';
     button.setAttribute('aria-pressed', String(saved));
   }
@@ -497,8 +485,8 @@ function update({ scene = true } = {}) {
     renderList();
   }
   syncFavoriteButtons();
-  document.querySelector('.sat-identity').hidden = !selected;
-  $('epoch').hidden = !selected;
+  document.querySelector('.sat-identity').hidden = !selection.current;
+  $('epoch').hidden = !selection.current;
   if ($('view-mode'))
     $('view-mode').textContent = fixedTime
       ? '◷ عرض في التاريخ والوقت المختارين'
@@ -511,8 +499,8 @@ function update({ scene = true } = {}) {
       timeStyle: 'medium',
       timeZone: Number($('timezone').value) === 0 ? 'UTC' : 'Asia/Riyadh',
     }).format(now) + (Number($('timezone').value) === 0 ? ' · UTC' : ' · الرياض');
-  $('focus').disabled = !selected || !world;
-  if (!selected) {
+  $('focus').disabled = !selection.current || !world;
+  if (!selection.current) {
     window.SourceDetails?.clear();
     $('name').textContent = 'لا يوجد قمر محدد';
     $('id').textContent = 'اختر مجموعة أو حدّث البيانات';
@@ -523,7 +511,7 @@ function update({ scene = true } = {}) {
     if (scene) updateGlobe();
     return;
   }
-  const o = selected,
+  const o = selection.current,
     p = position(o);
   $('name').textContent = o.name;
   updateSatelliteMetadata(o);
@@ -590,12 +578,12 @@ function updateGlobe() {
     $('hint').textContent = 'عرض أول 2,000 قمر · اختر الدولة أو ابحث لإظهار الأقمار الأخرى';
   else $('hint').textContent = 'اسحب للتدوير · مرّر للتكبير · اضغط على قمر';
   if (
-    selected &&
-    selectedByUser &&
-    matches.some((o) => o.id === selected.id) &&
-    !displayed.some((o) => o.id === selected.id)
+    selection.current &&
+    selection.byUser &&
+    matches.some((o) => o.id === selection.current.id) &&
+    !displayed.some((o) => o.id === selection.current.id)
   )
-    displayed = [...displayed, selected];
+    displayed = [...displayed, selection.current];
   if (window.MapFleet?.size) {
     const ids = new Set(displayed.map((o) => o.id));
     for (const entry of MapFleet.snapshot().items)
@@ -633,23 +621,23 @@ function updateGlobe() {
       ? []
       : satelliteMarkers()
         ? pts
-        : pts.filter((o) => o.id === selected?.id || window.MapFleet?.has(o.id)),
+        : pts.filter((o) => o.id === selection.current?.id || window.MapFleet?.has(o.id)),
   );
   window.MapDisplay?.update(world, pts, matches, duration);
   if (window.MapFleet?.size) {
     world.pathsData(MapFleet.paths(now));
-  } else if (selected && selectedByUser && (Date.now() - pathAt > 30000 || !pathAt)) {
-    const period = 1440 / OrbitData.fields(selected).motion,
+  } else if (selection.current && selection.byUser && (Date.now() - pathAt > 30000 || !pathAt)) {
+    const period = 1440 / OrbitData.fields(selection.current).motion,
       path = [];
     for (let i = 0; i <= 160; i++) {
-      const p = position(selected, new Date(now.getTime() + (i * period * 60000) / 160));
+      const p = position(selection.current, new Date(now.getTime() + (i * period * 60000) / 160));
       if (p) path.push([p.lat, p.lng, p.alt]);
     }
     world.pathsData(path.length ? [path] : []);
     pathAt = Date.now();
-  } else if (!selected || !selectedByUser) world.pathsData([]);
-  if (trackingSelected && selected) {
-    const p = position(selected, now),
+  } else if (!selection.current || !selection.byUser) world.pathsData([]);
+  if (selection.tracking && selection.current) {
+    const p = position(selection.current, now),
       camera = world.pointOfView();
     if (p)
       world.pointOfView(
@@ -660,7 +648,7 @@ function updateGlobe() {
   updateGlobeCard();
 }
 function focusSelected() {
-  const p = position(selected);
+  const p = position(selection.current);
   if (world && p)
     world.pointOfView({ lat: p.lat, lng: p.lng, altitude: Math.max(1.8, p.alt + 1.1) }, 850);
 }
@@ -686,7 +674,7 @@ function initGlobe(compat = false) {
       .pointRadius((d) =>
         satelliteMarkers()
           ? 0
-          : d.id === selected?.id
+          : d.id === selection.current?.id
             ? 0.34
             : window.MapFleet?.has(d.id)
               ? 0.27
@@ -696,7 +684,7 @@ function initGlobe(compat = false) {
       .pointColor(
         (d) =>
           window.MapFleet?.color(d.id) ||
-          (d.id === selected?.id
+          (d.id === selection.current?.id
             ? '#e8fff9'
             : OrbitAppearance.color(OrbitAppearance.category(d.obj))),
       )
@@ -713,9 +701,10 @@ function initGlobe(compat = false) {
       .labelLng('lng')
       .labelAltitude('alt')
       .labelText((d) => (satelliteMarkers() ? 'S' : d.name))
-      .labelSize((d) => (satelliteMarkers() ? (d.id === selected?.id ? 0.9 : 0.65) : 0.7))
+      .labelSize((d) => (satelliteMarkers() ? (d.id === selection.current?.id ? 0.9 : 0.65) : 0.7))
       .labelColor(
-        (d) => window.MapFleet?.color(d.id) || (d.id === selected?.id ? '#8ecbff' : '#2795ff'),
+        (d) =>
+          window.MapFleet?.color(d.id) || (d.id === selection.current?.id ? '#8ecbff' : '#2795ff'),
       )
       .labelDotRadius(() => (satelliteMarkers() ? 0 : 0.3))
       .onLabelClick((d, e) => {
@@ -805,11 +794,11 @@ function initGlobe(compat = false) {
   }
 }
 $('globe-card-favorite').onclick = $('favorite').onclick = async () => {
-  if (!selected) return;
-  const exists = favorites.some((f) => f.id === selected.id);
+  if (!selection.current) return;
+  const exists = favorites.some((f) => f.id === selection.current.id);
   favorites = exists
-    ? favorites.filter((f) => f.id !== selected.id)
-    : [...favorites, OrbitData.serialize(selected)];
+    ? favorites.filter((f) => f.id !== selection.current.id)
+    : [...favorites, OrbitData.serialize(selection.current)];
   reconcileSelection();
   renderList();
   update();
@@ -1031,13 +1020,13 @@ function initTime() {
 
 function renderMetadataSources(links, m) {
   if (!links) return;
-  const mode = selected?.provenance?.mode,
+  const mode = selection.current?.provenance?.mode,
     orbitUrl =
       mode === 'independent'
         ? 'https://mmccants.org/tles/'
         : mode && mode !== 'imported'
           ? 'https://celestrak.org/NORAD/elements/gp.php?CATNR=' +
-            encodeURIComponent(selected.id) +
+            encodeURIComponent(selection.current.id) +
             '&FORMAT=json'
           : '';
   const entries = [
@@ -1078,10 +1067,10 @@ function updateSatelliteMetadata(o) {
 }
 window.SatMetadata?.load()
   .then(() => {
-    if (selected) updateSatelliteMetadata(selected);
+    if (selection.current) updateSatelliteMetadata(selection.current);
   })
   .catch(() => {
-    if (selected) updateSatelliteMetadata(selected);
+    if (selection.current) updateSatelliteMetadata(selection.current);
   });
 
 $('follow-group').onclick = async () => {
@@ -1139,7 +1128,7 @@ function motionBearing(a, b) {
   );
 }
 function showGlobeCard() {
-  if (!selected) return;
+  if (!selection.current) return;
   const card = $('globe-card');
   if (card) {
     card.hidden = false;
@@ -1148,15 +1137,15 @@ function showGlobeCard() {
   }
 }
 function updateGlobeCard() {
-  if (selected) window.MapFleet?.card(selected);
+  if (selection.current) window.MapFleet?.card(selection.current);
   const card = $('globe-card');
-  if (!card || card.hidden || !selected) return;
-  const m = window.SatMetadata?.get(selected.id),
-    p = position(selected);
-  liveText('globe-card-name', selected.name);
+  if (!card || card.hidden || !selection.current) return;
+  const m = window.SatMetadata?.get(selection.current.id),
+    p = position(selection.current);
+  liveText('globe-card-name', selection.current.name);
   liveText(
     'globe-card-id',
-    'NORAD ' + selected.id + ' · ' + OrbitData.fields(selected).internationalId,
+    'NORAD ' + selection.current.id + ' · ' + OrbitData.fields(selection.current).internationalId,
   );
   liveText('globe-card-country', 'الدولة أو الجهة: ' + (m?.country || 'غير متاح'));
   liveText('globe-card-mission', 'المهمة: ' + (m?.missionLabel || 'غير متاحة'));
@@ -1167,7 +1156,9 @@ function updateGlobeCard() {
   renderMetadataSources($('globe-card-sources'), m);
   liveText(
     'globe-card-data-status',
-    OrbitData.freshness(selected, dateNow()).label + ' · ' + (selected.omm ? 'OMM JSON' : 'TLE'),
+    OrbitData.freshness(selection.current, dateNow()).label +
+      ' · ' +
+      (selection.current.omm ? 'OMM JSON' : 'TLE'),
   );
   liveText(
     'globe-card-motion',
@@ -1176,8 +1167,10 @@ function updateGlobeCard() {
   const flag = $('globe-card-flag');
   flag.hidden = !m?.ownerIso2;
   if (m?.ownerIso2) flag.src = 'assets/flags/' + m.ownerIso2.toLowerCase() + '.png';
-  $('track-selected').textContent = trackingSelected ? 'إيقاف متابعة الحركة' : 'متابعة حركة القمر';
-  $('track-selected').setAttribute('aria-pressed', String(trackingSelected));
+  $('track-selected').textContent = selection.tracking
+    ? 'إيقاف متابعة الحركة'
+    : 'متابعة حركة القمر';
+  $('track-selected').setAttribute('aria-pressed', String(selection.tracking));
 }
 $('globe-card-close').onclick = () => {
   $('globe-card').hidden = true;
@@ -1188,9 +1181,9 @@ document.addEventListener('keydown', (e) => {
 window.addEventListener('resize', positionGlobeCard);
 window.addEventListener('scroll', positionGlobeCard, { passive: true });
 $('track-selected').onclick = () => {
-  trackingSelected = !trackingSelected;
+  selection.toggleTracking();
   updateGlobeCard();
-  if (trackingSelected) focusSelected();
+  if (selection.tracking) focusSelected();
 };
 
 $('catalog-country').onchange = async () => {
@@ -1202,7 +1195,7 @@ $('catalog-country').onchange = async () => {
   await load();
   const count = rows().length;
   $('country-info').textContent = count + ' قمر في الفهرس المختار لهذه الدولة أو الجهة.';
-  if (selected) focusSelected();
+  if (selection.current) focusSelected();
   window.DraftState?.save();
 };
 
@@ -1246,7 +1239,7 @@ function renderDataHealth(o, time) {
   const dataset = rows(),
     sourceDataset = onlySaved ? favorites : globalMode && globalCatalog ? globalCatalog : objects;
   const key =
-    selectedByUser +
+    selection.byUser +
     '|' +
     (o?.id || '') +
     '|' +
@@ -1278,9 +1271,9 @@ function renderDataHealth(o, time) {
   const summary = $('data-health-summary');
   summary.replaceChildren();
   for (const [kind, text] of [
-    ['name', o && selectedByUser ? 'بيانات ' + o.name : 'حالة بيانات الأقمار'],
+    ['name', o && selection.byUser ? 'بيانات ' + o.name : 'حالة بيانات الأقمار'],
     ['source', o ? modes[p.mode] || 'مصدر غير موثق' : null],
-    ['freshness', selectedByUser ? h?.label : 'تختلف حداثة العناصر بين الأقمار'],
+    ['freshness', selection.byUser ? h?.label : 'تختلف حداثة العناصر بين الأقمار'],
   ]) {
     if (!text) continue;
     const part = document.createElement('span');
@@ -1288,7 +1281,7 @@ function renderDataHealth(o, time) {
     part.textContent = text;
     summary.append(part);
   }
-  summary.title = selectedByUser
+  summary.title = selection.byUser
     ? 'تفاصيل القمر المحدد: المصدر وتاريخ العناصر وآخر جلب ناجح؛ الحداثة محسوبة بالنسبة إلى وقت العرض.'
     : 'حالة المصدر؛ اختر قمرًا لعرض حداثة عناصره وتفاصيله.';
   $('health-source').textContent = o

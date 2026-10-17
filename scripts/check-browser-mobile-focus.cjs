@@ -114,7 +114,7 @@ async function checkBrowserMobileFocus(browser, url, output) {
         () =>
           world &&
           objects.length === 1604 &&
-          selectedByUser === false &&
+          selection.byUser === false &&
           document.getElementById('globe-card').hidden,
       );
       await page.waitForFunction(() => !document.getElementById('restore-notice').hidden);

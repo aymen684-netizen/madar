@@ -157,7 +157,9 @@ const server = http.createServer((req, res) => {
     assert.equal(await page.getAttribute('#favorite', 'aria-pressed'), 'true');
     assert(
       await page.evaluate(() =>
-        JSON.parse(localStorage.getItem('orbit-favorites')).some((o) => o.id === selected.id),
+        JSON.parse(localStorage.getItem('orbit-favorites')).some(
+          (o) => o.id === selection.current.id,
+        ),
       ),
     );
     await page.click('#saved');
@@ -166,11 +168,25 @@ const server = http.createServer((req, res) => {
     assert.equal(await page.getAttribute('#globe-card-favorite', 'aria-pressed'), 'false');
     assert.equal(await page.getAttribute('#favorite', 'aria-pressed'), 'false');
     assert.equal(await page.locator('#list button').count(), 0);
+    assert.deepEqual(
+      await page.evaluate(() => [selection.current, selection.byUser, selection.tracking]),
+      [null, false, false],
+    );
     await page.click('#all');
     await page.locator('#list button').first().click();
     await page.click('#globe-card-favorite');
+    const persistedSelectionId = await page.evaluate(() => {
+      DraftState.save();
+      const saved = JSON.parse(localStorage.getItem('madar-draft-v1'));
+      if (!saved.selectedByUser || saved.selected.id !== selection.current.id)
+        throw Error('Explicit selection must retain the existing draft schema');
+      return selection.current.id;
+    });
     await page.reload();
-    await page.waitForFunction(() => objects.length && selected);
+    await page.waitForFunction(
+      (id) => objects.length && selection.current?.id === id && selection.byUser,
+      persistedSelectionId,
+    );
     await page.locator('#list button').first().click();
     assert.equal(await page.getAttribute('#globe-card-favorite', 'aria-pressed'), 'true');
     assert.equal(await page.getAttribute('#favorite', 'aria-pressed'), 'true');
@@ -178,6 +194,7 @@ const server = http.createServer((req, res) => {
     console.log('PASS: card watchlist add/remove, sidebar sync and persisted reload');
     await page.click('#track-selected');
     assert.equal(await page.getAttribute('#track-selected', 'aria-pressed'), 'true');
+    assert.equal(await page.evaluate(() => selection.tracking), true);
     await page.selectOption('#marker-style', 'circle');
     await page.click('#pause');
     await page.click('#scene-live');

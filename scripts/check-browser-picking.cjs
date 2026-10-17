@@ -100,7 +100,7 @@ async function checkBrowserPicking(browser, url, output) {
         if (mobile) await page.touchscreen.tap(target.x, target.y);
         else await page.mouse.click(target.x, target.y);
         await page.waitForFunction(
-          () => !$('globe-card').hidden && selected.id === 100001 && pickTiming.paint,
+          () => !$('globe-card').hidden && selection.current.id === 100001 && pickTiming.paint,
           {},
           { timeout: 5000 },
         );

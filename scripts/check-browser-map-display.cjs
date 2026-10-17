@@ -69,7 +69,7 @@ async function checkBrowserMapDisplay(browser, url, output) {
       const satellite = page.locator('.flag-satellite[data-satellite-id="100001"]');
       await satellite.click({ force: true });
       await page.waitForFunction(
-        () => !document.getElementById('globe-card').hidden && selected.id === 100001,
+        () => !document.getElementById('globe-card').hidden && selection.current.id === 100001,
       );
       assert.equal(await page.evaluate(() => favorites.length), 0);
       await page.click('#globe-card-close');

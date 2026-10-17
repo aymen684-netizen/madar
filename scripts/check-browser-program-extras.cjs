@@ -22,7 +22,9 @@ async function checkBrowserProgramExtras(browser, url, output) {
   );
   try {
     await page.goto(url);
-    await page.waitForFunction(() => window.MadarDataRefresh && objects.length === 1 && selected);
+    await page.waitForFunction(
+      () => window.MadarDataRefresh && objects.length === 1 && selection.current,
+    );
     assert(await page.evaluate(() => Math.abs(+dateNow() - Date.now()) < 2000));
     await page.click('#data-health>summary');
     assert((await page.locator('#health-distance').textContent()).includes('23.0'));
@@ -36,7 +38,7 @@ async function checkBrowserProgramExtras(browser, url, output) {
     assert((await page.locator('#health-next').textContent()).includes('UTC'));
     await page.screenshot({ path: output + '/time-freshness-desktop.png' });
     await page.evaluate(() => {
-      fixedTime = new Date(OrbitData.epoch(selected));
+      fixedTime = new Date(OrbitData.epoch(selection.current));
       update();
     });
     assert((await page.locator('#health-display').textContent()).includes('وقت مختار'));
