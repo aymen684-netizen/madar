@@ -30,10 +30,10 @@
   panel.addEventListener('toggle', () => {
     if (!panel.open || root.FleetPasses || passesPending) return;
     passesPending = (async () => {
-      for (const file of ['fleet-pass-core.js', 'fleet-passes.js']) {
+      for (const file of ['fleet-pass-core.js', 'fleet-experience.js', 'fleet-passes.js']) {
         await new Promise((resolve, reject) => {
           const script = document.createElement('script');
-          script.src = file + '?v=67';
+          script.src = file + '?v=74';
           script.onload = resolve;
           script.onerror = () => {
             script.remove();

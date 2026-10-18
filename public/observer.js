@@ -45,6 +45,7 @@
         td.textContent = String(value);
         tr.append(td);
       }
+      if (i) tr.firstElementChild.append(PassMap.button(r.result.rows[i - 1], r));
       t.append(tr);
     }
     wrap.append(t);

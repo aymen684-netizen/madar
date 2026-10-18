@@ -11,6 +11,10 @@
   host.innerHTML =
     '<h3 id="fleet-pass-heading">المرور القادم لمجموعة الخريطة</h3><p>اختر موقع الحساب. لا يُطلب موقع جهازك ولا تُرسل الإحداثيات؛ تبقى مدخلات هذه اللوحة لهذه الجلسة.</p><form id="fleet-pass-form"><div class="fleet-site-grid"><label>خط العرض بالدرجات<input id="fleet-pass-lat" type="number" min="-90" max="90" step="any" required></label><label>خط الطول بالدرجات<input id="fleet-pass-lon" type="number" min="-180" max="180" step="any" required></label><label>ارتفاع الموقع عن مرجع WGS84 بالمتر<input id="fleet-pass-height" type="number" min="-500" max="9000" value="0" step="any" required></label><label>أقل زاوية ارتفاع فوق الأفق<input id="fleet-pass-elevation" type="number" min="0" max="89" value="10" step="any" required></label><label>التوقيت<select id="fleet-pass-zone"><option value="3">الرياض UTC+03:00</option><option value="0">UTC</option></select></label></div><button id="fleet-pass-run" type="submit">حساب المرور القادم · 24 ساعة</button><button id="fleet-pass-cancel" type="button" disabled>إلغاء الحساب</button></form><p id="fleet-pass-status" role="status" aria-live="polite">أدخل موقع الحساب ثم احسب مرور المجموعة.</p><p id="fleet-pass-window"></p><ol id="fleet-pass-list"></ol><div class="fleet-pass-actions"><button id="fleet-pass-country" type="button">استخدام المجموعة في تقرير البلد</button><button id="fleet-pass-observer" type="button">تقرير موقع الرصد للمجموعة</button></div><p>الحساب من وقت الخريطة وبالعناصر المتاحة، بخطوة 10 ثوانٍ. قد تفوت حالات أقصر من الخطوة. المرور هندسي ولا يضمن الرؤية أو التصوير أو الاتصال. يتوقف الحساب والعدّ عند إخفاء اللوحة؛ أعد الحساب لتحديث نافذة التنبؤ.</p>';
   panel.append(host);
+  const experience = FleetExperience.mount(host, {
+    stamp,
+    openPass: (pass, object) => PassMap.show(pass, object),
+  });
   const status = $('fleet-pass-status'),
     form = $('fleet-pass-form'),
     list = $('fleet-pass-list'),
@@ -50,6 +54,7 @@
     source = [];
     rows.clear();
     list.replaceChildren();
+    experience.reset();
     text($('fleet-pass-window'), '');
     text(status, message);
     busy(false);
@@ -122,6 +127,7 @@
       list.append(li);
     }
     tick();
+    experience.render(result, source, site());
   }
   function tick() {
     if (!visible() || !result) return;
@@ -131,6 +137,7 @@
       return;
     }
     text($('fleet-pass-window'), stamp(result.start) + ' → ' + stamp(result.end));
+    experience.tick(now, !fixedTime && !paused);
     for (const item of result.items) {
       const row = rows.get(item.id);
       if (!row) continue;

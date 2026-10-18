@@ -1096,7 +1096,7 @@
   --orbit-color: #ffcd74;
 }
 [data-orbit='geo'] {
-  --orbit-color: #f19db9;
+  --orbit-color: #b5aed1;
 }
 [data-orbit='other'] {
   --orbit-color: #aea6f7;
@@ -1426,7 +1426,7 @@
   }
   .tracking-map #shell-card-slot {
     position: absolute;
-    top: 80px;
+    top: var(--map-card-top, 140px);
     inset-inline-start: 16px;
     width: 330px;
     z-index: 7;
@@ -1436,7 +1436,9 @@
   }
   .tracking-map #shell-card-slot .globe-card {
     border: 1px solid #53748d;
-    max-height: calc(var(--shell-scene-height, 70dvh) - 110px) !important;
+    max-height: calc(
+      var(--shell-scene-height, 70dvh) - var(--map-card-top, 140px) - 24px
+    ) !important;
     background: #101c2bf5;
     box-shadow: 0 8px 30px #0006;
   }

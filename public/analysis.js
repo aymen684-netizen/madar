@@ -499,6 +499,12 @@ function renderAnalysis(r) {
     ['الفترة', 'NORAD', 'القمر', 'الدخول', 'الخروج', 'المدة', 'الارتفاع'],
     passes.slice(0, 1000),
   );
+  const passRows = r.windows.flatMap((w) => w.result.rows);
+  ae('analysis-passes')
+    .querySelectorAll('tbody tr')
+    .forEach((tr, i) => {
+      if (passRows[i]) tr.cells[2].append(PassMap.button(passRows[i], r));
+    });
   ae('analysis-status').textContent =
     'اكتمل التحليل. تُعرض أول 1,000 صف في الجداول الطويلة؛ Word يتضمن جميع النتائج. * مدة المرور محصورة في حدود الفترة.';
 }
