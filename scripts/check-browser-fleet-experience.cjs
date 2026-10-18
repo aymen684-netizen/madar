@@ -56,6 +56,13 @@ async function checkBrowserFleetExperience(browser, baseUrl, output) {
       assert((await page.locator('.fleet-timeline-pass').count()) >= 12);
       assert.equal(await page.locator('.fleet-sky').count(), 1);
       await page.locator('#fleet-timeline').scrollIntoViewIfNeeded();
+      const labelBounds = await page.locator('.fleet-timeline-row > span').first().boundingBox(),
+        timelineBounds = await page.locator('#fleet-timeline').boundingBox();
+      assert(
+        labelBounds.x >= timelineBounds.x &&
+          labelBounds.x + labelBounds.width <= timelineBounds.x + timelineBounds.width,
+        'satellite labels are visible at the initial Arabic scroll position',
+      );
       await page.screenshot({
         path: output + '/fleet-timeline-' + (mobile ? 'mobile' : 'desktop') + '.png',
         animations: 'disabled',
