@@ -83,6 +83,13 @@ for (const [ar, en] of [
   ['العناصر بعيدة زمنيًا عن وقت العرض', 'Elements are far from display time'],
 ])
   assert.equal(I.translate(ar, 'en'), en);
+assert.equal(
+  I.translate(
+    'أضف قمرًا من بطاقته أو فعّل التحديد بالضغط على الخريطة. لكل قمر لون ثابت؛ تظهر المختارة حتى عند تغيير المجموعة. هذه المجموعة مستقلة عن المفضلة وتصفية الدليل ونطاق التقارير.',
+    'en',
+  ),
+  'Add a satellite from its card or enable map selection. Each satellite keeps its color and remains displayed when you change groups. This map group is separate from favorites, catalog filters and report scope.',
+);
 const built = regexBuilds;
 assert(built > 0);
 I.translate('مدار · تقارير 35', 'en');

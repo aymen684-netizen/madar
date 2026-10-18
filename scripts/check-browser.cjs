@@ -51,6 +51,8 @@ const server = http.createServer((req, res) => {
     return context;
   };
   try {
+    const { checkBrowserMotion } = require('./check-browser-motion.cjs');
+    await checkBrowserMotion(browser, baseUrl, output);
     const { checkBrowserMapFleet } = require('./check-browser-map-fleet.cjs');
     await checkBrowserMapFleet(browser, baseUrl, output);
     const { checkBrowserFleetPasses } = require('./check-browser-fleet-passes.cjs');
@@ -61,8 +63,6 @@ const server = http.createServer((req, res) => {
     await checkBrowserInventory(browser, baseUrl, output);
     const { checkBrowserShell } = require('./check-browser-shell.cjs');
     await checkBrowserShell(browser, baseUrl, output);
-    const { checkBrowserMotion } = require('./check-browser-motion.cjs');
-    await checkBrowserMotion(browser, baseUrl, output);
     const { checkBrowserMobileFocus } = require('./check-browser-mobile-focus.cjs');
     await checkBrowserMobileFocus(browser, baseUrl, output);
     const { installNavigation } = require('./browser-navigation.cjs');
