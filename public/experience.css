@@ -1,6 +1,13 @@
-/* Keep the globe measurable and preloading behind the first visible interface. */
+/* Cover the app while keeping its layout and renderer ready behind the welcome. */
+body.startup::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+  background: #050c17;
+}
 body.startup > :not(#welcome-dialog) {
-  visibility: hidden;
+  pointer-events: none;
 }
 body.startup {
   overflow: hidden;

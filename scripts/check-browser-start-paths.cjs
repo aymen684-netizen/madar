@@ -105,7 +105,7 @@ async function checkBrowserStartPaths(browser, url, output) {
               };
             }),
           );
-          await page.locator('.sat-identity').screenshot({
+          await page.screenshot({
             path: output + '/attribution-' + (mobile ? 'ar-mobile' : 'en-desktop') + '.png',
           });
           await page.click('#language-toggle');

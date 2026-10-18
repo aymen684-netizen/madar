@@ -37,7 +37,13 @@ async function checkBrowserStartup(browser, url, output) {
       const navigation = page.goto(url + '#catalog');
       await page.locator('#welcome-dialog').waitFor({ state: 'visible' });
       assert.equal(await page.evaluate(() => typeof window.MadarShell), 'undefined');
-      assert(await page.locator('header').isHidden(), 'no legacy layout before scripts load');
+      assert(
+        await page.evaluate(() => {
+          const node = document.elementFromPoint(4, 4);
+          return node === document.body || !!node?.closest('#welcome-dialog');
+        }),
+        'opaque welcome cover blocks the legacy layout before scripts load',
+      );
       await page.screenshot({ path: output + '/startup-first-paint-' + mobile + '.png' });
       release();
       await navigation;
