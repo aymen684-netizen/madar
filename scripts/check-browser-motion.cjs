@@ -98,7 +98,7 @@ async function checkBrowserMotion(browser, url, output) {
       for (const lang of ['ar', 'en']) {
         if (lang === 'en') await page.click('#language-toggle');
         await page.waitForFunction((v) => document.documentElement.lang === v, lang);
-        const styles = await page.locator('.overview-bar .info-actions > *').evaluateAll((nodes) =>
+        const styles = await page.locator('.info-actions > *').evaluateAll((nodes) =>
           nodes.map((n) => {
             const s = getComputedStyle(n);
             return {
@@ -129,14 +129,16 @@ async function checkBrowserMotion(browser, url, output) {
             summaries[0],
             'all help disclosure headers share typography and spacing',
           );
-        assert.equal(styles.length, 2);
-        assert.deepEqual(
-          styles[0],
-          styles[1],
-          'information actions share typography, color and height',
-        );
+        assert.equal(styles.length, 4);
+        for (const style of styles)
+          assert.deepEqual(
+            style,
+            styles[0],
+            'all information actions share typography, color and height',
+          );
         assert.equal(await page.evaluate(() => document.body.scrollWidth <= innerWidth), true);
         await page.screenshot({
+          animations: 'disabled',
           path: output + '/info-actions-' + lang + '-' + (mobile ? 'mobile' : 'desktop') + '.png',
         });
       }
