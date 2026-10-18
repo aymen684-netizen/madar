@@ -73,6 +73,14 @@ async function checkBrowserOrbitFilter(browser, url, output) {
         await page.evaluate((language) => MadarI18n.setLanguage(language), language);
         const buttons = page.locator('#orbit-legend button');
         assert.equal(await buttons.count(), 4);
+        if (mobile) {
+          const legendBox = await page.locator('#orbit-legend').boundingBox();
+          const cardBox = await page.locator('#globe-card').boundingBox();
+          assert(
+            cardBox.y + cardBox.height <= legendBox.y,
+            'the selected satellite card must leave orbit buttons accessible',
+          );
+        }
         const leo = page.locator('#orbit-legend [data-orbit="leo"]');
         await leo.click();
         assert.equal(await leo.getAttribute('aria-pressed'), 'false');

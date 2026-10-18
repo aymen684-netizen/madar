@@ -1226,6 +1226,10 @@
     justify-content: flex-start;
     max-width: 260px;
   }
+  .mobile-map .globe-card {
+    bottom: calc(148px + env(safe-area-inset-bottom)) !important;
+    max-height: min(65dvh, calc(100dvh - 240px)) !important;
+  }
   .mobile-map #shell-time {
     top: 14px;
     inset-inline-start: 12px;
