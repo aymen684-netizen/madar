@@ -52,7 +52,7 @@
     });
   field.addEventListener('input', () => update());
   function drawFootprint() {
-    if (!world || !root.PassToolsCore) return;
+    if (!world || !root.PassToolsCore || !$('visibility-footprint')) return;
     const activeReplay = replay && selection.current === replay;
     if (!activeReplay && !$('visibility-footprint').checked && !hadBoundary) return;
     const p =
