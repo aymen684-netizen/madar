@@ -1,6 +1,6 @@
 (function (root) {
   'use strict';
-  const VERSION = '52',
+  const VERSION = '64',
     missing = 'غير متاح',
     documented = new Set(['documented', 'individual', 'program']);
   const labels = {

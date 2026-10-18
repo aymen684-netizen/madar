@@ -112,3 +112,28 @@ assert.equal(cached.edition, '49');
 console.log(
   'PASS: cached Word restores its content mode and rejects older editions or another language',
 );
+
+// Use the shipped edition against a pre-translation-review saved file, not a mock version.
+vm.runInNewContext(fs.readFileSync('public/report-brief.js', 'utf8'), root);
+for (const language of ['ar', 'en']) {
+  root.MadarI18n.language = language;
+  for (const kind of ['report', 'analysis']) {
+    cached = {
+      blob: new Blob(['pre-review Word']),
+      filename: 'saved.docx',
+      edition: '52',
+      language,
+      detail: 'brief',
+    };
+    root.WordDelivery.clear(kind);
+    assert.equal(await root.WordDelivery.restore(kind), null);
+    assert.equal(nodes.get(kind + '-share').hidden, true);
+    cached.edition = root.ReportBrief.VERSION;
+    assert(await root.WordDelivery.restore(kind));
+    assert.equal(nodes.get(kind + '-share').hidden, false);
+    assert.equal(cached.detail, 'brief');
+  }
+}
+console.log(
+  'PASS: shipped Word edition invalidates pre-review Arabic/English report and analysis files',
+);

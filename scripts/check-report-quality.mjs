@@ -200,6 +200,25 @@ const country = {
     },
   };
 const reports = { inventory, report: country, analysis: comparison, observer };
+const twoSatellites = B.build({
+  ...country,
+  result: { ...country.result, rows: [row, { ...row, id: 2 }], unique: 2 },
+});
+assert.equal(
+  c.MadarI18n.translate(twoSatellites.overview[0], 'en'),
+  'The calculation detected 2 passes involving 2 distinct satellites.',
+);
+assert(
+  c.MadarI18n.translate(B.build(inventory).overview[0], 'en').includes(
+    'satellites attributed to countries or organizations in the catalog.',
+  ),
+);
+const historicalNote = c.MadarI18n.translate(
+  '* حالة محصورة بحدود الفترة؛ قد يبدأ المرور قبلها أو يستمر بعدها. العينات الزمنية قد تفوّت مرورًا أقصر من خطوة الفحص. النتائج تقديرات من العناصر المتاحة وليست أرشيفًا تاريخيًا مرصودًا.',
+  'en',
+);
+assert(historicalNote.includes('estimates calculated from the available orbital elements'));
+assert(historicalNote.includes('not a record of historical observations'));
 const qa = new Set([
   'inventory-full-ar',
   'inventory-brief-en',
