@@ -55,6 +55,12 @@ async function checkBrowserFleetExperience(browser, baseUrl, output) {
       );
       assert((await page.locator('.fleet-timeline-pass').count()) >= 12);
       assert.equal(await page.locator('.fleet-sky').count(), 1);
+      await page.locator('#fleet-timeline').scrollIntoViewIfNeeded();
+      await page.screenshot({
+        path: output + '/fleet-timeline-' + (mobile ? 'mobile' : 'desktop') + '.png',
+        animations: 'disabled',
+        timeout: 60000,
+      });
       await page.check('#fleet-alerts');
       await page.waitForFunction(() =>
         document.getElementById('fleet-alert-status').textContent.includes('مثبت'),
@@ -110,10 +116,19 @@ async function checkBrowserFleetExperience(browser, baseUrl, output) {
         await page.evaluate(() => world.pathsData().find((p) => p.visibilityBoundary).length),
         73,
       );
+      await page.screenshot({
+        path: output + '/map-card-clock-ar-' + (mobile ? 'mobile' : 'desktop') + '.png',
+        animations: 'disabled',
+        timeout: 60000,
+      });
       await page.click('#language-toggle');
       await page.click('#map-fleet-open');
       await page.locator('#fleet-event-detail').scrollIntoViewIfNeeded();
       await page.waitForFunction(() => document.documentElement.lang === 'en');
+      assert(
+        (await page.locator('#clock').innerText()).startsWith('Gregorian:'),
+        'fixed map time follows language changes immediately',
+      );
       assert(
         !/[\u0620-\u064a]/.test(await page.locator('#fleet-experience').innerText()),
         'new tools translate completely',
@@ -124,6 +139,11 @@ async function checkBrowserFleetExperience(browser, baseUrl, output) {
         timeout: 60000,
       });
       await page.click('#map-tools-close');
+      await page.screenshot({
+        path: output + '/map-card-clock-en-' + (mobile ? 'mobile' : 'desktop') + '.png',
+        animations: 'disabled',
+        timeout: 60000,
+      });
       if (!mobile) {
         const gap = await page.evaluate(
           () =>
