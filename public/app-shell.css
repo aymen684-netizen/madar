@@ -1035,6 +1035,11 @@
 #map-sheet-content :is(.health-grid, #health-note, #health-invalid) {
   padding-inline: 12px;
 }
+#clock {
+  white-space: pre-line;
+  line-height: 1.6;
+  unicode-bidi: plaintext;
+}
 #orbit-legend {
   position: absolute;
   bottom: 18px;

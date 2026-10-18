@@ -4,6 +4,16 @@ import assert from 'node:assert/strict';
 const context = vm.createContext({});
 for (const file of ['globe-scene.js', 'time-controls.js'])
   vm.runInContext(fs.readFileSync('public/' + file, 'utf8'), context);
+const midnight = new Date('2026-10-17T22:15:30Z');
+const arClock = context.TimeControls.formatClock(midnight, { language: 'ar', offset: 3 });
+assert(arClock.startsWith('ميلادي: 18'));
+assert(arClock.includes('2026') && arClock.includes('1448') && arClock.includes('\nهجري:'));
+assert(arClock.includes('الرياض'));
+const enClock = context.TimeControls.formatClock(midnight, { language: 'en', offset: 0 });
+assert(enClock.startsWith('Gregorian: 17 Oct 2026'));
+assert(enClock.includes('22:15:30 · UTC\nHijri:'));
+assert(!/[\u0600-\u06ff]/.test(enClock));
+assert.equal(midnight.toISOString(), '2026-10-17T22:15:30.000Z');
 function dom() {
   const nodes = new Map();
   const node = (id) => {

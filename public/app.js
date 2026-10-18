@@ -383,12 +383,10 @@ function update({ scene = true } = {}) {
       : paused
         ? 'Ⅱ العرض متوقف'
         : '● موضع محسوب الآن · تحديث كل ثانية';
-  $('clock').textContent =
-    new Intl.DateTimeFormat('ar-SA', {
-      dateStyle: 'medium',
-      timeStyle: 'medium',
-      timeZone: Number($('timezone').value) === 0 ? 'UTC' : 'Asia/Riyadh',
-    }).format(now) + (Number($('timezone').value) === 0 ? ' · UTC' : ' · الرياض');
+  $('clock').textContent = TimeControls.formatClock(now, {
+    language: window.MadarI18n?.language,
+    offset: $('timezone').value,
+  });
   $('focus').disabled =
     !selection.current ||
     !world ||

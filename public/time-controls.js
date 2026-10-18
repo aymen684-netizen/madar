@@ -1,5 +1,31 @@
 (function (root) {
   'use strict';
+  const clockFormats = new Map();
+  function formatClock(date, { language = 'ar', offset = 3 } = {}) {
+    const english = language === 'en',
+      utc = Number(offset) === 0;
+    const key = `${english}:${utc}`;
+    let formats = clockFormats.get(key);
+    if (!formats) {
+      const locale = english ? 'en-GB' : 'ar-SA';
+      const common = {
+        numberingSystem: 'latn',
+        timeZone: utc ? 'UTC' : 'Asia/Riyadh',
+        dateStyle: 'medium',
+      };
+      formats = {
+        gregorian: new Intl.DateTimeFormat(locale, {
+          ...common,
+          calendar: 'gregory',
+          timeStyle: 'medium',
+        }),
+        hijri: new Intl.DateTimeFormat(locale, { ...common, calendar: 'islamic-umalqura' }),
+      };
+      clockFormats.set(key, formats);
+    }
+    const zone = utc ? 'UTC' : english ? 'Riyadh' : 'الرياض';
+    return `${english ? 'Gregorian' : 'ميلادي'}: ${formats.gregorian.format(date)} · ${zone}\n${english ? 'Hijri' : 'هجري'}: ${formats.hijri.format(date)}`;
+  }
   function create({
     document,
     now = () => new Date(),
@@ -96,7 +122,7 @@
     }
     return Object.freeze({ bind, fill, read, weekday, sync });
   }
-  const api = Object.freeze({ create });
+  const api = Object.freeze({ create, formatClock });
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.TimeControls = api;
 })(typeof window !== 'undefined' ? window : globalThis);

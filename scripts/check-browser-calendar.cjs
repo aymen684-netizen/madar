@@ -124,6 +124,26 @@ async function checkBrowserCalendar(browser, url, output) {
         'choosing a civil date does not apply map time or change zone/hour',
       );
       assert.deepEqual(errors, []);
+      for (const language of ['ar', 'en']) {
+        await page.evaluate((language) => {
+          MadarI18n.setLanguage(language);
+          fixedTime = new Date('2026-10-17T22:15:30Z');
+          document.getElementById('timezone').value = '3';
+          document.getElementById('shell-time').open = false;
+          update();
+        }, language);
+        const clock = await page.locator('#clock').innerText();
+        assert(clock.includes('2026') && clock.includes('1448'));
+        assert(clock.startsWith(language === 'ar' ? 'ميلادي: 18' : 'Gregorian: 18 Oct 2026'));
+        if (language === 'en') assert(!/[\u0600-\u06ff]/.test(clock));
+        assert.equal(
+          await page.locator('#clock').evaluate((n) => n.scrollWidth <= n.clientWidth),
+          true,
+        );
+        await page.screenshot({
+          path: `${output}/map-clock-${language}-${mobile ? 'mobile' : 'desktop'}.png`,
+        });
+      }
     } finally {
       await context.close();
     }

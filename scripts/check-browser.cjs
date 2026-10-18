@@ -257,15 +257,32 @@ const server = http.createServer((req, res) => {
     const live = await page.evaluate(async () => {
       try {
         const r = await SatGroups.fetchGroup('stations', parse, { force: true });
-        return { source: r.source, count: r.data.length };
+        return {
+          source: r.source,
+          count: r.data.length,
+          modes: [...new Set(r.data.map((o) => o.provenance?.mode))],
+          note: r.note || '',
+          fetchedAt: r.fetchedAt,
+        };
       } catch (e) {
         return { error: e.message };
       }
     });
     console.log('browser celestrak:', live);
     fs.writeFileSync(output + '/celestrak.json', JSON.stringify(live, null, 2));
-    assert.equal(live.source, 'live', 'CelesTrak direct browser fetch must succeed');
     assert(live.count > 0);
+    assert(['live', 'cache', 'local', 'derived'].includes(live.source));
+    assert.deepEqual(
+      live.modes,
+      [live.source],
+      'every record must retain the reported source mode',
+    );
+    if (live.source === 'live' || live.source === 'cache')
+      assert(Number.isFinite(live.fetchedAt) && live.fetchedAt > 0);
+    else {
+      assert(live.note, 'unavailable upstream must retain an explanatory note');
+      assert.equal(live.fetchedAt, null, 'fallback must not invent a fresh fetch timestamp');
+    }
     await page.close();
     const { checkBrowserComprehensive } = require('./check-browser-comprehensive.cjs');
     await checkBrowserComprehensive(browser, baseUrl, output);
