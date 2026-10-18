@@ -97,12 +97,21 @@ async function checkBrowserMobileFocus(browser, url, output) {
       const colors = await page.evaluate(() => {
         const points = [];
         world.scene().traverse((n) => {
-          if (n.isPoints && n.material?.size === 3)
-            points.push({ opacity: n.material.opacity, color: n.material.color.getHexString() });
+          if (n.isPoints && [3, 1.4].includes(n.material?.size))
+            points.push({
+              size: n.material.size,
+              opacity: n.material.opacity,
+              color: n.material.color.getHexString(),
+            });
         });
         return points;
       });
       assert.equal(new Set(colors.map((p) => p.color)).size, 4);
+      assert.equal(
+        colors.filter((p) => p.size === 1.4).length,
+        1,
+        'the GEO belt has one smaller particle group',
+      );
       assert(colors.every((p) => p.opacity > 0 && p.opacity < 0.75));
       await page.screenshot({ path: output + '/mobile-focus-' + width + '.png' });
       await page.waitForFunction(
