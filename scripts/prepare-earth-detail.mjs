@@ -1,18 +1,19 @@
 import fs from 'node:fs';
 import { createHash } from 'node:crypto';
 
-// Build-only asset acquisition: browsers fetch the verified copy from Madar itself.
-// Solar System Scope / INOVE, CC BY 4.0, based on NASA Blue Marble data.
+// Original NASA 8192x4096 pixels, converted to JPEG without upscaling.
+// Bundled in text parts so clean builds need no external image service.
 const target = new URL('../public/assets/earth-detail.jpg', import.meta.url),
-  source = 'https://www.solarsystemscope.com/textures/download/8k_earth_daymap.jpg',
-  expected = '88ab060b6e7d241cfc590c69f528fab2b3247b738d40124cb590999a6fe44abc',
-  valid = (bytes) => createHash('sha256').update(bytes).digest('hex') === expected;
+  manifest = JSON.parse(fs.readFileSync(new URL('../packed/earth-detail.json', import.meta.url))),
+  valid = (bytes) =>
+    bytes.length === manifest.bytes &&
+    createHash('sha256').update(bytes).digest('hex') === manifest.sha256;
 if (!fs.existsSync(target) || !valid(fs.readFileSync(target))) {
-  const response = await fetch(source, { signal: AbortSignal.timeout(45000) });
-  if (!response.ok)
-    throw Error('Could not prepare the optional 8K Earth texture: ' + response.status);
-  const bytes = Buffer.from(await response.arrayBuffer());
-  if (!valid(bytes)) throw Error('Optional Earth texture checksum mismatch');
+  const encoded = manifest.parts
+      .map((part) => fs.readFileSync(new URL('../' + part, import.meta.url), 'utf8'))
+      .join(''),
+    bytes = Buffer.from(encoded, 'base64');
+  if (!valid(bytes)) throw Error('Bundled Earth detail texture checksum mismatch');
   fs.writeFileSync(target, bytes);
 }
-console.log('Prepared verified 8192x4096 Earth detail texture (build only)');
+console.log('Prepared bundled 8192x4096 Earth detail texture');

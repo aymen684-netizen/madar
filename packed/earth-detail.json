@@ -1,0 +1,28 @@
+{
+  "sha256": "7b4c8cf4f068221b2c0451be66ae6f73fca04912aa83505c41c2f58b1913a8cb",
+  "bytes": 2181038,
+  "width": 8192,
+  "height": 4096,
+  "parts": [
+    "packed/earth-detail.b64.part00",
+    "packed/earth-detail.b64.part01",
+    "packed/earth-detail.b64.part02",
+    "packed/earth-detail.b64.part03",
+    "packed/earth-detail.b64.part04",
+    "packed/earth-detail.b64.part05",
+    "packed/earth-detail.b64.part06",
+    "packed/earth-detail.b64.part07",
+    "packed/earth-detail.b64.part08",
+    "packed/earth-detail.b64.part09",
+    "packed/earth-detail.b64.part10",
+    "packed/earth-detail.b64.part11",
+    "packed/earth-detail.b64.part12",
+    "packed/earth-detail.b64.part13",
+    "packed/earth-detail.b64.part14",
+    "packed/earth-detail.b64.part15",
+    "packed/earth-detail.b64.part16",
+    "packed/earth-detail.b64.part17",
+    "packed/earth-detail.b64.part18",
+    "packed/earth-detail.b64.part19"
+  ]
+}
