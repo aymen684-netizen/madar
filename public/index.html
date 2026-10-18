@@ -14,7 +14,7 @@
       content="تابع الأقمار الصناعية، استكشف مداراتها واحفظ قائمة متابعتك."
     />
     <link rel="stylesheet" href="app-base.css?v=53" />
-    <link rel="stylesheet" href="app-shell.css?v=67" />
+    <link rel="stylesheet" href="app-shell.css?v=72" />
     <link rel="icon" href="madar-mark.svg" type="image/svg+xml" />
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png" />
@@ -86,6 +86,11 @@
               توضح الألوان أسفل الخريطة مجموعات المدار المنخفض LEO والمتوسط MEO والمتزامن GEO
               والمدارات الأخرى. هذا تصنيف تقريبي؛ ظهور القمر ضمن مجموعة GEO لا يعني أنه ثابت فوق
               موضع واحد. بطاقة القمر تظهر بعد اختياره من الخريطة أو الدليل.
+            </p>
+            <p>
+              اضغط أزرار LEO وMEO وGEO وأخرى أسفل الخريطة لإظهار كل نوع أو إخفائه، ويمكن جمع عدة
+              أنواع. الأزرار المفعّلة ملوّنة، والمخفية مشطوبة. تبقى اختيارات مجموعة الخريطة محفوظة
+              عند إخفاء نوعها.
             </p>
             <p>
               من الخريطة افتح «تخصيص الأقمار على الخريطة · الدولة والمهمة». اختر الدولة أو الجهة
@@ -1129,7 +1134,7 @@
           </div>
           <div>
             <div class="count" id="count">—</div>
-            <div class="muted">قمر في المجموعة</div>
+            <div class="muted">قمر على الخريطة</div>
           </div>
         </div>
         <div class="scene-mode">
@@ -1297,9 +1302,9 @@
         >مصدر البيانات: CelesTrak ↗</a
       >
     </footer>
-    <script src="network-resources.js?v=71"></script>
+    <script src="network-resources.js?v=72"></script>
     <script src="network-policy.js?v=43"></script>
-    <script src="i18n.js?v=71"></script>
+    <script src="i18n.js?v=72"></script>
     <script src="privacy.js?v=61"></script>
     <script src="orbit-data.js?v=42"></script>
     <script src="vendor/satellite.min.js"></script>
@@ -1330,7 +1335,7 @@
     <script src="globe-motion.js?v=67"></script>
     <script src="globe-scene.js?v=67"></script>
     <script src="time-controls.js?v=61"></script>
-    <script src="app.js?v=67"></script>
+    <script src="app.js?v=72"></script>
     <script src="watchlist-backup.js?v=67"></script>
     <script src="report-archive.js?v=34"></script>
     <script src="report-brief.js?v=64"></script>
@@ -1356,7 +1361,8 @@
     <script src="data-refresh.js?v=35"></script>
     <script src="program-extras.js?v=67"></script>
     <script src="experience.js?v=69"></script>
-    <script src="mobile-map.js?v=46"></script>
+    <script src="mobile-map.js?v=72"></script>
+    <script src="map-orbit-filter.js?v=72"></script>
     <script src="map-fleet.js?v=67"></script>
   </body>
 </html>

@@ -1050,20 +1050,39 @@
   text-shadow: 0 1px 3px #000;
   z-index: 3;
 }
-#orbit-legend span {
+#orbit-legend button {
   display: inline-flex;
   align-items: center;
   gap: 5px;
   background: #0b1727bb;
-  padding: 4px 7px;
+  padding: 8px;
+  min-height: 44px;
+  font: inherit;
+  color: inherit;
+  pointer-events: auto;
+  border: 1px solid var(--orbit-color);
   border-radius: 5px;
 }
-#orbit-legend span::before {
+#orbit-legend button::before {
   content: '';
   width: 6px;
   height: 6px;
   border-radius: 50%;
   background: var(--orbit-color);
+}
+#orbit-legend button[aria-pressed='false'] {
+  background: #09121fe6;
+  color: #a5b1bf;
+  border-color: #596675;
+  text-decoration: line-through;
+}
+#orbit-legend button[aria-pressed='false']::before {
+  background: transparent;
+  border: 1px solid var(--orbit-color);
+}
+#orbit-legend button:focus-visible {
+  outline: 3px solid #8fc9ff;
+  outline-offset: 2px;
 }
 [data-orbit='leo'] {
   --orbit-color: #61d9d5;

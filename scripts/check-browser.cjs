@@ -53,6 +53,8 @@ const server = http.createServer((req, res) => {
   try {
     const { checkBrowserCalendar } = require('./check-browser-calendar.cjs');
     await checkBrowserCalendar(browser, baseUrl, output);
+    const { checkBrowserOrbitFilter } = require('./check-browser-orbit-filter.cjs');
+    await checkBrowserOrbitFilter(browser, baseUrl, output);
     const { checkBrowserMotion } = require('./check-browser-motion.cjs');
     await checkBrowserMotion(browser, baseUrl, output);
     const { checkBrowserMapFleet } = require('./check-browser-map-fleet.cjs');
