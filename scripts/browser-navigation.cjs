@@ -70,7 +70,10 @@ async function installNavigation(browser) {
     page.__shellNavigating = true;
     try {
       if ((await page.evaluate(() => window.MadarShell.current())) !== target.route)
-        await pageClick.call(page, '#shell-nav-' + target.route);
+        await pageClick.call(
+          page,
+          '#shell-nav-' + (target.route === 'watchlist' ? 'catalog' : target.route),
+        );
       if (
         (await loc.evaluate((e) => !!e.closest('#map-tools-dialog'))) &&
         !((await page.locator('#map-tools-dialog').getAttribute('open')) !== null)
