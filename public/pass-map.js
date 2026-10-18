@@ -73,7 +73,7 @@
         (p) =>
           !p.visibilityBoundary &&
           !p.reportReplay &&
-        (!activeReplay || (p.fleetId != null && Number(p.fleetId) !== Number(replay.id))),
+          (!activeReplay || (p.fleetId != null && Number(p.fleetId) !== Number(replay.id))),
       );
     if (activeReplay) {
       const time = +dateNow();
