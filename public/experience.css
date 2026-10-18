@@ -298,9 +298,6 @@ html[lang='en'] .shell-ready .data-health summary::after {
 html[lang='en'] .shell-ready .data-health[open] summary::after {
   content: 'Close details ⌃';
 }
-html[lang='en'] .shell-ready[data-shell-view='watchlist'] .catalog > h2:after {
-  content: 'Saved satellites';
-}
 html[dir='ltr'] .shell-ready #shell-card-slot .globe-card > strong {
   padding-inline-end: 20px;
 }
@@ -656,4 +653,22 @@ html[dir='ltr'] .guide-content {
 .globe-rotation-option small {
   flex-basis: 100%;
   color: var(--muted);
+}
+
+.shell-ready #shell-help > details {
+  background: #101e2c;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  margin-bottom: 16px;
+}
+.shell-ready #shell-help > details > summary {
+  padding: 11px 18px;
+  min-height: 48px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--cyan);
+}
+.shell-ready #shell-help .help-footer-actions {
+  margin-top: 20px;
 }

@@ -98,7 +98,7 @@ async function checkBrowserMotion(browser, url, output) {
       for (const lang of ['ar', 'en']) {
         if (lang === 'en') await page.click('#language-toggle');
         await page.waitForFunction((v) => document.documentElement.lang === v, lang);
-        const styles = await page.locator('.info-actions > *').evaluateAll((nodes) =>
+        const styles = await page.locator('.overview-bar .info-actions > *').evaluateAll((nodes) =>
           nodes.map((n) => {
             const s = getComputedStyle(n);
             return {
@@ -109,6 +109,26 @@ async function checkBrowserMotion(browser, url, output) {
             };
           }),
         );
+        const summaries = await page
+          .locator('#shell-help > details > summary')
+          .evaluateAll((nodes) =>
+            nodes.map((n) => {
+              const s = getComputedStyle(n);
+              return {
+                font: s.fontSize,
+                weight: s.fontWeight,
+                padding: s.padding,
+                minHeight: s.minHeight,
+              };
+            }),
+          );
+        assert.equal(summaries.length, 4);
+        for (const summary of summaries)
+          assert.deepEqual(
+            summary,
+            summaries[0],
+            'all help disclosure headers share typography and spacing',
+          );
         assert.equal(styles.length, 2);
         assert.deepEqual(
           styles[0],
