@@ -84,7 +84,27 @@ async function checkBrowserStartPaths(browser, url, output) {
           assert.equal(exported.attribution.operatorScope, 'program');
           assert.equal(exported.attribution.legalOwner, null);
           assert.equal(exported.attribution.catalogOwnerCode, SatOwner(fixture.NORAD_CAT_ID));
+          await page.bringToFront();
           await page.locator('.sat-identity').scrollIntoViewIfNeeded();
+          console.log(
+            'Attribution capture',
+            await page.evaluate(async () => {
+              const samples = [];
+              for (let i = 0; i < 5; i++) {
+                samples.push(
+                  document.querySelector('.sat-identity').getBoundingClientRect().toJSON(),
+                );
+                await new Promise((resolve) => setTimeout(resolve, 50));
+              }
+              return {
+                visibility: document.visibilityState,
+                body: document.body.className,
+                view: document.body.dataset.shellView,
+                scroll: scrollY,
+                samples,
+              };
+            }),
+          );
           await page.locator('.sat-identity').screenshot({
             path: output + '/attribution-' + (mobile ? 'ar-mobile' : 'en-desktop') + '.png',
           });
