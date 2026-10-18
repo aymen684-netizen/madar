@@ -39,6 +39,7 @@ function addPeriod(date) {
   ae('analysis-periods').append(row);
   day();
   renumberPeriods();
+  window.DateCalendar?.attach(d);
 }
 function renumberPeriods() {
   periodRows().forEach((row, i) => {

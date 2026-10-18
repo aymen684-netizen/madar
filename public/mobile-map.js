@@ -52,9 +52,11 @@
   sourceLabel();
   const legend = document.createElement('div');
   legend.id = 'orbit-legend';
-  legend.setAttribute('aria-label', 'ألوان المدارات التقريبية');
+  legend.setAttribute('role', 'group');
+  legend.setAttribute('aria-label', 'إظهار أنواع المدارات على الخريطة');
+  legend.title = 'اضغط لإظهار نوع المدار أو إخفائه. يمكن جمع أكثر من نوع.';
   legend.innerHTML =
-    '<span data-orbit="leo">منخفض LEO</span><span data-orbit="meo">متوسط MEO</span><span data-orbit="geo">متزامن GEO</span><span data-orbit="other">أخرى</span>';
+    '<button type="button" data-orbit="leo" aria-label="منخفض LEO">LEO</button><button type="button" data-orbit="meo" aria-label="متوسط MEO">MEO</button><button type="button" data-orbit="geo" aria-label="متزامن GEO">GEO</button><button type="button" data-orbit="other">أخرى</button>';
   space.append(legend);
   let opener = null,
     moved = false;

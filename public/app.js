@@ -389,7 +389,10 @@ function update({ scene = true } = {}) {
       timeStyle: 'medium',
       timeZone: Number($('timezone').value) === 0 ? 'UTC' : 'Asia/Riyadh',
     }).format(now) + (Number($('timezone').value) === 0 ? ' · UTC' : ' · الرياض');
-  $('focus').disabled = !selection.current || !world;
+  $('focus').disabled =
+    !selection.current ||
+    !world ||
+    (window.MapOrbitFilter && !MapOrbitFilter.matches(selection.current));
   satelliteCard.renderDetails(selection.current, now);
   refreshDataHealth(now);
   if (scene) updateGlobe();
@@ -423,11 +426,16 @@ function updateGlobe() {
   const mode = satelliteMarkers();
   globeScene.applyMarkerMode(world, mode);
   const now = dateNow();
-  const matches = window.MapFleet?.display(rows()) || rows();
+  const base = window.MapFleet?.display(rows()) || rows();
+  const matches = window.MapOrbitFilter?.display(base) || base;
+  const selectedVisible =
+    !!selection.current && (!window.MapOrbitFilter || MapOrbitFilter.matches(selection.current));
   const dense = matches.length > DETAIL_LIMIT && Swarm.supported();
   let displayed = dense ? [] : matches.slice(0, 2000);
   Swarm.show(dense ? matches : [], now);
-  if (dense)
+  if (!matches.length)
+    $('hint').textContent = 'لا توجد أقمار ظاهرة؛ فعّل أنواع المدارات أو عدّل تصفية الخريطة.';
+  else if (dense)
     $('hint').textContent =
       'عرض جميع الأقمار (' +
       matches.length.toLocaleString('en-US') +
@@ -482,9 +490,13 @@ function updateGlobe() {
         : pts.filter((o) => o.id === selection.current?.id || window.MapFleet?.has(o.id)),
   );
   window.MapDisplay?.update(world, pts, matches, duration);
-  if (window.MapFleet?.size) {
-    world.pathsData(MapFleet.paths(now));
-  } else if (selection.current && selection.byUser && (Date.now() - pathAt > 30000 || !pathAt)) {
+  if (!matches.length) world.pathsData([]);
+  else if (window.MapFleet?.size) {
+    const paths = MapFleet.paths(now);
+    world.pathsData(
+      window.MapOrbitFilter ? MapOrbitFilter.paths(paths, MapFleet.objects()) : paths,
+    );
+  } else if (selectedVisible && selection.byUser && (Date.now() - pathAt > 30000 || !pathAt)) {
     const period = 1440 / OrbitData.fields(selection.current).motion,
       path = [];
     for (let i = 0; i <= 160; i++) {
@@ -493,8 +505,8 @@ function updateGlobe() {
     }
     world.pathsData(path.length ? [path] : []);
     pathAt = Date.now();
-  } else if (!selection.current || !selection.byUser) world.pathsData([]);
-  if (selection.tracking && selection.current) {
+  } else if (!selectedVisible || !selection.byUser) world.pathsData([]);
+  if (selection.tracking && selectedVisible) {
     const p = position(selection.current, now),
       camera = world.pointOfView();
     if (p)
@@ -506,6 +518,7 @@ function updateGlobe() {
   updateGlobeCard();
 }
 function focusSelected() {
+  if (window.MapOrbitFilter && !MapOrbitFilter.matches(selection.current)) return;
   window.GlobeMotion?.interrupt();
   const p = position(selection.current);
   if (world && p)
