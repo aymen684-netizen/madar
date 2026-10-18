@@ -23,13 +23,32 @@ async function checkBrowserOrbitFilter(browser, url, output) {
     page.on('pageerror', (e) => errors.push(e.message));
     for (const pattern of ['https://celestrak.org/**', '**/api/orbits?*'])
       await page.route(pattern, (route) =>
-        route.fulfill({ contentType: 'application/json', body: JSON.stringify(data) }),
+        route.fulfill({
+          contentType: 'application/json',
+          headers: { 'X-Madar-Fetched-At': String(Date.now()), 'X-Madar-Connection': 'upstream' },
+          body: JSON.stringify(data),
+        }),
       );
     await page.goto(url);
-    await page.waitForFunction(
-      (n) => window.MapOrbitFilter && window.MapFleet && world && objects.length === n,
-      data.length,
-    );
+    try {
+      await page.waitForFunction(
+        (n) => window.MapOrbitFilter && window.MapFleet && world && objects.length === n,
+        data.length,
+      );
+    } catch (error) {
+      console.error('Orbit fixture startup', {
+        errors,
+        state: await page.evaluate(() => ({
+          filter: !!window.MapOrbitFilter,
+          fleet: !!window.MapFleet,
+          globe: !!world,
+          count: objects.length,
+          status: document.getElementById('status').textContent,
+        })),
+      });
+      await context.close();
+      throw error;
+    }
     await page.evaluate(() => MadarI18n.ready);
     return { context, page, errors };
   }
