@@ -386,6 +386,10 @@ html[dir='ltr'] .guide-content {
   font-weight: 800;
   border-color: #83efd3;
 }
+#welcome-dialog button:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
 .welcome-note {
   font-size: 13px;
   color: #a9c0d4;

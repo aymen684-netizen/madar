@@ -33,19 +33,21 @@
       <p id="welcome-brand" class="welcome-kicker" data-no-translate>MADAR · مدار</p>
       <p class="welcome-intro">تتبّع الأقمار وافهم مداراتها وأنشئ تقريرك في مكان واحد.</p>
       <div class="welcome-paths" aria-label="اختر طريقة البداية">
-        <button type="button" id="welcome-track">
+        <button type="button" id="welcome-track" disabled>
           <strong>تتبّع قمرًا</strong><span>ابحث بالاسم أو رقم NORAD</span></button
-        ><button type="button" id="welcome-country">
+        ><button type="button" id="welcome-country" disabled>
           <strong>استكشف دولة</strong><span>اعرض أقمارها وبياناتها المنشورة</span></button
-        ><button type="button" id="welcome-report">
+        ><button type="button" id="welcome-report" disabled>
           <strong>أنشئ تقريرًا</strong><span>اختر نوع التقرير ونطاقه</span>
         </button>
       </div>
-      <button type="button" id="welcome-start" class="action-primary">تشغيل برنامج مدار</button>
+      <button type="button" id="welcome-start" disabled class="action-primary">
+        تشغيل برنامج مدار
+      </button>
       <p class="welcome-note">
         اختر وجهتك عند كل تشغيل. تُجهَّز الخارطة في الخلفية، وتظهر بطاقة القمر عند اختياره فقط.
       </p>
-      <button type="button" id="welcome-language" data-no-translate>English</button>
+      <button type="button" id="welcome-language" disabled data-no-translate>English</button>
     </dialog>
     <header>
       <a class="brand" href="./"

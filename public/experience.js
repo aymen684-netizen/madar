@@ -98,6 +98,12 @@
     $('shell-report-' + MadarShell.report()).focus();
   };
   $('welcome-language').onclick = language.onclick;
+  $('welcome-language').disabled = false;
+  function ready() {
+    for (const id of ['welcome-start', 'welcome-track', 'welcome-country', 'welcome-report'])
+      $(id).disabled = false;
+  }
+  Promise.resolve(window.MadarStartupReady).then(ready, ready);
   welcome.addEventListener('cancel', (event) => event.preventDefault());
   const reopen = make('button', 'العودة إلى شاشة البداية');
   reopen.id = 'welcome-reopen';

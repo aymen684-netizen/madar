@@ -46,7 +46,8 @@ const server = http.createServer((req, res) => {
     const context = await originalContext(actual);
     if (!madarWelcome)
       await context.addInitScript(() => {
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
+          await window.MadarStartupReady?.catch(() => {});
           document.getElementById('welcome-start')?.click();
         });
       });

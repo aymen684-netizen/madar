@@ -50,7 +50,8 @@ const server = http.createServer((req, res) => {
       page.on('pageerror', (e) => errors.push(e.message));
       await context.addInitScript(() => {
         localStorage.setItem('madar-started', '1');
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
+          await window.MadarStartupReady?.catch(() => {});
           document.getElementById('welcome-start')?.click();
         });
         window.__lab = {

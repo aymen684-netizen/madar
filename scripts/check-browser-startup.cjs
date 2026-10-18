@@ -19,20 +19,22 @@ async function checkBrowserStartup(browser, url, output) {
     const page = await context.newPage(),
       errors = [];
     page.on('pageerror', (e) => errors.push(e.message));
-    let release;
+    let release, releaseData;
+    const dataReady = new Promise((resolve) => (releaseData = resolve));
     const scriptsReady = new Promise((resolve) => (release = resolve));
     await page.route('**/vendor/globe.min.js', async (route) => {
       await scriptsReady;
       await route.continue();
     });
     for (const pattern of ['https://celestrak.org/**', '**/api/orbits?*'])
-      await page.route(pattern, (r) =>
-        r.fulfill({
+      await page.route(pattern, async (r) => {
+        await dataReady;
+        return r.fulfill({
           contentType: 'application/json',
           headers: { 'X-Madar-Fetched-At': String(Date.now()), 'X-Madar-Connection': 'upstream' },
           body: JSON.stringify([fixture]),
-        }),
-      );
+        });
+      });
     try {
       const navigation = page.goto(url + '#catalog');
       await page.locator('#welcome-dialog').waitFor({ state: 'visible' });
@@ -47,7 +49,14 @@ async function checkBrowserStartup(browser, url, output) {
       await page.screenshot({ path: output + '/startup-first-paint-' + mobile + '.png' });
       release();
       await navigation;
-      await page.waitForFunction(() => window.MadarShell && world && objects.length === 1);
+      await page.waitForFunction(() => window.MadarShell && world);
+      assert(
+        await page.locator('#welcome-start').isDisabled(),
+        'fast launch waits for initial data',
+      );
+      releaseData();
+      await page.waitForFunction(() => objects.length === 1);
+      await page.waitForFunction(() => !document.getElementById('welcome-start').disabled);
       await page.evaluate(() => MadarI18n.ready);
       assert(await page.locator('#welcome-dialog').isVisible(), 'return visits start at welcome');
       assert.equal(await page.evaluate(() => MadarShell.current()), 'map');
@@ -107,6 +116,7 @@ async function checkBrowserStartup(browser, url, output) {
       throw error;
     } finally {
       release();
+      releaseData();
       await context.close();
     }
   }

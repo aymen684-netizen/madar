@@ -617,7 +617,7 @@ document.addEventListener('madar-language', () => {
 });
 globeScene.initialize();
 renderList();
-load();
+window.MadarStartupReady = load();
 setInterval(() => {
   if (!paused && !fixedTime && window.RenderLifecycle?.pageActive() !== false) update();
 }, 1000);
