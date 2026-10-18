@@ -433,7 +433,7 @@ function updateGlobe() {
   let displayed = dense ? [] : matches.slice(0, 2000);
   Swarm.show(dense ? matches : [], now);
   if (!matches.length)
-    $('hint').textContent = 'لا توجد أقمار ظاهرة؛ فعّل أنواع المدارات أو عدّل تصفية الخريطة.';
+    $('hint').textContent = 'لا توجد أقمار ظاهرة؛ فعّل أنواع المدارات أو عدّل تصفية الخارطة.';
   else if (dense)
     $('hint').textContent =
       'عرض جميع الأقمار (' +

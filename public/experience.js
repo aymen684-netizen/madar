@@ -73,16 +73,12 @@
     $(id)?.classList.add('action-download');
   for (const id of ['report-cancel', 'analysis-cancel', 'observer-cancel', 'clear-private-data'])
     $(id)?.classList.add('action-caution');
-  const welcome = make('dialog');
-  welcome.id = 'welcome-dialog';
-  welcome.setAttribute('aria-labelledby', 'welcome-brand');
-  welcome.innerHTML =
-    '<div class="welcome-orbit"><img src="madar-mark.svg" width="160" height="160" alt=""></div><p id="welcome-brand" class="welcome-kicker" data-no-translate>MADAR · مدار</p><p class="welcome-intro">تتبّع الأقمار وافهم مداراتها وأنشئ تقريرك في مكان واحد.</p><div class="welcome-paths" aria-label="اختر طريقة البداية"><button type="button" id="welcome-track"><strong>تتبّع قمرًا</strong><span>ابحث بالاسم أو رقم NORAD</span></button><button type="button" id="welcome-country"><strong>استكشف دولة</strong><span>اعرض أقمارها وبياناتها المنشورة</span></button><button type="button" id="welcome-report"><strong>أنشئ تقريرًا</strong><span>اختر نوع التقرير ونطاقه</span></button></div><button type="button" id="welcome-start" class="action-primary">تشغيل برنامج مدار</button><p class="welcome-note">يمكنك تغيير اللغة الآن أو لاحقًا من أعلى الصفحة. ستتجاوز هذه الشاشة في زياراتك التالية على هذا الجهاز.</p><button type="button" id="welcome-language" data-no-translate>English</button>';
-  document.body.append(welcome);
-  function start(route = 'map') {
+  const welcome = $('welcome-dialog');
+  function start(route = location.hash.slice(1) || 'map') {
     try {
       localStorage.setItem('madar-started', '1');
     } catch {}
+    document.body.classList.remove('startup');
     welcome.close();
     MadarShell.show(route, { focus: true });
     window.dispatchEvent(new Event('resize'));
@@ -102,11 +98,7 @@
     $('shell-report-' + MadarShell.report()).focus();
   };
   $('welcome-language').onclick = language.onclick;
-  welcome.addEventListener('cancel', () => {
-    try {
-      localStorage.setItem('madar-started', '1');
-    } catch {}
-  });
+  welcome.addEventListener('cancel', (event) => event.preventDefault());
   const reopen = make('button', 'العودة إلى شاشة البداية');
   reopen.id = 'welcome-reopen';
   reopen.type = 'button';
@@ -115,10 +107,7 @@
   helpActions.className = 'info-actions help-footer-actions';
   helpActions.append($('shell-help').querySelector(':scope > a.launch'), reopen);
   $('shell-help').append(helpActions);
-  let visited = false;
-  try {
-    visited = localStorage.getItem('madar-started') === '1';
-  } catch {}
-  if (!visited && !location.hash) welcome.showModal();
+  welcome.close();
+  welcome.showModal();
   languageState();
 })();

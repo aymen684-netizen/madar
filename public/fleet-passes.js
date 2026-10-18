@@ -9,7 +9,7 @@
   host.id = 'fleet-passes';
   host.setAttribute('aria-labelledby', 'fleet-pass-heading');
   host.innerHTML =
-    '<h3 id="fleet-pass-heading">المرور القادم لمجموعة الخريطة</h3><p>اختر موقع الحساب. لا يُطلب موقع جهازك ولا تُرسل الإحداثيات؛ تبقى مدخلات هذه اللوحة لهذه الجلسة.</p><form id="fleet-pass-form"><div class="fleet-site-grid"><label>خط العرض بالدرجات<input id="fleet-pass-lat" type="number" min="-90" max="90" step="any" required></label><label>خط الطول بالدرجات<input id="fleet-pass-lon" type="number" min="-180" max="180" step="any" required></label><label>ارتفاع الموقع عن مرجع WGS84 بالمتر<input id="fleet-pass-height" type="number" min="-500" max="9000" value="0" step="any" required></label><label>أقل زاوية ارتفاع فوق الأفق<input id="fleet-pass-elevation" type="number" min="0" max="89" value="10" step="any" required></label><label>التوقيت<select id="fleet-pass-zone"><option value="3">الرياض UTC+03:00</option><option value="0">UTC</option></select></label></div><button id="fleet-pass-run" type="submit">حساب المرور القادم · 24 ساعة</button><button id="fleet-pass-cancel" type="button" disabled>إلغاء الحساب</button></form><p id="fleet-pass-status" role="status" aria-live="polite">أدخل موقع الحساب ثم احسب مرور المجموعة.</p><p id="fleet-pass-window"></p><ol id="fleet-pass-list"></ol><div class="fleet-pass-actions"><button id="fleet-pass-country" type="button">استخدام المجموعة في تقرير البلد</button><button id="fleet-pass-observer" type="button">تقرير موقع الرصد للمجموعة</button></div><p>الحساب من وقت الخريطة وبالعناصر المتاحة، بخطوة 10 ثوانٍ. قد تفوت حالات أقصر من الخطوة. المرور هندسي ولا يضمن الرؤية أو التصوير أو الاتصال. يتوقف الحساب والعدّ عند إخفاء اللوحة؛ أعد الحساب لتحديث نافذة التنبؤ.</p>';
+    '<h3 id="fleet-pass-heading">المرور القادم لمجموعة الخارطة</h3><p>اختر موقع الحساب. لا يُطلب موقع جهازك ولا تُرسل الإحداثيات؛ تبقى مدخلات هذه اللوحة لهذه الجلسة.</p><form id="fleet-pass-form"><div class="fleet-site-grid"><label>خط العرض بالدرجات<input id="fleet-pass-lat" type="number" min="-90" max="90" step="any" required></label><label>خط الطول بالدرجات<input id="fleet-pass-lon" type="number" min="-180" max="180" step="any" required></label><label>ارتفاع الموقع عن مرجع WGS84 بالمتر<input id="fleet-pass-height" type="number" min="-500" max="9000" value="0" step="any" required></label><label>أقل زاوية ارتفاع فوق الأفق<input id="fleet-pass-elevation" type="number" min="0" max="89" value="10" step="any" required></label><label>التوقيت<select id="fleet-pass-zone"><option value="3">الرياض UTC+03:00</option><option value="0">UTC</option></select></label></div><button id="fleet-pass-run" type="submit">حساب المرور القادم · 24 ساعة</button><button id="fleet-pass-cancel" type="button" disabled>إلغاء الحساب</button></form><p id="fleet-pass-status" role="status" aria-live="polite">أدخل موقع الحساب ثم احسب مرور المجموعة.</p><p id="fleet-pass-window"></p><ol id="fleet-pass-list"></ol><div class="fleet-pass-actions"><button id="fleet-pass-country" type="button">استخدام المجموعة في تقرير البلد</button><button id="fleet-pass-observer" type="button">تقرير موقع الرصد للمجموعة</button></div><p>الحساب من وقت الخارطة وبالعناصر المتاحة، بخطوة 10 ثوانٍ. قد تفوت حالات أقصر من الخطوة. المرور هندسي ولا يضمن الرؤية أو التصوير أو الاتصال. يتوقف الحساب والعدّ عند إخفاء اللوحة؛ أعد الحساب لتحديث نافذة التنبؤ.</p>';
   panel.append(host);
   const experience = FleetExperience.mount(host, {
     stamp,
@@ -133,7 +133,7 @@
     if (!visible() || !result) return;
     const now = +dateNow();
     if (now < result.start || now >= result.end) {
-      invalidate('وقت الخريطة خارج نافذة الحساب؛ أعد حساب المرور.');
+      invalidate('وقت الخارطة خارج نافذة الحساب؛ أعد حساب المرور.');
       return;
     }
     text($('fleet-pass-window'), stamp(result.start) + ' → ' + stamp(result.end));
@@ -148,8 +148,8 @@
         {
           invalid: 'تعذّر حساب مدار هذا القمر؛ لا تتوفر نتيجة موثوقة.',
           none: 'لم يُكتشف مرور آخر ضمن نافذة الحساب.',
-          ongoing: 'مرور جارٍ عند وقت الخريطة',
-          upcoming: 'مرور قادم بعد وقت الخريطة',
+          ongoing: 'مرور جارٍ عند وقت الخارطة',
+          upcoming: 'مرور قادم بعد وقت الخارطة',
         }[next.state],
       );
       text(row.times, pass ? stamp(pass.entry) + ' → ' + stamp(pass.exit) : '—');
@@ -174,7 +174,7 @@
     if (!pending || worker || !visible()) return;
     const active = ++generation;
     busy(true);
-    text(status, 'جارٍ حساب مرور مجموعة الخريطة محليًا…');
+    text(status, 'جارٍ حساب مرور مجموعة الخارطة محليًا…');
     try {
       worker = new Worker('fleet-pass-worker.js?v=65');
       worker.onmessage = (event) => {
@@ -224,7 +224,7 @@
         request = { observer: site(), start: startTime, end: startTime + 864e5, step: 10 };
       ObserverEngine.validate(request);
       source = MapFleet.objects();
-      if (!source.length) throw Error('اختر من قمر واحد إلى 12 قمرًا صالحًا من مجموعة الخريطة.');
+      if (!source.length) throw Error('اختر من قمر واحد إلى 12 قمرًا صالحًا من مجموعة الخارطة.');
       pending = { objects: source, request };
       start();
     } catch (err) {
@@ -275,7 +275,7 @@
   $('fleet-pass-country').onclick = () => report('country');
   $('fleet-pass-observer').onclick = () => report('observer');
   document.addEventListener('madar-fleet', () =>
-    invalidate('تغيّرت مجموعة الخريطة أو عناصرها؛ أعد حساب المرور.'),
+    invalidate('تغيّرت مجموعة الخارطة أو عناصرها؛ أعد حساب المرور.'),
   );
   document.addEventListener('madar-language', tick);
   document.addEventListener('visibilitychange', sync);

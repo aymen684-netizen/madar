@@ -284,7 +284,9 @@ async function checkBrowserExperience(browser, url, output) {
     await page.click('#language-toggle');
     await page.goto(url);
     await page.waitForFunction(() => document.documentElement.lang === 'en' && window.MadarShell);
-    assert(await page.locator('#welcome-dialog').isHidden());
+    assert(await page.locator('#welcome-dialog').isVisible());
+    assert(await page.locator('#globe-card').isHidden());
+    await page.click('#welcome-start');
     assert.equal(await page.locator('#report-run').textContent(), 'Generate report');
     fs.writeFileSync(
       output + '/english-untranslated.json',

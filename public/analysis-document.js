@@ -402,7 +402,7 @@
           (t, o) => new Date(t + o * 3600000).toISOString().slice(0, 19).replace('T', ' '),
           dur,
         ).map((t, j, all) => p(t, { keepNext: j < all.length - 1 })),
-        h('خريطة وخط زمني للفترة ' + (i + 1), { pageBreakBefore: !!w.visuals }),
+        h('خارطة وخط زمني للفترة ' + (i + 1), { pageBreakBefore: !!w.visuals }),
         p(root.ReportInsights.notes(w)),
       );
       if (w.visuals)

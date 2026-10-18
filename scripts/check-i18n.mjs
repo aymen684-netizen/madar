@@ -85,7 +85,7 @@ for (const [ar, en] of [
   assert.equal(I.translate(ar, 'en'), en);
 assert.equal(
   I.translate(
-    'أضف قمرًا من بطاقته أو فعّل التحديد بالضغط على الخريطة. لكل قمر لون ثابت؛ تظهر المختارة حتى عند تغيير المجموعة. هذه المجموعة مستقلة عن المفضلة وتصفية الدليل ونطاق التقارير.',
+    'أضف قمرًا من بطاقته أو فعّل التحديد بالضغط على الخارطة. لكل قمر لون ثابت؛ تظهر المختارة حتى عند تغيير المجموعة. هذه المجموعة مستقلة عن المفضلة وتصفية الدليل ونطاق التقارير.',
     'en',
   ),
   'Add a satellite from its card or enable map selection. Each satellite keeps its color and remains displayed when you change groups. This map group is separate from favorites, catalog filters and report scope.',

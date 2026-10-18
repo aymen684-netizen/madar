@@ -22,12 +22,31 @@
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="مدار" />
-    <link rel="stylesheet" href="experience.css?v=70" />
+    <link rel="stylesheet" href="experience.css?v=75" />
     <link rel="stylesheet" href="map-display.css?v=45" />
     <link rel="stylesheet" href="map-fleet.css?v=74" />
     <link rel="stylesheet" href="date-calendar.css?v=71" />
   </head>
-  <body>
+  <body class="startup">
+    <dialog id="welcome-dialog" aria-labelledby="welcome-brand" open>
+      <div class="welcome-orbit"><img src="madar-mark.svg" width="160" height="160" alt="" /></div>
+      <p id="welcome-brand" class="welcome-kicker" data-no-translate>MADAR · مدار</p>
+      <p class="welcome-intro">تتبّع الأقمار وافهم مداراتها وأنشئ تقريرك في مكان واحد.</p>
+      <div class="welcome-paths" aria-label="اختر طريقة البداية">
+        <button type="button" id="welcome-track">
+          <strong>تتبّع قمرًا</strong><span>ابحث بالاسم أو رقم NORAD</span></button
+        ><button type="button" id="welcome-country">
+          <strong>استكشف دولة</strong><span>اعرض أقمارها وبياناتها المنشورة</span></button
+        ><button type="button" id="welcome-report">
+          <strong>أنشئ تقريرًا</strong><span>اختر نوع التقرير ونطاقه</span>
+        </button>
+      </div>
+      <button type="button" id="welcome-start" class="action-primary">تشغيل برنامج مدار</button>
+      <p class="welcome-note">
+        اختر وجهتك عند كل تشغيل. تُجهَّز الخارطة في الخلفية، وتظهر بطاقة القمر عند اختياره فقط.
+      </p>
+      <button type="button" id="welcome-language" data-no-translate>English</button>
+    </dialog>
     <header>
       <a class="brand" href="./"
         ><span class="logo">◎</span>
@@ -56,46 +75,46 @@
       <div class="guide-content">
         <h2>ابدأ باستخدام مدار</h2>
         <p id="guide-updated" class="muted">
-          آخر تحديث للدليل: 16 أكتوبر 2026 · الخريطة والتقارير والخصوصية
+          آخر تحديث للدليل: 16 أكتوبر 2026 · الخارطة والتقارير والخصوصية
         </p>
         <div class="guide-steps">
           <section class="guide-step">
             <h3>١ ابدأ واختر اللغة</h3>
             <p>
               ابدأ من «تشغيل برنامج مدار»، ثم اختر العربية أو English. يتغير اتجاه الواجهة مع اللغة.
-              للتنقل استخدم الخريطة ودليل الأقمار والتقارير، وافتح «النبذة والمساعدة» للإرشادات
+              للتنقل استخدم الخارطة ودليل الأقمار والتقارير، وافتح «النبذة والمساعدة» للإرشادات
               والإعدادات. يمكنك إعادة فتح شاشة البداية من المساعدة.
             </p>
             <p>
-              تملأ الكرة مساحة الخريطة على الجوال وسطح المكتب. افتح أيقونة البحث أو التخصيص فوق
-              الخريطة، واضغط شريط حالة المصدر لقراءة التفاصيل. أغلق لوحة الأدوات بزر الإغلاق، أو
+              تملأ الكرة مساحة الخارطة على الجوال وسطح المكتب. افتح أيقونة البحث أو التخصيص فوق
+              الخارطة، واضغط شريط حالة المصدر لقراءة التفاصيل. أغلق لوحة الأدوات بزر الإغلاق، أو
               اسحبها إلى الأسفل على الجوال. ابدأ بمجموعة جاهزة مثل المحطات أو الملاحة أو الكل، وافتح
               «متقدم» عند الحاجة إلى اختيار أنواع محددة.
             </p>
           </section>
           <section class="guide-step">
-            <h3>٢ خصص الخريطة واختر القمر</h3>
+            <h3>٢ خصص الخارطة واختر القمر</h3>
             <p>
-              لإضافة أقمار إلى مجموعة الخريطة، اضغط «إضافة إلى مجموعة الخريطة» في بطاقة كل قمر، أو
-              افتح أيقونة ◉ فوق الخريطة وفعّل التحديد بالضغط. يمكنك اختيار حتى 12 قمرًا بألوان
+              لإضافة أقمار إلى مجموعة الخارطة، اضغط «إضافة إلى مجموعة الخارطة» في بطاقة كل قمر، أو
+              افتح أيقونة ◉ فوق الخارطة وفعّل التحديد بالضغط. يمكنك اختيار حتى 12 قمرًا بألوان
               ثابتة، وإظهارها وحدها أو إخفاء مساراتها أو إزالة أي قمر من القائمة. الألوان الخاصة
-              بالاختيار تميّزه عن ألوان تصنيف المدار؛ اختيار الخريطة لا يغيّر المفضلة أو نطاق
+              بالاختيار تميّزه عن ألوان تصنيف المدار؛ اختيار الخارطة لا يغيّر المفضلة أو نطاق
               التقرير.
             </p>
             <p>
-              توضح الألوان أسفل الخريطة مجموعات المدار المنخفض LEO والمتوسط MEO والمتزامن GEO
+              توضح الألوان أسفل الخارطة مجموعات المدار المنخفض LEO والمتوسط MEO والمتزامن GEO
               والمدارات الأخرى. هذا تصنيف تقريبي؛ ظهور القمر ضمن مجموعة GEO لا يعني أنه ثابت فوق
-              موضع واحد. بطاقة القمر تظهر بعد اختياره من الخريطة أو الدليل.
+              موضع واحد. بطاقة القمر تظهر بعد اختياره من الخارطة أو الدليل.
             </p>
             <p>
-              اضغط أزرار LEO وMEO وGEO وأخرى أسفل الخريطة لإظهار كل نوع أو إخفائه، ويمكن جمع عدة
-              أنواع. الأزرار المفعّلة ملوّنة، والمخفية مشطوبة. تبقى اختيارات مجموعة الخريطة محفوظة
+              اضغط أزرار LEO وMEO وGEO وأخرى أسفل الخارطة لإظهار كل نوع أو إخفائه، ويمكن جمع عدة
+              أنواع. الأزرار المفعّلة ملوّنة، والمخفية مشطوبة. تبقى اختيارات مجموعة الخارطة محفوظة
               عند إخفاء نوعها.
             </p>
             <p>
-              من الخريطة افتح «تخصيص الأقمار على الخريطة · الدولة والمهمة». اختر الدولة أو الجهة
+              من الخارطة افتح «تخصيص الأقمار على الخارطة · الدولة والمهمة». اختر الدولة أو الجهة
               المسجلة، ثم اكتب المهمة أو اسم المنظومة مثل اتصالات أو ملاحة أو Starlink. يمكن جمع
-              البحث مع مستوى توثيق المهمة. تُطبّق الخيارات على الخريطة ودليل الأقمار ضمن المجموعة
+              البحث مع مستوى توثيق المهمة. تُطبّق الخيارات على الخارطة ودليل الأقمار ضمن المجموعة
               والبحث الحاليين؛ ولا تغيّر نطاق التقارير.
             </p>
             <p>
@@ -183,7 +202,7 @@
           </section>
         </div>
         <p>
-          تجد روابط NASA وSen وESA في «مصادر البث الفضائي» ضمن أدوات الخريطة. تفتح المشاهدة في موقع
+          تجد روابط NASA وSen وESA في «مصادر البث الفضائي» ضمن أدوات الخارطة. تفتح المشاهدة في موقع
           المصدر خارج مدار؛ لا يوجد مشغل خارجي مضمّن داخل التطبيق. قد يتوقف البث أو يتأخر، وهو مستقل
           عن حساب المدار. اعرض النبذة أو نزّل نسختها Word باللغة المختارة من المساعدة.
         </p>
@@ -308,7 +327,7 @@
             <p class="guide-expansion" dir="auto">Geostationary Earth Orbit</p>
             <p>
               مدار ثابت جغرافيًا: دائري فوق خط الاستواء ويدور مع دوران الأرض، فيبدو القمر ثابتًا فوق
-              موضع منها. تستخدم الخريطة علامة GEO لتجميع المدارات المتزامنة تقريبًا؛ هذا التجميع
+              موضع منها. تستخدم الخارطة علامة GEO لتجميع المدارات المتزامنة تقريبًا؛ هذا التجميع
               وحده لا يثبت ثبات القمر فوق نقطة.
             </p>
             <a
@@ -618,9 +637,9 @@
       </div>
     </details>
     <details class="help-panel" id="performance-panel">
-      <summary>جودة الخريطة وأداء الجوال</summary>
+      <summary>جودة الخارطة وأداء الجوال</summary>
       <div class="help-panel-body">
-        <label for="render-quality">جودة رسم الخريطة</label
+        <label for="render-quality">جودة رسم الخارطة</label
         ><select id="render-quality" aria-describedby="render-quality-note render-quality-status">
           <option value="auto">تلقائي · توازن الوضوح والأداء</option>
           <option value="economy">توفير الطاقة · رسم أخف</option>
@@ -636,7 +655,7 @@
           التقارير أو عدد الأقمار المعروضة. تُحفظ كتفضيل لهذا المتصفح.
         </p>
         <p class="muted">
-          في الوضع التلقائي تُخفّض دقة الرسم على الشاشات الضيقة لتخفيف العبء. يتوقف رسم الخريطة خارج
+          في الوضع التلقائي تُخفّض دقة الرسم على الشاشات الضيقة لتخفيف العبء. يتوقف رسم الخارطة خارج
           العرض، وتُعلّق تحديثات المواقع عند إخفاء الصفحة.
         </p>
       </div>
@@ -679,7 +698,7 @@
                 <option value="active">جميع الأقمار النشطة</option>
                 <option value="group">المجموعة الحالية</option>
                 <option value="favorites">المفضلة</option>
-                <option value="fleet">مجموعة الخريطة · حتى 12 قمرًا</option>
+                <option value="fleet">مجموعة الخارطة · حتى 12 قمرًا</option>
                 <option value="military">العسكرية والاستطلاع العلنية</option>
                 <option value="intelligence">الاستخبارية والاستطلاع الموثقة</option>
                 <option value="types">أنواع متعددة أختارها</option>
@@ -827,7 +846,7 @@
         </p>
         <div id="analysis-results" hidden>
           <div id="analysis-summary" class="analysis-summary"></div>
-          <label for="analysis-visual-period">مؤشرات وخريطة الفترة</label
+          <label for="analysis-visual-period">مؤشرات وخارطة الفترة</label
           ><select id="analysis-visual-period"></select>
           <div id="analysis-insights" class="analysis-summary"></div>
           <h3>ملخص كل فترة</h3>
@@ -914,7 +933,7 @@
             >الأقمار<select id="observer-scope">
               <option value="selected">القمر المحدد</option>
               <option value="favorites">المفضلة · حتى 500 قمر</option>
-              <option value="fleet">مجموعة الخريطة · حتى 12 قمرًا</option>
+              <option value="fleet">مجموعة الخارطة · حتى 12 قمرًا</option>
             </select></label
           ><label>التاريخ<input id="observer-date" type="date" required /></label
           ><label>من<input id="observer-start" type="time" step="1" required /></label
@@ -1138,12 +1157,12 @@
           </div>
           <div>
             <div class="count" id="count">—</div>
-            <div class="muted">قمر على الخريطة</div>
+            <div class="muted">قمر على الخارطة</div>
           </div>
         </div>
         <div class="scene-mode">
           <label class="globe-rotation-option"
-            ><input id="globe-rotation" type="checkbox" checked disabled />دوران هادئ للخريطة<small
+            ><input id="globe-rotation" type="checkbox" checked disabled />دوران هادئ للخارطة<small
               >يتوقف عند التفاعل، ويحترم إعداد تقليل الحركة.</small
             ></label
           >
@@ -1308,7 +1327,7 @@
     </footer>
     <script src="network-resources.js?v=72"></script>
     <script src="network-policy.js?v=43"></script>
-    <script src="i18n.js?v=74"></script>
+    <script src="i18n.js?v=75"></script>
     <script src="privacy.js?v=61"></script>
     <script src="orbit-data.js?v=42"></script>
     <script src="vendor/satellite.min.js"></script>
@@ -1339,36 +1358,36 @@
     <script src="globe-motion.js?v=67"></script>
     <script src="globe-scene.js?v=74"></script>
     <script src="time-controls.js?v=73"></script>
-    <script src="app.js?v=74"></script>
+    <script src="app.js?v=75"></script>
     <script src="watchlist-backup.js?v=67"></script>
     <script src="report-archive.js?v=34"></script>
-    <script src="report-brief.js?v=64"></script>
+    <script src="report-brief.js?v=75"></script>
     <script src="report-layout.js?v=52"></script>
     <script src="report-exports.js?v=49"></script>
-    <script src="report-insights.js?v=52"></script>
-    <script src="report-document.js?v=49"></script>
+    <script src="report-insights.js?v=75"></script>
+    <script src="report-document.js?v=75"></script>
     <script src="country-report-core.js?v=36"></script>
     <script src="pass-tools-core.js?v=74"></script>
-    <script src="pass-map.js?v=74"></script>
-    <script src="report.js?v=74"></script>
-    <script src="country-report-builder.js?v=74"></script>
+    <script src="pass-map.js?v=75"></script>
+    <script src="report.js?v=75"></script>
+    <script src="country-report-builder.js?v=75"></script>
     <script src="analysis-core.js?v=26"></script>
-    <script src="analysis-document.js?v=49"></script>
+    <script src="analysis-document.js?v=75"></script>
     <script src="analysis.js?v=74"></script>
     <script src="date-calendar.js?v=71"></script>
-    <script src="draft-state.js?v=61"></script>
+    <script src="draft-state.js?v=75"></script>
     <script src="observer-engine.js?v=26"></script>
-    <script src="observer-report.js?v=67"></script>
-    <script src="observer.js?v=74"></script>
+    <script src="observer-report.js?v=75"></script>
+    <script src="observer.js?v=75"></script>
     <script src="country-inventory-core.js?v=50"></script>
-    <script src="app-shell.js?v=67"></script>
-    <script src="inventory-report.js?v=67"></script>
-    <script src="map-display.js?v=59"></script>
+    <script src="app-shell.js?v=75"></script>
+    <script src="inventory-report.js?v=75"></script>
+    <script src="map-display.js?v=75"></script>
     <script src="data-refresh.js?v=35"></script>
-    <script src="program-extras.js?v=67"></script>
-    <script src="experience.js?v=69"></script>
-    <script src="mobile-map.js?v=72"></script>
+    <script src="program-extras.js?v=75"></script>
+    <script src="experience.js?v=75"></script>
+    <script src="mobile-map.js?v=75"></script>
     <script src="map-orbit-filter.js?v=72"></script>
-    <script src="map-fleet.js?v=74"></script>
+    <script src="map-fleet.js?v=75"></script>
   </body>
 </html>

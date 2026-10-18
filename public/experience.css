@@ -1,3 +1,19 @@
+/* Keep the globe measurable and preloading behind the first visible interface. */
+body.startup > :not(#welcome-dialog) {
+  visibility: hidden;
+}
+body.startup {
+  overflow: hidden;
+}
+#welcome-dialog[open] {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  z-index: 100;
+}
+body.startup {
+  background: #050c17;
+}
 /* A single visual hierarchy for actions, navigation and report entry. */
 :root {
   --muted: #a9b9cb;
@@ -331,8 +347,7 @@ html[dir='ltr'] .guide-content {
   box-shadow: 0 32px 120px #0009;
 }
 #welcome-dialog::backdrop {
-  background: #050c17e8;
-  backdrop-filter: blur(10px);
+  background: #050c17;
 }
 .welcome-orbit {
   margin: auto;

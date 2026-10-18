@@ -33,7 +33,7 @@ async function checkBrowserMotion(browser, url, output) {
         () => world && objects.length === 1 && RenderLifecycle.sceneActive(),
       );
       assert.equal(await page.locator('#shell-nav button').count(), 3);
-      assert.equal(await page.locator('#shell-nav-map').innerText(), 'الخريطة');
+      assert.equal(await page.locator('#shell-nav-map').innerText(), 'الخارطة');
       await page.waitForFunction(() => world.controls().autoRotate);
       const start = await page.evaluate(() => {
         fixedTime = new Date('2026-10-16T00:00:00Z');

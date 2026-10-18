@@ -180,7 +180,7 @@ reportEl('report-form').onsubmit = async (e) => {
               : scope === 'favorites'
                 ? 'المفضلة'
                 : scope === 'fleet'
-                  ? 'مجموعة الخريطة · حتى 12 قمرًا'
+                  ? 'مجموعة الخارطة · حتى 12 قمرًا'
                   : scope === 'military'
                     ? 'العسكرية والاستطلاع العلنية'
                     : scope === 'intelligence'

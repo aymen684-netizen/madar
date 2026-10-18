@@ -123,8 +123,6 @@
         const panel = document.getElementById(id);
         if (panel) panel.open = !!open;
       }
-      const scroll = snapshot.scroll || 0;
-      setTimeout(() => root.scrollTo?.({ top: scroll, behavior: 'instant' }), 100);
       for (const prefix of ['catalog', 'report', 'analysis']) root.TypePicker?.sync(prefix);
       reportDay();
       timeControls.weekday();
@@ -138,14 +136,11 @@
       onlySaved = !!snapshot.onlySaved;
       $('all').classList.toggle('active', !onlySaved);
       $('saved').classList.toggle('active', onlySaved);
-      if (snapshot.selected) {
+      if (snapshot.selected && !selection.byUser) {
         const candidate =
           objects.find((o) => o.id === snapshot.selected.id) || prepare([snapshot.selected])[0];
         if (candidate) {
-          if (snapshot.selectedByUser === true) choose(candidate, false);
-          else {
-            selection.restore(candidate);
-          }
+          selection.restore(candidate);
         }
       }
       reconcileSelection();
@@ -155,12 +150,8 @@
       const notice = document.getElementById('restore-notice');
       notice.hidden = false;
       notice.textContent =
-        'استُعيدت مدخلات بحثك ومكانك في الصفحة. يمكن استئناف أي بحث محفوظ غير مكتمل.';
-      const restoredScroll = snapshot.scroll || 0;
-      setTimeout(() => {
-        root.scrollTo?.({ top: restoredScroll, behavior: 'instant' });
-        save();
-      }, 200);
+        'استُعيدت مدخلات بحثك. اختر قمرًا لفتح بطاقته، ويمكن استئناف أي بحث محفوظ غير مكتمل.';
+      setTimeout(save, 200);
     }
     restored = true;
     const [reportResult, analysisResult, reportPending, analysisPending] = await Promise.all(

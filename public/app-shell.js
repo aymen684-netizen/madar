@@ -25,7 +25,7 @@
   nav.id = 'shell-nav';
   nav.setAttribute('aria-label', 'التنقل الرئيسي');
   for (const [id, title] of [
-    ['map', 'الخريطة'],
+    ['map', 'الخارطة'],
     ['catalog', 'دليل الأقمار'],
     ['reports', 'التقارير'],
   ]) {
@@ -149,7 +149,7 @@
     },
     true,
   );
-  const empty = el('p', 'اختر قمرًا من الدليل أو الخريطة لعرض معلوماته.');
+  const empty = el('p', 'اختر قمرًا من الدليل أو الخارطة لعرض معلوماته.');
   empty.className = 'muted';
   empty.id = 'shell-card-empty';
   slot.append(empty);
@@ -265,7 +265,7 @@
     quick.hidden = id !== 'map';
     heading.hidden = id === 'help' || id === 'reports';
     heading.textContent =
-      { map: 'الخريطة', catalog: 'دليل الأقمار الصناعية', watchlist: 'دليل الأقمار الصناعية' }[
+      { map: 'الخارطة', catalog: 'دليل الأقمار الصناعية', watchlist: 'دليل الأقمار الصناعية' }[
         id
       ] || '';
     for (const b of document.querySelectorAll('[data-shell-nav]')) {
@@ -324,7 +324,7 @@
     current: () => view,
     report: () => report,
   };
-  show(location.hash.slice(1) || 'map', { history: false });
+  show('map', { history: false });
   body.classList.add('shell-ready');
   sizeScene();
 })();

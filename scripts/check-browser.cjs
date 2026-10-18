@@ -46,11 +46,15 @@ const server = http.createServer((req, res) => {
     const context = await originalContext(actual);
     if (!madarWelcome)
       await context.addInitScript(() => {
-        if (!localStorage.getItem('madar-started')) localStorage.setItem('madar-started', '1');
+        document.addEventListener('DOMContentLoaded', () => {
+          document.getElementById('welcome-start')?.click();
+        });
       });
     return context;
   };
   try {
+    const { checkBrowserStartup } = require('./check-browser-startup.cjs');
+    await checkBrowserStartup(browser, baseUrl, output);
     const { checkBrowserFleetExperience } = require('./check-browser-fleet-experience.cjs');
     await checkBrowserFleetExperience(browser, baseUrl, output);
     const { checkBrowserCalendar } = require('./check-browser-calendar.cjs');
@@ -194,9 +198,10 @@ const server = http.createServer((req, res) => {
     });
     await page.reload();
     await page.waitForFunction(
-      (id) => objects.length && selection.current?.id === id && selection.byUser,
+      (id) => objects.length && selection.current?.id === id && !selection.byUser,
       persistedSelectionId,
     );
+    assert(await page.locator('#globe-card').isHidden());
     await page.locator('#list button').first().click();
     assert.equal(await page.getAttribute('#globe-card-favorite', 'aria-pressed'), 'true');
     assert.equal(await page.getAttribute('#favorite', 'aria-pressed'), 'true');
