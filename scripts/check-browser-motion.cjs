@@ -88,6 +88,7 @@ async function checkBrowserMotion(browser, url, output) {
         false,
         'satellite selection stops rotation',
       );
+      if (mobile) await page.click('#shell-card-expand');
       await page.click('#track-selected');
       assert.equal(await page.locator('#globe-rotation').isDisabled(), true);
       assert.equal(await page.evaluate(() => world.controls().autoRotate), false);
