@@ -6,6 +6,26 @@ on:
 permissions:
   contents: read
 jobs:
+  startup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci --ignore-scripts
+      - run: npm run build
+      - run: npx playwright install chromium
+      - run: node scripts/check-browser.cjs
+        env:
+          MADAR_BROWSER_SMOKE: '1'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: startup-review
+          path: test-results/
+
   browser:
     runs-on: ubuntu-latest
     timeout-minutes: 20

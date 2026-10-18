@@ -85,7 +85,7 @@ async function checkBrowserStartPaths(browser, url, output) {
           assert.equal(exported.attribution.legalOwner, null);
           assert.equal(exported.attribution.catalogOwnerCode, SatOwner(fixture.NORAD_CAT_ID));
           await page.locator('.sat-identity').scrollIntoViewIfNeeded();
-          await page.screenshot({
+          await page.locator('.sat-identity').screenshot({
             path: output + '/attribution-' + (mobile ? 'ar-mobile' : 'en-desktop') + '.png',
           });
           await page.click('#language-toggle');

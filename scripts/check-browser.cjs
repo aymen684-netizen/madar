@@ -53,6 +53,13 @@ const server = http.createServer((req, res) => {
     return context;
   };
   try {
+    if (process.env.MADAR_BROWSER_SMOKE === '1') {
+      const { checkBrowserStartup } = require('./check-browser-startup.cjs');
+      const { checkBrowserStartPaths } = require('./check-browser-start-paths.cjs');
+      await checkBrowserStartup(browser, baseUrl, output);
+      await checkBrowserStartPaths(browser, baseUrl, output);
+      return;
+    }
     const { checkBrowserStartup } = require('./check-browser-startup.cjs');
     await checkBrowserStartup(browser, baseUrl, output);
     const { checkBrowserFleetExperience } = require('./check-browser-fleet-experience.cjs');
