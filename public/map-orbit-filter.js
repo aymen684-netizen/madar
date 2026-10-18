@@ -17,6 +17,7 @@
         if (enabled.has(type)) enabled.delete(type);
         else enabled.add(type);
         revision++;
+        cache = null;
         return true;
       },
       matches,
