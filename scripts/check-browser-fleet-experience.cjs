@@ -166,12 +166,14 @@ async function checkBrowserFleetExperience(browser, baseUrl, output) {
       }
       // Archived replay uses its own orbital model, even if the catalog has the same ID.
       const replay = await page.evaluate(() => {
+        document.getElementById('catalog-freshness').value = 'recent';
+        renderList();
         const o = OrbitData.fromOmm({
           ...JSON.parse(JSON.stringify(objects[0].omm)),
           NORAD_CAT_ID: 199999,
           OBJECT_NAME: 'ARCHIVED REPLAY',
         });
-        const row = { id: o.id, entry: +dateNow() };
+        const row = { id: o.id, entry: +dateNow() + 4 * 864e5 };
         const b = PassMap.button(row, {
           archive: { payload: { objects: [OrbitData.serialize(o)] } },
         });

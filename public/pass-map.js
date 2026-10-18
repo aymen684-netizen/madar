@@ -22,6 +22,9 @@
     if (root.MapOrbitFilter && !MapOrbitFilter.matches(object))
       document.querySelector(`#orbit-legend [data-orbit="${regime}"]`)?.click();
     MadarShell.show('map');
+    // Recompute time-dependent catalog filters before selecting the archived object.
+    // Otherwise update() can reconcile it away against a newly changed catalog page.
+    renderList();
     replay = prepare([object])[0];
     replayPath = null;
     choose(replay, false);
