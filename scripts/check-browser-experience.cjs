@@ -117,7 +117,7 @@ async function checkBrowserExperience(browser, url, output) {
     await page.click('#welcome-language');
     await page.waitForFunction(() => document.documentElement.lang === 'en');
     assert.equal(await page.locator('html').getAttribute('dir'), 'ltr');
-    assert.equal(await page.locator('#welcome-start').textContent(), 'Launch Madar');
+    assert.equal(await page.locator('#welcome-start').innerText(), 'Launch Madar');
     await page.screenshot({ path: output + '/experience-welcome-en.png' });
     await page.click('#welcome-start');
     assert(await page.locator('#welcome-dialog').isHidden());

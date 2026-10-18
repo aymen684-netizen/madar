@@ -59,10 +59,10 @@ const server = http.createServer((req, res) => {
       const { checkBrowserStartPaths } = require('./check-browser-start-paths.cjs');
       await checkBrowserStartup(browser, baseUrl, output);
       await checkBrowserStartPaths(browser, baseUrl, output);
+      const { checkBrowserExperience } = require('./check-browser-experience.cjs');
+      await checkBrowserExperience(browser, baseUrl, output);
       return;
     }
-    const { checkBrowserStartup } = require('./check-browser-startup.cjs');
-    await checkBrowserStartup(browser, baseUrl, output);
     const { checkBrowserFleetExperience } = require('./check-browser-fleet-experience.cjs');
     await checkBrowserFleetExperience(browser, baseUrl, output);
     const { checkBrowserCalendar } = require('./check-browser-calendar.cjs');
