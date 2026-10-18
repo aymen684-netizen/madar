@@ -6,7 +6,7 @@
     const area = document.createElement('section');
     area.id = 'fleet-experience';
     area.innerHTML =
-      '<h4>الخط الزمني لمجموعة الخريطة · 24 ساعة</h4><p>كل صف قمر بلونه في الخريطة. اضغط على المرور لعرضه في وقته. الفراغ يعني عدم اكتشاف مرور ضمن خطوة الحساب، وليس ضمانًا لغيابه.</p><div id="fleet-timeline" class="fleet-timeline" tabindex="0"></div><label>اختر مرورًا لاستكشافه<select id="fleet-event"></select></label><div id="fleet-event-detail"></div><label><input id="fleet-alerts" type="checkbox">تنبيه داخل اللوحة قبل المرور بخمس دقائق</label><p>يعمل التنبيه أثناء فتح هذه اللوحة وظهورها فقط، وفي الوقت الحالي دون إيقافه. إغلاق التطبيق أو تعليق المتصفح قد يمنع التنبيه.</p><p id="fleet-alert-status" role="status" aria-live="polite"></p><details id="fleet-compare"><summary>مقارنة قمرين إلى أربعة</summary><div id="fleet-compare-options"></div><button id="fleet-compare-run" type="button">قارن الأقمار المختارة</button><div id="fleet-compare-result"></div></details>';
+      '<h4>الخط الزمني لمجموعة الخارطة · 24 ساعة</h4><p>كل صف قمر بلونه في الخارطة. اضغط على المرور لعرضه في وقته. الفراغ يعني عدم اكتشاف مرور ضمن خطوة الحساب، وليس ضمانًا لغيابه.</p><div id="fleet-timeline" class="fleet-timeline" tabindex="0"></div><label>اختر مرورًا لاستكشافه<select id="fleet-event"></select></label><div id="fleet-event-detail"></div><label><input id="fleet-alerts" type="checkbox">تنبيه داخل اللوحة قبل المرور بخمس دقائق</label><p>يعمل التنبيه أثناء فتح هذه اللوحة وظهورها فقط، وفي الوقت الحالي دون إيقافه. إغلاق التطبيق أو تعليق المتصفح قد يمنع التنبيه.</p><p id="fleet-alert-status" role="status" aria-live="polite"></p><details id="fleet-compare"><summary>مقارنة قمرين إلى أربعة</summary><div id="fleet-compare-options"></div><button id="fleet-compare-run" type="button">قارن الأقمار المختارة</button><div id="fleet-compare-result"></div></details>';
     host.querySelector('#fleet-pass-list').before(area);
     let result = null,
       source = [],
@@ -63,7 +63,7 @@
       const map = document.createElement('button'),
         calendar = document.createElement('button');
       map.type = calendar.type = 'button';
-      map.textContent = 'اعرض المرور على الخريطة';
+      map.textContent = 'اعرض المرور على الخارطة';
       map.onclick = () => openPass(pass, object);
       calendar.textContent = 'تنزيل موعد التقويم ICS';
       calendar.onclick = () => download(pass);
@@ -297,7 +297,7 @@
     function tick(now, live) {
       if (!$('fleet-alerts').checked || !result) return;
       if (!live) {
-        $('fleet-alert-status').textContent = 'التنبيهات متوقفة لأن وقت الخريطة مثبت أو متوقف.';
+        $('fleet-alert-status').textContent = 'التنبيهات متوقفة لأن وقت الخارطة مثبت أو متوقف.';
         return;
       }
       const due = events.filter(

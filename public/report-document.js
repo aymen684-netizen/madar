@@ -224,7 +224,7 @@
           '* حالة محصورة بحدود الفترة؛ قد يبدأ المرور قبلها أو يستمر بعدها. العينات الزمنية قد تفوّت مرورًا أقصر من خطوة الفحص. النتائج تقديرات من العناصر المتاحة وليست أرشيفًا تاريخيًا مرصودًا.',
         ),
       );
-      children.push(heading('خريطة المرور والخط الزمني'), p(I.notes(r)));
+      children.push(heading('خارطة المرور والخط الزمني'), p(I.notes(r)));
       if (r.visuals)
         for (const bytes of [r.visuals.map, r.visuals.timeline])
           children.push(new Paragraph({ spacing: { after: 150 }, children: [image(bytes, 624)] }));
@@ -360,7 +360,7 @@
     children.splice(
       2,
       0,
-      heading('خريطة المرور والخط الزمني'),
+      heading('خارطة المرور والخط الزمني'),
       p(insights.notes(r)),
       ...(r.visuals
         ? [

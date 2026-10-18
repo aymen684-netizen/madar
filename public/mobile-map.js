@@ -22,7 +22,7 @@
   dialog.id = 'map-tools-dialog';
   dialog.setAttribute('aria-labelledby', 'map-tools-title');
   dialog.innerHTML =
-    '<div class="map-sheet-head"><button type="button" id="map-sheet-handle" aria-label="اسحب إلى الأسفل لإغلاق أدوات الخريطة"><span></span></button><div><h2 id="map-tools-title">البحث وأدوات التتبع</h2><button type="button" id="map-tools-close" aria-label="إغلاق أدوات الخريطة">×</button></div></div><div id="map-sheet-content"></div>';
+    '<div class="map-sheet-head"><button type="button" id="map-sheet-handle" aria-label="اسحب إلى الأسفل لإغلاق أدوات الخارطة"><span></span></button><div><h2 id="map-tools-title">البحث وأدوات التتبع</h2><button type="button" id="map-tools-close" aria-label="إغلاق أدوات الخارطة">×</button></div></div><div id="map-sheet-content"></div>';
   document.body.append(dialog);
   const presets = document.createElement('section');
   presets.id = 'map-quick-presets';
@@ -32,7 +32,7 @@
   const rail = document.createElement('div');
   rail.id = 'map-floating-tools';
   rail.innerHTML =
-    '<button type="button" id="map-tools-open" aria-label="البحث وأدوات التتبع" title="البحث وأدوات التتبع">⌕</button><button type="button" id="map-filter-open" aria-label="تخصيص الأقمار على الخريطة" title="تخصيص الأقمار على الخريطة">☷</button><button type="button" id="map-data-open" aria-label="حالة بيانات الأقمار" title="حالة بيانات الأقمار">ⓘ</button>';
+    '<button type="button" id="map-tools-open" aria-label="البحث وأدوات التتبع" title="البحث وأدوات التتبع">⌕</button><button type="button" id="map-filter-open" aria-label="تخصيص الأقمار على الخارطة" title="تخصيص الأقمار على الخارطة">☷</button><button type="button" id="map-data-open" aria-label="حالة بيانات الأقمار" title="حالة بيانات الأقمار">ⓘ</button>';
   space.append(rail);
   const dataButton = $('map-data-open');
   dataButton.className = 'map-health-strip';
@@ -53,7 +53,7 @@
   const legend = document.createElement('div');
   legend.id = 'orbit-legend';
   legend.setAttribute('role', 'group');
-  legend.setAttribute('aria-label', 'إظهار أنواع المدارات على الخريطة');
+  legend.setAttribute('aria-label', 'إظهار أنواع المدارات على الخارطة');
   legend.title = 'اضغط لإظهار نوع المدار أو إخفائه. يمكن جمع أكثر من نوع.';
   legend.innerHTML =
     '<button type="button" data-orbit="leo" aria-label="منخفض LEO">LEO</button><button type="button" data-orbit="meo" aria-label="متوسط MEO">MEO</button><button type="button" data-orbit="geo" aria-label="متزامن GEO">GEO</button><button type="button" data-orbit="other">أخرى</button>';

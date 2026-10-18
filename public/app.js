@@ -49,7 +49,7 @@ const globeScene = GlobeScene.create({
   appearance: OrbitAppearance,
   view: {
     isSatelliteMode: satelliteMarkers,
-    selectedId: () => selection.current?.id,
+    selectedId: () => (selection.byUser ? selection.current?.id : undefined),
     fleet: () => window.MapFleet,
     isTracking: () => selection.tracking,
   },
@@ -355,7 +355,7 @@ function renderList() {
     query: $('search').value,
     loading: catalogLoading,
     time: dateNow(),
-    selectedId: selection.current?.id,
+    selectedId: selection.byUser ? selection.current?.id : undefined,
   });
   window.WatchlistBackup?.refresh();
 }
@@ -433,7 +433,7 @@ function updateGlobe() {
   let displayed = dense ? [] : matches.slice(0, 2000);
   Swarm.show(dense ? matches : [], now);
   if (!matches.length)
-    $('hint').textContent = 'لا توجد أقمار ظاهرة؛ فعّل أنواع المدارات أو عدّل تصفية الخريطة.';
+    $('hint').textContent = 'لا توجد أقمار ظاهرة؛ فعّل أنواع المدارات أو عدّل تصفية الخارطة.';
   else if (dense)
     $('hint').textContent =
       'عرض جميع الأقمار (' +
@@ -486,7 +486,10 @@ function updateGlobe() {
       ? []
       : satelliteMarkers()
         ? pts
-        : pts.filter((o) => o.id === selection.current?.id || window.MapFleet?.has(o.id)),
+        : pts.filter(
+            (o) =>
+              (selection.byUser && o.id === selection.current?.id) || window.MapFleet?.has(o.id),
+          ),
   );
   window.MapDisplay?.update(world, pts, matches, duration);
   if (!matches.length) world.pathsData([]);
@@ -614,7 +617,7 @@ document.addEventListener('madar-language', () => {
 });
 globeScene.initialize();
 renderList();
-load();
+window.MadarStartupReady = load();
 setInterval(() => {
   if (!paused && !fixedTime && window.RenderLifecycle?.pageActive() !== false) update();
 }, 1000);

@@ -24,7 +24,7 @@
   panel.id = 'map-fleet-panel';
   panel.className = 'map-fleet-panel';
   panel.innerHTML =
-    '<summary>مجموعة الخريطة · حتى 12</summary><p class="muted">أضف قمرًا من بطاقته أو فعّل التحديد بالضغط على الخريطة. لكل قمر لون ثابت؛ تظهر المختارة حتى عند تغيير المجموعة. هذه المجموعة مستقلة عن المفضلة وتصفية الدليل ونطاق التقارير.</p><label><input id="map-fleet-multi" type="checkbox">تحديد عدة أقمار بالضغط على الخريطة</label><label><input id="map-fleet-only" type="checkbox">إظهار المختارة فقط</label><label><input id="map-fleet-paths" type="checkbox" checked>إظهار مسارات المختارة</label><p id="map-fleet-status" class="muted" role="status" aria-live="polite"></p><ol id="map-fleet-list"></ol><button id="map-fleet-clear" type="button">إزالة جميع المختارة</button><p class="muted">المسارات تقديرات للدورة التالية من العناصر المتاحة. قد يكون بعض الأقمار خلف الأرض أو بلا موضع صالح. الحفظ يتبع خيار «حفظ عملي على هذا الجهاز».</p>';
+    '<summary>مجموعة الخارطة · حتى 12</summary><p class="muted">أضف قمرًا من بطاقته أو فعّل التحديد بالضغط على الخارطة. لكل قمر لون ثابت؛ تظهر المختارة حتى عند تغيير المجموعة. هذه المجموعة مستقلة عن المفضلة وتصفية الدليل ونطاق التقارير.</p><label><input id="map-fleet-multi" type="checkbox">تحديد عدة أقمار بالضغط على الخارطة</label><label><input id="map-fleet-only" type="checkbox">إظهار المختارة فقط</label><label><input id="map-fleet-paths" type="checkbox" checked>إظهار مسارات المختارة</label><p id="map-fleet-status" class="muted" role="status" aria-live="polite"></p><ol id="map-fleet-list"></ol><button id="map-fleet-clear" type="button">إزالة جميع المختارة</button><p class="muted">المسارات تقديرات للدورة التالية من العناصر المتاحة. قد يكون بعض الأقمار خلف الأرض أو بلا موضع صالح. الحفظ يتبع خيار «حفظ عملي على هذا الجهاز».</p>';
   $('map-sheet-content').prepend(panel);
   let passesPending = null;
   panel.addEventListener('toggle', () => {
@@ -50,8 +50,8 @@
   const open = document.createElement('button');
   open.id = 'map-fleet-open';
   open.type = 'button';
-  open.title = 'مجموعة الخريطة';
-  open.setAttribute('aria-label', 'مجموعة الخريطة');
+  open.title = 'مجموعة الخارطة';
+  open.setAttribute('aria-label', 'مجموعة الخارطة');
   $('map-floating-tools').insertBefore(open, $('map-floating-tools').querySelector('.controls'));
   open.onclick = () => {
     MobileMap.open('search');
@@ -72,7 +72,7 @@
     try {
       Privacy.localSet(key, JSON.stringify({ ...model.snapshot(), isolated, paths: showPaths }));
     } catch {
-      say('تعذّر حفظ اختيار الخريطة؛ يبقى متاحًا لهذه الجلسة.');
+      say('تعذّر حفظ اختيار الخارطة؛ يبقى متاحًا لهذه الجلسة.');
     }
   }
   function say(message) {
@@ -92,10 +92,10 @@
     LiveValues.text(
       pin,
       active
-        ? 'إزالة من مجموعة الخريطة'
+        ? 'إزالة من مجموعة الخارطة'
         : model.size === 12
-          ? 'اكتملت مجموعة الخريطة: 12 قمرًا؛ أزل قمرًا لإضافة آخر.'
-          : 'إضافة إلى مجموعة الخريطة',
+          ? 'اكتملت مجموعة الخارطة: 12 قمرًا؛ أزل قمرًا لإضافة آخر.'
+          : 'إضافة إلى مجموعة الخارطة',
     );
     pin.setAttribute('aria-pressed', String(active));
     pin.style.setProperty('--fleet-color', model.color(o.id) || '#83efd3');
@@ -132,10 +132,10 @@
       remove.type = 'button';
       remove.className = 'fleet-remove';
       remove.textContent = '×';
-      remove.setAttribute('aria-label', T('إزالة من مجموعة الخريطة') + ' · ' + entry.object.name);
+      remove.setAttribute('aria-label', T('إزالة من مجموعة الخارطة') + ' · ' + entry.object.name);
       remove.onclick = () => {
         model.remove(entry.object.id);
-        changed('أُزيل القمر من مجموعة الخريطة.');
+        changed('أُزيل القمر من مجموعة الخارطة.');
       };
       row.append(name, remove);
       list.append(row);
@@ -147,7 +147,7 @@
     displayCache = null;
     render();
     save();
-    say(message || model.size + ' / 12 · أقمار مختارة للخريطة');
+    say(message || model.size + ' / 12 · أقمار مختارة للخارطة');
     pathAt = 0;
     update();
     document.dispatchEvent(new Event('madar-fleet'));
@@ -164,7 +164,7 @@
       return status;
     }
     changed(
-      status === 'removed' ? 'أُزيل القمر من مجموعة الخريطة.' : 'أُضيف القمر إلى مجموعة الخريطة.',
+      status === 'removed' ? 'أُزيل القمر من مجموعة الخارطة.' : 'أُضيف القمر إلى مجموعة الخارطة.',
     );
     return status;
   }
@@ -232,7 +232,7 @@
   $('map-fleet-clear').onclick = () => {
     model.clear();
     isolated = false;
-    changed('أُزيلت جميع الأقمار من مجموعة الخريطة.');
+    changed('أُزيلت جميع الأقمار من مجموعة الخارطة.');
   };
   root.MapFleet = {
     toggle,
@@ -264,7 +264,7 @@
   document.addEventListener('madar-language', render);
   document.addEventListener('catalog-loaded', () => root.MapFleet.refresh(objects));
   render();
-  say(model.size ? model.size + ' / 12 · أقمار مختارة للخريطة' : 'لم تختر أقمارًا بعد.');
+  say(model.size ? model.size + ' / 12 · أقمار مختارة للخارطة' : 'لم تختر أقمارًا بعد.');
   if (model.size) {
     pathAt = 0;
     update();

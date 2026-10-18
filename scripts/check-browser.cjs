@@ -46,11 +46,25 @@ const server = http.createServer((req, res) => {
     const context = await originalContext(actual);
     if (!madarWelcome)
       await context.addInitScript(() => {
-        if (!localStorage.getItem('madar-started')) localStorage.setItem('madar-started', '1');
+        document.addEventListener('DOMContentLoaded', async () => {
+          await window.MadarStartupReady?.catch(() => {});
+          document.getElementById('welcome-start')?.click();
+        });
       });
     return context;
   };
   try {
+    if (process.env.MADAR_BROWSER_SMOKE === '1') {
+      const { checkBrowserStartup } = require('./check-browser-startup.cjs');
+      const { checkBrowserStartPaths } = require('./check-browser-start-paths.cjs');
+      await checkBrowserStartup(browser, baseUrl, output);
+      await checkBrowserStartPaths(browser, baseUrl, output);
+      const { installNavigation } = require('./browser-navigation.cjs');
+      await installNavigation(browser);
+      const { checkBrowserExperience } = require('./check-browser-experience.cjs');
+      await checkBrowserExperience(browser, baseUrl, output);
+      return;
+    }
     const { checkBrowserFleetExperience } = require('./check-browser-fleet-experience.cjs');
     await checkBrowserFleetExperience(browser, baseUrl, output);
     const { checkBrowserCalendar } = require('./check-browser-calendar.cjs');
@@ -194,9 +208,10 @@ const server = http.createServer((req, res) => {
     });
     await page.reload();
     await page.waitForFunction(
-      (id) => objects.length && selection.current?.id === id && selection.byUser,
+      (id) => objects.length && selection.current?.id === id && !selection.byUser,
       persistedSelectionId,
     );
+    assert(await page.locator('#globe-card').isHidden());
     await page.locator('#list button').first().click();
     assert.equal(await page.getAttribute('#globe-card-favorite', 'aria-pressed'), 'true');
     assert.equal(await page.getAttribute('#favorite', 'aria-pressed'), 'true');

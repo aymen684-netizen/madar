@@ -203,7 +203,7 @@
       py = (lat) => 270 - (lat - (minY + maxY) / 2) * scale;
     x.textAlign = 'right';
     x.direction = 'rtl';
-    x.fillText('خريطة إسقاط المسارات على سطح الأرض · الشمال ↑', 1060, 35);
+    x.fillText('خارطة إسقاط المسارات على سطح الأرض · الشمال ↑', 1060, 35);
     x.save();
     x.beginPath();
     x.rect(35, 60, 1030, 420);
@@ -293,7 +293,7 @@
   }
   function notes(w) {
     return (
-      'الخريطة: أول ' +
+      'الخارطة: أول ' +
       Math.min(LIMIT, w.result.rows.length) +
       ' حالة من ' +
       w.result.rows.length +
@@ -325,7 +325,7 @@
     note.textContent = notes(w) + ' على الهاتف مرّر الرسم أفقيًا لقراءة تفاصيله.';
     detail.append(note);
     for (const [title, c] of [
-      ['خريطة المرور', map(w, country)],
+      ['خارطة المرور', map(w, country)],
       ['الخط الزمني', timeline(w, offset, stamp)],
     ]) {
       c.setAttribute('role', 'img');

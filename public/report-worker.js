@@ -2,7 +2,7 @@ importScripts('network-resources.js?v=43', 'network-policy.js?v=43');
 importScripts(
   'vendor/satellite.min.js',
   'orbit-data.js?v=42',
-  'report-insights.js?v=42',
+  'report-insights.js?v=75',
   'report-engine.js?v=34',
 );
 self.onmessage = async (e) => {

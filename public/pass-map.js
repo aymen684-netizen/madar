@@ -38,7 +38,7 @@
     const b = document.createElement('button');
     b.type = 'button';
     b.className = 'pass-map-button';
-    b.textContent = 'اعرض المرور على الخريطة';
+    b.textContent = 'اعرض المرور على الخارطة';
     b.disabled = !object;
     if (!object) b.title = 'لا تتوفر لقطة مدارات لهذا التقرير؛ أعد الحساب.';
     b.onclick = () => show(row, object);

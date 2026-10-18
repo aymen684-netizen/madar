@@ -82,7 +82,7 @@
             e('scope').value === 'selected'
               ? 'القمر المحدد'
               : e('scope').value === 'fleet'
-                ? 'مجموعة الخريطة · حتى 12 قمرًا'
+                ? 'مجموعة الخارطة · حتى 12 قمرًا'
                 : 'المفضلة',
         };
       ObserverEngine.validate(request);
