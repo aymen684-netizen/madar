@@ -298,9 +298,6 @@ html[lang='en'] .shell-ready .data-health summary::after {
 html[lang='en'] .shell-ready .data-health[open] summary::after {
   content: 'Close details ⌃';
 }
-html[lang='en'] .shell-ready[data-shell-view='watchlist'] .catalog > h2:after {
-  content: 'Saved satellites';
-}
 html[dir='ltr'] .shell-ready #shell-card-slot .globe-card > strong {
   padding-inline-end: 20px;
 }
@@ -607,4 +604,72 @@ html[dir='ltr'] .guide-content {
   .welcome-note {
     margin-top: 14px;
   }
+}
+
+/* Equal actions in the information page, including native links. */
+.shell-ready #shell-help .info-actions > :is(button, a),
+.shell-ready #shell-help > .launch {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  margin: 0;
+  padding: 11px 16px;
+  font: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.5;
+  text-align: center;
+  border: 1px solid #53748d;
+  border-radius: 9px;
+  background: #142538;
+  color: #d2e8ff;
+  box-shadow: none;
+}
+.shell-ready #shell-help .info-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: 100%;
+}
+.shell-ready #shell-help .info-actions > :is(button, a) {
+  flex: 1 1 180px;
+}
+.shell-ready #shell-help :is(.info-actions > button, .info-actions > a, .launch):hover {
+  border-color: var(--cyan);
+  background: #20394f;
+}
+.globe-rotation-option {
+  flex-basis: 100%;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 14px;
+}
+.globe-rotation-option input {
+  width: auto;
+  margin: 0;
+}
+.globe-rotation-option small {
+  flex-basis: 100%;
+  color: var(--muted);
+}
+
+.shell-ready #shell-help > details {
+  background: #101e2c;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  margin-bottom: 16px;
+}
+.shell-ready #shell-help > details > summary {
+  padding: 11px 18px;
+  min-height: 48px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--cyan);
+}
+.shell-ready #shell-help .help-footer-actions {
+  margin-top: 20px;
 }

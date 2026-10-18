@@ -25,7 +25,7 @@
       objects.some((o) => !root.OrbitData.valid(o)) ||
       new Set(objects.map((o) => Number(o.id))).size !== objects.length
     )
-      throw Error('اختر من قمر واحد إلى 12 قمرًا صالحًا من متابعة الخريطة.');
+      throw Error('اختر من قمر واحد إلى 12 قمرًا صالحًا من مجموعة الخريطة.');
     const items = [];
     for (const object of objects) {
       const result = await root.ObserverEngine.scan(S, [object], request);

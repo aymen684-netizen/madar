@@ -51,6 +51,8 @@ const server = http.createServer((req, res) => {
     return context;
   };
   try {
+    const { checkBrowserMotion } = require('./check-browser-motion.cjs');
+    await checkBrowserMotion(browser, baseUrl, output);
     const { checkBrowserMapFleet } = require('./check-browser-map-fleet.cjs');
     await checkBrowserMapFleet(browser, baseUrl, output);
     const { checkBrowserFleetPasses } = require('./check-browser-fleet-passes.cjs');

@@ -81,8 +81,8 @@
             e('scope').value === 'selected'
               ? 'القمر المحدد'
               : e('scope').value === 'fleet'
-                ? 'متابعة الخريطة · حتى 12 قمرًا'
-                : 'قائمة المتابعة',
+                ? 'مجموعة الخريطة · حتى 12 قمرًا'
+                : 'المفضلة',
         };
       ObserverEngine.validate(request);
       const data =

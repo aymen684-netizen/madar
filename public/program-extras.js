@@ -9,10 +9,10 @@
   intro.append(title);
   const note = document.createElement('p');
   note.textContent =
-    'تعرّف على التتبع والتقارير وحصر أقمار الدول وإعدادات الخصوصية. اعرض النبذة أو نزّل Word باللغة المختارة. تحديث 16 أكتوبر 2026.';
+    'تعرّف على الخريطة والتقارير وحصر أقمار الدول وإعدادات الخصوصية. اعرض النبذة أو نزّل Word باللغة المختارة. تحديث 16 أكتوبر 2026.';
   intro.append(note);
   const actions = document.createElement('div');
-  actions.className = 'report-actions';
+  actions.className = 'report-actions info-actions';
   const preview = document.createElement('button');
   preview.id = 'overview-preview';
   preview.type = 'button';

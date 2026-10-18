@@ -47,7 +47,11 @@ async function checkBrowserShell(browser, url, output) {
     assert.equal(await page.locator('body').getAttribute('data-shell-view'), 'map');
     assert(await page.locator('#globe-card').isVisible());
     await page.click('#globe-card-favorite');
-    await page.click('#shell-nav-watchlist');
+    assert.equal(await page.locator('#shell-nav-watchlist').count(), 0);
+    assert.equal(await page.locator('#shell-nav button').count(), 3);
+    await page.click('#shell-nav-catalog');
+    await page.click('#saved');
+    assert.equal(await page.locator('#shell-nav-catalog').getAttribute('aria-current'), 'page');
     assert.equal(await page.locator('#list button').count(), 1);
     await page.click('#shell-nav-reports');
     assert(await page.locator('#report-panel').isVisible());

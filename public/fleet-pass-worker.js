@@ -4,7 +4,7 @@ importScripts(
   'orbit-data.js?v=42',
   'report-insights.js?v=52',
   'observer-engine.js?v=26',
-  'fleet-pass-core.js?v=65',
+  'fleet-pass-core.js?v=67',
 );
 self.onmessage = async (e) => {
   try {

@@ -94,7 +94,7 @@ async function checkBrowserCatalog(browser, url, output) {
     assert.equal(await page.locator('#list button').count(), 1);
     await page.fill('#search', 'لا يوجد هذا القمر');
     assert.equal(await page.locator('#list button').count(), 0);
-    assert((await page.locator('#list').textContent()).includes('ضمن متابعتك'));
+    assert((await page.locator('#list').textContent()).includes('ضمن المفضلة'));
     assert.equal(await page.evaluate(() => selection.current), null);
     assert(await page.locator('#catalog-empty-reset').isVisible());
     await page.click('#catalog-empty-reset');

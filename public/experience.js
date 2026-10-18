@@ -60,13 +60,11 @@
     'report-run',
     'analysis-run',
     'observer-run',
-    'overview-preview',
     'live-video-play',
     'report-view-apply',
   ])
     $(id)?.classList.add('action-primary');
   for (const id of [
-    'program-overview',
     'report-download',
     'analysis-download',
     'observer-download',
@@ -113,7 +111,10 @@
   reopen.id = 'welcome-reopen';
   reopen.type = 'button';
   reopen.onclick = () => welcome.showModal();
-  $('shell-help').append(reopen);
+  const helpActions = make('div');
+  helpActions.className = 'info-actions help-footer-actions';
+  helpActions.append($('shell-help').querySelector(':scope > a.launch'), reopen);
+  $('shell-help').append(helpActions);
   let visited = false;
   try {
     visited = localStorage.getItem('madar-started') === '1';
