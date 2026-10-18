@@ -59,6 +59,8 @@ const server = http.createServer((req, res) => {
       const { checkBrowserStartPaths } = require('./check-browser-start-paths.cjs');
       await checkBrowserStartup(browser, baseUrl, output);
       await checkBrowserStartPaths(browser, baseUrl, output);
+      const { installNavigation } = require('./browser-navigation.cjs');
+      await installNavigation(browser);
       const { checkBrowserExperience } = require('./check-browser-experience.cjs');
       await checkBrowserExperience(browser, baseUrl, output);
       return;
