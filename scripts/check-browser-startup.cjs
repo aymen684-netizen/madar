@@ -27,7 +27,11 @@ async function checkBrowserStartup(browser, url, output) {
     });
     for (const pattern of ['https://celestrak.org/**', '**/api/orbits?*'])
       await page.route(pattern, (r) =>
-        r.fulfill({ contentType: 'application/json', body: JSON.stringify([fixture]) }),
+        r.fulfill({
+          contentType: 'application/json',
+          headers: { 'X-Madar-Fetched-At': String(Date.now()), 'X-Madar-Connection': 'upstream' },
+          body: JSON.stringify([fixture]),
+        }),
       );
     try {
       const navigation = page.goto(url + '#catalog');
@@ -71,6 +75,19 @@ async function checkBrowserStartup(browser, url, output) {
       assert.equal(await page.locator('#shell-nav-map').textContent(), mobile ? 'الخارطة' : 'Map');
       await page.screenshot({ path: output + '/startup-ready-' + mobile + '.png' });
       assert.deepEqual(errors, []);
+    } catch (error) {
+      console.error(
+        'Startup diagnostic',
+        await page.evaluate(() => ({
+          shell: !!window.MadarShell,
+          globe: typeof world !== 'undefined' && !!world,
+          count: typeof objects !== 'undefined' ? objects.length : null,
+          status: document.getElementById('status')?.textContent,
+          mapError: document.getElementById('map-error')?.textContent,
+        })),
+        errors,
+      );
+      throw error;
     } finally {
       release();
       await context.close();
