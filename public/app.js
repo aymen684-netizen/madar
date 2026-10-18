@@ -49,7 +49,7 @@ const globeScene = GlobeScene.create({
   appearance: OrbitAppearance,
   view: {
     isSatelliteMode: satelliteMarkers,
-    selectedId: () => selection.current?.id,
+    selectedId: () => (selection.byUser ? selection.current?.id : undefined),
     fleet: () => window.MapFleet,
     isTracking: () => selection.tracking,
   },
@@ -355,7 +355,7 @@ function renderList() {
     query: $('search').value,
     loading: catalogLoading,
     time: dateNow(),
-    selectedId: selection.current?.id,
+    selectedId: selection.byUser ? selection.current?.id : undefined,
   });
   window.WatchlistBackup?.refresh();
 }
@@ -486,7 +486,10 @@ function updateGlobe() {
       ? []
       : satelliteMarkers()
         ? pts
-        : pts.filter((o) => o.id === selection.current?.id || window.MapFleet?.has(o.id)),
+        : pts.filter(
+            (o) =>
+              (selection.byUser && o.id === selection.current?.id) || window.MapFleet?.has(o.id),
+          ),
   );
   window.MapDisplay?.update(world, pts, matches, duration);
   if (!matches.length) world.pathsData([]);

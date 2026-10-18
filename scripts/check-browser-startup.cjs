@@ -66,6 +66,17 @@ async function checkBrowserStartup(browser, url, output) {
       assert(await page.locator('#welcome-dialog').isVisible());
       assert(await page.locator('#globe-card').isHidden());
       assert.equal(await page.evaluate(() => selection.byUser), false);
+      assert(
+        await page.evaluate(() =>
+          world
+            .pointsData()
+            .every(
+              (point) =>
+                world.pointColor()(point) !== '#e8fff9' && world.labelColor()(point) !== '#8ecbff',
+            ),
+        ),
+        'restored satellite must not receive selection colors',
+      );
       assert.equal(
         await page.evaluate(() => JSON.parse(localStorage.getItem('orbit-favorites')).length),
         1,
