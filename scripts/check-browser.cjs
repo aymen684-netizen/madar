@@ -53,6 +53,8 @@ const server = http.createServer((req, res) => {
   try {
     const { checkBrowserMapFleet } = require('./check-browser-map-fleet.cjs');
     await checkBrowserMapFleet(browser, baseUrl, output);
+    const { checkBrowserFleetPasses } = require('./check-browser-fleet-passes.cjs');
+    await checkBrowserFleetPasses(browser, baseUrl, output);
     const { checkBrowserStartPaths } = require('./check-browser-start-paths.cjs');
     await checkBrowserStartPaths(browser, baseUrl, output);
     const { checkBrowserInventory } = require('./check-browser-inventory.cjs');

@@ -78,6 +78,11 @@ const sharingNote = I.translate(
 );
 assert(sharingNote.includes('loading site files may still contact the hosting service'));
 assert(sharingNote.includes('sharing sends the file to the app you choose'));
+for (const [ar, en] of [
+  ['تحقّق من عمر العناصر', 'Check the age of the orbital elements'],
+  ['العناصر بعيدة زمنيًا عن وقت العرض', 'Elements are far from display time'],
+])
+  assert.equal(I.translate(ar, 'en'), en);
 const built = regexBuilds;
 assert(built > 0);
 I.translate('مدار · تقارير 35', 'en');

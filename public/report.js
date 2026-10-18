@@ -135,6 +135,7 @@ reportEl('report-form').onsubmit = async (e) => {
     if (scope === 'types') data = await TypePicker.load('report');
     else if (scope === 'active') data = await loadGlobalCatalog();
     else if (['military', 'intelligence'].includes(scope)) data = await fetchCatalogGroup(scope);
+    else if (scope === 'fleet') data = window.MapFleet?.objects() || [];
     else data = scope === 'favorites' ? watchlist.items : objects;
     if (data.failed?.length)
       throw Error('تعذّر تحميل بعض أنواع المجموعة الحالية: ' + data.failed.join('، '));
@@ -178,12 +179,14 @@ reportEl('report-form').onsubmit = async (e) => {
               ? 'جميع الأقمار النشطة'
               : scope === 'favorites'
                 ? 'قائمة المتابعة'
-                : scope === 'military'
-                  ? 'العسكرية والاستطلاع العلنية'
-                  : scope === 'intelligence'
-                    ? 'الاستخبارية والاستطلاع الموثقة'
-                    : window.MadarI18n?.original(reportEl('group').selectedOptions[0]) ||
-                      reportEl('group').selectedOptions[0].textContent,
+                : scope === 'fleet'
+                  ? 'متابعة الخريطة · حتى 12 قمرًا'
+                  : scope === 'military'
+                    ? 'العسكرية والاستطلاع العلنية'
+                    : scope === 'intelligence'
+                      ? 'الاستخبارية والاستطلاع الموثقة'
+                      : window.MadarI18n?.original(reportEl('group').selectedOptions[0]) ||
+                        reportEl('group').selectedOptions[0].textContent,
       day: window.MadarI18n?.original(reportEl('report-day')) || reportEl('report-day').textContent,
     };
     if (criteria) {

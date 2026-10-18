@@ -91,3 +91,69 @@
   outline: 2px solid var(--fleet-color);
   outline-offset: 2px;
 }
+#fleet-passes {
+  border-block-start: 1px solid #52758a;
+  margin-block-start: 18px;
+  padding-block-start: 10px;
+}
+.fleet-site-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+#fleet-passes .fleet-site-grid label {
+  display: block;
+  min-width: 0;
+}
+#fleet-passes .fleet-site-grid input,
+#fleet-passes select {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-height: 44px;
+  margin-block-start: 5px;
+  box-sizing: border-box;
+}
+#fleet-passes button {
+  min-height: 44px;
+}
+#fleet-pass-list {
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+#fleet-pass-list li {
+  padding: 10px;
+  border: 1px solid #52758a;
+  border-radius: 8px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+#fleet-pass-list p {
+  margin-block: 6px;
+}
+#fleet-pass-list bdi {
+  display: block;
+  text-align: start;
+  font-variant-numeric: tabular-nums;
+}
+#fleet-pass-window {
+  text-align: start;
+  font-variant-numeric: tabular-nums;
+}
+.fleet-pass-name {
+  width: 100%;
+  text-align: start;
+  border-inline-start: 5px solid;
+  overflow-wrap: anywhere;
+}
+.fleet-pass-actions {
+  display: grid;
+  gap: 8px;
+}
+@media (max-width: 430px) {
+  .fleet-site-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

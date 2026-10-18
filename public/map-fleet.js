@@ -26,6 +26,27 @@
   panel.innerHTML =
     '<summary>متابعة عدة أقمار · حتى 12</summary><p class="muted">أضف قمرًا من بطاقته أو فعّل التحديد بالضغط على الخريطة. لكل قمر لون ثابت؛ تظهر المختارة حتى عند تغيير المجموعة. هذه المتابعة مستقلة عن المفضلة وتصفية الدليل ونطاق التقارير.</p><label><input id="map-fleet-multi" type="checkbox">تحديد عدة أقمار بالضغط على الخريطة</label><label><input id="map-fleet-only" type="checkbox">إظهار المختارة فقط</label><label><input id="map-fleet-paths" type="checkbox" checked>إظهار مسارات المختارة</label><p id="map-fleet-status" class="muted" role="status" aria-live="polite"></p><ol id="map-fleet-list"></ol><button id="map-fleet-clear" type="button">إزالة جميع المختارة</button><p class="muted">المسارات تقديرات للدورة التالية من العناصر المتاحة. قد يكون بعض الأقمار خلف الأرض أو بلا موضع صالح. الحفظ يتبع خيار «حفظ عملي على هذا الجهاز».</p>';
   $('map-sheet-content').prepend(panel);
+  let passesPending = null;
+  panel.addEventListener('toggle', () => {
+    if (!panel.open || root.FleetPasses || passesPending) return;
+    passesPending = (async () => {
+      for (const file of ['fleet-pass-core.js', 'fleet-passes.js']) {
+        await new Promise((resolve, reject) => {
+          const script = document.createElement('script');
+          script.src = file + '?v=65';
+          script.onload = resolve;
+          script.onerror = () => {
+            script.remove();
+            reject(Error());
+          };
+          document.head.append(script);
+        });
+      }
+    })().catch(() => {
+      passesPending = null;
+      say('تعذّر تحميل لوحة المرور. أغلق اللوحة وافتحها لإعادة المحاولة.');
+    });
+  });
   const open = document.createElement('button');
   open.id = 'map-fleet-open';
   open.type = 'button';
@@ -129,6 +150,7 @@
     say(message || model.size + ' / 12 · أقمار مختارة للخريطة');
     pathAt = 0;
     update();
+    document.dispatchEvent(new Event('madar-fleet'));
   }
   function toggle(o) {
     const status = model.toggle(o);
@@ -217,6 +239,7 @@
     card,
     display,
     paths,
+    objects: () => model.entries().map((e) => e.object),
     has: (id) => model.has(id),
     color: (id) => model.color(id),
     pick: (o) => {
@@ -233,6 +256,7 @@
         render();
         save();
         pathRevision = -1;
+        document.dispatchEvent(new Event('madar-fleet'));
       }
     },
     snapshot: () => ({ ...model.snapshot(), isolated, paths: showPaths }),
