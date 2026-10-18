@@ -51,6 +51,8 @@ const server = http.createServer((req, res) => {
     return context;
   };
   try {
+    const { checkBrowserFleetExperience } = require('./check-browser-fleet-experience.cjs');
+    await checkBrowserFleetExperience(browser, baseUrl, output);
     const { checkBrowserCalendar } = require('./check-browser-calendar.cjs');
     await checkBrowserCalendar(browser, baseUrl, output);
     const { checkBrowserOrbitFilter } = require('./check-browser-orbit-filter.cjs');

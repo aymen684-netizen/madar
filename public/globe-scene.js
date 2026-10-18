@@ -47,6 +47,7 @@
             : new Globe(holder, { waitForGlobeReady: false, animateIn: false })
         )
           .globeImageUrl('assets/earth.jpg')
+          .onGlobeReady(() => extensions().quality?.sharpen?.())
           .backgroundImageUrl('assets/stars.png')
           .backgroundColor('#080d16')
           .showAtmosphere(true)
@@ -63,7 +64,9 @@
                 ? 0.34
                 : view.fleet()?.has(d.id)
                   ? 0.27
-                  : 0.18,
+                  : appearance.category(d.obj) === 'geo'
+                    ? 0.08
+                    : 0.18,
           )
           .pointResolution(6)
           .pointColor(
@@ -113,7 +116,7 @@
             .particleLat('lat')
             .particleLng('lng')
             .particleAltitude('alt')
-            .particlesSize(3)
+            .particlesSize((group) => (group.regime === 'geo' ? 1.4 : 3))
             .particlesSizeAttenuation(false)
             .particlesColor((group) => appearance.color(group.regime))
             .particleLabel((d) => {
@@ -133,6 +136,17 @@
           select: (o) => events.select(o),
         });
         ext.quality?.attach(world);
+        // Follow the rendered clock, including language changes and wrapped source status.
+        const top = document.querySelector?.('.scene-top');
+        if (top)
+          observeSize(() => {
+            const scene = holder.getBoundingClientRect(),
+              header = top.getBoundingClientRect();
+            holder.parentElement.style.setProperty(
+              '--map-card-top',
+              Math.ceil(header.bottom - scene.top + 12) + 'px',
+            );
+          }, top);
         fonts.set(world, { defaultFont: world.labelTypeFace(), mode: null });
         world.pointOfView(initialView());
         world.controls().minDistance = 110;

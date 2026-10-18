@@ -164,7 +164,7 @@
     parent.append(e);
     return e;
   }
-  function table(title, headers, rows) {
+  function table(title, headers, rows, passes, report) {
     const details = document.createElement('details');
     details.open = true;
     text('summary', title, details);
@@ -175,6 +175,7 @@
     for (const [i, row] of [headers, ...rows].entries()) {
       const tr = document.createElement('tr');
       for (const v of row) text(i ? 'td' : 'th', v, tr);
+      if (i && passes?.[i - 1]) tr.firstElementChild.append(PassMap.button(passes[i - 1], report));
       t.append(tr);
     }
     wrap.append(t);
@@ -222,6 +223,8 @@
       'تفاصيل الحركة والمسار · أول ' + Math.min(1000, v.result.rows.length) + ' حالة',
       pass[0],
       pass.slice(1, 1001),
+      v.result.rows.slice(0, 1000),
+      v,
     );
     text(
       'p',

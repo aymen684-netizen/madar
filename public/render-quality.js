@@ -3,7 +3,9 @@
   const preference = 'madar-render-quality',
     modes = new Set(['auto', 'economy', 'detail']);
   let mode = 'auto',
-    renderer = null;
+    renderer = null,
+    globe = null,
+    textureUrl = null;
   try {
     const saved = root.localStorage.getItem(preference);
     if (modes.has(saved)) mode = saved;
@@ -19,6 +21,17 @@
   function apply() {
     const value = ratio();
     if (renderer && renderer.getPixelRatio() !== value) renderer.setPixelRatio(value);
+    if (globe) {
+      const url =
+        mode === 'detail' && renderer.capabilities?.maxTextureSize >= 8192
+          ? 'assets/earth-detail.jpg'
+          : 'assets/earth.jpg';
+      if (textureUrl !== url) {
+        textureUrl = url;
+        globe.globeImageUrl(url);
+      }
+      sharpen();
+    }
     const select = root.document.getElementById('render-quality'),
       status = root.document.getElementById('render-quality-status');
     if (select) select.value = mode;
@@ -35,6 +48,18 @@
         status.dataset.message = text;
         status.textContent = text;
       }
+    }
+  }
+  function sharpen() {
+    const map = globe?.globeMaterial?.()?.map;
+    if (!map) return;
+    const value = Math.min(
+      mode === 'economy' ? 1 : 8,
+      renderer.capabilities?.getMaxAnisotropy?.() || 1,
+    );
+    if (map.anisotropy !== value) {
+      map.anisotropy = value;
+      map.needsUpdate = true;
     }
   }
   function setMode(value) {
@@ -59,9 +84,11 @@
   });
   root.RenderQuality = {
     attach(world) {
+      globe = world;
       renderer = world.renderer();
       apply();
     },
+    sharpen,
     setMode,
     get mode() {
       return mode;

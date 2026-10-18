@@ -3,6 +3,7 @@ Orbital elements: CelesTrak https://celestrak.org/ (snapshot retrieved 2026-10-1
 Propagation: satellite.js 6.0.1 (MIT), https://github.com/shashwatak/satellite-js
 Globe renderer: globe.gl 2.41.4 (MIT), https://github.com/vasturiano/globe.gl
 Earth texture: NASA Blue Marble, distributed in three-globe examples.
+Optional 8192x4096 Earth texture: NASA / Reto Stockli (land surface, ocean color and sea ice), converted from PNG to JPEG at quality 72 without upscaling. Source: https://eoimages.gsfc.nasa.gov/images/imagerecords/57000/57730/land_ocean_ice_8192.png
 Earth and sky assets: https://github.com/vasturiano/three-globe/tree/master/example/img
 Independent application; not affiliated with KeepTrack.
 Country boundaries: Natural Earth 1:50m, public domain; world-atlas 2.0.2 (ISC).

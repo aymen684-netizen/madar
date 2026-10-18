@@ -1,4 +1,6 @@
 node_modules/
+node_modules
+public/assets/earth-detail.jpg
 .wrangler/
 .env
 .env.*

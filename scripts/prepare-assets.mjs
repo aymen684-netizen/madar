@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { compactMetadata } from './compact-metadata.mjs';
+await import('./prepare-earth-detail.mjs');
 const data = fs.readFileSync(new URL('../public/assets/flags.bundle.zip', import.meta.url));
 const root = new URL('../public/assets/flags/', import.meta.url);
 let at = 0,

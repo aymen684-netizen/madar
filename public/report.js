@@ -249,6 +249,7 @@ function renderReport(r) {
       td.textContent = value;
       tr.append(td);
     }
+    tr.firstElementChild.append(PassMap.button(row, r));
     body.append(tr);
   }
   reportEl('report-table').hidden = !!r.criteria || !r.result.rows.length;

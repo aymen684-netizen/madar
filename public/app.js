@@ -424,7 +424,8 @@ function updateGlobe() {
   const mode = satelliteMarkers();
   globeScene.applyMarkerMode(world, mode);
   const now = dateNow();
-  const base = window.MapFleet?.display(rows()) || rows();
+  const fleetBase = window.MapFleet?.display(rows()) || rows();
+  const base = window.PassMap?.display(fleetBase) || fleetBase;
   const matches = window.MapOrbitFilter?.display(base) || base;
   const selectedVisible =
     !!selection.current && (!window.MapOrbitFilter || MapOrbitFilter.matches(selection.current));
@@ -513,6 +514,7 @@ function updateGlobe() {
         duration,
       );
   }
+  window.PassMap?.drawFootprint();
   updateGlobeCard();
 }
 function focusSelected() {
@@ -604,6 +606,12 @@ $('catalog-empty-refresh').onclick = () => $('refresh').click();
 $('list-previous').onclick = () => changeListPage(-1);
 $('list-next').onclick = () => changeListPage(1);
 timeControls.bind();
+document.addEventListener('madar-language', () => {
+  $('clock').textContent = TimeControls.formatClock(dateNow(), {
+    language: window.MadarI18n?.language,
+    offset: $('timezone').value,
+  });
+});
 globeScene.initialize();
 renderList();
 load();

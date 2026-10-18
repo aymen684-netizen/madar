@@ -157,3 +157,119 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+.fleet-timeline {
+  direction: ltr;
+  overflow-x: auto;
+  border: 1px solid #52758a;
+  border-radius: 8px;
+  padding: 8px;
+}
+.fleet-timeline-chart {
+  min-width: 680px;
+}
+.fleet-timeline-axis {
+  margin-left: 160px;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 10px;
+  min-height: 48px;
+}
+.fleet-timeline-axis span {
+  max-width: 100px;
+  overflow-wrap: anywhere;
+}
+.fleet-timeline-row {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 10px;
+  min-height: 48px;
+  align-items: center;
+}
+.fleet-timeline-row > span {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: #102b3b;
+  font-size: 12px;
+  padding-inline-start: 6px;
+  overflow-wrap: anywhere;
+}
+.fleet-timeline-track {
+  position: relative;
+  min-height: 44px;
+  background: repeating-linear-gradient(90deg, #52758a70 0 1px, transparent 1px 25%);
+  border-block-end: 1px solid #52758a50;
+}
+#fleet-passes .fleet-timeline-pass {
+  position: absolute;
+  top: 0;
+  height: 44px;
+  min-width: 3px;
+  min-height: 44px;
+  padding: 0;
+  margin: 0;
+  border: 1px solid #fff9;
+  border-radius: 3px;
+}
+.fleet-timeline-pass:focus-visible {
+  outline: 3px solid white;
+  outline-offset: 2px;
+  z-index: 1;
+}
+.fleet-timeline-track > span {
+  font-size: 11px;
+  line-height: 44px;
+  padding-inline: 6px;
+}
+.fleet-sky {
+  display: block;
+  width: min(100%, 320px);
+  margin: auto;
+  background: #0b1828;
+  border-radius: 50%;
+}
+#fleet-event-detail figure {
+  margin: 12px 0;
+}
+#fleet-event-detail figcaption {
+  line-height: 1.8;
+  font-size: 12px;
+  margin-block: 12px;
+}
+#fleet-event {
+  width: 100%;
+  min-width: 0;
+}
+#fleet-experience {
+  min-width: 0;
+}
+#fleet-experience h4 {
+  line-height: 1.8;
+}
+#fleet-experience > label {
+  display: block;
+  margin-block: 12px;
+}
+#fleet-compare {
+  margin-block: 16px;
+}
+.pass-map-button {
+  display: block;
+  min-height: 44px;
+  font-size: 12px;
+  margin-block: 8px;
+}
+.visibility-controls {
+  min-width: 0;
+  border: 1px solid #52758a;
+  margin-block: 16px;
+}
+.visibility-controls p {
+  font-size: 12px;
+  line-height: 1.8;
+}
+.visibility-controls input[type='number'] {
+  width: 80px;
+  min-height: 44px;
+}

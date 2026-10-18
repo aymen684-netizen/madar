@@ -3,7 +3,7 @@
   const colors = {
     leo: 'rgba(97,217,213,0.55)',
     meo: 'rgba(255,205,116,0.65)',
-    geo: 'rgba(241,157,185,0.7)',
+    geo: 'rgba(181,174,209,0.38)',
     other: 'rgba(174,166,247,0.6)',
   };
   const cache = new WeakMap();
