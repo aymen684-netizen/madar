@@ -37,7 +37,11 @@ async function checkBrowserProgramExtras(browser, url, output) {
       ),
     );
     assert((await page.locator('#health-next').textContent()).includes('UTC'));
-    await page.screenshot({ path: output + '/time-freshness-desktop.png' });
+    await page.screenshot({
+      path: output + '/time-freshness-desktop.png',
+      animations: 'disabled',
+      timeout: 60000,
+    });
     await page.evaluate(() => {
       fixedTime = new Date(dateNow());
       update();
@@ -67,10 +71,18 @@ async function checkBrowserProgramExtras(browser, url, output) {
       await page.locator('#overview-content>p,#overview-content>h3').count(),
       json.paragraphs.length - 1,
     );
-    await page.screenshot({ path: output + '/overview-preview-desktop.png' });
+    await page.screenshot({
+      path: output + '/overview-preview-desktop.png',
+      animations: 'disabled',
+      timeout: 60000,
+    });
     await page.setViewportSize({ width: 390, height: 844 });
     assert.equal(await page.evaluate(() => document.body.scrollWidth), 390);
-    await page.screenshot({ path: output + '/overview-preview-mobile.png' });
+    await page.screenshot({
+      path: output + '/overview-preview-mobile.png',
+      animations: 'disabled',
+      timeout: 60000,
+    });
     await page.keyboard.press('Escape');
     assert.equal(await page.evaluate(() => document.activeElement.id), 'overview-preview');
     const download = page.waitForEvent('download');
@@ -96,7 +108,11 @@ async function checkBrowserProgramExtras(browser, url, output) {
       'noopener noreferrer',
     );
     assert(!requests.some((u) => u.includes('youtube-nocookie.com')));
-    await page.screenshot({ path: output + '/official-video-mobile.png' });
+    await page.screenshot({
+      path: output + '/official-video-mobile.png',
+      animations: 'disabled',
+      timeout: 60000,
+    });
     assert.equal(await page.evaluate(() => document.body.scrollWidth), 390);
     await page.click('#shell-nav-catalog');
     await page.waitForFunction(() => !document.querySelector('#live-video-frame iframe'));
