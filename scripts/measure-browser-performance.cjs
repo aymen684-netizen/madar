@@ -184,6 +184,13 @@ const server = http.createServer((req, res) => {
           startupFullCatalogRequests: performance
             .getEntriesByType('resource')
             .filter((entry) => /\/satellite-metadata\.json/.test(entry.name)).length,
+          startupFullBoundaryRequests: performance
+            .getEntriesByType('resource')
+            .filter((entry) => /\/data\/countries\.json/.test(entry.name)).length,
+          startupBoundaryBytes: performance
+            .getEntriesByType('resource')
+            .filter((entry) => /\/data\/(countries|country-index|sa-border)\.json/.test(entry.name))
+            .reduce((sum, entry) => sum + entry.decodedBodySize, 0),
         };
       });
       result.readyMs = readyMs;
@@ -214,6 +221,8 @@ const server = http.createServer((req, res) => {
       if (candidate) {
         assert(result.startupIdentityBytes > 0 && result.startupIdentityBytes < 1500000);
         assert.equal(result.startupFullCatalogRequests, 0);
+        assert.equal(result.startupFullBoundaryRequests, 0);
+        assert(result.startupBoundaryBytes > 0 && result.startupBoundaryBytes < 40000);
       }
       samples.push(result);
       await context.close();
@@ -224,6 +233,7 @@ const server = http.createServer((req, res) => {
       medianUpdateMs: median(samples.map((sample) => sample.medianUpdateMs)),
       prepareMs: median(samples.map((sample) => sample.prepareMs)),
       startupIdentityBytes: samples[0].startupIdentityBytes,
+      startupBoundaryBytes: samples[0].startupBoundaryBytes,
       medianTranslationSetupMs: median(samples.map((sample) => sample.lab.translationSetupMs)),
       samples,
     };

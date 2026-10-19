@@ -46,6 +46,7 @@ for (const entry of JSON.parse(
   fs.writeFileSync(target, restored);
 }
 console.log('Prepared orbital data and vendor libraries');
+await import('./prepare-country-index.mjs');
 
 // Keep full source fields available on demand, without parsing them on startup.
 const metadataPath = new URL('../public/data/satellite-metadata.json', import.meta.url);

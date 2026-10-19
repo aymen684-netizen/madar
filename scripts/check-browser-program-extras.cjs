@@ -21,7 +21,6 @@ async function checkBrowserProgramExtras(browser, url, output) {
     }),
   );
   try {
-    await page.clock.install();
     await page.goto(url);
     await page.waitForFunction(
       () => window.MadarDataRefresh && objects.length === 1 && selection.current,
@@ -117,28 +116,53 @@ async function checkBrowserProgramExtras(browser, url, output) {
     await page.click('#shell-nav-catalog');
     await page.waitForFunction(() => !document.querySelector('#live-video-frame iframe'));
     assert(await page.locator('#live-video-panel').isHidden());
-    const frozen = await page.evaluate(() => {
-      fixedTime = new Date(OrbitData.epoch(selection.current));
-      update();
-      return { time: +dateNow(), points: world.pointsData().map(({ lat, lng }) => [lat, lng]) };
-    });
-    const sourceRequests = requests.filter(
-      (u) => u.includes('celestrak.org') || u.includes('/api/orbits'),
-    ).length;
-    await page.clock.fastForward(6 * 60000);
-    assert((await page.locator('#health-age').textContent()).includes('23.1'));
-    assert((await page.locator('#health-distance').textContent()).includes('0.0'));
-    assert.deepEqual(
-      await page.evaluate(() => ({
-        time: +dateNow(),
-        points: world.pointsData().map(({ lat, lng }) => [lat, lng]),
-      })),
-      frozen,
-    );
-    assert.equal(
-      requests.filter((u) => u.includes('celestrak.org') || u.includes('/api/orbits')).length,
-      sourceRequests,
-    );
+    // Capture visual previews with the native compositor clock. Keep the six-minute
+    // timer jump in its own context, installed before navigation, without screenshots.
+    const timedContext = await browser.newContext({ viewport: { width: 390, height: 844 } });
+    try {
+      const timedPage = await timedContext.newPage(),
+        timedErrors = [],
+        timedRequests = [];
+      timedPage.on('pageerror', (error) => timedErrors.push(error.message));
+      timedPage.on('request', (request) => timedRequests.push(request.url()));
+      await timedPage.clock.install();
+      await timedPage.route('https://celestrak.org/**', (route) =>
+        route.fulfill({
+          contentType: 'application/json',
+          body: JSON.stringify([fixture]),
+        }),
+      );
+      await timedPage.goto(url);
+      await timedPage.waitForFunction(
+        () => window.MadarDataRefresh && world && objects.length === 1 && selection.current,
+      );
+      const frozen = await timedPage.evaluate(() => {
+        fixedTime = new Date(OrbitData.epoch(selection.current));
+        update();
+        return { time: +dateNow(), points: world.pointsData().map(({ lat, lng }) => [lat, lng]) };
+      });
+      const sourceRequests = timedRequests.filter(
+        (u) => u.includes('celestrak.org') || u.includes('/api/orbits'),
+      ).length;
+      await timedPage.clock.fastForward(6 * 60000);
+      assert((await timedPage.locator('#health-age').textContent()).includes('23.1'));
+      assert((await timedPage.locator('#health-distance').textContent()).includes('0.0'));
+      assert.deepEqual(
+        await timedPage.evaluate(() => ({
+          time: +dateNow(),
+          points: world.pointsData().map(({ lat, lng }) => [lat, lng]),
+        })),
+        frozen,
+      );
+      assert.equal(
+        timedRequests.filter((u) => u.includes('celestrak.org') || u.includes('/api/orbits'))
+          .length,
+        sourceRequests,
+      );
+      assert.deepEqual(timedErrors, []);
+    } finally {
+      await timedContext.close();
+    }
     console.log(
       'PASS: fixed display keeps orbital positions frozen while the minute timer refreshes real element age without source requests',
     );
