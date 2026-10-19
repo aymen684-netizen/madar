@@ -740,11 +740,19 @@ function updateGlobeCard() {
   if (selection.current) window.MapFleet?.card(selection.current);
   satelliteCard.renderFloating(selection.current, { now: dateNow(), tracking: selection.tracking });
 }
-$('globe-card-close').onclick = () => {
+function closeGlobeCard() {
+  const returnFocus = $('globe-card').contains(document.activeElement);
   satelliteCard.hide();
-};
+  if (returnFocus) $('map-tools-open')?.focus({ preventScroll: true });
+}
+$('globe-card-close').onclick = closeGlobeCard;
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') satelliteCard.hide();
+  if (
+    e.key === 'Escape' &&
+    !document.querySelector('dialog[open]') &&
+    !window.ObserverMapPicker?.active()
+  )
+    closeGlobeCard();
 });
 window.addEventListener('resize', positionGlobeCard);
 window.addEventListener('scroll', positionGlobeCard, { passive: true });

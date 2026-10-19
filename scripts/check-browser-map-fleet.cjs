@@ -41,7 +41,7 @@ async function checkBrowserMapFleet(browser, url, output) {
         await page.fill('#search', 'FLEET TEST ' + String(i).padStart(2, '0'));
         await page.locator('#list button[data-satellite-id="' + (100000 + i) + '"]').click();
         if (i === 1) {
-          if (mobile) await page.click('#shell-card-expand');
+          await page.click('#shell-card-expand');
           const buttons = await page.evaluate(() =>
             ['globe-card-favorite', 'globe-card-fleet', 'globe-card-source', 'track-selected'].map(
               (id) => {

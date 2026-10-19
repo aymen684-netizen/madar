@@ -2015,5 +2015,13 @@
   "تعذّر حساب المدار؛ لا تتوفر نتيجة موثوقة.": "Orbit calculation failed; no reliable result is available.",
   "تعذّر حساب بعض أقمار المجموعة؛ النتيجة تشمل الأقمار التي نجح حسابها فقط.": "Some group satellites could not be calculated; the result covers only successfully calculated satellites.",
   "ملخص الرصد ومجموعة الخارطة": "Observing overview and map group",
-  "الوقت": "Time"
+  "الوقت": "Time",
+  "تاريخ بيانات المدار غير متاح؛ لا يمكن تقييم دقة التقدير.": "Orbital data time is unavailable; estimate quality cannot be assessed.",
+  "الفارق عن وقت بيانات المدار:": "Difference from orbital data time:",
+  "قد تقل دقة الموقع.": "Position accuracy may be lower.",
+  "الموقع تقديري.": "Position is an estimate.",
+  "صيغة بيانات المدار:": "Orbital data format:",
+  "وقت بيانات المدار:": "Orbital data time:",
+  "تاريخ بيانات المدار غير متاح": "Orbital data time is unavailable",
+  "الفارق بين وقت العرض ووقت بيانات المدار، وليس وقت آخر جلب.": "Difference between display time and orbital data time, not the last retrieval time."
 }

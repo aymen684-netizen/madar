@@ -31,6 +31,7 @@
       key === 'orbit-favorites' ||
       key === 'madar-draft-v1' ||
       key === 'madar-observer-sites-v1' ||
+      key === 'madar-card-details' ||
       key.startsWith('orbit-cache-')
     );
   }

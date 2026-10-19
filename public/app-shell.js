@@ -158,13 +158,24 @@
   expand.id = 'shell-card-expand';
   expand.type = 'button';
   expand.setAttribute('aria-expanded', 'false');
+  expand.setAttribute('aria-controls', 'globe-card-technical');
   const card = $('globe-card');
   card.dataset.expanded = 'false';
-  card.insertBefore(expand, card.firstChild);
-  function expanded(value) {
+  card.insertBefore(expand, $('globe-card-technical'));
+  function expanded(value, save = true) {
     card.dataset.expanded = String(value);
     expand.setAttribute('aria-expanded', String(value));
     expand.textContent = value ? 'اختصار البطاقة' : 'عرض التفاصيل';
+    $('globe-card-technical').hidden = !value;
+    if (save)
+      try {
+        window.Privacy?.localSet('madar-card-details', String(value));
+      } catch {}
+  }
+  try {
+    expanded(window.Privacy?.localGet('madar-card-details') === 'true', false);
+  } catch {
+    expanded(false, false);
   }
   let skipClick = false;
   expand.onclick = () => {

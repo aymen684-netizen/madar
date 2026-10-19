@@ -84,6 +84,7 @@ const data = new Map([
   ['orbit-cache-active', 'old'],
   ['madar-draft-v1', 'old'],
   ['madar-observer-sites-v1', 'old'],
+  ['madar-card-details', 'true'],
 ]);
 const ls = {
   getItem: (k) => data.get(k) ?? null,
@@ -118,6 +119,7 @@ assert.equal(data.get('other-app-data'), 'keep');
 assert(!data.has('orbit-favorites'));
 assert(!data.has('madar-draft-v1'));
 assert(!data.has('madar-observer-sites-v1'));
+assert(!data.has('madar-card-details'));
 assert(!data.has('orbit-cache-active'));
 assert(!privacy.persistent());
 assert(!stalePrivacy.persistent());

@@ -51,6 +51,10 @@ assert.equal(
 );
 assert(!I.translate('زمن غير منشور', 'en').includes('From'));
 assert.equal(I.translate('عرض 12 من 50 نتيجة', 'en'), 'Showing 12 of 50 results');
+assert.equal(
+  I.translate('الفارق عن وقت بيانات المدار: 96.0 ساعة · قد تقل دقة الموقع.', 'en'),
+  'Difference from orbital data time: 96.0 hours · Position accuracy may be lower.',
+);
 assert.equal(I.translate('عرض 10.2°، طول -3.4°', 'en'), 'Latitude 10.2°, longitude -3.4°');
 assert.equal(I.translate('مدار · تقارير 34', 'en'), 'Madar · Reports 34');
 assert.equal(I.translate('اليوم: Saturday', 'en'), 'Day: Saturday');

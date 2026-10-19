@@ -62,6 +62,8 @@ const server = http.createServer((req, res) => {
   };
   try {
     if (includes('observing') || smoke) {
+      const { checkBrowserSatelliteSummary } = require('./check-browser-satellite-summary.cjs');
+      await checkBrowserSatelliteSummary(browser, baseUrl, output);
       const { checkBrowserBoundaries } = require('./check-browser-boundaries.cjs');
       await checkBrowserBoundaries(browser, baseUrl, output);
       const { checkBrowserReportGuidance } = require('./check-browser-report-guidance.cjs');

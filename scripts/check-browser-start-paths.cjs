@@ -62,7 +62,7 @@ async function checkBrowserStartPaths(browser, url, output) {
           assert.equal(await page.evaluate(() => document.activeElement.id), 'search');
           await page.locator('#list button').first().click();
           await page.waitForFunction(() => !document.getElementById('globe-card').hidden);
-          if (mobile) await page.click('#shell-card-expand');
+          await page.click('#shell-card-expand');
           await page.click('#globe-card-source');
           await page.waitForFunction(() => SatMetadata.detailsLoaded());
           assert.equal(await page.locator('#sat-operator').innerText(), 'SpaceX');
