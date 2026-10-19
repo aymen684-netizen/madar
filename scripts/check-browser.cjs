@@ -54,6 +54,8 @@ const server = http.createServer((req, res) => {
     return context;
   };
   try {
+    const { checkBrowserObserverSites } = require('./check-browser-observer-sites.cjs');
+    await checkBrowserObserverSites(browser, baseUrl, output);
     if (process.env.MADAR_BROWSER_SMOKE === '1') {
       const { checkBrowserStartup } = require('./check-browser-startup.cjs');
       const { checkBrowserStartPaths } = require('./check-browser-start-paths.cjs');

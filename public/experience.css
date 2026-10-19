@@ -40,6 +40,42 @@ body.startup {
   gap: 10px;
   flex-shrink: 0;
 }
+.observer-sites {
+  grid-column: 1 / -1;
+  min-width: 0;
+  margin: 0 0 12px;
+  padding: 14px;
+  border: 1px solid #38586c;
+  border-radius: 14px;
+}
+.observer-sites legend {
+  padding: 0 6px;
+  color: #96ebd5;
+}
+.observer-sites select {
+  width: 100%;
+  min-width: 0;
+}
+.observer-sites-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+.observer-sites-actions button {
+  flex: 1 1 150px;
+  min-height: 44px;
+  font: inherit;
+}
+.observer-sites p {
+  margin: 10px 0 0;
+  font-size: 13px;
+  line-height: 1.8;
+  color: #c1d5e5;
+}
+.observer-sites .observer-sites-status:empty {
+  display: none;
+}
 .madar-mark {
   display: block;
   border-radius: 12px;

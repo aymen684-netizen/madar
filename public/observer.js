@@ -5,6 +5,29 @@
     token = 0,
     url = null;
   const e = (id) => document.getElementById('observer-' + id);
+  ObserverSites.mount(e('form'), {
+    prefix: 'observer',
+    nameInput: e('name'),
+    read: () => ({
+      lat: e('lat').value,
+      lon: e('lon').value,
+      height: e('height').value,
+      minElevation: e('elevation').value,
+      zone: e('zone').value,
+    }),
+    apply: (site) => {
+      for (const [key, value] of Object.entries({
+        lat: site.lat,
+        lon: site.lon,
+        height: site.height,
+        elevation: site.minElevation,
+        zone: site.zone,
+      })) {
+        e(key).value = value;
+        e(key).dispatchEvent(new Event('input', { bubbles: true }));
+      }
+    },
+  });
   function busy(v) {
     e('form').setAttribute('aria-busy', String(v));
     for (const n of e('form').querySelectorAll('input,select,button')) n.disabled = v;
