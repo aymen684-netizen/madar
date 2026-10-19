@@ -51,6 +51,16 @@ async function checkBrowserObservingOverview(browser, url, output) {
       await page.waitForSelector('#observing-overview');
       assert.equal(await page.locator('#observing-count').innerText(), '1 / 12');
       assert(await page.locator('#observing-sky').isDisabled());
+      for (const language of [mobile ? 'ar' : 'en', mobile ? 'en' : 'ar']) {
+        await page.click('#map-tools-close');
+        await page.click('#language-toggle');
+        await page.waitForFunction((lang) => document.documentElement.lang === lang, language);
+        await page.click('#map-fleet-open');
+        assert.equal(
+          await page.locator('#observing-site').innerText(),
+          language === 'en' ? 'No calculation site has been set yet.' : 'لم يُحدد موقع للحساب بعد.',
+        );
+      }
       await page.fill('#fleet-pass-height', '123');
       await page.selectOption('#fleet-pass-zone', '0');
       await page.click('#fleet-pass-city-picker>summary');

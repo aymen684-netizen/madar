@@ -407,7 +407,10 @@
   document.addEventListener('madar-fleet', () =>
     invalidate('تغيّرت مجموعة الخارطة أو عناصرها؛ أعد حساب المرور.'),
   );
-  document.addEventListener('madar-language', tick);
+  document.addEventListener('madar-language', () => {
+    updateOverview();
+    tick();
+  });
   document.addEventListener('visibilitychange', sync);
   document.addEventListener('madar-route', sync);
   panel.addEventListener('toggle', sync);
