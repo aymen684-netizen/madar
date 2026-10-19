@@ -33,7 +33,7 @@
       for (const file of ['fleet-pass-core.js', 'fleet-experience.js', 'fleet-passes.js']) {
         await new Promise((resolve, reject) => {
           const script = document.createElement('script');
-          script.src = file + '?v=74';
+          script.src = file + '?v=77';
           script.onload = resolve;
           script.onerror = () => {
             script.remove();

@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import worker from '../worker/index.js';
 import './check-branding.mjs';
+import './check-observer-sites.mjs';
 for (const name of fs.readdirSync('public').filter((n) => n.endsWith('.js'))) {
   const r = spawnSync(process.execPath, ['--check', 'public/' + name]);
   assert.equal(r.status, 0, name + ' syntax');

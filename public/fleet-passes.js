@@ -9,8 +9,16 @@
   host.id = 'fleet-passes';
   host.setAttribute('aria-labelledby', 'fleet-pass-heading');
   host.innerHTML =
-    '<h3 id="fleet-pass-heading">المرور القادم لمجموعة الخارطة</h3><p>اختر موقع الحساب. لا يُطلب موقع جهازك ولا تُرسل الإحداثيات؛ تبقى مدخلات هذه اللوحة لهذه الجلسة.</p><form id="fleet-pass-form"><div class="fleet-site-grid"><label>خط العرض بالدرجات<input id="fleet-pass-lat" type="number" min="-90" max="90" step="any" required></label><label>خط الطول بالدرجات<input id="fleet-pass-lon" type="number" min="-180" max="180" step="any" required></label><label>ارتفاع الموقع عن مرجع WGS84 بالمتر<input id="fleet-pass-height" type="number" min="-500" max="9000" value="0" step="any" required></label><label>أقل زاوية ارتفاع فوق الأفق<input id="fleet-pass-elevation" type="number" min="0" max="89" value="10" step="any" required></label><label>التوقيت<select id="fleet-pass-zone"><option value="3">الرياض UTC+03:00</option><option value="0">UTC</option></select></label></div><button id="fleet-pass-run" type="submit">حساب المرور القادم · 24 ساعة</button><button id="fleet-pass-cancel" type="button" disabled>إلغاء الحساب</button></form><p id="fleet-pass-status" role="status" aria-live="polite">أدخل موقع الحساب ثم احسب مرور المجموعة.</p><p id="fleet-pass-window"></p><ol id="fleet-pass-list"></ol><div class="fleet-pass-actions"><button id="fleet-pass-country" type="button">استخدام المجموعة في تقرير البلد</button><button id="fleet-pass-observer" type="button">تقرير موقع الرصد للمجموعة</button></div><p>الحساب من وقت الخارطة وبالعناصر المتاحة، بخطوة 10 ثوانٍ. قد تفوت حالات أقصر من الخطوة. المرور هندسي ولا يضمن الرؤية أو التصوير أو الاتصال. يتوقف الحساب والعدّ عند إخفاء اللوحة؛ أعد الحساب لتحديث نافذة التنبؤ.</p>';
+    '<h3 id="fleet-pass-heading">المرور القادم لمجموعة الخارطة</h3><p>اختر موقع الحساب. يمكنك حفظ موقع مسمى لاستخدامه لاحقًا وفق إعداد الحفظ على الجهاز. لا يُطلب موقع جهازك ولا تُرسل الإحداثيات.</p><form id="fleet-pass-form"><div class="fleet-site-grid"><label>خط العرض بالدرجات<input id="fleet-pass-lat" type="number" min="-90" max="90" step="any" required></label><label>خط الطول بالدرجات<input id="fleet-pass-lon" type="number" min="-180" max="180" step="any" required></label><label>ارتفاع الموقع عن مرجع WGS84 بالمتر<input id="fleet-pass-height" type="number" min="-500" max="9000" value="0" step="any" required></label><label>أقل زاوية ارتفاع فوق الأفق<input id="fleet-pass-elevation" type="number" min="0" max="89" value="10" step="any" required></label><label>التوقيت<select id="fleet-pass-zone"><option value="3">الرياض UTC+03:00</option><option value="0">UTC</option></select></label></div><button id="fleet-pass-run" type="submit">حساب المرور القادم · 24 ساعة</button><button id="fleet-pass-cancel" type="button" disabled>إلغاء الحساب</button></form><p id="fleet-pass-status" role="status" aria-live="polite">أدخل موقع الحساب ثم احسب مرور المجموعة.</p><p id="fleet-pass-window"></p><ol id="fleet-pass-list"></ol><div class="fleet-pass-actions"><button id="fleet-pass-country" type="button">استخدام المجموعة في تقرير البلد</button><button id="fleet-pass-observer" type="button">تقرير موقع الرصد للمجموعة</button></div><p>الحساب من وقت الخارطة وبالعناصر المتاحة، بخطوة 10 ثوانٍ. قد تفوت حالات أقصر من الخطوة. المرور هندسي ولا يضمن الرؤية أو التصوير أو الاتصال. يتوقف الحساب والعدّ عند إخفاء اللوحة؛ أعد الحساب لتحديث نافذة التنبؤ.</p>';
   panel.append(host);
+  const siteName = document.createElement('label'),
+    nameInput = document.createElement('input');
+  siteName.textContent = 'اسم الموقع';
+  nameInput.id = 'fleet-pass-name';
+  nameInput.maxLength = 80;
+  nameInput.placeholder = 'اسم تختاره للموقع';
+  siteName.append(nameInput);
+  host.querySelector('.fleet-site-grid').prepend(siteName);
   const experience = FleetExperience.mount(host, {
     stamp,
     openPass: (pass, object) => PassMap.show(pass, object),
@@ -28,6 +36,28 @@
     source = [],
     timer = null,
     intersecting = false;
+  ObserverSites.mount(form, {
+    prefix: 'fleet-pass',
+    nameInput,
+    read: () => ({
+      lat: $('fleet-pass-lat').value,
+      lon: $('fleet-pass-lon').value,
+      height: $('fleet-pass-height').value,
+      minElevation: $('fleet-pass-elevation').value,
+      zone: $('fleet-pass-zone').value,
+    }),
+    apply: (site) => {
+      for (const [key, value] of Object.entries({
+        lat: site.lat,
+        lon: site.lon,
+        height: site.height,
+        elevation: site.minElevation,
+        zone: site.zone,
+      }))
+        $('fleet-pass-' + key).value = value;
+      invalidate('تغيّر موقع الحساب؛ أعد حساب المرور.');
+    },
+  });
   function visible() {
     return (
       !document.hidden &&
@@ -38,6 +68,7 @@
     );
   }
   function busy(value) {
+    form.setAttribute('aria-busy', String(value));
     $('fleet-pass-run').disabled = value || !MapFleet.size;
     $('fleet-pass-cancel').disabled = !value;
   }
@@ -64,7 +95,7 @@
   function site() {
     const value = (id) => ($(id).value.trim() === '' ? NaN : Number($(id).value));
     return {
-      name: 'موقع الرصد',
+      name: nameInput.value.trim() || 'موقع الرصد',
       lat: value('fleet-pass-lat'),
       lon: value('fleet-pass-lon'),
       height: value('fleet-pass-height'),
@@ -232,7 +263,16 @@
     }
   };
   form.addEventListener('input', (event) => {
-    if (event.target.id !== 'fleet-pass-zone') invalidate('تغيّر موقع الحساب؛ أعد حساب المرور.');
+    if (
+      [
+        'fleet-pass-name',
+        'fleet-pass-lat',
+        'fleet-pass-lon',
+        'fleet-pass-height',
+        'fleet-pass-elevation',
+      ].includes(event.target.id)
+    )
+      invalidate('تغيّر موقع الحساب؛ أعد حساب المرور.');
   });
   $('fleet-pass-zone').onchange = tick;
   $('fleet-pass-cancel').onclick = () => invalidate('أُلغي حساب المرور القادم.');
@@ -249,6 +289,7 @@
       if (!form.reportValidity()) return;
       const a = site();
       for (const [key, value] of Object.entries({
+        name: nameInput.value,
         lat: a.lat,
         lon: a.lon,
         height: a.height,
