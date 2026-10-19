@@ -49,7 +49,16 @@ async function checkBrowserMapSite(browser, baseUrl, output) {
       assert(r.overflow <= 2, id + ' has no horizontal overflow');
     }
     async function camera() {
-      await page.evaluate(() => world.pointOfView({ lat: 25, lng: 45, altitude: 2.4 }, 0));
+      await page.evaluate(() => {
+        const controls = world.controls(),
+          damping = controls.enableDamping;
+        // Consume drag inertia before projecting the next exact test coordinate.
+        controls.enableDamping = false;
+        controls.update();
+        world.pointOfView({ lat: 25, lng: 45, altitude: 2.4 }, 0);
+        controls.update();
+        controls.enableDamping = damping;
+      });
       await page.waitForTimeout(250);
     }
     async function tap(lat, lng) {
