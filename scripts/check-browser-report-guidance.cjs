@@ -43,6 +43,11 @@ async function checkBrowserReportGuidance(browser, baseUrl, output) {
       await visible('report-country');
       assert(!(await page.locator('#report-start-date').isVisible()));
       assert(!(await page.locator('#report-run').isVisible()));
+      assert.equal(
+        await page.locator('fieldset#report-scope-step').count(),
+        0,
+        'the old empty fieldset is removed',
+      );
       await next('report');
       await visible('report-start-date');
       await page.fill('#report-start-date', '2026-10-19');

@@ -256,7 +256,11 @@
       const term = document.createElement('dt'),
         value = document.createElement('dd'),
         text = document.createElement('bdi');
-      term.textContent = T(name.trim());
+      term.textContent =
+        T(name.trim()) +
+        (['date', 'time'].includes(input.type)
+          ? ' · ' + T(input.type === 'date' ? 'التاريخ' : 'الوقت')
+          : '');
       text.dataset.noTranslate = '';
       text.dir = 'auto';
       text.textContent =
@@ -299,6 +303,8 @@
     state.back.hidden = !state.guided || state.index === 0;
     state.next.hidden = !state.guided || state.index === last;
     state.run.hidden = state.guided && state.index !== last;
+    if (state.config.key === 'report')
+      $('report-action-title').hidden = state.guided && state.index !== last;
     state.toggle.disabled = state.back.disabled = state.next.disabled = busy(state);
     if (state.guided && state.index === last) summary(state);
   }
@@ -398,6 +404,11 @@
     state.back = back;
     state.next = next;
     // All fields remain the original nodes in the original form; no alternate calculation path.
+    if (config.key === 'report') {
+      const legacy = $('report-scope-step');
+      if (legacy && !legacy.querySelector('input,select,textarea')) legacy.remove();
+      container.id = 'report-scope-step';
+    }
     for (const grid of form.querySelectorAll(':scope > .report-grid'))
       if (!grid.children.length) grid.remove();
     form.prepend(header, nav, container, footer);
