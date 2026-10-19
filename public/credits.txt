@@ -7,6 +7,9 @@ Earth texture: NASA Blue Marble, distributed in three-globe examples.
 Optional 8192x4096 Earth texture: NASA / Reto Stockli (land surface, ocean color and sea ice), converted from PNG to JPEG at quality 72 without upscaling. Source: https://eoimages.gsfc.nasa.gov/images/imagerecords/57000/57730/land_ocean_ice_8192.png
 Earth and sky assets: https://github.com/vasturiano/three-globe/tree/master/example/img
 Independent application; not affiliated with KeepTrack.
+Local city picker: 27 approximate populated-place points from Natural Earth 1:10m populated places simple, public domain. Coordinates copied without modification; Arabic labels curated for this app. These are city points, not street-level observing locations or elevations.
+Source: https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_10m_populated_places_simple.geojson
+Retrieved 2026-10-19; source SHA-256 fd3fa867a320cbd5c5b6bb5bc550afeec2939fb2cef688e508007282a55ac42f. Terms: https://www.naturalearthdata.com/about/terms-of-use/
 Country boundaries: Natural Earth 1:50m, public domain; world-atlas 2.0.2 (ISC).
 Country ISO mapping: datasets/country-codes.
 Word export: docx 9.5.1 (MIT), https://github.com/dolanmiu/docx

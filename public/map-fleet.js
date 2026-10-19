@@ -33,7 +33,7 @@
       for (const file of ['fleet-pass-core.js', 'fleet-experience.js', 'fleet-passes.js']) {
         await new Promise((resolve, reject) => {
           const script = document.createElement('script');
-          script.src = file + '?v=77';
+          script.src = file + '?v=80';
           script.onload = resolve;
           script.onerror = () => {
             script.remove();
@@ -50,8 +50,8 @@
   const open = document.createElement('button');
   open.id = 'map-fleet-open';
   open.type = 'button';
-  open.title = 'مجموعة الخارطة';
-  open.setAttribute('aria-label', 'مجموعة الخارطة');
+  open.title = 'ملخص الرصد ومجموعة الخارطة';
+  open.setAttribute('aria-label', 'ملخص الرصد ومجموعة الخارطة');
   $('map-floating-tools').insertBefore(open, $('map-floating-tools').querySelector('.controls'));
   open.onclick = () => {
     MobileMap.open('search');

@@ -6,6 +6,7 @@
     id: () => root.crypto?.randomUUID?.() || Date.now().toString(36) + '-' + ++serial,
   });
   function mount(form, { prefix, read, apply, nameInput }) {
+    let cityPicker = null;
     const fieldset = document.createElement('fieldset');
     fieldset.className = 'observer-sites';
     fieldset.innerHTML =
@@ -41,6 +42,7 @@
       return form.getAttribute('aria-busy') === 'true';
     }
     function sync() {
+      cityPicker?.sync();
       const selected = select.value;
       select.replaceChildren();
       const empty = document.createElement('option');
@@ -110,6 +112,16 @@
     document.addEventListener('madar-observer-sites', sync);
     new MutationObserver(sync).observe(form, { attributes: true, attributeFilter: ['aria-busy'] });
     form.prepend(fieldset);
+    cityPicker = root.ObserverCities.mount(fieldset, {
+      prefix,
+      locked,
+      apply: (city) => {
+        nameInput.value = city.name;
+        apply({ ...read(), lat: city.lat, lon: city.lon });
+        nameInput.dispatchEvent(new Event('input', { bubbles: true }));
+        nameInput.dispatchEvent(new Event('change', { bubbles: true }));
+      },
+    });
     nameInput.dir = 'auto';
     sync();
     return { sync };

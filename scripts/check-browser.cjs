@@ -56,6 +56,8 @@ const server = http.createServer((req, res) => {
   try {
     const { checkBrowserReportGuidance } = require('./check-browser-report-guidance.cjs');
     await checkBrowserReportGuidance(browser, baseUrl, output);
+    const { checkBrowserObservingOverview } = require('./check-browser-observing-overview.cjs');
+    await checkBrowserObservingOverview(browser, baseUrl, output);
     const { installReportNavigation } = require('./browser-report-navigation.cjs');
     await installReportNavigation(browser);
     const { checkBrowserMapSite } = require('./check-browser-map-site.cjs');
