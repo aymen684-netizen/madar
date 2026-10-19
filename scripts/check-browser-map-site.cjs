@@ -88,6 +88,14 @@ async function checkBrowserMapSite(browser, baseUrl, output) {
       );
       await page.evaluate(() => MadarI18n.ready);
       await page.click('#shell-nav-reports');
+      const timeWidth = await page.locator('#report-start-time').evaluate((input) => ({
+        time: input.getBoundingClientRect().width,
+        date: input.closest('label').querySelector('.date-entry').getBoundingClientRect().width,
+      }));
+      assert(
+        timeWidth.time >= 125 && timeWidth.time >= timeWidth.date - 2,
+        'time keeps the full input column width',
+      );
       await page.click('#shell-report-observer');
       await inline('observer-lat', 'rtl');
       await inline('observer-date', 'rtl');
