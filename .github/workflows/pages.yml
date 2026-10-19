@@ -24,7 +24,7 @@ jobs:
       - name: Prepare assets and check application
         run: npm run check
       - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: public
       - name: Deploy
