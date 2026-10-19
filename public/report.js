@@ -88,6 +88,12 @@ async function initReport() {
         return;
       }
       if (select.value !== selectedId) return;
+      const status = reportEl('report-status');
+      if (
+        (window.MadarI18n?.original(status) || status.textContent) ===
+        'تعذّر تحميل حدود البلدان. حدّث الصفحة لإعادة المحاولة.'
+      )
+        status.textContent = '';
       if (world && c) {
         world
           .polygonsData([c])

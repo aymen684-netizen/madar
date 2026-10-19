@@ -39,10 +39,16 @@ async function checkBrowserBoundaries(browser, baseUrl, output) {
       assert.equal(attempts, 0, 'map startup never downloads full country boundaries');
       await page.waitForFunction(() => world.polygonsData()[0]?.id === '682');
       assert(await page.locator('#globe-card').isHidden());
+      if (mobile) {
+        await page.click('#language-toggle');
+        await page.waitForFunction(() => document.documentElement.lang === 'en');
+      }
       await page.click('#shell-nav-reports');
       await page.selectOption('#report-country', '840');
       await page.waitForFunction(() =>
-        document.getElementById('report-status').textContent.includes('تعذّر تحميل حدود البلدان'),
+        MadarI18n.original(document.getElementById('report-status')).includes(
+          'تعذّر تحميل حدود البلدان',
+        ),
       );
       await Promise.all([
         page.waitForRequest('**/data/countries.json'),
@@ -60,6 +66,7 @@ async function checkBrowserBoundaries(browser, baseUrl, output) {
       );
       await page.selectOption('#report-country', '840');
       await page.waitForFunction(() => world.polygonsData()[0]?.id === '840');
+      assert.equal(await page.locator('#report-status').innerText(), '');
       assert.equal(attempts, 2, 'successful full boundaries are reused after one failed attempt');
       const countries = await page.evaluate(() => ({
         count: document.getElementById('analysis-country').options.length,
