@@ -4,7 +4,8 @@
     $ = (id) => document.getElementById(id);
   let countriesReady = false,
     latest = null;
-  const nodes = new Map(),
+  const configured = new WeakSet(),
+    nodes = new Map(),
     compiled = new Map();
   function flags() {
     return $('marker-style')?.value === 'flag';
@@ -90,12 +91,11 @@
     const ids = new Set(data.map((d) => d.id));
     for (const id of nodes.keys()) if (!ids.has(id)) nodes.delete(id);
     const site = root.ObserverMapPicker?.markerData();
-    w.htmlLat('lat')
-      .htmlLng('lng')
-      .htmlAltitude(markerAltitude)
-      .htmlElement(markerElement)
-      .htmlTransitionDuration(duration)
-      .htmlElementsData(site ? [...data, site] : data);
+    if (!configured.has(w)) {
+      w.htmlLat('lat').htmlLng('lng').htmlAltitude(markerAltitude).htmlElement(markerElement);
+      configured.add(w);
+    }
+    w.htmlTransitionDuration(duration).htmlElementsData(site ? [...data, site] : data);
     for (const p of data) marker(p);
     updateStatus(matches);
   }
@@ -119,8 +119,8 @@
     }
     syncCountry();
   }
-  // The globe rebuilds its HTML layer when the element callback changes.
-  // Stable callbacks preserve existing marker nodes across position updates.
+  // The globe rebuilds its HTML layer whenever the element setter is called,
+  // even with the same callback; install these accessors once per renderer.
   function markerAltitude(d) {
     return d.observerSite ? 0.004 : d.alt;
   }
