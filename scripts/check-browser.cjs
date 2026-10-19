@@ -54,6 +54,8 @@ const server = http.createServer((req, res) => {
     return context;
   };
   try {
+    const { checkBrowserBoundaries } = require('./check-browser-boundaries.cjs');
+    await checkBrowserBoundaries(browser, baseUrl, output);
     const { checkBrowserReportGuidance } = require('./check-browser-report-guidance.cjs');
     await checkBrowserReportGuidance(browser, baseUrl, output);
     const { checkBrowserObservingOverview } = require('./check-browser-observing-overview.cjs');

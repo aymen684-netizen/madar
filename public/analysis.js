@@ -184,7 +184,14 @@ ae('analysis-form').onsubmit = async (e) => {
   const token = ++analyticToken;
   try {
     const windows = readPeriods(),
-      country = reportCountries.find((f) => f.id === ae('analysis-country').value);
+      countryId = ae('analysis-country').value;
+    // Lock before a deferred boundary request so repeated submits cannot race.
+    analysisLock(true);
+    const country = await window.CountryBoundaries.country(
+      countryId,
+      reportCountries.find((f) => f.id === countryId),
+    );
+    if (token !== analyticToken) return;
     if (!country) throw Error('اختر البلد.');
     const scope = ae('analysis-scope').value,
       offset = Number(ae('analysis-zone').value),

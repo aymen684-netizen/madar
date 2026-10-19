@@ -56,11 +56,9 @@ async function initReport() {
   reportEl('report-start-date').onchange = reportDay;
   reportEl('report-run').disabled = true;
   try {
-    const r = await fetch('data/countries.json');
-    if (!r.ok) throw Error();
-    const geo = await r.json(),
+    const features = await window.CountryBoundaries.index(),
       names = new Intl.DisplayNames(['ar'], { type: 'region' });
-    reportCountries = geo.features
+    reportCountries = features
       .map((f) => ({
         ...f,
         displayName: f.properties.iso2 ? names.of(f.properties.iso2) : f.properties.name,
@@ -75,8 +73,21 @@ async function initReport() {
       select.append(opt);
     }
     select.value = '682';
-    select.onchange = () => {
-      const c = reportCountries.find((f) => f.id === select.value);
+    select.onchange = async () => {
+      const selectedId = select.value;
+      let c;
+      try {
+        c = await window.CountryBoundaries.country(
+          selectedId,
+          reportCountries.find((f) => f.id === selectedId),
+        );
+      } catch {
+        if (select.value === selectedId)
+          reportEl('report-status').textContent =
+            'تعذّر تحميل حدود البلدان. حدّث الصفحة لإعادة المحاولة.';
+        return;
+      }
+      if (select.value !== selectedId) return;
       if (world && c) {
         world
           .polygonsData([c])
@@ -118,7 +129,12 @@ reportEl('report-form').onsubmit = async (e) => {
     if (end <= start) throw Error('نهاية الفترة يجب أن تكون بعد بدايتها.');
     if (end - start > 7 * 86400000)
       throw Error('الحد الأقصى للتقرير الشامل 7 أيام. قسّم الفترة الأطول إلى تقارير مستقلة.');
-    const country = reportCountries.find((f) => f.id === reportEl('report-country').value);
+    const countryId = reportEl('report-country').value;
+    const country = await window.CountryBoundaries.country(
+      countryId,
+      reportCountries.find((f) => f.id === countryId),
+    );
+    if (token !== reportToken) return;
     if (!country) throw Error('اختر البلد.');
     const scope = reportEl('report-scope').value,
       step = Number(reportEl('report-step').value);
