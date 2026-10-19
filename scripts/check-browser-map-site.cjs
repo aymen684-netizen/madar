@@ -153,6 +153,23 @@ async function checkBrowserMapSite(browser, baseUrl, output) {
       await page.locator('.observer-site-marker').waitFor({ state: 'visible' });
       await page.locator('.flag-satellite').waitFor({ state: 'attached' });
       assert.equal(await page.locator('.flag-satellite').count(), 1);
+      assert(
+        await page.evaluate(async () => {
+          const flag = document.querySelector('.flag-satellite'),
+            site = document.querySelector('.observer-site-marker'),
+            datum = ObserverMapPicker.markerData();
+          for (let i = 0; i < 3; i++) {
+            update();
+            await new Promise((resolve) => setTimeout(resolve, 150));
+          }
+          return (
+            document.querySelector('.flag-satellite') === flag &&
+            document.querySelector('.observer-site-marker') === site &&
+            ObserverMapPicker.markerData() === datum
+          );
+        }),
+        'satellite and site markers retain their DOM nodes across position updates',
+      );
       assert.equal(
         await page.locator('#observer-lat').inputValue(),
         '12.345678',

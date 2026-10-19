@@ -29,7 +29,7 @@
     return element;
   }
   function markerData() {
-    return marker ? { ...marker, observerSite: true } : null;
+    return marker;
   }
   function start(next) {
     if (
@@ -73,7 +73,7 @@
       return;
     }
     point = { lat: Number(value.lat.toFixed(6)), lng: Number(value.lng.toFixed(6)) };
-    marker = point;
+    marker = { ...point, observerSite: true };
     const status = $('observer-map-coordinates');
     status.replaceChildren();
     const label = document.createElement('span'),

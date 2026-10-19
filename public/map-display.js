@@ -92,8 +92,8 @@
     const site = root.ObserverMapPicker?.markerData();
     w.htmlLat('lat')
       .htmlLng('lng')
-      .htmlAltitude((d) => (d.observerSite ? 0.004 : d.alt))
-      .htmlElement((d) => (d.observerSite ? root.ObserverMapPicker.markerElement() : marker(d)))
+      .htmlAltitude(markerAltitude)
+      .htmlElement(markerElement)
       .htmlTransitionDuration(duration)
       .htmlElementsData(site ? [...data, site] : data);
     for (const p of data) marker(p);
@@ -118,6 +118,14 @@
       }
     }
     syncCountry();
+  }
+  // The globe rebuilds its HTML layer when the element callback changes.
+  // Stable callbacks preserve existing marker nodes across position updates.
+  function markerAltitude(d) {
+    return d.observerSite ? 0.004 : d.alt;
+  }
+  function markerElement(d) {
+    return d.observerSite ? root.ObserverMapPicker.markerElement() : marker(d);
   }
   function syncCountry() {
     const source = $('catalog-country'),
