@@ -12,19 +12,19 @@
   "theme_color": "#102337",
   "icons": [
     {
-      "src": "icons/madar-192.png",
+      "src": "icons/madar-art-192-v76.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icons/madar-512.png",
+      "src": "icons/madar-art-512-v76.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icons/madar-maskable-512.png",
+      "src": "icons/madar-maskable-512-v76.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"

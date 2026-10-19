@@ -38,6 +38,11 @@ async function checkBrowserStartup(browser, url, output) {
     try {
       const navigation = page.goto(url + '#catalog');
       await page.locator('#welcome-dialog').waitFor({ state: 'visible' });
+      await page.waitForFunction(() => {
+        const image = document.querySelector('#welcome-dialog img');
+        return image.complete && image.naturalWidth === 512;
+      });
+      assert.equal(await page.locator('#welcome-dialog video').count(), 0);
       assert.equal(await page.evaluate(() => typeof window.MadarShell), 'undefined');
       assert(
         await page.evaluate(() => {
@@ -50,6 +55,10 @@ async function checkBrowserStartup(browser, url, output) {
       release();
       await navigation;
       await page.waitForFunction(() => window.MadarShell && world);
+      await page.waitForFunction(() => {
+        const image = document.querySelector('.brand img');
+        return image?.complete && image.naturalWidth === 64;
+      });
       assert(
         await page.locator('#welcome-start').isDisabled(),
         'fast launch waits for initial data',
