@@ -30,7 +30,7 @@
     );
   }
   const handled = new WeakSet();
-  function install(holder, { world, candidates, select }) {
+  function install(holder, { world, candidates, select, surface }) {
     const pointers = new Map(),
       doc = holder.ownerDocument;
     let multiple = false,
@@ -73,7 +73,17 @@
       const w = world();
       if (!w) return;
       const rect = holder.getBoundingClientRect(),
-        camera = w.camera().position,
+        surfaceMode = surface?.active();
+      if (surfaceMode) {
+        pendingClick = { x: e.clientX, y: e.clientY, until: Date.now() + 800 };
+        let location = null;
+        try {
+          location = w.toGlobeCoords(e.clientX - rect.left, e.clientY - rect.top);
+        } catch {}
+        surface.select(location);
+        return;
+      }
+      const camera = w.camera().position,
         edge = w.getCoords(0, 0, 0),
         radius = Math.hypot(edge.x, edge.y, edge.z) * 0.999999;
       const object = pick(candidates(), e.clientX - rect.left, e.clientY - rect.top, {

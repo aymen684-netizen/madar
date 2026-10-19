@@ -18,6 +18,25 @@
     save.id = prefix + '-site-save';
     update.id = prefix + '-site-update';
     remove.id = prefix + '-site-delete';
+    const map = document.createElement('button');
+    map.type = 'button';
+    map.id = prefix + '-site-map';
+    map.textContent = 'اختيار من الخارطة';
+    map.title = 'تحديد موقع الرصد على الخارطة';
+    fieldset.querySelector('.observer-sites-actions').prepend(map);
+    map.onclick = () => {
+      if (locked()) return;
+      const started = root.ObserverMapPicker?.start({
+        form,
+        opener: map,
+        locked,
+        apply: (point) => {
+          apply({ ...read(), lat: point.lat, lon: point.lng });
+          announce('نُقلت الإحداثيات من الخارطة. راجع الموقع وارتفاعه، ثم احفظه أو ابدأ الحساب.');
+        },
+      });
+      if (!started) announce('تعذّر بدء اختيار الموقع؛ انتظر جاهزية الخارطة أو أعد تحميل الصفحة.');
+    };
     function locked() {
       return form.getAttribute('aria-busy') === 'true';
     }
@@ -38,7 +57,7 @@
       }
       select.value = [...select.options].some((o) => o.value === selected) ? selected : '';
       update.disabled = remove.disabled = !select.value || locked();
-      save.disabled = select.disabled = locked();
+      save.disabled = select.disabled = map.disabled = locked();
       storage.textContent = model.sessionOnly()
         ? 'تعذّر التخزين على الجهاز؛ تبقى التعديلات الجديدة لهذه الجلسة فقط حتى إعادة تحميل الصفحة.'
         : Privacy.persistent()

@@ -82,7 +82,8 @@
             return el;
           })
           .onPointClick((d, e) => {
-            if (!ext.picking?.handled(e)) events.select(d.obj);
+            if (!extensions().sitePicker?.active() && !ext.picking?.handled(e))
+              events.select(d.obj);
           })
           .labelRotation((d) => (view.isSatelliteMode() ? d.bearing : 0))
           .labelLat('lat')
@@ -98,7 +99,8 @@
           )
           .labelDotRadius(() => (view.isSatelliteMode() ? 0 : 0.3))
           .onLabelClick((d, e) => {
-            if (!ext.picking?.handled(e)) events.select(d.obj);
+            if (!extensions().sitePicker?.active() && !ext.picking?.handled(e))
+              events.select(d.obj);
           })
           .labelResolution(2)
           .pathPoints((d) => d)
@@ -128,12 +130,17 @@
             })
             .onParticleClick((d, e) => {
               const o = particleObject(d);
-              if (o && !ext.picking?.handled(e)) events.select(o);
+              if (o && !extensions().sitePicker?.active() && !ext.picking?.handled(e))
+                events.select(o);
             });
         ext.picking?.install(holder, {
           world: () => world,
           candidates: events.candidates,
           select: (o) => events.select(o),
+          surface: {
+            active: () => extensions().sitePicker?.active(),
+            select: (point) => extensions().sitePicker?.pick(point),
+          },
         });
         ext.quality?.attach(world);
         // Follow the rendered clock, including language changes and wrapped source status.

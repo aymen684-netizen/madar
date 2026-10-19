@@ -2,7 +2,8 @@
   'use strict';
   const LIMIT = 180,
     $ = (id) => document.getElementById(id);
-  let countriesReady = false;
+  let countriesReady = false,
+    latest = null;
   const nodes = new Map(),
     compiled = new Map();
   function flags() {
@@ -64,6 +65,7 @@
       n.setAttribute('aria-label', n.title);
       n.onclick = (e) => {
         e.stopPropagation();
+        if (root.ObserverMapPicker?.active()) return;
         mapChoose(d.obj, false);
       };
       nodes.set(d.id, n);
@@ -77,6 +79,7 @@
   }
   function updateFlags(w, points, matches, duration) {
     if (!w?.htmlElementsData) return;
+    latest = { w, points, matches, duration };
     const data = flags()
       ? matches.length <= LIMIT
         ? points
@@ -86,14 +89,18 @@
       : [];
     const ids = new Set(data.map((d) => d.id));
     for (const id of nodes.keys()) if (!ids.has(id)) nodes.delete(id);
+    const site = root.ObserverMapPicker?.markerData();
     w.htmlLat('lat')
       .htmlLng('lng')
-      .htmlAltitude('alt')
-      .htmlElement(marker)
+      .htmlAltitude((d) => (d.observerSite ? 0.004 : d.alt))
+      .htmlElement((d) => (d.observerSite ? root.ObserverMapPicker.markerElement() : marker(d)))
       .htmlTransitionDuration(duration)
-      .htmlElementsData(data);
+      .htmlElementsData(site ? [...data, site] : data);
     for (const p of data) marker(p);
     updateStatus(matches);
+  }
+  function refreshMarker() {
+    if (latest) updateFlags(latest.w, latest.points, latest.matches, 0);
   }
   function updateStatus(matches) {
     const note = $('map-display-status');
@@ -201,6 +208,7 @@
     key,
     matches,
     update: updateFlags,
+    refreshMarker,
     status: updateStatus,
     limit: LIMIT,
   };
