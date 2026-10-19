@@ -1,0 +1,55 @@
+.observing-overview {
+  background: #122b38;
+  border: 1px solid #4a8991;
+  border-radius: 12px;
+  padding: 14px;
+  margin-block: 14px;
+}
+.observing-overview h3,
+.observing-overview h4 {
+  margin-top: 0;
+}
+.observing-overview dl {
+  display: grid;
+  grid-template-columns: minmax(90px, 0.7fr) minmax(0, 1.3fr);
+  gap: 8px 12px;
+}
+.observing-overview dt,
+.observing-overview dd {
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.observing-overview dt {
+  color: #b8d6e6;
+}
+.observing-overview p {
+  overflow-wrap: anywhere;
+}
+.observing-overview .fleet-pass-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.observing-overview button,
+.observer-city-picker button {
+  min-height: 44px;
+  padding: 10px;
+  font-size: 15px;
+  white-space: normal;
+}
+.observer-city-picker {
+  border: 1px solid #37586c;
+  border-radius: 10px;
+  padding: 12px;
+  margin-top: 12px;
+}
+.observer-city-picker > summary {
+  cursor: pointer;
+}
+.observer-city-picker > label {
+  margin-block: 12px !important;
+}
+.observer-city-picker p {
+  font-size: 14px;
+  line-height: 1.7;
+}

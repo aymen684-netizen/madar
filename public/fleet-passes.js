@@ -36,6 +36,86 @@
     source = [],
     timer = null,
     intersecting = false;
+  const overview = document.createElement('section');
+  overview.id = 'observing-overview';
+  overview.className = 'observing-overview';
+  overview.setAttribute('aria-labelledby', 'observing-heading');
+  overview.innerHTML =
+    '<h3 id="observing-heading">ملخص الرصد</h3><dl><dt>الموقع المستخدم</dt><dd><bdi id="observing-site" data-no-translate></bdi></dd><dt>الارتفاع وحد الأفق</dt><dd><bdi id="observing-geometry" data-no-translate></bdi></dd><dt>وقت الخارطة</dt><dd><bdi id="observing-time" dir="ltr" data-no-translate></bdi></dd><dt>التوقيت</dt><dd id="observing-zone"></dd><dt>أقمار المجموعة</dt><dd><bdi id="observing-count" data-no-translate></bdi></dd></dl><p id="observing-mode"></p><h4>أقرب مرور للمجموعة</h4><p id="observing-state"></p><p><bdi id="observing-next" data-no-translate></bdi></p><p><bdi id="observing-interval" dir="ltr" data-no-translate></bdi></p><p><bdi id="observing-countdown" dir="ltr" data-no-translate></bdi></p><p id="observing-quality"></p><div class="fleet-pass-actions"><button id="observing-edit" type="button">تغيير موقع الرصد</button><button id="observing-calculate" type="button">حساب أو تحديث المرور</button><button id="observing-group" type="button">أقمار المجموعة</button><button id="observing-sky" type="button" disabled>مخطط سماء أقرب مرور</button></div><p>الأوقات تخص المرور الهندسي ووقت الخارطة، ولا تضمن الرؤية بالعين. تغيير الموقع أو المجموعة يبطل النتائج ويحتاج حسابًا جديدًا.</p>';
+  panel.querySelector('summary').after(overview);
+  function updateOverview(now = +dateNow()) {
+    const a = site(),
+      current = FleetPassCore.overview(result, now),
+      T = (s) => MadarI18n.translate(s);
+    text(
+      $('observing-site'),
+      Number.isFinite(a.lat) && Number.isFinite(a.lon)
+        ? (nameInput.value.trim() || T('موقع الرصد')) + ' · ' + a.lat + '°, ' + a.lon + '°'
+        : T('لم يُحدد موقع للحساب بعد.'),
+    );
+    text(
+      $('observing-geometry'),
+      Number.isFinite(a.height) && Number.isFinite(a.minElevation)
+        ? a.height + ' m · ' + a.minElevation + '°'
+        : '—',
+    );
+    text($('observing-time'), stamp(now));
+    text($('observing-zone'), $('fleet-pass-zone').selectedOptions[0].textContent);
+    text($('observing-count'), MapFleet.size + ' / 12');
+    text(
+      $('observing-mode'),
+      fixedTime || paused
+        ? 'الوقت مثبت أو متوقف؛ العدّ يتبع وقت الخارطة.'
+        : 'الوقت الحالي؛ العدّ يتبع ساعة الخارطة.',
+    );
+    text(
+      $('observing-state'),
+      {
+        missing: 'احسب المرور للموقع والمجموعة الحاليين لعرض النتيجة.',
+        upcoming: 'مرور قادم بعد وقت الخارطة',
+        ongoing: 'مرور جارٍ عند وقت الخارطة',
+        none: 'لم يُكتشف مرور آخر ضمن نافذة الحساب.',
+        invalid: 'تعذّر حساب المدار؛ لا تتوفر نتيجة موثوقة.',
+      }[current.state],
+    );
+    const event = current.event,
+      object = event && source.find((o) => Number(o.id) === Number(event.id));
+    text($('observing-next'), object ? object.name + ' · ' + object.id : '');
+    text(
+      $('observing-interval'),
+      event ? stamp(event.pass.entry) + ' → ' + stamp(event.pass.exit) : '',
+    );
+    text($('observing-countdown'), event ? FleetPassCore.countdown(event.pass, now) : '');
+    text(
+      $('observing-quality'),
+      current.invalid
+        ? 'تعذّر حساب بعض أقمار المجموعة؛ النتيجة تشمل الأقمار التي نجح حسابها فقط.'
+        : event?.pass.clippedStart || event?.pass.clippedEnd
+          ? 'المرور محصور بحدود نافذة الحساب؛ الذروة تخص الجزء المحسوب.'
+          : '',
+    );
+    $('observing-sky').disabled = !event;
+    $('observing-calculate').disabled = !MapFleet.size || !!worker;
+  }
+  $('observing-edit').onclick = () => {
+    form.scrollIntoView({ block: 'start', behavior: 'instant' });
+    $('fleet-pass-lat').focus();
+  };
+  $('observing-group').onclick = () => {
+    const target = $('map-fleet-list');
+    target.tabIndex = -1;
+    target.scrollIntoView({ block: 'start', behavior: 'instant' });
+    target.focus({ preventScroll: true });
+  };
+  $('observing-calculate').onclick = () => {
+    if (worker || !MapFleet.size) return;
+    form.scrollIntoView({ block: 'start', behavior: 'instant' });
+    if (form.reportValidity()) form.requestSubmit();
+  };
+  $('observing-sky').onclick = () => {
+    const event = FleetPassCore.overview(result, +dateNow()).event;
+    if (event) experience.showEvent(event.id, event.pass.entry);
+  };
   ObserverSites.mount(form, {
     prefix: 'fleet-pass',
     nameInput,
@@ -71,6 +151,7 @@
     form.setAttribute('aria-busy', String(value));
     $('fleet-pass-run').disabled = value || !MapFleet.size;
     $('fleet-pass-cancel').disabled = !value;
+    $('observing-calculate').disabled = value || !MapFleet.size;
   }
   function stop() {
     generation++;
@@ -91,6 +172,8 @@
     busy(false);
     $('fleet-pass-country').disabled = !MapFleet.size;
     $('fleet-pass-observer').disabled = !MapFleet.size;
+    updateOverview();
+    sync();
   }
   function site() {
     const value = (id) => ($(id).value.trim() === '' ? NaN : Number($(id).value));
@@ -161,12 +244,17 @@
     experience.render(result, source, site());
   }
   function tick() {
-    if (!visible() || !result) return;
+    if (!visible()) return;
     const now = +dateNow();
+    if (!result) {
+      updateOverview(now);
+      return;
+    }
     if (now < result.start || now >= result.end) {
       invalidate('وقت الخارطة خارج نافذة الحساب؛ أعد حساب المرور.');
       return;
     }
+    updateOverview(now);
     text($('fleet-pass-window'), stamp(result.start) + ' → ' + stamp(result.end));
     experience.tick(now, !fixedTime && !paused);
     for (const item of result.items) {
@@ -235,7 +323,8 @@
   }
   function sync() {
     if (visible()) {
-      if (result && !timer) timer = setInterval(tick, 1000);
+      updateOverview();
+      if (!timer) timer = setInterval(tick, 1000);
       start();
       tick();
     } else {
@@ -318,20 +407,29 @@
   document.addEventListener('madar-fleet', () =>
     invalidate('تغيّرت مجموعة الخارطة أو عناصرها؛ أعد حساب المرور.'),
   );
-  document.addEventListener('madar-language', tick);
+  document.addEventListener('madar-language', () => {
+    updateOverview();
+    tick();
+  });
   document.addEventListener('visibilitychange', sync);
   document.addEventListener('madar-route', sync);
   panel.addEventListener('toggle', sync);
   new MutationObserver(sync).observe(dialog, { attributes: true, attributeFilter: ['open'] });
   if (root.IntersectionObserver) {
-    new IntersectionObserver((entries) => {
-      intersecting = entries[0].isIntersecting;
+    const seen = new Map();
+    const observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) seen.set(entry.target, entry.isIntersecting);
+      intersecting = [...seen.values()].some(Boolean);
       sync();
-    }).observe(host);
+    });
+    observer.observe(host);
+    observer.observe(overview);
   } else {
     const viewport = () => {
-      const r = host.getBoundingClientRect();
-      intersecting = r.bottom > 0 && r.top < innerHeight;
+      intersecting = [host, overview].some((node) => {
+        const r = node.getBoundingClientRect();
+        return r.bottom > 0 && r.top < innerHeight;
+      });
       sync();
     };
     root.addEventListener('scroll', viewport, true);

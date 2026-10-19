@@ -1,0 +1,111 @@
+.report-guided-form {
+  display: block !important;
+}
+.report-guide-header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.report-guide-header p {
+  flex: 1 1 280px;
+  margin: 0;
+  color: #bad1e1;
+}
+.report-guide-nav {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.report-guide-nav button {
+  min-width: 0;
+  white-space: normal;
+}
+.report-guide-nav [aria-current='step'] {
+  border-color: #83efd3;
+  background: #163e43;
+  color: #afffe7;
+}
+.report-guide-step[hidden],
+.report-guide-nav[hidden],
+.report-guided-form [hidden] {
+  display: none !important;
+}
+.report-guide-step h3 {
+  margin-top: 0;
+}
+.report-guide-step {
+  margin-bottom: 16px;
+}
+.report-guide-step .observer-sites,
+.report-guide-step .type-picker,
+.report-guide-step #analysis-periods,
+.report-guide-step #analysis-add {
+  grid-column: 1 / -1;
+}
+.report-guide-advanced {
+  margin-top: 16px;
+  border: 1px solid #37586c;
+  border-radius: 10px;
+  padding: 12px;
+}
+.report-guide-advanced > summary {
+  cursor: pointer;
+}
+.report-guide-advanced > .inline-field {
+  margin-top: 12px !important;
+}
+.report-guide-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-block: 16px;
+}
+.report-guide-actions button,
+.report-guide-header button,
+.report-guide-nav button {
+  min-height: 44px;
+  padding: 10px 14px;
+  font-size: 16px;
+}
+.report-field-error {
+  display: block;
+  grid-column: 2;
+  color: #ffb9b9;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.report-guided-form [aria-invalid='true'] {
+  border: 2px solid #ff9797;
+}
+.report-guide-summary {
+  display: grid;
+  grid-template-columns: minmax(100px, 0.8fr) minmax(0, 1.2fr);
+  gap: 10px 16px;
+  padding: 16px;
+  background: #152a38;
+  border-radius: 10px;
+}
+.report-guide-summary dt,
+.report-guide-summary dd {
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.report-guide-summary dt {
+  color: #a9c8da;
+}
+.report-guide-summary dd {
+  font-weight: 600;
+}
+@media (max-width: 700px) {
+  .report-guide-nav {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .report-guide-summary {
+    padding: 12px;
+    column-gap: 10px;
+  }
+}

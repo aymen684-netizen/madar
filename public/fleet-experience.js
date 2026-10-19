@@ -72,6 +72,8 @@
       host.append(actions);
       const figure = document.createElement('figure'),
         caption = document.createElement('figcaption');
+      figure.id = 'fleet-sky-view';
+      figure.tabIndex = -1;
       caption.textContent =
         'مخطط السماء: الشمال أعلى، والشرق يمينًا، والمركز فوق الرأس. الدوائر لارتفاع 0° و30° و60°. المسار هندسي ولا يضمن الرؤية بالعين. الدائرة الممتلئة بداية الجزء المحسوب والمفرغة نهايته.';
       figure.append(caption);
@@ -324,7 +326,21 @@
       if (result) render(result, source, observer);
     });
     reset();
-    return { reset, render, tick };
+    function showEvent(id, entry) {
+      const index = events.findIndex(
+        (event) => Number(event.object.id) === Number(id) && event.pass.entry === entry,
+      );
+      if (index < 0) return false;
+      if ($('fleet-event').value !== String(index)) {
+        $('fleet-event').value = index;
+        detail();
+      }
+      const figure = $('fleet-sky-view');
+      figure?.scrollIntoView({ block: 'center', behavior: 'instant' });
+      figure?.focus({ preventScroll: true });
+      return true;
+    }
+    return { reset, render, tick, showEvent };
   }
   root.FleetExperience = { mount };
 })(window);
