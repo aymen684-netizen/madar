@@ -26,9 +26,9 @@ jobs:
           name: startup-review
           path: test-results/
 
-  browser:
+  checks:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -38,12 +38,29 @@ jobs:
       - run: npm run format:check
       - run: npm run audit
       - run: npm run check
+  browser:
+    needs: checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        suite: [observing, interface, reports, extras]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci --ignore-scripts
+      - run: npm run build
       - run: npx playwright install chromium
       - run: node scripts/check-browser.cjs
+        env:
+          MADAR_BROWSER_SUITE: ${{ matrix.suite }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: browser-review
+          name: browser-review-${{ matrix.suite }}
           path: test-results/
 
   performance:
