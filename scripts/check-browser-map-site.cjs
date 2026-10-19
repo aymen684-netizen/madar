@@ -19,7 +19,11 @@ async function checkBrowserMapSite(browser, baseUrl, output) {
     page.on('request', (r) => requests.push(r.url() + (r.postData() || '')));
     for (const route of ['**/api/orbits?*', 'https://celestrak.org/**'])
       await page.route(route, (r) =>
-        r.fulfill({ contentType: 'application/json', body: JSON.stringify([fixture]) }),
+        r.fulfill({
+          contentType: 'application/json',
+          headers: { 'X-Madar-Fetched-At': String(Date.now()), 'X-Madar-Connection': 'upstream' },
+          body: JSON.stringify([fixture]),
+        }),
       );
     async function inline(id, direction) {
       const r = await page.locator('#' + id).evaluate((input) => {
@@ -166,6 +170,22 @@ async function checkBrowserMapSite(browser, baseUrl, output) {
         ),
       );
       assert.deepEqual(errors, []);
+    } catch (error) {
+      console.error(
+        'Map-site diagnostic',
+        await page.evaluate(() => ({
+          picker: !!window.ObserverMapPicker,
+          shell: !!window.MadarShell,
+          world: typeof world !== 'undefined' && !!world,
+          count: typeof objects !== 'undefined' ? objects.length : null,
+          ready: document.readyState,
+          mapError: document.getElementById('map-error')?.textContent,
+          status: document.getElementById('status')?.textContent,
+        })),
+        errors,
+      );
+      await page.screenshot({ path: output + '/map-site-failure-' + mobile + '.png' });
+      throw error;
     } finally {
       await context.close();
     }
