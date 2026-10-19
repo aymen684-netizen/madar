@@ -49,6 +49,8 @@ async function checkBrowserMapSite(browser, baseUrl, output) {
       assert(r.overflow <= 2, id + ' has no horizontal overflow');
     }
     async function camera() {
+      // Let an earlier tracking/focus transition finish before setting a fixed test view.
+      await page.waitForTimeout(1200);
       await page.evaluate(() => {
         const controls = world.controls(),
           damping = controls.enableDamping;
@@ -66,10 +68,16 @@ async function checkBrowserMapSite(browser, baseUrl, output) {
         ({ lat, lng }) => {
           const r = document.getElementById('globe').getBoundingClientRect(),
             p = world.getScreenCoords(lat, lng, 0);
-          return { x: r.left + p.x, y: r.top + p.y };
+          return {
+            x: r.left + p.x,
+            y: r.top + p.y,
+            inverse: world.toGlobeCoords(p.x, p.y),
+            camera: world.pointOfView(),
+          };
         },
         { lat, lng },
       );
+      assert(p.inverse && Math.abs(p.inverse.lat - lat) < 0.05, JSON.stringify(p));
       if (mobile) await page.touchscreen.tap(p.x, p.y);
       else await page.mouse.click(p.x, p.y);
     }
@@ -212,6 +220,9 @@ async function checkBrowserMapSite(browser, baseUrl, output) {
           ready: document.readyState,
           mapError: document.getElementById('map-error')?.textContent,
           status: document.getElementById('status')?.textContent,
+          camera: typeof world !== 'undefined' && world?.pointOfView(),
+          site: document.getElementById('observer-map-coordinates')?.textContent,
+          fleetLat: document.getElementById('fleet-pass-lat')?.value,
           markers: [...document.querySelectorAll('.observer-site-marker')].map((n) => ({
             display: getComputedStyle(n).display,
             visibility: getComputedStyle(n).visibility,
