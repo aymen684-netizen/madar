@@ -18,20 +18,18 @@
     return target !== null;
   }
   function draw() {
-    if (typeof world === 'undefined' || !world?.htmlElementsData) return;
-    world
-      .htmlLat('lat')
-      .htmlLng('lng')
-      .htmlAltitude(0.004)
-      .htmlElement(() => {
-        const element = document.createElement('span');
-        element.className = 'observer-site-marker';
-        element.textContent = '⊕';
-        element.setAttribute('role', 'img');
-        element.setAttribute('aria-label', T('موقع الرصد المختار'));
-        return element;
-      })
-      .htmlElementsData(marker ? [{ ...marker }] : []);
+    root.MapDisplay?.refreshMarker();
+  }
+  function markerElement() {
+    const element = document.createElement('span');
+    element.className = 'observer-site-marker';
+    element.textContent = '⊕';
+    element.setAttribute('role', 'img');
+    element.setAttribute('aria-label', T('موقع الرصد المختار'));
+    return element;
+  }
+  function markerData() {
+    return marker ? { ...marker, observerSite: true } : null;
   }
   function start(next) {
     if (
@@ -121,5 +119,5 @@
     if (active() && MadarShell.current() !== 'map') finish(false, false);
   });
   document.addEventListener('madar-language', draw);
-  root.ObserverMapPicker = { active, start, pick };
+  root.ObserverMapPicker = { active, start, pick, markerData, markerElement };
 })(window);

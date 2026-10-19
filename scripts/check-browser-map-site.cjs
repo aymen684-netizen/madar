@@ -89,6 +89,9 @@ async function checkBrowserMapSite(browser, baseUrl, output) {
       await page.fill('#observer-height', '123');
       await page.selectOption('#observer-zone', '0');
       await page.evaluate(() => {
+        const style = document.getElementById('marker-style');
+        style.value = 'flag';
+        style.dispatchEvent(new Event('change', { bubbles: true }));
         choose(objects[0], false);
         MapFleet.toggle(objects[0]);
         selection.toggleTracking();
@@ -126,8 +129,13 @@ async function checkBrowserMapSite(browser, baseUrl, output) {
       assert(await page.locator('#observer-map-use').isDisabled(), 'space is not a location');
       await tap(35, 45);
       await page.waitForFunction(() => !document.getElementById('observer-map-use').disabled);
-      assert.equal(await page.evaluate(() => world.htmlElementsData().length), 1);
+      await page.evaluate(() => update());
+      assert.equal(
+        await page.evaluate(() => world.htmlElementsData().filter((d) => d.observerSite).length),
+        1,
+      );
       await page.locator('.observer-site-marker').waitFor({ state: 'visible' });
+      assert.equal(await page.locator('.flag-satellite').count(), 1);
       assert.equal(
         await page.locator('#observer-lat').inputValue(),
         '12.345678',
