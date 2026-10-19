@@ -151,6 +151,7 @@ async function checkBrowserMapSite(browser, baseUrl, output) {
         1,
       );
       await page.locator('.observer-site-marker').waitFor({ state: 'visible' });
+      await page.locator('.flag-satellite').waitFor({ state: 'attached' });
       assert.equal(await page.locator('.flag-satellite').count(), 1);
       assert.equal(
         await page.locator('#observer-lat').inputValue(),
