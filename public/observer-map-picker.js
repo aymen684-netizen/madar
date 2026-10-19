@@ -7,7 +7,7 @@
   panel.hidden = true;
   panel.setAttribute('aria-labelledby', 'observer-map-heading');
   panel.innerHTML =
-    '<h3 id="observer-map-heading" tabindex="-1">تحديد موقع الرصد</h3><p>اضغط على سطح الأرض، ثم استخدم الموقع. اسحب لتدوير الكرة أو قرّبها لتعديل الاختيار.</p><p id="observer-map-coordinates" role="status" aria-live="polite"></p><p class="observer-map-note">اختيار بصري تقريبي؛ راجع الإحداثيات والارتفاع قبل الحساب. لا يُقاس ارتفاع الموقع من صورة الأرض.</p><div><button id="observer-map-use" type="button" disabled>استخدام الموقع في الحقول</button><button id="observer-map-cancel" type="button">إلغاء اختيار الموقع</button></div>';
+    '<h3 id="observer-map-heading" tabindex="-1">تحديد موقع الرصد</h3><p>اضغط على سطح الأرض لتحديد موقع الرصد.</p><p id="observer-map-coordinates" role="status" aria-live="polite"></p><p class="observer-map-note">اختيار تقريبي؛ راجع الإحداثيات وأدخل الارتفاع يدويًا.</p><div><button id="observer-map-use" type="button" disabled>استخدام الموقع في الحقول</button><button id="observer-map-cancel" type="button">إلغاء اختيار الموقع</button></div>';
   document.querySelector('.space').append(panel);
   let target = null,
     point = null,

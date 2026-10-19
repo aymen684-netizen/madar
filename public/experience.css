@@ -122,6 +122,14 @@ body.startup {
   padding: 0 6px;
   color: #96ebd5;
 }
+@media (max-height: 500px) {
+  #observer-map-picker {
+    width: min(300px, calc(100% - 90px));
+    max-height: calc(100% - 28px);
+    bottom: 14px;
+    left: 64px;
+  }
+}
 .observer-sites select {
   width: 100%;
   min-width: 0;

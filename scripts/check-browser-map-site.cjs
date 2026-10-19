@@ -99,12 +99,26 @@ async function checkBrowserMapSite(browser, baseUrl, output) {
         'drag does not select a location',
       );
       await camera();
-      if (mobile) await page.touchscreen.tap(box.x + box.width - 3, box.y + box.height * 0.35);
-      else await page.mouse.click(box.x + box.width - 3, box.y + box.height * 0.35);
+      const space = await page.evaluate(() => {
+        const globe = document.getElementById('globe'),
+          r = globe.getBoundingClientRect();
+        for (const y of [0.12, 0.25, 0.45, 0.7])
+          for (const x of [0.05, 0.2, 0.8, 0.95]) {
+            const p = { x: r.left + r.width * x, y: r.top + r.height * y };
+            const element = document.elementFromPoint(p.x, p.y);
+            if (globe.contains(element) && !world.toGlobeCoords(r.width * x, r.height * y))
+              return p;
+          }
+        return null;
+      });
+      assert(space, 'a visible off-Earth canvas location is available');
+      if (mobile) await page.touchscreen.tap(space.x, space.y);
+      else await page.mouse.click(space.x, space.y);
       assert(await page.locator('#observer-map-use').isDisabled(), 'space is not a location');
       await tap(35, 45);
       await page.waitForFunction(() => !document.getElementById('observer-map-use').disabled);
       assert.equal(await page.evaluate(() => world.htmlElementsData().length), 1);
+      await page.locator('.observer-site-marker').waitFor({ state: 'visible' });
       assert.equal(
         await page.locator('#observer-lat').inputValue(),
         '12.345678',
@@ -181,6 +195,11 @@ async function checkBrowserMapSite(browser, baseUrl, output) {
           ready: document.readyState,
           mapError: document.getElementById('map-error')?.textContent,
           status: document.getElementById('status')?.textContent,
+          markers: [...document.querySelectorAll('.observer-site-marker')].map((n) => ({
+            display: getComputedStyle(n).display,
+            visibility: getComputedStyle(n).visibility,
+            rect: JSON.stringify(n.getBoundingClientRect()),
+          })),
         })),
         errors,
       );
