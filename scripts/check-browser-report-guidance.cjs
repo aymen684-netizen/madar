@@ -122,8 +122,9 @@ async function checkBrowserReportGuidance(browser, baseUrl, output) {
       );
       await page.click('#shell-report-analysis');
       await next('analysis');
-      await page.click('#analysis-add');
-      await page.locator('.period-remove').last().click();
+      while ((await page.locator('.analysis-period').count()) > 1)
+        await page.locator('.period-remove').last().click();
+      assert.equal(await page.locator('.analysis-period').count(), 1);
       await next('analysis');
       assert((await page.locator('#analysis-form [aria-invalid=true]').count()) > 0);
       await page.click('#analysis-add');
