@@ -100,3 +100,36 @@ assert.equal(stopped, 2);
 console.log(
   'PASS: selection does not activate a newly revealed card button; independent next clicks remain available',
 );
+const sites = [];
+let candidateReads = 0;
+world.toGlobeCoords = (x, y) => (x < 200 ? { lat: 0, lng: 0 } : null);
+P.install(holder, {
+  world: () => world,
+  candidates: () => {
+    candidateReads++;
+    return [];
+  },
+  select: () => {
+    throw Error('site mode must not select satellites');
+  },
+  surface: { active: () => true, select: (point) => sites.push(point) },
+});
+listeners.pointerdown(event('pointerdown'));
+listeners.pointerup(event('pointerup'));
+assert.equal(sites[0].lat, 0);
+assert.equal(sites[0].lng, 0);
+assert.equal(candidateReads, 0);
+listeners.pointerdown(event('pointerdown', 1, 250));
+listeners.pointerup(event('pointerup', 1, 250));
+assert.equal(sites[1], null, 'off-Earth taps cannot reuse an old hit');
+listeners.pointerdown(event('pointerdown'));
+listeners.pointermove(event('pointermove', 1, 135));
+listeners.pointerup(event('pointerup', 1, 135));
+listeners.pointerdown(event('pointerdown'));
+listeners.pointerdown(event('pointerdown', 2));
+listeners.pointerup(event('pointerup'));
+listeners.pointerup(event('pointerup', 2));
+assert.equal(sites.length, 2, 'drag and pinch must not choose a surface location');
+console.log(
+  'PASS: explicit surface mode, zero coordinates, off-Earth rejection, no satellite sampling and drag/pinch exclusion',
+);

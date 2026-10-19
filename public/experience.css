@@ -48,6 +48,76 @@ body.startup {
   border: 1px solid #38586c;
   border-radius: 14px;
 }
+.observer-site-picking #globe-card {
+  visibility: hidden;
+}
+.observer-site-picking #globe canvas {
+  cursor: crosshair;
+}
+.observer-site-marker {
+  display: block;
+  width: 34px;
+  height: 34px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: #073b54;
+  color: #96fff1;
+  font:
+    700 28px/30px system-ui,
+    sans-serif;
+  text-align: center;
+  box-shadow: 0 0 0 4px #07233788;
+  pointer-events: none;
+}
+#observer-map-picker {
+  position: absolute;
+  z-index: 8;
+  bottom: 72px;
+  left: 72px;
+  width: min(400px, calc(100% - 96px));
+  max-height: 42dvh;
+  overflow: auto;
+  padding: 14px;
+  border: 1px solid #71d5ca;
+  border-radius: 16px;
+  color: #e7edf5;
+  background: #101e2df5;
+  box-shadow: 0 10px 40px #0007;
+}
+#observer-map-picker[hidden] {
+  display: none;
+}
+#observer-map-picker h3 {
+  margin: 0 0 8px;
+  font-size: 17px;
+}
+#observer-map-picker p {
+  margin: 8px 0;
+  font-size: 13px;
+  line-height: 1.7;
+}
+#observer-map-picker .observer-map-note {
+  color: #b4c8d8;
+  font-size: 12px;
+}
+#observer-map-picker > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+#observer-map-picker button {
+  flex: 1 1 140px;
+  min-height: 44px;
+  font: inherit;
+}
+@media (max-width: 700px) {
+  #observer-map-picker {
+    left: 12px;
+    width: calc(100% - 24px);
+    bottom: 62px;
+    padding: 10px;
+  }
+}
 .observer-sites legend {
   padding: 0 6px;
   color: #96ebd5;

@@ -96,9 +96,11 @@
       input.getAttribute('aria-label') ||
       Array.from(input.labels || [])
         .flatMap((label) =>
-          Array.from(label.childNodes)
-            .filter((n) => n.nodeType === 3)
-            .map((n) => n.textContent.trim()),
+          label.querySelector('.field-caption')
+            ? [label.querySelector('.field-caption').textContent.trim()]
+            : Array.from(label.childNodes)
+                .filter((n) => n.nodeType === 3)
+                .map((n) => n.textContent.trim()),
         )
         .join(' ');
     const nav = doc.createElement('div');

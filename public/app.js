@@ -55,6 +55,7 @@ const globeScene = GlobeScene.create({
   },
   extensions: () => ({
     picking: window.GlobePicking,
+    sitePicker: window.ObserverMapPicker,
     quality: window.RenderQuality,
     lifecycle: window.RenderLifecycle,
     motion: window.GlobeMotion,
@@ -508,7 +509,7 @@ function updateGlobe() {
     world.pathsData(path.length ? [path] : []);
     pathAt = Date.now();
   } else if (!selectedVisible || !selection.byUser) world.pathsData([]);
-  if (selection.tracking && selectedVisible) {
+  if (selection.tracking && selectedVisible && !window.ObserverMapPicker?.active()) {
     const p = position(selection.current, now),
       camera = world.pointOfView();
     if (p)

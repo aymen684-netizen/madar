@@ -54,6 +54,8 @@ const server = http.createServer((req, res) => {
     return context;
   };
   try {
+    const { checkBrowserMapSite } = require('./check-browser-map-site.cjs');
+    await checkBrowserMapSite(browser, baseUrl, output);
     const { checkBrowserObserverSites } = require('./check-browser-observer-sites.cjs');
     await checkBrowserObserverSites(browser, baseUrl, output);
     if (process.env.MADAR_BROWSER_SMOKE === '1') {

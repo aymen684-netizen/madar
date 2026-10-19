@@ -1,0 +1,88 @@
+/* Captions and controls follow the document direction; DOM label bindings stay intact. */
+body :is(#shell-reports, #map-tools-dialog, #time-form, .catalog-controls) .inline-field {
+  display: grid;
+  grid-template-columns: minmax(88px, 0.7fr) minmax(0, 1.3fr);
+  align-items: center;
+  gap: 8px 12px;
+  min-width: 0;
+  margin-block: 0;
+}
+body .inline-field[hidden] {
+  display: none !important;
+}
+body .inline-field > .field-caption {
+  min-width: 0;
+  margin: 0;
+  color: inherit;
+  font-size: 16px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+body
+  :is(#shell-reports, #map-tools-dialog, #time-form, .catalog-controls)
+  .inline-field
+  > :is(input, select, textarea, .date-entry) {
+  min-width: 0;
+  max-width: 100%;
+  width: 100%;
+  margin: 0;
+}
+body
+  :is(#shell-reports, #map-tools-dialog, #time-form, .catalog-controls)
+  .inline-field
+  > :is(input, select, textarea) {
+  min-height: 44px;
+  height: auto;
+  padding-block: 8px;
+  box-sizing: border-box;
+}
+body .inline-field > :is(small, .next-day) {
+  grid-column: 2;
+  margin: 0;
+}
+body :is(#shell-reports, #map-tools-dialog, #time-form) .inline-field .date-entry > input {
+  min-height: 44px;
+  margin: 0;
+  padding-inline: 6px;
+}
+body #map-tools-dialog .fleet-site-grid {
+  grid-template-columns: minmax(0, 1fr);
+}
+body #inventory-form > .inline-field {
+  flex: 1 1 480px;
+}
+body #inventory-form .field-caption {
+  flex-basis: auto;
+}
+body .catalog-controls .inline-field {
+  margin-block: 8px;
+}
+body .observer-sites-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+body .observer-sites-actions button {
+  padding: 8px;
+  font-size: 15px;
+}
+body #fleet-experience > label.inline-field {
+  margin-block: 12px;
+}
+@media (min-width: 701px) and (max-width: 1100px) {
+  .shell-ready .report-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 700px) {
+  body :is(#shell-reports, #map-tools-dialog, #time-form, .catalog-controls) .inline-field {
+    grid-template-columns: minmax(78px, 0.65fr) minmax(0, 1.35fr);
+    column-gap: 8px;
+  }
+  body :is(#shell-reports, #map-tools-dialog, #time-form) .inline-field .date-entry > input {
+    font-size: 16px;
+  }
+  body .inline-field .date-calendar-open {
+    padding-inline: 4px;
+    font-size: 12px;
+  }
+}
