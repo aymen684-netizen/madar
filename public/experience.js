@@ -8,7 +8,7 @@
     };
   const brand = document.querySelector('.brand'),
     mark = make('img');
-  mark.src = 'madar-mark.svg';
+  mark.src = 'icons/madar-symbol-64-v76.png';
   mark.alt = '';
   mark.width = 54;
   mark.height = 54;

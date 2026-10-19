@@ -42,6 +42,8 @@ body.startup {
 }
 .madar-mark {
   display: block;
+  border-radius: 12px;
+  object-fit: contain;
   filter: drop-shadow(0 0 16px #64d5bd22);
 }
 .brand strong {
@@ -362,6 +364,11 @@ html[dir='ltr'] .guide-content {
 .welcome-orbit img {
   width: 144px;
   height: 144px;
+  display: block;
+  margin: auto;
+  border-radius: 24%;
+  object-fit: contain;
+  box-shadow: 0 8px 32px #20c7ee22;
 }
 .welcome-kicker {
   color: #96ebd5;

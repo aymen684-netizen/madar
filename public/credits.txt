@@ -1,4 +1,5 @@
 Madār — satellite tracker
+Brand artwork: supplied by the project owner; static app and favicon adaptations prepared with the built-in image generation tool, 2026-10-19. No video is included in the branding update.
 Orbital elements: CelesTrak https://celestrak.org/ (snapshot retrieved 2026-10-13).
 Propagation: satellite.js 6.0.1 (MIT), https://github.com/shashwatak/satellite-js
 Globe renderer: globe.gl 2.41.4 (MIT), https://github.com/vasturiano/globe.gl
