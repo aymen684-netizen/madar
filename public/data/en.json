@@ -2014,5 +2014,6 @@
   "احسب المرور للموقع والمجموعة الحاليين لعرض النتيجة.": "Calculate passes for the current site and group to see a result.",
   "تعذّر حساب المدار؛ لا تتوفر نتيجة موثوقة.": "Orbit calculation failed; no reliable result is available.",
   "تعذّر حساب بعض أقمار المجموعة؛ النتيجة تشمل الأقمار التي نجح حسابها فقط.": "Some group satellites could not be calculated; the result covers only successfully calculated satellites.",
-  "ملخص الرصد ومجموعة الخارطة": "Observing overview and map group"
+  "ملخص الرصد ومجموعة الخارطة": "Observing overview and map group",
+  "الوقت": "Time"
 }
