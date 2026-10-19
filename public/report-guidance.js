@@ -445,7 +445,7 @@
   }
   configs.forEach(mount);
   document.addEventListener('madar-language', () => {
-    for (const entry of errors.values()) entry.node.textContent = T(entry.message);
+    for (const [input, entry] of errors) errorAt(input, entry.message);
     for (const state of states)
       if (state.guided && state.index === state.steps.length - 1) summary(state);
   });

@@ -1987,5 +1987,6 @@
   "مجموعة الخارطة فارغة؛ أضف قمرًا إليها أو اختر نطاقًا آخر.": "The map group is empty; add a satellite or choose another scope.",
   "المفضلة فارغة؛ أضف قمرًا إليها أو اختر نطاقًا آخر.": "Your favorites are empty; add a satellite or choose another scope.",
   "اختر قمرًا من الدليل أو الخارطة أولًا، أو غيّر نطاق الأقمار.": "First choose a satellite from the catalog or map, or change the satellite scope.",
-  "أنواع الأقمار المختارة": "Selected satellite types"
+  "أنواع الأقمار المختارة": "Selected satellite types",
+  "نعم": "Yes"
 }
