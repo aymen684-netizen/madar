@@ -66,6 +66,13 @@ async function checkBrowserSatelliteSummary(browser, url, output) {
       await page.locator('#shell-card-expand').focus();
       await page.keyboard.press('Enter');
       assert(await page.locator('#globe-card-technical').isVisible());
+      assert.equal(
+        await page
+          .locator('#globe-card-mission')
+          .evaluate((node) => getComputedStyle(node).whiteSpace),
+        'normal',
+        'expanded cards reveal the full mission text',
+      );
       assert((await page.locator('#globe-card-format').textContent()).includes('OMM JSON'));
       assert((await page.locator('#globe-card-epoch').textContent()).includes('UTC'));
       assert.equal(await page.locator('#shell-card-expand').getAttribute('aria-expanded'), 'true');

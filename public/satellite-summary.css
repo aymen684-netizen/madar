@@ -19,6 +19,10 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.shell-ready .globe-card[data-expanded='true'] #globe-card-mission {
+  white-space: normal;
+  overflow: visible;
+}
 .shell-ready #globe-card-country,
 .shell-ready #globe-card-data-status,
 .shell-ready #globe-card-motion {
