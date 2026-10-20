@@ -707,6 +707,9 @@ button:disabled {
   gap: 8px;
   font-size: 13px;
 }
+#observer-types {
+  align-items: start;
+}
 .type-picker input {
   width: 18px;
   margin: 0;

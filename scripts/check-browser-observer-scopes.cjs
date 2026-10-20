@@ -71,6 +71,12 @@ async function checkBrowserObserverScopes(browser, baseUrl, output) {
       assert.equal(new Set(report.inputs).size, count, 'multi-type overlaps count once');
       assert(report.scope.length > 0);
     }
+    await page.click('#observer-types .type-advanced > summary');
+    assert(
+      (await page.locator('#observer-types .type-presets button').first().boundingBox()).height <
+        80,
+      'opening detailed types keeps preset buttons compact',
+    );
     await page.screenshot({ path: output + '/observer-satellite-scopes.png' });
     // A large scan remains cancellable and cannot publish a late result.
     await page.selectOption('#observer-scope', 'active');
