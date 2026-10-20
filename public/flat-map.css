@@ -1,12 +1,13 @@
 #flat-map {
   position: absolute;
-  inset: 90px 8px 55px;
+  inset: 90px 8px 100px;
   display: flex;
   flex-direction: column;
   gap: 8px;
   direction: inherit;
 }
 .flat-map-tools {
+  margin: 0 52px;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   gap: 4px 10px;
@@ -38,12 +39,21 @@
   line-height: 1.5;
   color: #b6c9d8;
 }
+#flat-map-count {
+  direction: ltr;
+  unicode-bidi: isolate;
+  white-space: nowrap;
+  font-size: 12px;
+}
+.flat-map-active .space .hint {
+  display: none;
+}
 #globe.has-flat-map {
   direction: inherit;
 }
 @media (max-width: 700px) {
   #flat-map {
-    inset: 92px 8px 76px;
+    inset: 92px 8px 110px;
   }
   .flat-map-tools {
     grid-template-columns: minmax(0, 1fr) auto;

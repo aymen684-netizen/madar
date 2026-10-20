@@ -198,6 +198,7 @@
       panel.append(tools, canvas, note);
       holder.replaceChildren(panel);
       holder.classList.add('has-flat-map');
+      document.body.classList.add('flat-map-active');
       texture = new root.Image();
       texture.onload = draw;
       texture.src = 'assets/earth.jpg';
