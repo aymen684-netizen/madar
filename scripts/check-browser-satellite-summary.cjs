@@ -34,6 +34,10 @@ async function checkBrowserSatelliteSummary(browser, url, output) {
     try {
       await page.goto(url);
       await page.waitForFunction(() => world && objects.length === 1 && window.MadarShell);
+      const provenance = await page.evaluate(() => objects[0].provenance);
+      assert.equal(provenance.mode, 'live', 'the relay fixture must not fall back to a snapshot');
+      assert.equal(provenance.transport, 'server');
+      assert(Number.isFinite(provenance.fetchedAt) && provenance.fetchedAt > 0);
       await page.evaluate(() => MadarI18n.ready);
       if (mobile) {
         await page.click('#language-toggle');
@@ -79,6 +83,12 @@ async function checkBrowserSatelliteSummary(browser, url, output) {
       );
       assert((await page.locator('#globe-card-format').textContent()).includes('OMM JSON'));
       assert((await page.locator('#globe-card-epoch').textContent()).includes('UTC'));
+      assert.equal(await page.locator('#shell-card-expand').getAttribute('aria-expanded'), 'true');
+      await page.keyboard.press('Space');
+      assert(!(await page.locator('#globe-card-technical').isVisible()));
+      assert.equal(await page.locator('#shell-card-expand').getAttribute('aria-expanded'), 'false');
+      await page.keyboard.press('Space');
+      assert(await page.locator('#globe-card-technical').isVisible());
       assert.equal(await page.locator('#shell-card-expand').getAttribute('aria-expanded'), 'true');
       assert.equal(
         await page.evaluate(() => localStorage.getItem('madar-card-details')),
