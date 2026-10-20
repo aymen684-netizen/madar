@@ -20,7 +20,11 @@ async function checkBrowserSatelliteSummary(browser, url, output) {
     page.on('request', (request) => requests.push(request));
     for (const pattern of ['https://celestrak.org/**', '**/api/orbits?*'])
       await page.route(pattern, (route) =>
-        route.fulfill({ contentType: 'application/json', body: JSON.stringify([fixture]) }),
+        route.fulfill({
+          contentType: 'application/json',
+          headers: { 'X-Madar-Fetched-At': String(Date.now()), 'X-Madar-Connection': 'upstream' },
+          body: JSON.stringify([fixture]),
+        }),
       );
     async function choose() {
       await page.click('#shell-nav-catalog');
@@ -100,6 +104,19 @@ async function checkBrowserSatelliteSummary(browser, url, output) {
         'card preferences and actions never upload data',
       );
       assert.deepEqual(errors, []);
+    } catch (error) {
+      console.error('Satellite summary diagnostics', {
+        mobile,
+        errors,
+        state: await page.evaluate(() => ({
+          count: typeof objects === 'undefined' ? null : objects.length,
+          world: typeof world !== 'undefined' && !!world,
+          shell: !!window.MadarShell,
+          status: document.getElementById('status')?.textContent,
+        })),
+      });
+      await page.screenshot({ path: output + '/satellite-summary-failure-' + mobile + '.png' });
+      throw error;
     } finally {
       await context.close();
     }
