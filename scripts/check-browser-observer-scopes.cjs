@@ -1,5 +1,30 @@
 const fs = require('node:fs'),
   assert = require('node:assert/strict');
+function checkWordBundle(bytes, language) {
+  const { docxXml } = require('./check-browser-inventory.cjs');
+  let offset = 0,
+    count = 0,
+    passes = 0;
+  while (bytes.readUInt32LE(offset) === 0x04034b50) {
+    const size = bytes.readUInt32LE(offset + 18),
+      length = bytes.readUInt16LE(offset + 26),
+      extra = bytes.readUInt16LE(offset + 28),
+      name = bytes.subarray(offset + 30, offset + 30 + length).toString(),
+      start = offset + 30 + length + extra;
+    if (name.endsWith('.docx')) {
+      const xml = docxXml(bytes.subarray(start, start + size)),
+        rows = [...xml.matchAll(/<w:tr(?:\s[^>]*)?>[\s\S]*?<\/w:tr>/g)].slice(1);
+      assert(rows.length <= 500);
+      if (language === 'en')
+        assert(!/[\u0620-\u064a]/.test(xml), 'English bundle is fully translated');
+      for (const row of rows) assert.equal(Number(row[0].match(/WORD PASS (\d+)/)?.[1]), passes++);
+      count++;
+    }
+    offset = start + size;
+  }
+  assert.equal(count, 3);
+  assert.equal(passes, 1001);
+}
 async function checkBrowserObserverScopes(browser, baseUrl, output) {
   const seed = JSON.parse(fs.readFileSync('scripts/fixtures/omm-six-digit.json')),
     data = Array.from({ length: 501 }, (_, i) => ({
@@ -78,6 +103,9 @@ async function checkBrowserObserverScopes(browser, baseUrl, output) {
       'opening detailed types keeps preset buttons compact',
     );
     await page.screenshot({ path: output + '/observer-satellite-scopes.png' });
+    await page.evaluate(() => {
+      window.__wordScopeSeed = ObserverUI.result;
+    });
     // A large scan remains cancellable and cannot publish a late result.
     await page.selectOption('#observer-scope', 'active');
     await page.fill('#observer-end', '23:59:59');
@@ -87,6 +115,56 @@ async function checkBrowserObserverScopes(browser, baseUrl, output) {
     await page.waitForTimeout(300);
     assert.equal(await page.evaluate(() => ObserverUI.result), null);
     assert.equal(await page.locator('#observer-form').getAttribute('aria-busy'), 'false');
+    await page.evaluate(() => {
+      const report = window.__wordScopeSeed,
+        t = report.start;
+      ObserverUI.render({
+        ...report,
+        result: {
+          ...report.result,
+          rows: Array.from({ length: 1001 }, (_, i) => ({
+            id: 100001 + (i % 3),
+            name: 'WORD PASS ' + i,
+            entry: t,
+            exit: t + 10000,
+            peakTime: t + 5000,
+            duration: 10,
+            elevation: 45,
+            azimuth: 90,
+            range: 1000,
+            entryAzimuth: 80,
+            exitAzimuth: 100,
+            epoch: t,
+          })),
+          unique: 3,
+        },
+      });
+    });
+    for (const language of ['ar', 'en']) {
+      if (language === 'en') await page.click('#language-toggle');
+      await page.click('#observer-word');
+      await page.waitForFunction(
+        () => !document.getElementById('observer-download').hidden,
+        {},
+        { timeout: 45000 },
+      );
+      assert((await page.locator('#observer-download').getAttribute('download')).endsWith('.zip'));
+      const bytes = Buffer.from(
+        await page.evaluate(async () =>
+          Array.from(
+            new Uint8Array(await (await StateStore.get('observer-word')).blob.arrayBuffer()),
+          ),
+        ),
+      );
+      checkWordBundle(bytes, language);
+    }
+    // Cancel a second preparation without throwing away the computed passes.
+    await page.click('#observer-word');
+    await page.click('#observer-cancel');
+    assert.equal(await page.evaluate(() => ObserverUI.result.result.rows.length), 1001);
+    assert.equal(await page.locator('#observer-form').getAttribute('aria-busy'), 'false');
+    assert(await page.locator('#observer-download').isHidden());
+    await page.screenshot({ path: output + '/observer-word-bundle.png' });
     assert.deepEqual(errors, []);
   } catch (error) {
     console.error(

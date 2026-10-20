@@ -1,4 +1,9 @@
 {
+  "تفاصيل المرور": "Pass details",
+  "الملخص يصف كامل فترة الرصد؛ هذا الملف يتضمن جزءًا من حالات المرور.": "The summary covers the full observing period; this file contains some of its passes.",
+  "أُلغي تجهيز Word. يبقى التقرير متاحًا.": "Word preparation cancelled. The report remains available.",
+  "جارٍ تجهيز Word في الخلفية…": "Preparing Word in the background\u2026",
+  "حزمة Word جاهزة؛ تشمل جميع حالات المرور، بحد أقصى 500 حالة في كل جزء.": "Word package ready; all passes are included, with at most 500 passes per part.",
   "مدار ": "Madar ",
   "مواقع الرصد المحفوظة": "Saved observing sites",
   "تحديد موقع الرصد على الخارطة": "Choose observing site on the map",
