@@ -12,6 +12,10 @@ async function checkBrowserObserverScopes(browser, baseUrl, output) {
     page = await context.newPage(),
     errors = [];
   page.on('pageerror', (error) => errors.push(error.message));
+  // Intelligence is intentionally a local, independently sourced group, not a relay request.
+  await page.route('**/data/intelligence.txt', (r) =>
+    r.fulfill({ contentType: 'application/json', body: JSON.stringify(data.slice(1, 3)) }),
+  );
   for (const route of ['**/api/orbits?*', 'https://celestrak.org/**'])
     await page.route(route, (r) => {
       const params = new URL(r.request().url()).searchParams,
@@ -78,6 +82,21 @@ async function checkBrowserObserverScopes(browser, baseUrl, output) {
     assert.equal(await page.evaluate(() => ObserverUI.result), null);
     assert.equal(await page.locator('#observer-form').getAttribute('aria-busy'), 'false');
     assert.deepEqual(errors, []);
+  } catch (error) {
+    console.error(
+      'Observer scope diagnostic',
+      await page.evaluate(() => ({
+        scope: document.getElementById('observer-scope').value,
+        status: document.getElementById('observer-status').textContent,
+        total: window.ObserverUI?.result?.result.total,
+        invalid: [...document.querySelectorAll('#observer-form [aria-invalid=true]')].map(
+          (n) => n.id,
+        ),
+      })),
+      errors,
+    );
+    await page.screenshot({ path: output + '/observer-scopes-failure.png' });
+    throw error;
   } finally {
     await context.close();
   }
