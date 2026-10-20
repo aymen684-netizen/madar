@@ -90,6 +90,7 @@ async function checkBrowserNoWebGL(browser, url, output) {
         await page.click('#shell-nav-catalog');
         await page.locator('#list button').first().click();
         assert.equal(await page.evaluate(() => selection.current.id), 100001);
+        assert.equal(await page.evaluate(() => MadarShell.current()), 'catalog');
         assert(await page.locator('#favorite').isVisible());
         await page.click('#favorite');
         await page.waitForFunction(() => watchlist.has(100001));

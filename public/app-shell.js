@@ -145,7 +145,8 @@
   catalog.addEventListener(
     'click',
     (e) => {
-      if (e.target.closest('#list button')) show('map');
+      if (e.target.closest('#list button') && $('globe').dataset.renderState !== 'unavailable')
+        show('map');
     },
     true,
   );
