@@ -133,7 +133,6 @@ async function installNavigation(browser) {
         await locatorClick.call(advanced.locator(':scope>summary'));
       if (
         target.card &&
-        (await page.evaluate(() => MadarShell.compact())) &&
         (await page.locator('#globe-card').getAttribute('data-expanded')) === 'false' &&
         !(await loc.isVisible())
       )

@@ -73,6 +73,15 @@ const globeScene = GlobeScene.create({
       update();
     },
     error: (error) => console.error('Globe initialization', error),
+    unavailable: () => {
+      $('globe').dataset.renderState = 'unavailable';
+      if (flatMap.activate()) {
+        $('map-error').hidden = true;
+        $('hint').textContent = 'خارطة ثنائية الأبعاد · اختر قمرًا من الخارطة أو القائمة.';
+        update();
+      }
+      document.dispatchEvent(new Event('madar-map-unavailable'));
+    },
   },
 });
 const timeControls = TimeControls.create({
@@ -111,6 +120,18 @@ const Swarm = MapSwarm.create({
     update();
   },
 });
+const flatMap = FlatMap.create({
+  document,
+  holder: $('globe'),
+  position,
+  color: (object) =>
+    window.MapFleet?.color(object.id) || OrbitAppearance.color(OrbitAppearance.category(object)),
+  onSelect: (object) => mapChoose(object, false),
+});
+for (const event of ['madar-route', 'visibilitychange'])
+  document.addEventListener(event, () => {
+    if (flatMap.active()) updateGlobe();
+  });
 function parse(text, provenance = { mode: 'local', snapshot: '2026-10-13', fetchedAt: null }) {
   return OrbitData.parse(text, provenance);
 }
@@ -417,17 +438,35 @@ function refreshDataHealth(time = dateNow()) {
 function satelliteMarkers() {
   return $('marker-style')?.value === 'satellite';
 }
+function mapRows() {
+  const fleetBase = window.MapFleet?.display(rows()) || rows();
+  const base = window.PassMap?.display(fleetBase) || fleetBase;
+  return window.MapOrbitFilter?.display(base) || base;
+}
 function updateGlobe() {
   if (!world || window.RenderLifecycle?.sceneActive() === false) {
+    if (
+      !world &&
+      flatMap.active() &&
+      !document.hidden &&
+      document.body.dataset.shellView === 'map'
+    ) {
+      const count = flatMap.update({
+        objects: mapRows(),
+        time: dateNow(),
+        selected: selection.byUser ? selection.current?.id : null,
+        fleet: window.MapFleet?.snapshot().items.map((entry) => entry.object.id) || [],
+        exact: !!fixedTime || paused,
+      });
+      if (count !== undefined) $('count').textContent = count.toLocaleString('en-US');
+    }
     updateGlobeCard();
     return;
   }
   const mode = satelliteMarkers();
   globeScene.applyMarkerMode(world, mode);
   const now = dateNow();
-  const fleetBase = window.MapFleet?.display(rows()) || rows();
-  const base = window.PassMap?.display(fleetBase) || fleetBase;
-  const matches = window.MapOrbitFilter?.display(base) || base;
+  const matches = mapRows();
   const selectedVisible =
     !!selection.current && (!window.MapOrbitFilter || MapOrbitFilter.matches(selection.current));
   const dense = matches.length > DETAIL_LIMIT && Swarm.supported();
@@ -740,11 +779,19 @@ function updateGlobeCard() {
   if (selection.current) window.MapFleet?.card(selection.current);
   satelliteCard.renderFloating(selection.current, { now: dateNow(), tracking: selection.tracking });
 }
-$('globe-card-close').onclick = () => {
+function closeGlobeCard() {
+  const returnFocus = $('globe-card').contains(document.activeElement);
   satelliteCard.hide();
-};
+  if (returnFocus) $('map-tools-open')?.focus({ preventScroll: true });
+}
+$('globe-card-close').onclick = closeGlobeCard;
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') satelliteCard.hide();
+  if (
+    e.key === 'Escape' &&
+    !document.querySelector('dialog[open]') &&
+    !window.ObserverMapPicker?.active()
+  )
+    closeGlobeCard();
 });
 window.addEventListener('resize', positionGlobeCard);
 window.addEventListener('scroll', positionGlobeCard, { passive: true });

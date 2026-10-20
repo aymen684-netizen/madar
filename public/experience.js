@@ -74,13 +74,14 @@
   for (const id of ['report-cancel', 'analysis-cancel', 'observer-cancel', 'clear-private-data'])
     $(id)?.classList.add('action-caution');
   const welcome = $('welcome-dialog');
+  const mapUnavailable = () => $('globe').dataset.renderState === 'unavailable';
   function start(route = location.hash.slice(1) || 'map') {
     try {
       localStorage.setItem('madar-started', '1');
     } catch {}
     document.body.classList.remove('startup');
     welcome.close();
-    MadarShell.show(route, { focus: true });
+    MadarShell.show(mapUnavailable() && route === 'map' ? 'catalog' : route, { focus: true });
     window.dispatchEvent(new Event('resize'));
   }
   $('welcome-start').onclick = () => start();
@@ -103,6 +104,14 @@
     for (const id of ['welcome-start', 'welcome-track', 'welcome-country', 'welcome-report'])
       $(id).disabled = false;
   }
+  function mapFailure() {
+    welcome.querySelector('.welcome-note').textContent = document.getElementById('flat-map')
+      ? 'تعذّر العرض ثلاثي الأبعاد. تتوفر خارطة ثنائية الأبعاد، ودليل الأقمار والتقارير؛ قد يستمر تحميل البيانات في الخلفية.'
+      : 'الخارطة غير متاحة في هذا المتصفح. يمكنك فتح دليل الأقمار والتقارير؛ قد يستمر تحميل البيانات في الخلفية.';
+    ready();
+  }
+  document.addEventListener('madar-map-unavailable', mapFailure);
+  if (mapUnavailable()) mapFailure();
   Promise.resolve(window.MadarStartupReady).then(ready, ready);
   welcome.addEventListener('cancel', (event) => event.preventDefault());
   const reopen = make('button', 'العودة إلى شاشة البداية');

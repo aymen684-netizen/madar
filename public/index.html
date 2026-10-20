@@ -14,7 +14,8 @@
       content="تابع الأقمار الصناعية، استكشف مداراتها واحفظ قائمة متابعتك."
     />
     <link rel="stylesheet" href="app-base.css?v=53" />
-    <link rel="stylesheet" href="app-shell.css?v=74" />
+    <link rel="stylesheet" href="app-shell.css?v=82" />
+    <link rel="stylesheet" href="flat-map.css?v=85" />
     <link rel="icon" href="icons/favicon-32-v76.png" sizes="32x32" type="image/png" />
     <link rel="icon" href="icons/favicon-16-v76.png" sizes="16x16" type="image/png" />
     <link rel="manifest" href="manifest.webmanifest?v=76" />
@@ -30,6 +31,7 @@
     <link rel="stylesheet" href="form-layout.css?v=78" />
     <link rel="stylesheet" href="report-guidance.css?v=79" />
     <link rel="stylesheet" href="observing-overview.css?v=80" />
+    <link rel="stylesheet" href="satellite-summary.css?v=82" />
   </head>
   <body class="startup">
     <dialog id="welcome-dialog" aria-labelledby="welcome-brand" open>
@@ -1194,14 +1196,11 @@
         <section id="globe-card" class="globe-card" hidden aria-label="معلومات القمر المحدد">
           <button id="globe-card-close" type="button" aria-label="إغلاق معلومات القمر">×</button
           ><strong id="globe-card-name"></strong>
-          <p id="globe-card-id"></p>
           <p>
             <img id="globe-card-flag" width="24" alt="علم الدولة" hidden />
             <span id="globe-card-country"></span>
           </p>
           <p id="globe-card-mission"></p>
-          <p id="globe-card-evidence" class="muted"></p>
-          <div id="globe-card-sources"></div>
           <small id="globe-card-motion"></small>
           <p id="globe-card-data-status" class="muted"></p>
           <button
@@ -1211,16 +1210,25 @@
             aria-pressed="false"
           >
             ☆ إضافة إلى المفضلة</button
-          ><button id="globe-card-source" class="satellite-card-action" type="button">
-            بيانات المصدر التفصيلية</button
           ><button
             id="track-selected"
             class="satellite-card-action"
             type="button"
             aria-pressed="false"
           >
-            متابعة حركة القمر</button
-          ><small>الموقع والحركة تقديران من العناصر المدارية المتاحة.</small>
+            متابعة حركة القمر
+          </button>
+          <div id="globe-card-technical" hidden>
+            <p id="globe-card-id"></p>
+            <p id="globe-card-evidence" class="muted"></p>
+            <div id="globe-card-sources"></div>
+            <small id="globe-card-format"></small>
+            <small id="globe-card-epoch"></small>
+            <button id="globe-card-source" class="satellite-card-action" type="button">
+              بيانات المصدر التفصيلية
+            </button>
+            <small>الموقع والحركة تقديران من العناصر المدارية المتاحة.</small>
+          </div>
         </section>
         <div id="hint" class="hint">اسحب للتدوير · مرّر للتكبير · اضغط على قمر لتتبّعه</div>
         <div class="scene-bottom">
@@ -1339,10 +1347,10 @@
         >مصدر البيانات: CelesTrak ↗</a
       >
     </footer>
-    <script src="network-resources.js?v=81"></script>
+    <script src="network-resources.js?v=82"></script>
     <script src="network-policy.js?v=43"></script>
-    <script src="i18n.js?v=80"></script>
-    <script src="privacy.js?v=77"></script>
+    <script src="i18n.js?v=84"></script>
+    <script src="privacy.js?v=82"></script>
     <script src="observer-sites-core.js?v=77"></script>
     <script src="observer-cities.js?v=80"></script>
     <script src="observer-sites.js?v=80"></script>
@@ -1368,14 +1376,15 @@
     <script src="map-swarm.js?v=54"></script>
     <script src="satellite-selection.js?v=55"></script>
     <script src="watchlist-state.js?v=56"></script>
-    <script src="satellite-card.js?v=67"></script>
+    <script src="satellite-card.js?v=82"></script>
     <script src="data-health.js?v=58"></script>
     <script src="catalog-rows.js?v=59"></script>
     <script src="catalog-list.js?v=67"></script>
     <script src="globe-motion.js?v=67"></script>
-    <script src="globe-scene.js?v=78"></script>
+    <script src="globe-scene.js?v=79"></script>
     <script src="time-controls.js?v=73"></script>
-    <script src="app.js?v=78"></script>
+    <script src="flat-map.js?v=85"></script>
+    <script src="app.js?v=84"></script>
     <script src="watchlist-backup.js?v=67"></script>
     <script src="report-archive.js?v=34"></script>
     <script src="report-brief.js?v=75"></script>
@@ -1398,12 +1407,12 @@
     <script src="observer-report.js?v=75"></script>
     <script src="observer.js?v=77"></script>
     <script src="country-inventory-core.js?v=50"></script>
-    <script src="app-shell.js?v=75"></script>
+    <script src="app-shell.js?v=83"></script>
     <script src="inventory-report.js?v=75"></script>
     <script src="map-display.js?v=81"></script>
     <script src="data-refresh.js?v=35"></script>
     <script src="program-extras.js?v=75"></script>
-    <script src="experience.js?v=76"></script>
+    <script src="experience.js?v=84"></script>
     <script src="mobile-map.js?v=75"></script>
     <script src="map-orbit-filter.js?v=72"></script>
     <script src="map-fleet.js?v=80"></script>

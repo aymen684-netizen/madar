@@ -3,7 +3,11 @@ const fs = require('node:fs'),
 async function checkBrowserMapSite(browser, baseUrl, output) {
   const fixture = {
     ...JSON.parse(fs.readFileSync('scripts/fixtures/omm-six-digit.json')),
-    EPOCH: new Date().toISOString(),
+    // At this epoch/node the satellite is near 0° N, 45° E, in the test camera's
+    // hemisphere. Wall-clock propagation can put it behind Earth, where the
+    // globe correctly omits its HTML marker from the DOM.
+    EPOCH: '2026-10-16T00:00:00Z',
+    RA_OF_ASC_NODE: 70,
   };
   for (const mobile of [false, true]) {
     const context = await browser.newContext({
@@ -86,6 +90,10 @@ async function checkBrowserMapSite(browser, baseUrl, output) {
       await page.waitForFunction(
         () => window.ObserverMapPicker && window.MadarShell && world && objects.length === 1,
       );
+      await page.evaluate((epoch) => {
+        fixedTime = new Date(epoch);
+        update();
+      }, fixture.EPOCH);
       await page.evaluate(() => MadarI18n.ready);
       await page.click('#shell-nav-reports');
       const timeWidth = await page.locator('#report-start-time').evaluate((input) => ({
@@ -243,6 +251,16 @@ async function checkBrowserMapSite(browser, baseUrl, output) {
           shell: !!window.MadarShell,
           world: typeof world !== 'undefined' && !!world,
           count: typeof objects !== 'undefined' ? objects.length : null,
+          sceneTime: typeof dateNow === 'function' ? dateNow().toISOString() : null,
+          satellite: typeof objects !== 'undefined' && objects[0] ? position(objects[0]) : null,
+          htmlMarkers:
+            typeof world !== 'undefined' &&
+            world?.htmlElementsData().map((d) => ({
+              id: d.id,
+              observerSite: !!d.observerSite,
+              lat: d.lat,
+              lng: d.lng,
+            })),
           ready: document.readyState,
           mapError: document.getElementById('map-error')?.textContent,
           status: document.getElementById('status')?.textContent,

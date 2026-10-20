@@ -127,14 +127,43 @@
       );
       liveText('globe-card-country', 'الدولة أو الجهة: ' + (m?.country || 'غير متاح'));
       liveText('globe-card-mission', 'المهمة: ' + (m?.missionLabel || 'غير متاحة'));
+      const missionNode = $('globe-card-mission'),
+        missionTitle = m?.missionLabel || 'غير متاحة';
+      if (missionNode.dataset.missionTitle !== missionTitle) {
+        missionNode.dataset.missionTitle = missionTitle;
+        missionNode.setAttribute('title', missionTitle);
+      }
       liveText(
         'globe-card-evidence',
         (m?.evidenceLabel || 'جارٍ تحميل المعلومات') + (m?.checked ? ' · ' + m.checked : ''),
       );
       renderMetadataSources($('globe-card-sources'), m, object);
+      const quality = orbit.freshness(object, now);
+      if (card.dataset.quality !== quality.level) card.dataset.quality = quality.level;
+      if (!card.dataset.qualityHint) {
+        card.dataset.qualityHint = '1';
+        $('globe-card-data-status').setAttribute(
+          'title',
+          'الفارق بين وقت العرض ووقت بيانات المدار، وليس وقت آخر جلب.',
+        );
+      }
       liveText(
         'globe-card-data-status',
-        orbit.freshness(object, now).label + ' · ' + (object.omm ? 'OMM JSON' : 'TLE'),
+        !Number.isFinite(quality.hours)
+          ? 'تاريخ بيانات المدار غير متاح؛ لا يمكن تقييم دقة التقدير.'
+          : 'الفارق عن وقت بيانات المدار: ' +
+              quality.hours.toFixed(1) +
+              ' ساعة' +
+              (quality.level === 'old' ? ' · قد تقل دقة الموقع.' : ' · الموقع تقديري.'),
+      );
+      liveText('globe-card-format', 'صيغة بيانات المدار: ' + (object.omm ? 'OMM JSON' : 'TLE'));
+      liveText(
+        'globe-card-epoch',
+        Number.isFinite(quality.epoch)
+          ? 'وقت بيانات المدار: ' +
+              new Date(quality.epoch).toISOString().slice(0, 19).replace('T', ' ') +
+              ' UTC'
+          : 'تاريخ بيانات المدار غير متاح',
       );
       liveText(
         'globe-card-motion',
