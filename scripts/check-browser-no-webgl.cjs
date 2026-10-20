@@ -6,21 +6,24 @@ async function checkBrowserNoWebGL(browser, url, output) {
     EPOCH: new Date().toISOString(),
   };
   for (const mobile of [false, true])
-    for (const failure of ['webgl', 'compat-script']) {
+    for (const failure of ['webgl', 'compat-script', 'no-canvas']) {
       const context = await browser.newContext({
         viewport: mobile ? { width: 390, height: 844 } : { width: 1440, height: 1000 },
         isMobile: mobile,
         hasTouch: mobile,
         madarWelcome: true,
       });
-      await context.addInitScript((en) => {
-        if (en) localStorage.setItem('madar-language', 'en');
-        localStorage.setItem('madar-save-enabled', 'false');
-        const getContext = HTMLCanvasElement.prototype.getContext;
-        HTMLCanvasElement.prototype.getContext = function (kind, ...args) {
-          return /webgl/i.test(kind) ? null : getContext.call(this, kind, ...args);
-        };
-      }, !mobile);
+      await context.addInitScript(
+        ({ en, noCanvas }) => {
+          if (en) localStorage.setItem('madar-language', 'en');
+          localStorage.setItem('madar-save-enabled', 'false');
+          const getContext = HTMLCanvasElement.prototype.getContext;
+          HTMLCanvasElement.prototype.getContext = function (kind, ...args) {
+            return noCanvas || /webgl/i.test(kind) ? null : getContext.call(this, kind, ...args);
+          };
+        },
+        { en: !mobile, noCanvas: failure === 'no-canvas' },
+      );
       const page = await context.newPage(),
         errors = [];
       page.on('pageerror', (error) => errors.push(error.message));
@@ -65,7 +68,13 @@ async function checkBrowserNoWebGL(browser, url, output) {
           assert(await page.locator('#' + id).isEnabled());
         assert(
           (await page.locator('.welcome-note').innerText()).includes(
-            mobile ? 'الخارطة غير متاحة' : 'map is unavailable',
+            failure === 'no-canvas'
+              ? mobile
+                ? 'الخارطة غير متاحة'
+                : 'map is unavailable'
+              : mobile
+                ? 'خارطة ثنائية الأبعاد'
+                : '2D map',
           ),
         );
         await page.screenshot({
@@ -76,17 +85,57 @@ async function checkBrowserNoWebGL(browser, url, output) {
         assert.equal(await page.evaluate(() => MadarShell.current()), 'catalog');
         await page.click('#shell-nav-reports');
         assert(await page.locator('#shell-reports').isVisible());
+        if (failure === 'no-canvas') {
+          assert.equal(await page.locator('#flat-map').count(), 0);
+          releaseData();
+          await page.waitForFunction(() => objects.length === 1 && !catalogLoading);
+          continue;
+        }
         await page.click('#shell-nav-map');
-        assert(await page.locator('#map-error').isVisible());
-        assert(
-          (await page.locator('#map-error').innerText()).includes(
-            mobile ? 'دليل الأقمار والتقارير' : 'satellite catalog and reports',
-          ),
-        );
+        assert(!(await page.locator('#map-error').isVisible()));
+        assert(await page.locator('#flat-map-canvas').isVisible());
         for (const id of ['plus', 'minus', 'reset', 'focus'])
           assert(await page.locator('#' + id).isDisabled());
         releaseData();
         await page.waitForFunction(() => objects.length === 1 && !catalogLoading);
+        await page.waitForFunction(
+          () => document.getElementById('flat-map-select').options.length === 2,
+        );
+        const point = await page.evaluate(() => {
+          const canvas = document.getElementById('flat-map-canvas'),
+            box = canvas.getBoundingClientRect(),
+            width = Math.min(box.width, box.height * 2),
+            height = width / 2,
+            p = position(objects[0]),
+            xy = FlatMap.project(p.lat, p.lng, {
+              x: (box.width - width) / 2,
+              y: (box.height - height) / 2,
+              width,
+              height,
+            });
+          return { x: box.x + xy.x, y: box.y + xy.y };
+        });
+        if (mobile) await page.touchscreen.tap(point.x, point.y);
+        else await page.mouse.click(point.x, point.y);
+        await page.locator('#globe-card').waitFor({ state: 'visible' });
+        assert.equal(await page.evaluate(() => selection.current.id), 100001);
+        await page.click('#globe-card-close');
+        await page.selectOption('#flat-map-select', '100001');
+        await page.locator('#globe-card').waitFor({ state: 'visible' });
+        await page.click('#globe-card-close');
+        const beforeTime = await page
+          .locator('#flat-map-canvas')
+          .evaluate((node) => node.toDataURL());
+        await page.evaluate(() => {
+          fixedTime = new Date(Date.now() + 3600000);
+          update();
+        });
+        assert.notEqual(
+          await page.locator('#flat-map-canvas').evaluate((node) => node.toDataURL()),
+          beforeTime,
+          '2D positions follow the scene clock',
+        );
+        await page.screenshot({ path: output + '/flat-map-' + failure + '-' + mobile + '.png' });
         await page.click('#shell-nav-catalog');
         await page.locator('#list button').first().click();
         assert.equal(await page.evaluate(() => selection.current.id), 100001);
@@ -117,6 +166,35 @@ async function checkBrowserNoWebGL(browser, url, output) {
         await page.screenshot({
           path: output + '/no-webgl-report-' + failure + '-' + mobile + '.png',
         });
+        await page.evaluate(() => {
+          const seed = OrbitData.serialize(objects[0]);
+          objects = prepare(
+            Array.from({ length: 620 }, (_, i) => ({
+              ...seed,
+              id: 100001 + i,
+              name: 'FLAT MAP ' + i,
+            })),
+          );
+          choose(objects[619], false);
+          renderList();
+          update();
+        });
+        await page.click('#shell-nav-map');
+        await page.waitForFunction(
+          () => document.getElementById('flat-map-select').options.length === 501,
+        );
+        assert.equal(
+          await page.locator('#flat-map-select').inputValue(),
+          '100620',
+          'selected satellite survives the display cap',
+        );
+        assert.equal(await page.locator('#flat-map-count').textContent(), '500 / 620');
+        await page.click('#shell-nav-catalog');
+        await page.fill('#search', 'FLAT MAP 619');
+        await page.click('#shell-nav-map');
+        await page.waitForFunction(
+          () => document.getElementById('flat-map-count').textContent === '1 / 1',
+        );
         assert.deepEqual(errors, []);
       } catch (error) {
         console.error('No-WebGL diagnostic', { mobile, failure, errors });
@@ -131,7 +209,7 @@ async function checkBrowserNoWebGL(browser, url, output) {
       }
     }
   console.log(
-    'PASS: unavailable WebGL and failed compatibility download allow bilingual desktop/mobile entry before data, catalog selection/favorites and real observer reports without a renderer',
+    'PASS: 2D fallback without WebGL, real mouse/touch and accessible selection, scene clock, capped/filterable markers, catalog/favorites and real observer reports; no-Canvas entry on bilingual desktop/mobile',
   );
 }
 module.exports = { checkBrowserNoWebGL };

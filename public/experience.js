@@ -105,8 +105,9 @@
       $(id).disabled = false;
   }
   function mapFailure() {
-    welcome.querySelector('.welcome-note').textContent =
-      'الخارطة غير متاحة في هذا المتصفح. يمكنك فتح دليل الأقمار والتقارير؛ قد يستمر تحميل البيانات في الخلفية.';
+    welcome.querySelector('.welcome-note').textContent = document.getElementById('flat-map')
+      ? 'تعذّر العرض ثلاثي الأبعاد. تتوفر خارطة ثنائية الأبعاد، ودليل الأقمار والتقارير؛ قد يستمر تحميل البيانات في الخلفية.'
+      : 'الخارطة غير متاحة في هذا المتصفح. يمكنك فتح دليل الأقمار والتقارير؛ قد يستمر تحميل البيانات في الخلفية.';
     ready();
   }
   document.addEventListener('madar-map-unavailable', mapFailure);
