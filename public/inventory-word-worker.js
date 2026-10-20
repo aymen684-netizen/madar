@@ -5,7 +5,9 @@ self.onmessage = async (e) => {
     const { title, notes, headers, groups, language, brief, brandBytes, detail = 'full' } = e.data,
       D = docx,
       rtl = language !== 'en',
-      align = D.AlignmentType.START;
+      align = D.AlignmentType.START,
+      widths = e.data.columnWidths || [2200, 1900, 2800, 4600, 2900],
+      prefix = e.data.filePrefix || 'madar-inventory';
     const paragraph = (text, opts = {}) =>
       new D.Paragraph({
         bidirectional: rtl,
@@ -27,7 +29,7 @@ self.onmessage = async (e) => {
       });
     const cell = (value, i, header = false, index = 0) =>
       new D.TableCell({
-        width: { size: [2200, 1900, 2800, 4600, 2900][i], type: D.WidthType.DXA },
+        width: { size: widths[i], type: D.WidthType.DXA },
         verticalAlign: D.VerticalAlign.CENTER,
         margins: { top: 100, bottom: 100, left: 100, right: 100 },
         shading: { fill: header ? 'DDEAF1' : index % 2 ? 'F4F6F8' : 'FFFFFF' },
@@ -84,7 +86,7 @@ self.onmessage = async (e) => {
           new D.Table({
             visuallyRightToLeft: rtl,
             width: { size: 14400, type: D.WidthType.DXA },
-            columnWidths: [2200, 1900, 2800, 4600, 2900],
+            columnWidths: widths,
             borders: Object.fromEntries(
               ['top', 'bottom', 'left', 'right', 'insideHorizontal', 'insideVertical'].map((k) => [
                 k,
@@ -142,7 +144,8 @@ self.onmessage = async (e) => {
             );
           files.push({
             name:
-              'madar-inventory-' +
+              prefix +
+              '-' +
               String(group.code || 'country').replace(/[^a-zA-Z0-9_-]/g, '_') +
               '-' +
               String(Math.floor(i / 500) + 1).padStart(3, '0') +

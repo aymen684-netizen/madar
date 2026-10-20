@@ -1,6 +1,7 @@
 (function (root) {
   'use strict';
   let worker = null,
+    wordTask = null,
     result = null,
     token = 0,
     url = null;
@@ -37,6 +38,8 @@
   function clear() {
     StateStore.remove('observer-result');
     token++;
+    wordTask?.cancel();
+    wordTask = null;
     worker?.terminate();
     worker = null;
     result = null;
@@ -169,6 +172,15 @@
     }
   };
   e('cancel').onclick = () => {
+    if (wordTask) {
+      token++;
+      wordTask.cancel();
+      wordTask = null;
+      busy(false);
+      e('word').disabled = false;
+      e('status').textContent = 'أُلغي تجهيز Word. يبقى التقرير متاحًا.';
+      return;
+    }
     clear();
     busy(false);
     e('status').textContent = 'أُلغي الحساب؛ لم يُنشأ تقرير نهائي.';
@@ -179,23 +191,47 @@
       active = token;
     e('word').disabled = true;
     try {
-      await WordDelivery.library();
-      r.brandBytes = await ReportLayout.brand();
-      if (active !== token) return;
-      const blob = await docx.Packer.toBlob(ObserverReport.create(docx, r));
+      let blob,
+        extension = 'docx';
+      if (r.result.rows.length > 500 && ReportLayout.mode('observer') !== 'brief') {
+        busy(true);
+        e('download').hidden = true;
+        WordDelivery.clear('observer');
+        e('status').textContent = 'جارٍ تجهيز Word في الخلفية…';
+        wordTask = root.ObserverWord.start(r, (done) => {
+          if (active === token)
+            e('status').textContent = 'Word: ' + done + ' / ' + r.result.rows.length;
+        });
+        ({ blob, extension } = await wordTask.promise);
+      } else {
+        await WordDelivery.library();
+        r.brandBytes = await ReportLayout.brand();
+        if (active !== token) return;
+        blob = await docx.Packer.toBlob(ObserverReport.create(docx, r));
+      }
       if (active !== token) return;
       if (url) URL.revokeObjectURL(url);
       url = URL.createObjectURL(blob);
       e('download').href = url;
       e('download').download =
-        r.archive.id + (ReportLayout.mode('observer') === 'brief' ? '-brief' : '') + '.docx';
+        r.archive.id +
+        (ReportLayout.mode('observer') === 'brief' ? '-brief' : '') +
+        '.' +
+        extension;
       e('download').hidden = false;
       await WordDelivery.attach('observer', blob, e('download').download);
-      e('status').textContent = 'Word جاهز للتنزيل أو المشاركة.';
+      e('status').textContent =
+        extension === 'zip'
+          ? 'حزمة Word جاهزة؛ تشمل جميع حالات المرور، بحد أقصى 500 حالة في كل جزء.'
+          : 'Word جاهز للتنزيل أو المشاركة.';
     } catch (err) {
-      e('status').textContent = err.message;
+      if (active === token) e('status').textContent = err.message;
     } finally {
-      if (active === token) e('word').disabled = false;
+      if (active === token) {
+        wordTask = null;
+        busy(false);
+        e('word').disabled = false;
+      }
     }
   };
   const now = new Date(Date.now() + 3 * 36e5);
@@ -216,6 +252,9 @@
   document.addEventListener('madar-language', () => {
     if (!result || worker) return;
     token++;
+    wordTask?.cancel();
+    wordTask = null;
+    busy(false);
     WordDelivery.clear('observer');
     if (url) URL.revokeObjectURL(url);
     url = null;
@@ -229,6 +268,9 @@
     clear,
     invalidateWord() {
       token++;
+      wordTask?.cancel();
+      wordTask = null;
+      busy(false);
       WordDelivery.clear('observer');
       if (url) URL.revokeObjectURL(url);
       url = null;

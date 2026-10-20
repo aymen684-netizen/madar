@@ -86,6 +86,30 @@
       ]),
     ];
   }
+  function wordRows(r) {
+    return [
+      [
+        'القمر وNORAD',
+        'الدخول والخروج',
+        'الذروة وزاويتها',
+        'السمت عند الدخول / الذروة / الخروج',
+        'المسافة كم',
+        'المدة ثانية',
+      ],
+      ...r.result.rows.map((v) => [
+        v.name + '\n' + v.id,
+        ReportDocument.stamp(v.entry, r.offset) +
+          (v.clippedStart ? ' *' : '') +
+          '\n' +
+          ReportDocument.stamp(v.exit, r.offset) +
+          (v.clippedEnd ? ' *' : ''),
+        ReportDocument.stamp(v.peakTime, r.offset) + '\n' + v.elevation.toFixed(2) + '°',
+        [v.entryAzimuth, v.azimuth, v.exitAzimuth].map(angle).join(' / '),
+        v.range.toFixed(1),
+        v.duration.toFixed(1),
+      ]),
+    ];
+  }
   function create(D, r) {
     D = root.MadarI18n?.wordLibrary(D) || D;
     if (root.ReportLayout.mode('observer') === 'brief')
@@ -114,28 +138,7 @@
             .map((line, i) => new TextRun({ text: line, break: i ? 1 : 0, font: 'Arial', size })),
         }),
       widths = [1800, 2200, 1800, 1500, 1060, 1000];
-    const data = [
-      [
-        'القمر وNORAD',
-        'الدخول والخروج',
-        'الذروة وزاويتها',
-        'السمت عند الدخول / الذروة / الخروج',
-        'المسافة كم',
-        'المدة ثانية',
-      ],
-      ...r.result.rows.map((v) => [
-        v.name + '\n' + v.id,
-        ReportDocument.stamp(v.entry, r.offset) +
-          (v.clippedStart ? ' *' : '') +
-          '\n' +
-          ReportDocument.stamp(v.exit, r.offset) +
-          (v.clippedEnd ? ' *' : ''),
-        ReportDocument.stamp(v.peakTime, r.offset) + '\n' + v.elevation.toFixed(2) + '°',
-        [v.entryAzimuth, v.azimuth, v.exitAzimuth].map(angle).join(' / '),
-        v.range.toFixed(1),
-        v.duration.toFixed(1),
-      ]),
-    ];
+    const data = wordRows(r);
     const children = [
       new Paragraph({
         text: 'تقرير مرور الأقمار من موقع الرصد',
@@ -183,5 +186,5 @@
       detail: root.ReportLayout.mode('observer'),
     });
   }
-  root.ObserverReport = { lines, rows, create };
+  root.ObserverReport = { lines, rows, wordRows, create };
 })(window);
