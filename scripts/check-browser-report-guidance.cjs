@@ -109,6 +109,14 @@ async function checkBrowserReportGuidance(browser, baseUrl, output) {
       await page.selectOption('#observer-scope', 'fleet');
       await next('observer');
       assert.equal(await page.locator('#observer-scope').getAttribute('aria-invalid'), 'true');
+      await page.selectOption('#observer-scope', 'types');
+      await next('observer');
+      assert.equal(await page.locator('#observer-scope').getAttribute('aria-invalid'), 'true');
+      await page.click('[data-type-prefix="observer"][data-type-preset="navigation"]');
+      await next('observer');
+      assert(await page.locator('#observer-form .report-guide-review').isVisible());
+      assert.equal(await page.evaluate(() => ObserverUI.result), null);
+      await page.click('#observer-guide-back');
       await page.selectOption('#observer-scope', 'selected');
       await page.click('#shell-nav-catalog');
       await page.locator('#list button').first().click();
