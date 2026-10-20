@@ -35,6 +35,13 @@
         altitude: width <= 700 ? Math.max(2, (height / width) * 1.4) : 2.6,
       };
     }
+    function unavailable(message, error) {
+      $('map-error').hidden = false;
+      $('map-error').textContent = message;
+      for (const id of ['plus', 'minus', 'reset', 'focus']) $(id).disabled = true;
+      events.unavailable?.();
+      if (error) events.error(error);
+    }
     function initialize(compat = false) {
       try {
         const Globe = getGlobe(),
@@ -185,18 +192,17 @@
             events.refresh();
           };
           script.onerror = () => {
-            $('map-error').hidden = false;
-            $('map-error').textContent =
-              'تعذّر تحميل العارض المتوافق. حدّث الصفحة أو افتح التطبيق في متصفح الجهاز.';
+            unavailable(
+              'تعذّر تحميل عارض الخارطة. يمكنك استخدام دليل الأقمار والتقارير، أو تجربة متصفح آخر.',
+            );
           };
           document.head.append(script);
           return;
         }
-        $('map-error').hidden = false;
-        $('map-error').textContent =
-          'تعذّر إكمال العرض. جرّب إعادة تحميل الصفحة أو فتح التطبيق في متصفح الجهاز.';
-        events.error(e);
-        for (const id of ['plus', 'minus', 'reset', 'focus']) $(id).disabled = true;
+        unavailable(
+          'تعذّر عرض الخارطة ثلاثية الأبعاد في هذا المتصفح. يمكنك استخدام دليل الأقمار والتقارير، أو تجربة متصفح آخر.',
+          e,
+        );
       }
     }
     function applyMarkerMode(world, mode) {

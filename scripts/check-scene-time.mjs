@@ -185,6 +185,7 @@ function scene({ failModern = false, failCompat = false, width = 390, height = 8
     refreshed = 0,
     attached = 0,
     errors = 0,
+    unavailable = 0,
     satellite = false,
     observed;
   function Globe(_holder, options) {
@@ -235,6 +236,7 @@ function scene({ failModern = false, failCompat = false, width = 390, height = 8
       error: () => {
         errors++;
       },
+      unavailable: () => unavailable++,
     },
   });
   return {
@@ -252,6 +254,9 @@ function scene({ failModern = false, failCompat = false, width = 390, height = 8
     },
     get errors() {
       return errors;
+    },
+    get unavailable() {
+      return unavailable;
     },
     get attached() {
       return attached;
@@ -301,17 +306,21 @@ assert.equal(script.src, 'vendor/globe-compat.min.js');
 script.onload();
 assert.equal(fallback.linked, fallback.render.world);
 assert.equal(fallback.refreshed, 1);
+assert.equal(fallback.unavailable, 0, 'successful compatibility fallback keeps normal startup');
 const failed = scene({ failModern: true, failCompat: true });
 failed.api.initialize();
 failed.elements.node('head').children[0].onload();
 assert.equal(failed.linked, null);
 assert.equal(failed.errors, 1);
+assert.equal(failed.unavailable, 1, 'terminal rendering failure releases non-map startup');
 assert.equal(failed.elements.node('map-error').hidden, false);
 assert.equal(failed.elements.node('focus').disabled, true);
 const offline = scene({ failModern: true });
 offline.api.initialize();
 offline.elements.node('head').children[0].onerror();
-assert(offline.elements.node('map-error').textContent.includes('تحميل العارض المتوافق'));
+assert(offline.elements.node('map-error').textContent.includes('تحميل عارض الخارطة'));
+assert.equal(offline.unavailable, 1, 'compatibility script failure also releases startup');
+assert.equal(offline.elements.node('focus').disabled, true);
 console.log(
   'PASS: isolated time controls, UTC/Riyadh midnight round-trip, invalid dates, fixed/live/pause routing; globe configuration, picking, fonts, camera bounds, resize and compatibility success/failure',
 );

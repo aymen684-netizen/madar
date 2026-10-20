@@ -73,6 +73,10 @@ const globeScene = GlobeScene.create({
       update();
     },
     error: (error) => console.error('Globe initialization', error),
+    unavailable: () => {
+      $('globe').dataset.renderState = 'unavailable';
+      document.dispatchEvent(new Event('madar-map-unavailable'));
+    },
   },
 });
 const timeControls = TimeControls.create({

@@ -61,6 +61,10 @@ const server = http.createServer((req, res) => {
     return context;
   };
   try {
+    if (includes('interface') || smoke) {
+      const { checkBrowserNoWebGL } = require('./check-browser-no-webgl.cjs');
+      await checkBrowserNoWebGL(browser, baseUrl, output);
+    }
     if (includes('observing') || smoke) {
       const { checkBrowserSatelliteSummary } = require('./check-browser-satellite-summary.cjs');
       await checkBrowserSatelliteSummary(browser, baseUrl, output);
