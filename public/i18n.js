@@ -138,7 +138,7 @@
   function start() {
     setLanguage(lang);
   }
-  const promise = fetch('data/en.json?v=87')
+  const promise = fetch('data/en.json?v=88')
     .then((r) => {
       if (!r.ok) throw Error('Language unavailable');
       return r.json();
