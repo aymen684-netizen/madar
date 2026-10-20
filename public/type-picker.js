@@ -118,7 +118,7 @@
     return row;
   }
   if (document.getElementById)
-    for (const prefix of ['catalog', 'report', 'analysis']) {
+    for (const prefix of ['catalog', 'report', 'analysis', 'observer']) {
       const field = document.getElementById(prefix + '-types');
       mountPresets(prefix, field);
       const advanced = field.querySelector('.type-advanced');

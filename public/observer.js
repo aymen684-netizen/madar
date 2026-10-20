@@ -31,6 +31,7 @@
   function busy(v) {
     e('form').setAttribute('aria-busy', String(v));
     for (const n of e('form').querySelectorAll('input,select,button')) n.disabled = v;
+    TypePicker.lock('observer', v);
     e('cancel').disabled = !v;
   }
   function clear() {
@@ -85,7 +86,8 @@
     e('progress').removeAttribute('value');
     e('status').textContent = 'جارٍ تجهيز بيانات التقرير…';
     try {
-      const offset = Number(e('zone').value),
+      const scope = e('scope').value,
+        offset = Number(e('zone').value),
         start = reportDate(e('date').value, e('start').value, offset),
         end = reportDate(e('date').value, e('end').value, offset) + (e('next').checked ? 864e5 : 0),
         request = {
@@ -102,22 +104,27 @@
           zoneLabel: offset === 3 ? 'الرياض UTC+03:00' : 'UTC',
           step: 10,
           scopeName:
-            e('scope').value === 'selected'
-              ? 'القمر المحدد'
-              : e('scope').value === 'fleet'
-                ? 'مجموعة الخارطة · حتى 12 قمرًا'
-                : 'المفضلة',
+            scope === 'types'
+              ? TypePicker.name(TypePicker.selected('observer'))
+              : scope === 'group'
+                ? TypePicker.selected('catalog').length
+                  ? TypePicker.name(TypePicker.selected('catalog'))
+                  : root.MadarI18n.original(document.getElementById('group').selectedOptions[0])
+                : root.MadarI18n.original(e('scope').selectedOptions[0]),
         };
       ObserverEngine.validate(request);
-      const data =
-        e('scope').value === 'selected'
-          ? [selection.current].filter(Boolean)
-          : e('scope').value === 'fleet'
-            ? root.MapFleet?.objects() || []
-            : watchlist.items.slice();
-      if (!data.length) throw Error('اختر قمرًا أو أضف أقمارًا إلى المتابعة.');
-      if (data.length > 500)
-        throw Error('الحد الأقصى 500 قمر لهذا الحساب؛ اختر القمر المحدد أو قلّل المتابعة.');
+      let data;
+      if (scope === 'types') data = await TypePicker.load('observer');
+      else if (scope === 'active') data = await loadGlobalCatalog();
+      else if (['military', 'intelligence'].includes(scope)) data = await fetchCatalogGroup(scope);
+      else if (scope === 'selected') data = [selection.current].filter(Boolean);
+      else if (scope === 'fleet') data = root.MapFleet?.objects() || [];
+      else data = scope === 'favorites' ? watchlist.items.slice() : objects;
+      if (active !== token) return;
+      if (data.failed?.length)
+        throw Error('تعذّر تحميل بعض أنواع المجموعة الحالية: ' + data.failed.join('، '));
+      if (!data.length) throw Error('قائمة الأقمار المختارة فارغة.');
+      request.scopeName = TypePicker.describe(data, request.scopeName);
       request.archive = await ReportArchive.capture('observer', data, request);
       if (active !== token) return;
       worker = new Worker('observer-worker.js?v=43');

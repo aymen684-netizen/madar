@@ -137,6 +137,8 @@ const server = http.createServer((req, res) => {
       await checkBrowserExperience(browser, baseUrl, output);
     }
     if (includes('reports')) {
+      const { checkBrowserObserverScopes } = require('./check-browser-observer-scopes.cjs');
+      await checkBrowserObserverScopes(browser, baseUrl, output);
       const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
       const errors = [];
       await page.route('https://celestrak.org/**', (route) => route.abort());

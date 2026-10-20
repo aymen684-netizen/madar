@@ -13,7 +13,7 @@
       name="description"
       content="تابع الأقمار الصناعية، استكشف مداراتها واحفظ قائمة متابعتك."
     />
-    <link rel="stylesheet" href="app-base.css?v=53" />
+    <link rel="stylesheet" href="app-base.css?v=86" />
     <link rel="stylesheet" href="app-shell.css?v=82" />
     <link rel="stylesheet" href="flat-map.css?v=85" />
     <link rel="icon" href="icons/favicon-32-v76.png" sizes="32x32" type="image/png" />
@@ -948,10 +948,19 @@
           ><label
             >الأقمار<select id="observer-scope">
               <option value="selected">القمر المحدد</option>
+              <option value="active">جميع الأقمار النشطة</option>
+              <option value="group">المجموعة الحالية</option>
               <option value="favorites">المفضلة · حتى 500 قمر</option>
               <option value="fleet">مجموعة الخارطة · حتى 12 قمرًا</option>
+              <option value="military">العسكرية والاستطلاع العلنية</option>
+              <option value="intelligence">الاستخبارية والاستطلاع الموثقة</option>
+              <option value="types">أنواع متعددة أختارها</option>
             </select></label
-          ><label>التاريخ<input id="observer-date" type="date" required /></label
+          >
+          <fieldset class="type-picker" id="observer-types">
+            <legend>اختر نوعًا أو أكثر</legend>
+          </fieldset>
+          <label>التاريخ<input id="observer-date" type="date" required /></label
           ><label>من<input id="observer-start" type="time" step="1" required /></label
           ><label>إلى<input id="observer-end" type="time" step="1" required /></label
           ><label class="next-day"
@@ -1362,8 +1371,8 @@
     <script src="flag-assets.js?v=15"></script>
     <script src="word-delivery.js?v=49"></script>
     <script src="orbit-service.js?v=45"></script>
-    <script src="satellite-groups.js?v=46"></script>
-    <script src="type-picker.js?v=46"></script>
+    <script src="satellite-groups.js?v=86"></script>
+    <script src="type-picker.js?v=86"></script>
     <script src="catalog-search.js?v=22"></script>
     <script src="user-guide.js?v=44"></script>
     <script src="render-lifecycle.js?v=67"></script>
@@ -1405,7 +1414,7 @@
     <script src="draft-state.js?v=75"></script>
     <script src="observer-engine.js?v=26"></script>
     <script src="observer-report.js?v=75"></script>
-    <script src="observer.js?v=77"></script>
+    <script src="observer.js?v=86"></script>
     <script src="country-inventory-core.js?v=50"></script>
     <script src="app-shell.js?v=83"></script>
     <script src="inventory-report.js?v=75"></script>
@@ -1418,6 +1427,6 @@
     <script src="map-fleet.js?v=80"></script>
     <script src="observer-map-picker.js?v=81"></script>
     <script src="form-layout.js?v=78"></script>
-    <script src="report-guidance.js?v=79"></script>
+    <script src="report-guidance.js?v=86"></script>
   </body>
 </html>

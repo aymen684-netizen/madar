@@ -49,7 +49,7 @@
           'الفترة والتوقيت',
           ['observer-date', 'observer-start', 'observer-end', 'observer-next', 'observer-zone'],
         ],
-        ['الأقمار والخيارات', ['observer-scope']],
+        ['الأقمار والخيارات', ['observer-scope', 'observer-types']],
       ],
       advanced: ['observer-elevation'],
     },

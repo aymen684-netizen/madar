@@ -296,7 +296,7 @@
   }
   function build() {
     if (typeof document === 'undefined') return;
-    for (const id of ['catalog-types', 'report-types', 'analysis-types']) {
+    for (const id of ['catalog-types', 'report-types', 'analysis-types', 'observer-types']) {
       const e = document.getElementById(id);
       if (e) checkboxes(e);
     }
