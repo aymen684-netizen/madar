@@ -190,14 +190,29 @@ async function checkBrowserNoWebGL(browser, url, output) {
         );
         assert.equal(await page.locator('#flat-map-count').textContent(), '500 / 620');
         await page.click('#shell-nav-catalog');
-        await page.fill('#search', 'FLAT MAP 619');
+        await page.fill('#search', '100620');
         await page.click('#shell-nav-map');
         await page.waitForFunction(
           () => document.getElementById('flat-map-count').textContent === '1 / 1',
         );
         assert.deepEqual(errors, []);
       } catch (error) {
-        console.error('No-WebGL diagnostic', { mobile, failure, errors });
+        console.error('No-WebGL diagnostic', {
+          mobile,
+          failure,
+          errors,
+          state: await page.evaluate(() => ({
+            route: document.body.dataset.shellView,
+            count: document.getElementById('flat-map-count')?.textContent,
+            query: document.getElementById('search')?.value,
+            rows:
+              typeof rows === 'function'
+                ? rows()
+                    .slice(0, 5)
+                    .map((o) => ({ id: o.id, name: o.name }))
+                : null,
+          })),
+        });
         await page.screenshot({
           path: output + '/no-webgl-failure-' + failure + '-' + mobile + '.png',
         });
