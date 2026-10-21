@@ -13,7 +13,7 @@
     "format:check": "prettier --check \"public/*.{js,css,html}\" \"worker/**/*.js\" \"security/**/*.js\" \"scripts/*.{mjs,cjs}\" \"*.md\" \".prettierrc.json\" \"package.json\""
   },
   "devDependencies": {
-    "playwright": "1.64.0",
+    "playwright": "1.64.1",
     "prettier": "3.9.10",
     "wrangler": "4.151.0"
   }
