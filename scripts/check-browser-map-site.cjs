@@ -66,6 +66,42 @@ async function checkBrowserMapSite(browser, baseUrl, output) {
         controls.enableDamping = damping;
       });
       await page.waitForTimeout(250);
+      if (process.env.MADAR_MAP_MATRIX_PROBE === '1') {
+        const probe = await page.evaluate(() => {
+          if (window.__matrixProbeDone) return null;
+          window.__matrixProbeDone = true;
+          world.pauseAnimation();
+          const controls = world.controls(),
+            camera = world.camera(),
+            damping = controls.enableDamping;
+          controls.enableDamping = false;
+          world.pointOfView({ lat: 30, lng: 7.8, altitude: 2.4 }, 0);
+          controls.update();
+          camera.updateMatrixWorld(true);
+          world.pointOfView({ lat: 25, lng: 45, altitude: 2.4 }, 0);
+          controls.update();
+          const stale = world.getScreenCoords(35, 45, 0),
+            inverseBefore = world.toGlobeCoords(stale.x, stale.y),
+            matrixBefore = camera.matrixWorld.elements.slice();
+          camera.updateMatrixWorld(true);
+          const inverseAfter = world.toGlobeCoords(stale.x, stale.y),
+            fresh = world.getScreenCoords(35, 45, 0),
+            inverseFresh = world.toGlobeCoords(fresh.x, fresh.y),
+            matrixAfter = camera.matrixWorld.elements.slice();
+          controls.enableDamping = damping;
+          world.resumeAnimation();
+          return {
+            stale,
+            inverseBefore,
+            inverseAfter,
+            fresh,
+            inverseFresh,
+            matrixBefore,
+            matrixAfter,
+          };
+        });
+        if (probe) console.log('MAP MATRIX PROBE', JSON.stringify({ mobile, ...probe }));
+      }
     }
     async function tap(lat, lng) {
       await page.evaluate(
