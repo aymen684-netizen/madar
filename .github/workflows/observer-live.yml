@@ -17,7 +17,7 @@ jobs:
       - run: npx playwright install chromium
       - run: node scripts/check-browser-observer-live.cjs
         env:
-          MADAR_TEST_URL: https://codex-observer-report-pagination-madar.aymen684.workers.dev/
+          MADAR_TEST_URL: https://madar.aymen684.workers.dev/
       - uses: actions/upload-artifact@v4
         if: always()
         with:
