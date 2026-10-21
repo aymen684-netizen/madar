@@ -1,0 +1,26 @@
+name: Diagnose map-site coordinate taps
+on:
+  push:
+    branches: [verification/map-site-diagnostic]
+permissions:
+  contents: read
+jobs:
+  map-site:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci --ignore-scripts
+      - run: npm run build
+      - run: npx playwright install chromium
+      - run: node scripts/check-browser-map-site-repeat.cjs
+        env:
+          MADAR_MAP_REPEATS: '3'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: map-site-diagnostic
+          path: test-results/

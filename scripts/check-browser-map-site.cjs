@@ -68,6 +68,40 @@ async function checkBrowserMapSite(browser, baseUrl, output) {
       await page.waitForTimeout(250);
     }
     async function tap(lat, lng) {
+      await page.evaluate(
+        ({ lat, lng }) => {
+          window.__mapTapLog ||= [];
+          window.__mapTapExpected = { lat, lng };
+          if (window.__mapTapObserver) return;
+          window.__mapTapObserver = true;
+          for (const type of ['pointerdown', 'pointerup'])
+            document.addEventListener(
+              type,
+              (event) => {
+                const globe = document.getElementById('globe');
+                if (!ObserverMapPicker.active() || !globe.contains(event.target)) return;
+                const rect = globe.getBoundingClientRect();
+                const entry = {
+                  type,
+                  expected: window.__mapTapExpected,
+                  at: performance.now(),
+                  client: [event.clientX, event.clientY],
+                  rect: rect.toJSON(),
+                  size: [world.width(), world.height()],
+                  camera: world.pointOfView(),
+                  inverse: world.toGlobeCoords(event.clientX - rect.left, event.clientY - rect.top),
+                };
+                window.__mapTapLog.push(entry);
+                if (type === 'pointerup')
+                  queueMicrotask(() => {
+                    entry.selected = ObserverMapPicker.markerData();
+                  });
+              },
+              true,
+            );
+        },
+        { lat, lng },
+      );
       const p = await page.evaluate(
         ({ lat, lng }) => {
           const r = document.getElementById('globe').getBoundingClientRect(),
@@ -77,13 +111,24 @@ async function checkBrowserMapSite(browser, baseUrl, output) {
             y: r.top + p.y,
             inverse: world.toGlobeCoords(p.x, p.y),
             camera: world.pointOfView(),
+            rect: r.toJSON(),
+            size: [world.width(), world.height()],
           };
         },
         { lat, lng },
       );
       assert(p.inverse && Math.abs(p.inverse.lat - lat) < 0.05, JSON.stringify(p));
+      await page.evaluate((p) => window.__mapTapLog.push({ type: 'projection', ...p }), p);
       if (mobile) await page.touchscreen.tap(p.x, p.y);
       else await page.mouse.click(p.x, p.y);
+      console.log(
+        'MAP TAP TRACE',
+        JSON.stringify({
+          mobile,
+          requested: { lat, lng },
+          samples: await page.evaluate(() => window.__mapTapLog.splice(0)),
+        }),
+      );
     }
     try {
       await page.goto(baseUrl);
@@ -247,6 +292,7 @@ async function checkBrowserMapSite(browser, baseUrl, output) {
       console.error(
         'Map-site diagnostic',
         await page.evaluate(() => ({
+          taps: window.__mapTapLog,
           picker: !!window.ObserverMapPicker,
           shell: !!window.MadarShell,
           world: typeof world !== 'undefined' && !!world,
