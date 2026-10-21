@@ -66,80 +66,29 @@ async function checkBrowserMapSite(browser, baseUrl, output) {
         controls.enableDamping = damping;
       });
       await page.waitForTimeout(250);
-      if (process.env.MADAR_MAP_MATRIX_PROBE === '1') {
-        const probe = await page.evaluate(() => {
-          if (window.__matrixProbeDone) return null;
-          window.__matrixProbeDone = true;
-          world.pauseAnimation();
-          const controls = world.controls(),
-            camera = world.camera(),
-            damping = controls.enableDamping;
-          controls.enableDamping = false;
-          world.pointOfView({ lat: 30, lng: 7.8, altitude: 2.4 }, 0);
-          controls.update();
-          camera.updateMatrixWorld(true);
-          world.pointOfView({ lat: 25, lng: 45, altitude: 2.4 }, 0);
-          controls.update();
-          const stale = world.getScreenCoords(35, 45, 0),
-            inverseBefore = world.toGlobeCoords(stale.x, stale.y),
-            matrixBefore = camera.matrixWorld.elements.slice();
-          camera.updateMatrixWorld(true);
-          const inverseAfter = world.toGlobeCoords(stale.x, stale.y),
-            fresh = world.getScreenCoords(35, 45, 0),
-            inverseFresh = world.toGlobeCoords(fresh.x, fresh.y),
-            matrixAfter = camera.matrixWorld.elements.slice();
-          controls.enableDamping = damping;
-          world.resumeAnimation();
-          return {
-            stale,
-            inverseBefore,
-            inverseAfter,
-            fresh,
-            inverseFresh,
-            matrixBefore,
-            matrixAfter,
-          };
-        });
-        if (probe) console.log('MAP MATRIX PROBE', JSON.stringify({ mobile, ...probe }));
-      }
     }
     async function tap(lat, lng) {
-      await page.evaluate(
-        ({ lat, lng }) => {
-          window.__mapTapLog ||= [];
-          window.__mapTapExpected = { lat, lng };
-          if (window.__mapTapObserver) return;
-          window.__mapTapObserver = true;
-          for (const type of ['pointerdown', 'pointerup'])
-            document.addEventListener(
-              type,
-              (event) => {
-                const globe = document.getElementById('globe');
-                if (!ObserverMapPicker.active() || !globe.contains(event.target)) return;
-                const rect = globe.getBoundingClientRect();
-                const entry = {
-                  type,
-                  expected: window.__mapTapExpected,
-                  at: performance.now(),
-                  client: [event.clientX, event.clientY],
-                  rect: rect.toJSON(),
-                  size: [world.width(), world.height()],
-                  camera: world.pointOfView(),
-                  inverse: world.toGlobeCoords(event.clientX - rect.left, event.clientY - rect.top),
-                };
-                window.__mapTapLog.push(entry);
-                if (type === 'pointerup')
-                  queueMicrotask(() => {
-                    entry.selected = ObserverMapPicker.markerData();
-                  });
-              },
-              true,
-            );
-        },
-        { lat, lng },
-      );
+      const pendingView = lat === 35 && lng === 45;
+      if (pendingView) {
+        // Reproduce a camera change before the renderer has refreshed its matrices.
+        // Projection and inverse projection can agree with each other while both
+        // still describe the previous orientation; the next frame invalidates them.
+        await page.evaluate(() => {
+          world.pauseAnimation();
+          const controls = world.controls(), damping = controls.enableDamping;
+          controls.enableDamping = false;
+          world.pointOfView({lat:30,lng:7.8,altitude:2.4},0);
+          controls.update();
+          world.camera().updateMatrixWorld(true);
+          world.pointOfView({lat:25,lng:45,altitude:2.4},0);
+          controls.update();
+          controls.enableDamping = damping;
+        });
+      }
       const p = await page.evaluate(
         ({ lat, lng }) => {
+          // Synchronize before converting a geographic fixture to screen coordinates.
+          // CAMERA_SYNC
           const r = document.getElementById('globe').getBoundingClientRect(),
             p = world.getScreenCoords(lat, lng, 0);
           return {
@@ -147,24 +96,18 @@ async function checkBrowserMapSite(browser, baseUrl, output) {
             y: r.top + p.y,
             inverse: world.toGlobeCoords(p.x, p.y),
             camera: world.pointOfView(),
-            rect: r.toJSON(),
-            size: [world.width(), world.height()],
           };
         },
         { lat, lng },
       );
-      assert(p.inverse && Math.abs(p.inverse.lat - lat) < 0.05, JSON.stringify(p));
-      await page.evaluate((p) => window.__mapTapLog.push({ type: 'projection', ...p }), p);
+      assert(p.inverse && Math.abs(p.inverse.lat - lat) < 0.05 && Math.abs(p.inverse.lng-lng)<0.05, JSON.stringify(p));
+      if (pendingView) {
+        // Model the renderer completing its next frame between projection and tap.
+        await page.evaluate(() => world.camera().updateMatrixWorld(true));
+      }
       if (mobile) await page.touchscreen.tap(p.x, p.y);
       else await page.mouse.click(p.x, p.y);
-      console.log(
-        'MAP TAP TRACE',
-        JSON.stringify({
-          mobile,
-          requested: { lat, lng },
-          samples: await page.evaluate(() => window.__mapTapLog.splice(0)),
-        }),
-      );
+      if (pendingView) await page.evaluate(() => world.resumeAnimation());
     }
     try {
       await page.goto(baseUrl);
@@ -328,7 +271,6 @@ async function checkBrowserMapSite(browser, baseUrl, output) {
       console.error(
         'Map-site diagnostic',
         await page.evaluate(() => ({
-          taps: window.__mapTapLog,
           picker: !!window.ObserverMapPicker,
           shell: !!window.MadarShell,
           world: typeof world !== 'undefined' && !!world,
