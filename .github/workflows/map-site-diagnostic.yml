@@ -18,7 +18,7 @@ jobs:
       - run: npx playwright install chromium
       - run: node scripts/check-browser-map-site-repeat.cjs
         env:
-          MADAR_MAP_REPEATS: '1'
+          MADAR_MAP_REPEATS: '3'
       - uses: actions/upload-artifact@v4
         if: always()
         with:

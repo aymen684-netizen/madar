@@ -67,20 +67,20 @@ async function checkBrowserMapSite(browser, baseUrl, output) {
       });
       await page.waitForTimeout(250);
     }
-    async function tap(lat, lng) {
-      const pendingView = lat === 35 && lng === 45;
+    async function tap(lat, lng, { pendingView = false } = {}) {
       if (pendingView) {
         // Reproduce a camera change before the renderer has refreshed its matrices.
         // Projection and inverse projection can agree with each other while both
         // still describe the previous orientation; the next frame invalidates them.
         await page.evaluate(() => {
           world.pauseAnimation();
-          const controls = world.controls(), damping = controls.enableDamping;
+          const controls = world.controls(),
+            damping = controls.enableDamping;
           controls.enableDamping = false;
-          world.pointOfView({lat:30,lng:7.8,altitude:2.4},0);
+          world.pointOfView({ lat: 30, lng: 7.8, altitude: 2.4 }, 0);
           controls.update();
           world.camera().updateMatrixWorld(true);
-          world.pointOfView({lat:25,lng:45,altitude:2.4},0);
+          world.pointOfView({ lat: 25, lng: 45, altitude: 2.4 }, 0);
           controls.update();
           controls.enableDamping = damping;
         });
@@ -88,7 +88,7 @@ async function checkBrowserMapSite(browser, baseUrl, output) {
       const p = await page.evaluate(
         ({ lat, lng }) => {
           // Synchronize before converting a geographic fixture to screen coordinates.
-          // CAMERA_SYNC
+          world.camera().updateMatrixWorld(true);
           const r = document.getElementById('globe').getBoundingClientRect(),
             p = world.getScreenCoords(lat, lng, 0);
           return {
@@ -100,7 +100,10 @@ async function checkBrowserMapSite(browser, baseUrl, output) {
         },
         { lat, lng },
       );
-      assert(p.inverse && Math.abs(p.inverse.lat - lat) < 0.05 && Math.abs(p.inverse.lng-lng)<0.05, JSON.stringify(p));
+      assert(
+        p.inverse && Math.abs(p.inverse.lat - lat) < 0.05 && Math.abs(p.inverse.lng - lng) < 0.05,
+        JSON.stringify(p),
+      );
       if (pendingView) {
         // Model the renderer completing its next frame between projection and tap.
         await page.evaluate(() => world.camera().updateMatrixWorld(true));
@@ -175,7 +178,7 @@ async function checkBrowserMapSite(browser, baseUrl, output) {
       if (mobile) await page.touchscreen.tap(space.x, space.y);
       else await page.mouse.click(space.x, space.y);
       assert(await page.locator('#observer-map-use').isDisabled(), 'space is not a location');
-      await tap(35, 45);
+      await tap(35, 45, { pendingView: true });
       await page.waitForFunction(() => !document.getElementById('observer-map-use').disabled);
       await page.evaluate(() => update());
       assert.equal(
