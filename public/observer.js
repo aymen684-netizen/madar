@@ -63,20 +63,71 @@
     }
     const wrap = document.createElement('div');
     wrap.className = 'report-table-wrap';
-    const t = document.createElement('table');
+    const t = document.createElement('table'),
+      controls = document.createElement('div'),
+      previous = document.createElement('button'),
+      next = document.createElement('button'),
+      label = document.createElement('label'),
+      pageInput = document.createElement('input'),
+      status = document.createElement('span'),
+      pageSize = 100,
+      total = r.result.rows.length,
+      pages = Math.max(1, Math.ceil(total / pageSize));
+    let page = 0;
     t.className = 'analysis-table';
-    for (const [i, row] of ObserverReport.rows(r).entries()) {
-      const tr = document.createElement('tr');
-      for (const value of row) {
-        const td = document.createElement(i ? 'td' : 'th');
-        td.textContent = String(value);
-        tr.append(td);
+    t.setAttribute('aria-describedby', 'observer-page-status');
+    controls.className = 'report-actions';
+    controls.hidden = total <= pageSize;
+    previous.type = next.type = 'button';
+    previous.id = 'observer-page-previous';
+    next.id = 'observer-page-next';
+    previous.textContent = 'السابق';
+    next.textContent = 'التالي';
+    label.textContent = 'الصفحة';
+    pageInput.id = 'observer-page';
+    pageInput.type = 'number';
+    pageInput.min = '1';
+    pageInput.max = String(pages);
+    pageInput.step = '1';
+    pageInput.style.width = '6em';
+    label.append(pageInput);
+    status.id = 'observer-page-status';
+    status.setAttribute('role', 'status');
+    function showPage(index) {
+      page = Math.max(0, Math.min(pages - 1, index));
+      const start = page * pageSize,
+        visible = r.result.rows.slice(start, start + pageSize),
+        rows = ObserverReport.rows({ ...r, result: { ...r.result, rows: visible } }),
+        head = document.createElement('thead'),
+        body = document.createElement('tbody');
+      for (const [i, row] of rows.entries()) {
+        const tr = document.createElement('tr');
+        for (const value of row) {
+          const td = document.createElement(i ? 'td' : 'th');
+          td.textContent = String(value);
+          if (!i) td.scope = 'col';
+          tr.append(td);
+        }
+        if (i) tr.firstElementChild.append(PassMap.button(visible[i - 1], r));
+        (i ? body : head).append(tr);
       }
-      if (i) tr.firstElementChild.append(PassMap.button(r.result.rows[i - 1], r));
-      t.append(tr);
+      t.replaceChildren(head, body);
+      pageInput.value = String(page + 1);
+      previous.disabled = page === 0;
+      next.disabled = page === pages - 1;
+      status.textContent =
+        'حالات المرور ' + (total ? start + 1 : 0) + '–' + (start + visible.length) + ' / ' + total;
     }
+    previous.onclick = () => showPage(page - 1);
+    next.onclick = () => showPage(page + 1);
+    pageInput.onchange = () => {
+      const value = Number(pageInput.value);
+      showPage(Number.isInteger(value) && value >= 1 ? value - 1 : page);
+    };
+    controls.append(previous, label, next);
+    showPage(0);
     wrap.append(t);
-    e('results').append(wrap);
+    e('results').append(controls, status, wrap);
     ReportExports.attach('observer', r);
     e('word').disabled = false;
   }

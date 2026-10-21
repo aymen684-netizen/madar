@@ -140,6 +140,63 @@ async function checkBrowserObserverScopes(browser, baseUrl, output) {
         },
       });
     });
+    // Keep a full-day-sized result while bounding visible rows and replay buttons.
+    await page.evaluate(() => {
+      window.__paginationSeed = ObserverUI.result;
+      const report = ObserverUI.result;
+      ObserverUI.render({
+        ...report,
+        result: {
+          ...report.result,
+          rows: Array.from({ length: 56515 }, (_, i) => ({
+            ...report.result.rows[i % report.result.rows.length],
+            name: 'PAGED PASS ' + i,
+          })),
+        },
+      });
+    });
+    assert.equal(await page.locator('#observer-results tbody tr').count(), 100);
+    assert.equal(await page.locator('#observer-results .pass-map-button').count(), 100);
+    assert(await page.locator('#observer-page-previous').isDisabled());
+    assert.equal(await page.locator('#observer-page').getAttribute('max'), '566');
+    await page.click('#observer-page-next');
+    assert.match(
+      await page.locator('#observer-results tbody tr').first().innerText(),
+      /PAGED PASS 100/,
+    );
+    await page.fill('#observer-page', '566');
+    await page.locator('#observer-page').press('Tab');
+    assert.equal(await page.locator('#observer-results tbody tr').count(), 15);
+    assert.match(
+      await page.locator('#observer-results tbody tr').last().innerText(),
+      /PAGED PASS 56514/,
+    );
+    assert(await page.locator('#observer-page-next').isDisabled());
+    assert.equal(await page.evaluate(() => ObserverUI.result.result.rows.length), 56515);
+    assert.equal(
+      await page.evaluate(() => ReportExports.passRows(ObserverUI.result).length),
+      56516,
+    );
+    await page.fill('#observer-page', '99999');
+    await page.locator('#observer-page').press('Tab');
+    assert.equal(await page.locator('#observer-page').inputValue(), '566');
+    await page.fill('#observer-page', '');
+    await page.locator('#observer-page').press('Tab');
+    assert.equal(await page.locator('#observer-page').inputValue(), '566');
+    await page.click('#observer-page-previous');
+    assert.match(
+      await page.locator('#observer-results tbody tr').first().innerText(),
+      /PAGED PASS 56400/,
+    );
+    await page.click('#language-toggle');
+    await page.waitForFunction(() =>
+      document.querySelector('#observer-page-status').textContent.includes('Passes'),
+    );
+    assert.equal(await page.locator('#observer-results tbody tr').count(), 100);
+    assert.equal(await page.locator('#observer-page').inputValue(), '1');
+    await page.click('#language-toggle');
+    await page.screenshot({ path: output + '/observer-large-pagination.png' });
+    await page.evaluate(() => ObserverUI.render(window.__paginationSeed));
     for (const language of ['ar', 'en']) {
       if (language === 'en') await page.click('#language-toggle');
       await page.click('#observer-word');
