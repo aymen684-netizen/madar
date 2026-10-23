@@ -1,0 +1,14 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> madar-satellite-tracker@1.0.0 audit
+> npm audit --audit-level=high && npm --prefix tools/vendor-audit audit --audit-level=high --fetch-retries=0 --fetch-timeout=20000
+
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+found 0 vulnerabilities
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+found 0 vulnerabilities
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice

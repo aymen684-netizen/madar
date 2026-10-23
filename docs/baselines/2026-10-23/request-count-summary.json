@@ -1,0 +1,96 @@
+{
+  "sourceCommit": "3d4ed849b9cf6d8fafbb9b3080e2de93a1d2b25b",
+  "measurementCommit": "9ae39252cec7fb8c0189cbb644d786ef6c0b5418",
+  "runId": 39923252101,
+  "jobId": 120313324804,
+  "artifactId": 12488197584,
+  "artifactSha256": "5d5e7f62c5429fa1c43de5e474469f5a1f730724cc767016ada71fcd8f675bfb",
+  "measuredOn": "2026-10-23",
+  "timezone": "Asia/Riyadh",
+  "results": {
+    "baseline": {
+      "sampleCount": 3,
+      "startupRequestCounts": [
+        100,
+        100,
+        100
+      ],
+      "startupCompletedResourceCounts": [
+        95,
+        95,
+        95
+      ],
+      "readyMs": 9038.199999999997,
+      "medianUpdateMs": 1.9,
+      "prepareMs": 163,
+      "requestTypesPerSample": [
+        {
+          "document": 1,
+          "stylesheet": 11,
+          "image": 4,
+          "script": 74,
+          "fetch": 6,
+          "other": 4
+        },
+        {
+          "document": 1,
+          "stylesheet": 11,
+          "image": 4,
+          "script": 74,
+          "fetch": 6,
+          "other": 4
+        },
+        {
+          "document": 1,
+          "stylesheet": 11,
+          "image": 4,
+          "script": 74,
+          "fetch": 6,
+          "other": 4
+        }
+      ]
+    },
+    "candidate": {
+      "sampleCount": 3,
+      "startupRequestCounts": [
+        100,
+        100,
+        100
+      ],
+      "startupCompletedResourceCounts": [
+        95,
+        95,
+        95
+      ],
+      "readyMs": 9142.200000000012,
+      "medianUpdateMs": 1.55,
+      "prepareMs": 147.29999999998836,
+      "requestTypesPerSample": [
+        {
+          "document": 1,
+          "stylesheet": 11,
+          "image": 4,
+          "script": 74,
+          "fetch": 6,
+          "other": 4
+        },
+        {
+          "document": 1,
+          "stylesheet": 11,
+          "image": 4,
+          "script": 74,
+          "fetch": 6,
+          "other": 4
+        },
+        {
+          "document": 1,
+          "stylesheet": 11,
+          "image": 4,
+          "script": 74,
+          "fetch": 6,
+          "other": 4
+        }
+      ]
+    }
+  }
+}

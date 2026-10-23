@@ -1,0 +1,427 @@
+[
+  {
+    "kind": "stylesheet",
+    "url": "app-base.css?v=86"
+  },
+  {
+    "kind": "stylesheet",
+    "url": "app-shell.css?v=82"
+  },
+  {
+    "kind": "stylesheet",
+    "url": "flat-map.css?v=85"
+  },
+  {
+    "kind": "icon",
+    "url": "icons/favicon-32-v76.png"
+  },
+  {
+    "kind": "icon",
+    "url": "icons/favicon-16-v76.png"
+  },
+  {
+    "kind": "manifest",
+    "url": "manifest.webmanifest?v=76"
+  },
+  {
+    "kind": "apple-touch-icon",
+    "url": "icons/apple-touch-icon-v76.png"
+  },
+  {
+    "kind": "stylesheet",
+    "url": "experience.css?v=78"
+  },
+  {
+    "kind": "stylesheet",
+    "url": "map-display.css?v=45"
+  },
+  {
+    "kind": "stylesheet",
+    "url": "map-fleet.css?v=74"
+  },
+  {
+    "kind": "stylesheet",
+    "url": "date-calendar.css?v=71"
+  },
+  {
+    "kind": "stylesheet",
+    "url": "form-layout.css?v=78"
+  },
+  {
+    "kind": "stylesheet",
+    "url": "report-guidance.css?v=79"
+  },
+  {
+    "kind": "stylesheet",
+    "url": "observing-overview.css?v=80"
+  },
+  {
+    "kind": "stylesheet",
+    "url": "satellite-summary.css?v=82"
+  },
+  {
+    "kind": "script",
+    "url": "network-resources.js?v=82",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "network-policy.js?v=43",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "i18n.js?v=88",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "privacy.js?v=82",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "observer-sites-core.js?v=77",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "observer-cities.js?v=80",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "observer-sites.js?v=80",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "orbit-data.js?v=42",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "vendor/satellite.min.js",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "vendor/globe.min.js",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "satellite-metadata.js?v=62",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "state-store.js?v=17",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "flag-assets.js?v=15",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "word-delivery.js?v=49",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "orbit-service.js?v=45",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "satellite-groups.js?v=86",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "type-picker.js?v=86",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "catalog-search.js?v=22",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "user-guide.js?v=44",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "render-lifecycle.js?v=67",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "render-quality.js?v=74",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "globe-picking.js?v=78",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "source-details.js?v=50",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "orbit-appearance.js?v=74",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "map-fleet-core.js?v=51",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "live-values.js?v=50",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "map-swarm.js?v=54",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "satellite-selection.js?v=55",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "watchlist-state.js?v=56",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "satellite-card.js?v=82",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "data-health.js?v=58",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "catalog-rows.js?v=59",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "catalog-list.js?v=67",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "globe-motion.js?v=67",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "globe-scene.js?v=79",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "time-controls.js?v=73",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "flat-map.js?v=85",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "app.js?v=84",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "watchlist-backup.js?v=67",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "report-archive.js?v=34",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "report-brief.js?v=75",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "report-layout.js?v=52",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "report-exports.js?v=49",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "report-insights.js?v=75",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "report-document.js?v=75",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "country-report-core.js?v=36",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "pass-tools-core.js?v=74",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "pass-map.js?v=75",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "country-boundaries.js?v=81",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "report.js?v=81",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "country-report-builder.js?v=75",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "analysis-core.js?v=26",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "analysis-document.js?v=75",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "analysis.js?v=81",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "date-calendar.js?v=78",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "draft-state.js?v=75",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "observer-engine.js?v=26",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "observer-report.js?v=87",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "observer-word.js?v=87",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "observer.js?v=88",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "country-inventory-core.js?v=50",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "app-shell.js?v=83",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "inventory-report.js?v=75",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "map-display.js?v=81",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "data-refresh.js?v=35",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "program-extras.js?v=75",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "experience.js?v=84",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "mobile-map.js?v=75",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "map-orbit-filter.js?v=72",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "map-fleet.js?v=80",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "observer-map-picker.js?v=81",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "form-layout.js?v=78",
+    "defer": false
+  },
+  {
+    "kind": "script",
+    "url": "report-guidance.js?v=86",
+    "defer": false
+  }
+]

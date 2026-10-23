@@ -1,0 +1,76 @@
+{
+  "head": "9ae39252cec7fb8c0189cbb644d786ef6c0b5418",
+  "runId": 39923252101,
+  "jobs": [
+    {
+      "id": 120313324804,
+      "name": "performance",
+      "head_sha": "9ae39252cec7fb8c0189cbb644d786ef6c0b5418",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-23T08:14:29Z",
+      "completed_at": "2026-10-23T08:16:23Z",
+      "html_url": "https://github.com/aymen684-netizen/madar/actions/runs/39923252101/job/120313324804"
+    },
+    {
+      "id": 120313324941,
+      "name": "startup",
+      "head_sha": "9ae39252cec7fb8c0189cbb644d786ef6c0b5418",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-23T08:14:29Z",
+      "completed_at": "2026-10-23T08:21:12Z",
+      "html_url": "https://github.com/aymen684-netizen/madar/actions/runs/39923252101/job/120313324941"
+    },
+    {
+      "id": 120313324985,
+      "name": "checks",
+      "head_sha": "9ae39252cec7fb8c0189cbb644d786ef6c0b5418",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-23T08:14:30Z",
+      "completed_at": "2026-10-23T08:14:53Z",
+      "html_url": "https://github.com/aymen684-netizen/madar/actions/runs/39923252101/job/120313324985"
+    },
+    {
+      "id": 120313501390,
+      "name": "browser (interface)",
+      "head_sha": "9ae39252cec7fb8c0189cbb644d786ef6c0b5418",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-23T08:14:56Z",
+      "completed_at": "2026-10-23T08:22:31Z",
+      "html_url": "https://github.com/aymen684-netizen/madar/actions/runs/39923252101/job/120313501390"
+    },
+    {
+      "id": 120313501401,
+      "name": "browser (extras)",
+      "head_sha": "9ae39252cec7fb8c0189cbb644d786ef6c0b5418",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-23T08:14:56Z",
+      "completed_at": "2026-10-23T08:17:04Z",
+      "html_url": "https://github.com/aymen684-netizen/madar/actions/runs/39923252101/job/120313501401"
+    },
+    {
+      "id": 120313501461,
+      "name": "browser (observing)",
+      "head_sha": "9ae39252cec7fb8c0189cbb644d786ef6c0b5418",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-23T08:14:56Z",
+      "completed_at": "2026-10-23T08:24:09Z",
+      "html_url": "https://github.com/aymen684-netizen/madar/actions/runs/39923252101/job/120313501461"
+    },
+    {
+      "id": 120313501467,
+      "name": "browser (reports)",
+      "head_sha": "9ae39252cec7fb8c0189cbb644d786ef6c0b5418",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-23T08:14:57Z",
+      "completed_at": "2026-10-23T08:17:22Z",
+      "html_url": "https://github.com/aymen684-netizen/madar/actions/runs/39923252101/job/120313501467"
+    }
+  ]
+}
