@@ -46,7 +46,15 @@ const server = http.createServer((req, res) => {
           deviceScaleFactor: 3,
         }),
         page = await context.newPage(),
-        errors = [];
+        errors = [],
+        requests = [];
+      context.on('request', (request) =>
+        requests.push({
+          url: request.url(),
+          method: request.method(),
+          type: request.resourceType(),
+        }),
+      );
       page.on('pageerror', (e) => errors.push(e.message));
       await context.addInitScript(() => {
         localStorage.setItem('madar-started', '1');
@@ -120,6 +128,17 @@ const server = http.createServer((req, res) => {
         { timeout: 90000 },
       );
       const readyMs = await page.evaluate(() => performance.now());
+      const startupRequests = requests.slice(),
+        startupResources = await page.evaluate(() =>
+          performance.getEntriesByType('resource').map((entry) => ({
+            url: entry.name,
+            initiatorType: entry.initiatorType,
+            transferSize: entry.transferSize,
+            encodedBodySize: entry.encodedBodySize,
+            decodedBodySize: entry.decodedBodySize,
+            duration: entry.duration,
+          })),
+        );
       await page.click('#map-tools-open');
       await page.click('#pause');
       await page.click('#map-tools-close');
@@ -194,6 +213,10 @@ const server = http.createServer((req, res) => {
         };
       });
       result.readyMs = readyMs;
+      result.startupRequests = startupRequests;
+      result.startupResources = startupResources;
+      result.startupRequestCount = startupRequests.length;
+      result.startupCompletedResourceCount = startupResources.length;
       result.environment = {
         viewport: '390x844',
         deviceScaleFactor: 3,
@@ -229,6 +252,8 @@ const server = http.createServer((req, res) => {
     }
     const result = {
       sampleCount,
+      startupRequestCounts: samples.map((sample) => sample.startupRequestCount),
+      startupCompletedResourceCounts: samples.map((sample) => sample.startupCompletedResourceCount),
       readyMs: median(samples.map((sample) => sample.readyMs)),
       medianUpdateMs: median(samples.map((sample) => sample.medianUpdateMs)),
       prepareMs: median(samples.map((sample) => sample.prepareMs)),
@@ -243,6 +268,8 @@ const server = http.createServer((req, res) => {
       JSON.stringify({
         output,
         sampleCount,
+        startupRequestCounts: result.startupRequestCounts,
+        startupCompletedResourceCounts: result.startupCompletedResourceCounts,
         readyMs: result.readyMs,
         medianUpdateMs: result.medianUpdateMs,
         prepareMs: result.prepareMs,

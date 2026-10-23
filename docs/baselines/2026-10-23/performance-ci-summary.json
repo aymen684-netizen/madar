@@ -1,0 +1,42 @@
+{
+  "commit": "3d4ed849b9cf6d8fafbb9b3080e2de93a1d2b25b",
+  "runId": 39783038984,
+  "attempt": 2,
+  "jobId": 120310922372,
+  "measuredAt": "2026-10-23",
+  "summary": {
+    "output": "test-results/performance-candidate.json",
+    "sampleCount": 3,
+    "readyMs": 8322.100000000006,
+    "medianUpdateMs": 1.4699999999997089,
+    "prepareMs": 143.20000000001164,
+    "startupIdentityBytes": 1198162,
+    "medianTranslationSetupMs": 2.8999999999941792,
+    "eagerModelBuilds": [
+      0,
+      0,
+      0
+    ],
+    "metricNodesAdded": [
+      0,
+      0,
+      0
+    ],
+    "metricRowsRemoved": [
+      0,
+      0,
+      0
+    ],
+    "arabicTranslationCallbacks": [
+      0,
+      0,
+      0
+    ],
+    "arabicTranslationRecords": [
+      0,
+      0,
+      0
+    ],
+    "physicalPhone": false
+  }
+}

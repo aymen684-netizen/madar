@@ -1,0 +1,4028 @@
+{
+  "sampleCount": 3,
+  "startupRequestCounts": [
+    100,
+    100,
+    100
+  ],
+  "startupCompletedResourceCounts": [
+    95,
+    95,
+    95
+  ],
+  "readyMs": 9038.199999999997,
+  "medianUpdateMs": 1.9,
+  "prepareMs": 163,
+  "startupIdentityBytes": 1198162,
+  "startupBoundaryBytes": 35367,
+  "medianTranslationSetupMs": 2.1999999999970896,
+  "samples": [
+    {
+      "prepareMs": 163,
+      "eagerModelBuilds": 0,
+      "modelPositionIdentical": true,
+      "updateMs": [
+        1.769999999999709,
+        1.6,
+        1.6700000000004365,
+        1.7099999999998545,
+        1.3900000000001456
+      ],
+      "metricNodesAdded": 0,
+      "metricRowsRemoved": 0,
+      "firstMetricRetained": true,
+      "metricRows": 12,
+      "satellites": 16752,
+      "pixelRatio": 1.5,
+      "lab": {
+        "longTasks": [
+          65,
+          699,
+          293,
+          55,
+          77,
+          776,
+          95,
+          457,
+          1243,
+          70,
+          398,
+          176,
+          54,
+          66,
+          122,
+          61,
+          90,
+          239,
+          480,
+          615,
+          91,
+          306,
+          80,
+          51,
+          51,
+          718,
+          71,
+          60,
+          51,
+          66
+        ],
+        "cls": 0.0536660237656502,
+        "lcp": 316,
+        "arabicTranslationCallbacks": 0,
+        "arabicTranslationRecords": 0,
+        "dictionaryDecodedAt": 337.59999999999854,
+        "translationSetupMs": 2.6999999999970896
+      },
+      "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.8078.4 Safari/537.36",
+      "startupIdentityBytes": 1198162,
+      "startupFullCatalogRequests": 0,
+      "startupFullBoundaryRequests": 0,
+      "startupBoundaryBytes": 35367,
+      "readyMs": 11110.299999999996,
+      "startupRequests": [
+        {
+          "url": "http://127.0.0.1:8082/",
+          "method": "GET",
+          "type": "document"
+        },
+        {
+          "url": "http://127.0.0.1:8082/app-base.css?v=86",
+          "method": "GET",
+          "type": "stylesheet"
+        },
+        {
+          "url": "http://127.0.0.1:8082/app-shell.css?v=82",
+          "method": "GET",
+          "type": "stylesheet"
+        },
+        {
+          "url": "http://127.0.0.1:8082/flat-map.css?v=85",
+          "method": "GET",
+          "type": "stylesheet"
+        },
+        {
+          "url": "http://127.0.0.1:8082/experience.css?v=78",
+          "method": "GET",
+          "type": "stylesheet"
+        },
+        {
+          "url": "http://127.0.0.1:8082/map-display.css?v=45",
+          "method": "GET",
+          "type": "stylesheet"
+        },
+        {
+          "url": "http://127.0.0.1:8082/map-fleet.css?v=74",
+          "method": "GET",
+          "type": "stylesheet"
+        },
+        {
+          "url": "http://127.0.0.1:8082/date-calendar.css?v=71",
+          "method": "GET",
+          "type": "stylesheet"
+        },
+        {
+          "url": "http://127.0.0.1:8082/form-layout.css?v=78",
+          "method": "GET",
+          "type": "stylesheet"
+        },
+        {
+          "url": "http://127.0.0.1:8082/report-guidance.css?v=79",
+          "method": "GET",
+          "type": "stylesheet"
+        },
+        {
+          "url": "http://127.0.0.1:8082/observing-overview.css?v=80",
+          "method": "GET",
+          "type": "stylesheet"
+        },
+        {
+          "url": "http://127.0.0.1:8082/satellite-summary.css?v=82",
+          "method": "GET",
+          "type": "stylesheet"
+        },
+        {
+          "url": "http://127.0.0.1:8082/icons/madar-art-512-v76.png",
+          "method": "GET",
+          "type": "image"
+        },
+        {
+          "url": "http://127.0.0.1:8082/network-resources.js?v=82",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/network-policy.js?v=43",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/i18n.js?v=88",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/data/en.json?v=88",
+          "method": "GET",
+          "type": "fetch"
+        },
+        {
+          "url": "http://127.0.0.1:8082/privacy.js?v=82",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/observer-sites-core.js?v=77",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/observer-cities.js?v=80",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/observer-sites.js?v=80",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/orbit-data.js?v=42",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/vendor/satellite.min.js",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/vendor/globe.min.js",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/satellite-metadata.js?v=62",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/state-store.js?v=17",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/flag-assets.js?v=15",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/word-delivery.js?v=49",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/orbit-service.js?v=45",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/satellite-groups.js?v=86",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/type-picker.js?v=86",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/catalog-search.js?v=22",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/user-guide.js?v=44",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/render-lifecycle.js?v=67",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/render-quality.js?v=74",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/globe-picking.js?v=78",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/source-details.js?v=50",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/orbit-appearance.js?v=74",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/map-fleet-core.js?v=51",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/live-values.js?v=50",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/map-swarm.js?v=54",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/satellite-selection.js?v=55",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/watchlist-state.js?v=56",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/satellite-card.js?v=82",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/data-health.js?v=58",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/catalog-rows.js?v=59",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/catalog-list.js?v=67",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/globe-motion.js?v=67",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/globe-scene.js?v=79",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/time-controls.js?v=73",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/flat-map.js?v=85",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/app.js?v=84",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/data/satellite-metadata-compact.json?v=62",
+          "method": "GET",
+          "type": "fetch"
+        },
+        {
+          "url": "http://127.0.0.1:8082/data/mission-profiles.json?v=50",
+          "method": "GET",
+          "type": "fetch"
+        },
+        {
+          "url": "http://127.0.0.1:8082/watchlist-backup.js?v=67",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/assets/earth.jpg",
+          "method": "GET",
+          "type": "image"
+        },
+        {
+          "url": "http://127.0.0.1:8082/assets/stars.png",
+          "method": "GET",
+          "type": "image"
+        },
+        {
+          "url": "http://127.0.0.1:8082/report-archive.js?v=34",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/report-brief.js?v=75",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "https://celestrak.org/NORAD/elements/gp.php?GROUP=active&FORMAT=json",
+          "method": "GET",
+          "type": "fetch"
+        },
+        {
+          "url": "http://127.0.0.1:8082/report-layout.js?v=52",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/report-exports.js?v=49",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/report-insights.js?v=75",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/positions-worker.js?v=43",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/report-document.js?v=75",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/network-resources.js?v=43",
+          "method": "GET",
+          "type": "other"
+        },
+        {
+          "url": "http://127.0.0.1:8082/network-policy.js?v=43",
+          "method": "GET",
+          "type": "other"
+        },
+        {
+          "url": "http://127.0.0.1:8082/vendor/satellite.min.js",
+          "method": "GET",
+          "type": "other"
+        },
+        {
+          "url": "http://127.0.0.1:8082/country-report-core.js?v=36",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/orbit-data.js?v=19",
+          "method": "GET",
+          "type": "other"
+        },
+        {
+          "url": "http://127.0.0.1:8082/pass-tools-core.js?v=74",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/pass-map.js?v=75",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/country-boundaries.js?v=81",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/report.js?v=81",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/data/country-index.json",
+          "method": "GET",
+          "type": "fetch"
+        },
+        {
+          "url": "http://127.0.0.1:8082/data/sa-border.json",
+          "method": "GET",
+          "type": "fetch"
+        },
+        {
+          "url": "http://127.0.0.1:8082/country-report-builder.js?v=75",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/analysis-core.js?v=26",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/analysis-document.js?v=75",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/analysis.js?v=81",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/date-calendar.js?v=78",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/draft-state.js?v=75",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/observer-engine.js?v=26",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/observer-report.js?v=87",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/observer-word.js?v=87",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/observer.js?v=88",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/country-inventory-core.js?v=50",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/app-shell.js?v=83",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/inventory-report.js?v=75",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/map-display.js?v=81",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/data-refresh.js?v=35",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/program-extras.js?v=75",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/experience.js?v=84",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/icons/madar-symbol-64-v76.png",
+          "method": "GET",
+          "type": "image"
+        },
+        {
+          "url": "http://127.0.0.1:8082/mobile-map.js?v=75",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/map-orbit-filter.js?v=72",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/map-fleet.js?v=80",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/observer-map-picker.js?v=81",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/form-layout.js?v=78",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/report-guidance.js?v=86",
+          "method": "GET",
+          "type": "script"
+        }
+      ],
+      "startupResources": [
+        {
+          "url": "http://127.0.0.1:8082/app-base.css?v=86",
+          "initiatorType": "link",
+          "transferSize": 19708,
+          "encodedBodySize": 19408,
+          "decodedBodySize": 19408,
+          "duration": 17.900000000001455
+        },
+        {
+          "url": "http://127.0.0.1:8082/app-shell.css?v=82",
+          "initiatorType": "link",
+          "transferSize": 31115,
+          "encodedBodySize": 30815,
+          "decodedBodySize": 30815,
+          "duration": 21.299999999995634
+        },
+        {
+          "url": "http://127.0.0.1:8082/flat-map.css?v=85",
+          "initiatorType": "link",
+          "transferSize": 1431,
+          "encodedBodySize": 1131,
+          "decodedBodySize": 1131,
+          "duration": 25.10000000000582
+        },
+        {
+          "url": "http://127.0.0.1:8082/experience.css?v=78",
+          "initiatorType": "link",
+          "transferSize": 16656,
+          "encodedBodySize": 16356,
+          "decodedBodySize": 16356,
+          "duration": 24.599999999998545
+        },
+        {
+          "url": "http://127.0.0.1:8082/map-display.css?v=45",
+          "initiatorType": "link",
+          "transferSize": 2949,
+          "encodedBodySize": 2649,
+          "decodedBodySize": 2649,
+          "duration": 27.099999999998545
+        },
+        {
+          "url": "http://127.0.0.1:8082/map-fleet.css?v=74",
+          "initiatorType": "link",
+          "transferSize": 5266,
+          "encodedBodySize": 4966,
+          "decodedBodySize": 4966,
+          "duration": 30.400000000001455
+        },
+        {
+          "url": "http://127.0.0.1:8082/date-calendar.css?v=71",
+          "initiatorType": "link",
+          "transferSize": 2245,
+          "encodedBodySize": 1945,
+          "decodedBodySize": 1945,
+          "duration": 20.80000000000291
+        },
+        {
+          "url": "http://127.0.0.1:8082/form-layout.css?v=78",
+          "initiatorType": "link",
+          "transferSize": 2600,
+          "encodedBodySize": 2300,
+          "decodedBodySize": 2300,
+          "duration": 23.299999999995634
+        },
+        {
+          "url": "http://127.0.0.1:8082/report-guidance.css?v=79",
+          "initiatorType": "link",
+          "transferSize": 2501,
+          "encodedBodySize": 2201,
+          "decodedBodySize": 2201,
+          "duration": 26.5
+        },
+        {
+          "url": "http://127.0.0.1:8082/observing-overview.css?v=80",
+          "initiatorType": "link",
+          "transferSize": 1392,
+          "encodedBodySize": 1092,
+          "decodedBodySize": 1092,
+          "duration": 26.5
+        },
+        {
+          "url": "http://127.0.0.1:8082/satellite-summary.css?v=82",
+          "initiatorType": "link",
+          "transferSize": 2055,
+          "encodedBodySize": 1755,
+          "decodedBodySize": 1755,
+          "duration": 26.5
+        },
+        {
+          "url": "http://127.0.0.1:8082/icons/madar-art-512-v76.png",
+          "initiatorType": "img",
+          "transferSize": 127405,
+          "encodedBodySize": 127105,
+          "decodedBodySize": 127105,
+          "duration": 26.900000000001455
+        },
+        {
+          "url": "http://127.0.0.1:8082/network-resources.js?v=82",
+          "initiatorType": "script",
+          "transferSize": 9032,
+          "encodedBodySize": 8732,
+          "decodedBodySize": 8732,
+          "duration": 3.5
+        },
+        {
+          "url": "http://127.0.0.1:8082/network-policy.js?v=43",
+          "initiatorType": "script",
+          "transferSize": 4735,
+          "encodedBodySize": 4435,
+          "decodedBodySize": 4435,
+          "duration": 3.599999999998545
+        },
+        {
+          "url": "http://127.0.0.1:8082/i18n.js?v=88",
+          "initiatorType": "script",
+          "transferSize": 6670,
+          "encodedBodySize": 6370,
+          "decodedBodySize": 6370,
+          "duration": 2.599999999998545
+        },
+        {
+          "url": "http://127.0.0.1:8082/data/en.json?v=88",
+          "initiatorType": "fetch",
+          "transferSize": 257829,
+          "encodedBodySize": 257529,
+          "decodedBodySize": 257529,
+          "duration": 5.30000000000291
+        },
+        {
+          "url": "http://127.0.0.1:8082/privacy.js?v=82",
+          "initiatorType": "script",
+          "transferSize": 5864,
+          "encodedBodySize": 5564,
+          "decodedBodySize": 5564,
+          "duration": 5.599999999998545
+        },
+        {
+          "url": "http://127.0.0.1:8082/observer-sites-core.js?v=77",
+          "initiatorType": "script",
+          "transferSize": 5148,
+          "encodedBodySize": 4848,
+          "decodedBodySize": 4848,
+          "duration": 2.8000000000029104
+        },
+        {
+          "url": "http://127.0.0.1:8082/observer-cities.js?v=80",
+          "initiatorType": "script",
+          "transferSize": 5569,
+          "encodedBodySize": 5269,
+          "decodedBodySize": 5269,
+          "duration": 3.2000000000043656
+        },
+        {
+          "url": "http://127.0.0.1:8082/observer-sites.js?v=80",
+          "initiatorType": "script",
+          "transferSize": 6570,
+          "encodedBodySize": 6270,
+          "decodedBodySize": 6270,
+          "duration": 3.1999999999970896
+        },
+        {
+          "url": "http://127.0.0.1:8082/orbit-data.js?v=42",
+          "initiatorType": "script",
+          "transferSize": 8753,
+          "encodedBodySize": 8453,
+          "decodedBodySize": 8453,
+          "duration": 8
+        },
+        {
+          "url": "http://127.0.0.1:8082/vendor/satellite.min.js",
+          "initiatorType": "script",
+          "transferSize": 24340,
+          "encodedBodySize": 24040,
+          "decodedBodySize": 24040,
+          "duration": 2.8000000000029104
+        },
+        {
+          "url": "http://127.0.0.1:8082/vendor/globe.min.js",
+          "initiatorType": "script",
+          "transferSize": 1647949,
+          "encodedBodySize": 1647649,
+          "decodedBodySize": 1647649,
+          "duration": 7.900000000001455
+        },
+        {
+          "url": "http://127.0.0.1:8082/satellite-metadata.js?v=62",
+          "initiatorType": "script",
+          "transferSize": 10782,
+          "encodedBodySize": 10482,
+          "decodedBodySize": 10482,
+          "duration": 3.1000000000058208
+        },
+        {
+          "url": "http://127.0.0.1:8082/state-store.js?v=17",
+          "initiatorType": "script",
+          "transferSize": 3630,
+          "encodedBodySize": 3330,
+          "decodedBodySize": 3330,
+          "duration": 7
+        },
+        {
+          "url": "http://127.0.0.1:8082/flag-assets.js?v=15",
+          "initiatorType": "script",
+          "transferSize": 2001,
+          "encodedBodySize": 1701,
+          "decodedBodySize": 1701,
+          "duration": 7.30000000000291
+        },
+        {
+          "url": "http://127.0.0.1:8082/word-delivery.js?v=49",
+          "initiatorType": "script",
+          "transferSize": 4274,
+          "encodedBodySize": 3974,
+          "decodedBodySize": 3974,
+          "duration": 6.799999999995634
+        },
+        {
+          "url": "http://127.0.0.1:8082/orbit-service.js?v=45",
+          "initiatorType": "script",
+          "transferSize": 10199,
+          "encodedBodySize": 9899,
+          "decodedBodySize": 9899,
+          "duration": 8.099999999998545
+        },
+        {
+          "url": "http://127.0.0.1:8082/satellite-groups.js?v=86",
+          "initiatorType": "script",
+          "transferSize": 13665,
+          "encodedBodySize": 13365,
+          "decodedBodySize": 13365,
+          "duration": 3.099999999998545
+        },
+        {
+          "url": "http://127.0.0.1:8082/type-picker.js?v=86",
+          "initiatorType": "script",
+          "transferSize": 6156,
+          "encodedBodySize": 5856,
+          "decodedBodySize": 5856,
+          "duration": 2.7000000000043656
+        },
+        {
+          "url": "http://127.0.0.1:8082/catalog-search.js?v=22",
+          "initiatorType": "script",
+          "transferSize": 2661,
+          "encodedBodySize": 2361,
+          "decodedBodySize": 2361,
+          "duration": 2.900000000001455
+        },
+        {
+          "url": "http://127.0.0.1:8082/user-guide.js?v=44",
+          "initiatorType": "script",
+          "transferSize": 3268,
+          "encodedBodySize": 2968,
+          "decodedBodySize": 2968,
+          "duration": 2.400000000001455
+        },
+        {
+          "url": "http://127.0.0.1:8082/render-lifecycle.js?v=67",
+          "initiatorType": "script",
+          "transferSize": 3184,
+          "encodedBodySize": 2884,
+          "decodedBodySize": 2884,
+          "duration": 2.5
+        },
+        {
+          "url": "http://127.0.0.1:8082/render-quality.js?v=74",
+          "initiatorType": "script",
+          "transferSize": 3360,
+          "encodedBodySize": 3060,
+          "decodedBodySize": 3060,
+          "duration": 1.9000000000014552
+        },
+        {
+          "url": "http://127.0.0.1:8082/globe-picking.js?v=78",
+          "initiatorType": "script",
+          "transferSize": 4657,
+          "encodedBodySize": 4357,
+          "decodedBodySize": 4357,
+          "duration": 3.1000000000058208
+        },
+        {
+          "url": "http://127.0.0.1:8082/source-details.js?v=50",
+          "initiatorType": "script",
+          "transferSize": 8513,
+          "encodedBodySize": 8213,
+          "decodedBodySize": 8213,
+          "duration": 2.3000000000029104
+        },
+        {
+          "url": "http://127.0.0.1:8082/orbit-appearance.js?v=74",
+          "initiatorType": "script",
+          "transferSize": 1415,
+          "encodedBodySize": 1115,
+          "decodedBodySize": 1115,
+          "duration": 1.8000000000029104
+        },
+        {
+          "url": "http://127.0.0.1:8082/map-fleet-core.js?v=51",
+          "initiatorType": "script",
+          "transferSize": 3305,
+          "encodedBodySize": 3005,
+          "decodedBodySize": 3005,
+          "duration": 1.9000000000014552
+        },
+        {
+          "url": "http://127.0.0.1:8082/live-values.js?v=50",
+          "initiatorType": "script",
+          "transferSize": 1489,
+          "encodedBodySize": 1189,
+          "decodedBodySize": 1189,
+          "duration": 1.7000000000043656
+        },
+        {
+          "url": "http://127.0.0.1:8082/map-swarm.js?v=54",
+          "initiatorType": "script",
+          "transferSize": 3805,
+          "encodedBodySize": 3505,
+          "decodedBodySize": 3505,
+          "duration": 1.9000000000014552
+        },
+        {
+          "url": "http://127.0.0.1:8082/satellite-selection.js?v=55",
+          "initiatorType": "script",
+          "transferSize": 1778,
+          "encodedBodySize": 1478,
+          "decodedBodySize": 1478,
+          "duration": 1.8000000000029104
+        },
+        {
+          "url": "http://127.0.0.1:8082/watchlist-state.js?v=56",
+          "initiatorType": "script",
+          "transferSize": 3273,
+          "encodedBodySize": 2973,
+          "decodedBodySize": 2973,
+          "duration": 2.599999999998545
+        },
+        {
+          "url": "http://127.0.0.1:8082/satellite-card.js?v=82",
+          "initiatorType": "script",
+          "transferSize": 8862,
+          "encodedBodySize": 8562,
+          "decodedBodySize": 8562,
+          "duration": 2.2999999999956344
+        },
+        {
+          "url": "http://127.0.0.1:8082/data-health.js?v=58",
+          "initiatorType": "script",
+          "transferSize": 7459,
+          "encodedBodySize": 7159,
+          "decodedBodySize": 7159,
+          "duration": 2.3000000000029104
+        },
+        {
+          "url": "http://127.0.0.1:8082/catalog-rows.js?v=59",
+          "initiatorType": "script",
+          "transferSize": 2298,
+          "encodedBodySize": 1998,
+          "decodedBodySize": 1998,
+          "duration": 2
+        },
+        {
+          "url": "http://127.0.0.1:8082/catalog-list.js?v=67",
+          "initiatorType": "script",
+          "transferSize": 5924,
+          "encodedBodySize": 5624,
+          "decodedBodySize": 5624,
+          "duration": 1.6999999999970896
+        },
+        {
+          "url": "http://127.0.0.1:8082/globe-motion.js?v=67",
+          "initiatorType": "script",
+          "transferSize": 2209,
+          "encodedBodySize": 1909,
+          "decodedBodySize": 1909,
+          "duration": 2.8000000000029104
+        },
+        {
+          "url": "http://127.0.0.1:8082/globe-scene.js?v=79",
+          "initiatorType": "script",
+          "transferSize": 9026,
+          "encodedBodySize": 8726,
+          "decodedBodySize": 8726,
+          "duration": 2.400000000001455
+        },
+        {
+          "url": "http://127.0.0.1:8082/time-controls.js?v=73",
+          "initiatorType": "script",
+          "transferSize": 5393,
+          "encodedBodySize": 5093,
+          "decodedBodySize": 5093,
+          "duration": 3.3999999999941792
+        },
+        {
+          "url": "http://127.0.0.1:8082/flat-map.js?v=85",
+          "initiatorType": "script",
+          "transferSize": 9137,
+          "encodedBodySize": 8837,
+          "decodedBodySize": 8837,
+          "duration": 2.5
+        },
+        {
+          "url": "http://127.0.0.1:8082/app.js?v=84",
+          "initiatorType": "script",
+          "transferSize": 28935,
+          "encodedBodySize": 28635,
+          "decodedBodySize": 28635,
+          "duration": 2.7000000000043656
+        },
+        {
+          "url": "http://127.0.0.1:8082/data/satellite-metadata-compact.json?v=62",
+          "initiatorType": "fetch",
+          "transferSize": 1198462,
+          "encodedBodySize": 1198162,
+          "decodedBodySize": 1198162,
+          "duration": 30.599999999998545
+        },
+        {
+          "url": "http://127.0.0.1:8082/data/mission-profiles.json?v=50",
+          "initiatorType": "fetch",
+          "transferSize": 115200,
+          "encodedBodySize": 114900,
+          "decodedBodySize": 114900,
+          "duration": 33
+        },
+        {
+          "url": "http://127.0.0.1:8082/watchlist-backup.js?v=67",
+          "initiatorType": "script",
+          "transferSize": 9394,
+          "encodedBodySize": 9094,
+          "decodedBodySize": 9094,
+          "duration": 5.5
+        },
+        {
+          "url": "http://127.0.0.1:8082/assets/earth.jpg",
+          "initiatorType": "img",
+          "transferSize": 1462177,
+          "encodedBodySize": 1461877,
+          "decodedBodySize": 1461877,
+          "duration": 15.30000000000291
+        },
+        {
+          "url": "http://127.0.0.1:8082/assets/stars.png",
+          "initiatorType": "img",
+          "transferSize": 904454,
+          "encodedBodySize": 904154,
+          "decodedBodySize": 904154,
+          "duration": 8.599999999998545
+        },
+        {
+          "url": "http://127.0.0.1:8082/report-archive.js?v=34",
+          "initiatorType": "script",
+          "transferSize": 1954,
+          "encodedBodySize": 1654,
+          "decodedBodySize": 1654,
+          "duration": 5.19999999999709
+        },
+        {
+          "url": "http://127.0.0.1:8082/report-brief.js?v=75",
+          "initiatorType": "script",
+          "transferSize": 15234,
+          "encodedBodySize": 14934,
+          "decodedBodySize": 14934,
+          "duration": 2.8000000000029104
+        },
+        {
+          "url": "https://celestrak.org/NORAD/elements/gp.php?GROUP=active&FORMAT=json",
+          "initiatorType": "fetch",
+          "transferSize": 0,
+          "encodedBodySize": 0,
+          "decodedBodySize": 0,
+          "duration": 178.5
+        },
+        {
+          "url": "http://127.0.0.1:8082/report-layout.js?v=52",
+          "initiatorType": "script",
+          "transferSize": 13027,
+          "encodedBodySize": 12727,
+          "decodedBodySize": 12727,
+          "duration": 187.5
+        },
+        {
+          "url": "http://127.0.0.1:8082/report-exports.js?v=49",
+          "initiatorType": "script",
+          "transferSize": 17076,
+          "encodedBodySize": 16776,
+          "decodedBodySize": 16776,
+          "duration": 13.400000000001455
+        },
+        {
+          "url": "http://127.0.0.1:8082/report-insights.js?v=75",
+          "initiatorType": "script",
+          "transferSize": 13562,
+          "encodedBodySize": 13262,
+          "decodedBodySize": 13262,
+          "duration": 8
+        },
+        {
+          "url": "http://127.0.0.1:8082/report-document.js?v=75",
+          "initiatorType": "script",
+          "transferSize": 16897,
+          "encodedBodySize": 16597,
+          "decodedBodySize": 16597,
+          "duration": 13
+        },
+        {
+          "url": "http://127.0.0.1:8082/positions-worker.js?v=43",
+          "initiatorType": "other",
+          "transferSize": 1899,
+          "encodedBodySize": 1599,
+          "decodedBodySize": 1599,
+          "duration": -336.40000000000146
+        },
+        {
+          "url": "http://127.0.0.1:8082/country-report-core.js?v=36",
+          "initiatorType": "script",
+          "transferSize": 12969,
+          "encodedBodySize": 12669,
+          "decodedBodySize": 12669,
+          "duration": 13
+        },
+        {
+          "url": "http://127.0.0.1:8082/pass-tools-core.js?v=74",
+          "initiatorType": "script",
+          "transferSize": 4012,
+          "encodedBodySize": 3712,
+          "decodedBodySize": 3712,
+          "duration": 8.89999999999418
+        },
+        {
+          "url": "http://127.0.0.1:8082/pass-map.js?v=75",
+          "initiatorType": "script",
+          "transferSize": 5035,
+          "encodedBodySize": 4735,
+          "decodedBodySize": 4735,
+          "duration": 7.80000000000291
+        },
+        {
+          "url": "http://127.0.0.1:8082/country-boundaries.js?v=81",
+          "initiatorType": "script",
+          "transferSize": 2866,
+          "encodedBodySize": 2566,
+          "decodedBodySize": 2566,
+          "duration": 10.599999999998545
+        },
+        {
+          "url": "http://127.0.0.1:8082/report.js?v=81",
+          "initiatorType": "script",
+          "transferSize": 17650,
+          "encodedBodySize": 17350,
+          "decodedBodySize": 17350,
+          "duration": 5.599999999998545
+        },
+        {
+          "url": "http://127.0.0.1:8082/data/country-index.json",
+          "initiatorType": "fetch",
+          "transferSize": 18575,
+          "encodedBodySize": 18275,
+          "decodedBodySize": 18275,
+          "duration": 13.900000000001455
+        },
+        {
+          "url": "http://127.0.0.1:8082/data/sa-border.json",
+          "initiatorType": "fetch",
+          "transferSize": 17392,
+          "encodedBodySize": 17092,
+          "decodedBodySize": 17092,
+          "duration": 12.700000000004366
+        },
+        {
+          "url": "http://127.0.0.1:8082/country-report-builder.js?v=75",
+          "initiatorType": "script",
+          "transferSize": 15172,
+          "encodedBodySize": 14872,
+          "decodedBodySize": 14872,
+          "duration": 11.099999999998545
+        },
+        {
+          "url": "http://127.0.0.1:8082/analysis-core.js?v=26",
+          "initiatorType": "script",
+          "transferSize": 7187,
+          "encodedBodySize": 6887,
+          "decodedBodySize": 6887,
+          "duration": 7.200000000004366
+        },
+        {
+          "url": "http://127.0.0.1:8082/analysis-document.js?v=75",
+          "initiatorType": "script",
+          "transferSize": 18788,
+          "encodedBodySize": 18488,
+          "decodedBodySize": 18488,
+          "duration": 12.599999999998545
+        },
+        {
+          "url": "http://127.0.0.1:8082/analysis.js?v=81",
+          "initiatorType": "script",
+          "transferSize": 23685,
+          "encodedBodySize": 23385,
+          "decodedBodySize": 23385,
+          "duration": 9.900000000001455
+        },
+        {
+          "url": "http://127.0.0.1:8082/date-calendar.js?v=78",
+          "initiatorType": "script",
+          "transferSize": 10507,
+          "encodedBodySize": 10207,
+          "decodedBodySize": 10207,
+          "duration": 6.700000000004366
+        },
+        {
+          "url": "http://127.0.0.1:8082/draft-state.js?v=75",
+          "initiatorType": "script",
+          "transferSize": 8318,
+          "encodedBodySize": 8018,
+          "decodedBodySize": 8018,
+          "duration": 13.5
+        },
+        {
+          "url": "http://127.0.0.1:8082/observer-engine.js?v=26",
+          "initiatorType": "script",
+          "transferSize": 5464,
+          "encodedBodySize": 5164,
+          "decodedBodySize": 5164,
+          "duration": 10
+        },
+        {
+          "url": "http://127.0.0.1:8082/observer-report.js?v=87",
+          "initiatorType": "script",
+          "transferSize": 7519,
+          "encodedBodySize": 7219,
+          "decodedBodySize": 7219,
+          "duration": 7.900000000001455
+        },
+        {
+          "url": "http://127.0.0.1:8082/observer-word.js?v=87",
+          "initiatorType": "script",
+          "transferSize": 2879,
+          "encodedBodySize": 2579,
+          "decodedBodySize": 2579,
+          "duration": 14.099999999998545
+        },
+        {
+          "url": "http://127.0.0.1:8082/observer.js?v=88",
+          "initiatorType": "script",
+          "transferSize": 12999,
+          "encodedBodySize": 12699,
+          "decodedBodySize": 12699,
+          "duration": 8.60000000000582
+        },
+        {
+          "url": "http://127.0.0.1:8082/country-inventory-core.js?v=50",
+          "initiatorType": "script",
+          "transferSize": 7851,
+          "encodedBodySize": 7551,
+          "decodedBodySize": 7551,
+          "duration": 7.5
+        },
+        {
+          "url": "http://127.0.0.1:8082/app-shell.js?v=83",
+          "initiatorType": "script",
+          "transferSize": 12525,
+          "encodedBodySize": 12225,
+          "decodedBodySize": 12225,
+          "duration": 6.69999999999709
+        },
+        {
+          "url": "http://127.0.0.1:8082/inventory-report.js?v=75",
+          "initiatorType": "script",
+          "transferSize": 16559,
+          "encodedBodySize": 16259,
+          "decodedBodySize": 16259,
+          "duration": 11.80000000000291
+        },
+        {
+          "url": "http://127.0.0.1:8082/map-display.js?v=81",
+          "initiatorType": "script",
+          "transferSize": 9175,
+          "encodedBodySize": 8875,
+          "decodedBodySize": 8875,
+          "duration": 21.19999999999709
+        },
+        {
+          "url": "http://127.0.0.1:8082/data-refresh.js?v=35",
+          "initiatorType": "script",
+          "transferSize": 3084,
+          "encodedBodySize": 2784,
+          "decodedBodySize": 2784,
+          "duration": 12.700000000004366
+        },
+        {
+          "url": "http://127.0.0.1:8082/program-extras.js?v=75",
+          "initiatorType": "script",
+          "transferSize": 8953,
+          "encodedBodySize": 8653,
+          "decodedBodySize": 8653,
+          "duration": 6.799999999995634
+        },
+        {
+          "url": "http://127.0.0.1:8082/experience.js?v=84",
+          "initiatorType": "script",
+          "transferSize": 5548,
+          "encodedBodySize": 5248,
+          "decodedBodySize": 5248,
+          "duration": 5.700000000004366
+        },
+        {
+          "url": "http://127.0.0.1:8082/icons/madar-symbol-64-v76.png",
+          "initiatorType": "img",
+          "transferSize": 3708,
+          "encodedBodySize": 3408,
+          "decodedBodySize": 3408,
+          "duration": 11.200000000004366
+        },
+        {
+          "url": "http://127.0.0.1:8082/mobile-map.js?v=75",
+          "initiatorType": "script",
+          "transferSize": 6653,
+          "encodedBodySize": 6353,
+          "decodedBodySize": 6353,
+          "duration": 4
+        },
+        {
+          "url": "http://127.0.0.1:8082/map-orbit-filter.js?v=72",
+          "initiatorType": "script",
+          "transferSize": 2127,
+          "encodedBodySize": 1827,
+          "decodedBodySize": 1827,
+          "duration": 6.599999999998545
+        },
+        {
+          "url": "http://127.0.0.1:8082/map-fleet.js?v=80",
+          "initiatorType": "script",
+          "transferSize": 10664,
+          "encodedBodySize": 10364,
+          "decodedBodySize": 10364,
+          "duration": 7
+        },
+        {
+          "url": "http://127.0.0.1:8082/observer-map-picker.js?v=81",
+          "initiatorType": "script",
+          "transferSize": 4994,
+          "encodedBodySize": 4694,
+          "decodedBodySize": 4694,
+          "duration": 8.900000000001455
+        },
+        {
+          "url": "http://127.0.0.1:8082/form-layout.js?v=78",
+          "initiatorType": "script",
+          "transferSize": 2281,
+          "encodedBodySize": 1981,
+          "decodedBodySize": 1981,
+          "duration": 7.30000000000291
+        },
+        {
+          "url": "http://127.0.0.1:8082/report-guidance.js?v=86",
+          "initiatorType": "script",
+          "transferSize": 19230,
+          "encodedBodySize": 18930,
+          "decodedBodySize": 18930,
+          "duration": 8.900000000001455
+        }
+      ],
+      "startupRequestCount": 100,
+      "startupCompletedResourceCount": 95,
+      "environment": {
+        "viewport": "390x844",
+        "deviceScaleFactor": 3,
+        "cpuSlowdown": 4,
+        "renderer": "headless Chromium with SwiftShader",
+        "network": "local static server; fixed orbital snapshot",
+        "physicalPhone": false
+      },
+      "medianUpdateMs": 1.6700000000004365
+    },
+    {
+      "prepareMs": 177,
+      "eagerModelBuilds": 0,
+      "modelPositionIdentical": true,
+      "updateMs": [
+        1.889999999999418,
+        1.9600000000005822,
+        2.619999999999709,
+        2.2,
+        1.989999999999418
+      ],
+      "metricNodesAdded": 0,
+      "metricRowsRemoved": 0,
+      "firstMetricRetained": true,
+      "metricRows": 12,
+      "satellites": 16752,
+      "pixelRatio": 1.5,
+      "lab": {
+        "longTasks": [
+          61,
+          669,
+          233,
+          60,
+          68,
+          774,
+          106,
+          387,
+          1030,
+          69,
+          229,
+          139,
+          73,
+          81,
+          52,
+          56,
+          593,
+          269,
+          290,
+          394,
+          53,
+          52,
+          51
+        ],
+        "cls": 0.0817561385429463,
+        "lcp": 184,
+        "arabicTranslationCallbacks": 0,
+        "arabicTranslationRecords": 0,
+        "dictionaryDecodedAt": 297.59999999999127,
+        "translationSetupMs": 1.9000000000087311
+      },
+      "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.8078.4 Safari/537.36",
+      "startupIdentityBytes": 1198162,
+      "startupFullCatalogRequests": 0,
+      "startupFullBoundaryRequests": 0,
+      "startupBoundaryBytes": 35367,
+      "readyMs": 9031.399999999994,
+      "startupRequests": [
+        {
+          "url": "http://127.0.0.1:8082/",
+          "method": "GET",
+          "type": "document"
+        },
+        {
+          "url": "http://127.0.0.1:8082/app-base.css?v=86",
+          "method": "GET",
+          "type": "stylesheet"
+        },
+        {
+          "url": "http://127.0.0.1:8082/app-shell.css?v=82",
+          "method": "GET",
+          "type": "stylesheet"
+        },
+        {
+          "url": "http://127.0.0.1:8082/flat-map.css?v=85",
+          "method": "GET",
+          "type": "stylesheet"
+        },
+        {
+          "url": "http://127.0.0.1:8082/experience.css?v=78",
+          "method": "GET",
+          "type": "stylesheet"
+        },
+        {
+          "url": "http://127.0.0.1:8082/map-display.css?v=45",
+          "method": "GET",
+          "type": "stylesheet"
+        },
+        {
+          "url": "http://127.0.0.1:8082/map-fleet.css?v=74",
+          "method": "GET",
+          "type": "stylesheet"
+        },
+        {
+          "url": "http://127.0.0.1:8082/date-calendar.css?v=71",
+          "method": "GET",
+          "type": "stylesheet"
+        },
+        {
+          "url": "http://127.0.0.1:8082/form-layout.css?v=78",
+          "method": "GET",
+          "type": "stylesheet"
+        },
+        {
+          "url": "http://127.0.0.1:8082/report-guidance.css?v=79",
+          "method": "GET",
+          "type": "stylesheet"
+        },
+        {
+          "url": "http://127.0.0.1:8082/observing-overview.css?v=80",
+          "method": "GET",
+          "type": "stylesheet"
+        },
+        {
+          "url": "http://127.0.0.1:8082/satellite-summary.css?v=82",
+          "method": "GET",
+          "type": "stylesheet"
+        },
+        {
+          "url": "http://127.0.0.1:8082/icons/madar-art-512-v76.png",
+          "method": "GET",
+          "type": "image"
+        },
+        {
+          "url": "http://127.0.0.1:8082/network-resources.js?v=82",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/network-policy.js?v=43",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/i18n.js?v=88",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/data/en.json?v=88",
+          "method": "GET",
+          "type": "fetch"
+        },
+        {
+          "url": "http://127.0.0.1:8082/privacy.js?v=82",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/observer-sites-core.js?v=77",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/observer-cities.js?v=80",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/observer-sites.js?v=80",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/orbit-data.js?v=42",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/vendor/satellite.min.js",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/vendor/globe.min.js",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/satellite-metadata.js?v=62",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/state-store.js?v=17",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/flag-assets.js?v=15",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/word-delivery.js?v=49",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/orbit-service.js?v=45",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/satellite-groups.js?v=86",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/type-picker.js?v=86",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/catalog-search.js?v=22",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/user-guide.js?v=44",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/render-lifecycle.js?v=67",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/render-quality.js?v=74",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/globe-picking.js?v=78",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/source-details.js?v=50",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/orbit-appearance.js?v=74",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/map-fleet-core.js?v=51",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/live-values.js?v=50",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/map-swarm.js?v=54",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/satellite-selection.js?v=55",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/watchlist-state.js?v=56",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/satellite-card.js?v=82",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/data-health.js?v=58",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/catalog-rows.js?v=59",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/catalog-list.js?v=67",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/globe-motion.js?v=67",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/globe-scene.js?v=79",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/time-controls.js?v=73",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/flat-map.js?v=85",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/app.js?v=84",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/data/satellite-metadata-compact.json?v=62",
+          "method": "GET",
+          "type": "fetch"
+        },
+        {
+          "url": "http://127.0.0.1:8082/data/mission-profiles.json?v=50",
+          "method": "GET",
+          "type": "fetch"
+        },
+        {
+          "url": "http://127.0.0.1:8082/watchlist-backup.js?v=67",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/assets/earth.jpg",
+          "method": "GET",
+          "type": "image"
+        },
+        {
+          "url": "http://127.0.0.1:8082/assets/stars.png",
+          "method": "GET",
+          "type": "image"
+        },
+        {
+          "url": "http://127.0.0.1:8082/report-archive.js?v=34",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "https://celestrak.org/NORAD/elements/gp.php?GROUP=active&FORMAT=json",
+          "method": "GET",
+          "type": "fetch"
+        },
+        {
+          "url": "http://127.0.0.1:8082/report-brief.js?v=75",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/report-layout.js?v=52",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/report-exports.js?v=49",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/positions-worker.js?v=43",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/report-insights.js?v=75",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/network-resources.js?v=43",
+          "method": "GET",
+          "type": "other"
+        },
+        {
+          "url": "http://127.0.0.1:8082/network-policy.js?v=43",
+          "method": "GET",
+          "type": "other"
+        },
+        {
+          "url": "http://127.0.0.1:8082/vendor/satellite.min.js",
+          "method": "GET",
+          "type": "other"
+        },
+        {
+          "url": "http://127.0.0.1:8082/report-document.js?v=75",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/orbit-data.js?v=19",
+          "method": "GET",
+          "type": "other"
+        },
+        {
+          "url": "http://127.0.0.1:8082/country-report-core.js?v=36",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/pass-tools-core.js?v=74",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/pass-map.js?v=75",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/country-boundaries.js?v=81",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/report.js?v=81",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/data/country-index.json",
+          "method": "GET",
+          "type": "fetch"
+        },
+        {
+          "url": "http://127.0.0.1:8082/data/sa-border.json",
+          "method": "GET",
+          "type": "fetch"
+        },
+        {
+          "url": "http://127.0.0.1:8082/country-report-builder.js?v=75",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/analysis-core.js?v=26",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/analysis-document.js?v=75",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/analysis.js?v=81",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/date-calendar.js?v=78",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/draft-state.js?v=75",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/observer-engine.js?v=26",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/observer-report.js?v=87",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/observer-word.js?v=87",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/observer.js?v=88",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/country-inventory-core.js?v=50",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/app-shell.js?v=83",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/inventory-report.js?v=75",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/map-display.js?v=81",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/data-refresh.js?v=35",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/program-extras.js?v=75",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/experience.js?v=84",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/icons/madar-symbol-64-v76.png",
+          "method": "GET",
+          "type": "image"
+        },
+        {
+          "url": "http://127.0.0.1:8082/mobile-map.js?v=75",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/map-orbit-filter.js?v=72",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/map-fleet.js?v=80",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/observer-map-picker.js?v=81",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/form-layout.js?v=78",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/report-guidance.js?v=86",
+          "method": "GET",
+          "type": "script"
+        }
+      ],
+      "startupResources": [
+        {
+          "url": "http://127.0.0.1:8082/app-base.css?v=86",
+          "initiatorType": "link",
+          "transferSize": 19708,
+          "encodedBodySize": 19408,
+          "decodedBodySize": 19408,
+          "duration": 10.19999999999709
+        },
+        {
+          "url": "http://127.0.0.1:8082/app-shell.css?v=82",
+          "initiatorType": "link",
+          "transferSize": 31115,
+          "encodedBodySize": 30815,
+          "decodedBodySize": 30815,
+          "duration": 11.30000000000291
+        },
+        {
+          "url": "http://127.0.0.1:8082/flat-map.css?v=85",
+          "initiatorType": "link",
+          "transferSize": 1431,
+          "encodedBodySize": 1131,
+          "decodedBodySize": 1131,
+          "duration": 12.39999999999418
+        },
+        {
+          "url": "http://127.0.0.1:8082/experience.css?v=78",
+          "initiatorType": "link",
+          "transferSize": 16656,
+          "encodedBodySize": 16356,
+          "decodedBodySize": 16356,
+          "duration": 15.000000000007276
+        },
+        {
+          "url": "http://127.0.0.1:8082/map-display.css?v=45",
+          "initiatorType": "link",
+          "transferSize": 2949,
+          "encodedBodySize": 2649,
+          "decodedBodySize": 2649,
+          "duration": 14.900000000001455
+        },
+        {
+          "url": "http://127.0.0.1:8082/map-fleet.css?v=74",
+          "initiatorType": "link",
+          "transferSize": 5266,
+          "encodedBodySize": 4966,
+          "decodedBodySize": 4966,
+          "duration": 12.89999999999418
+        },
+        {
+          "url": "http://127.0.0.1:8082/date-calendar.css?v=71",
+          "initiatorType": "link",
+          "transferSize": 2245,
+          "encodedBodySize": 1945,
+          "decodedBodySize": 1945,
+          "duration": 17.400000000001455
+        },
+        {
+          "url": "http://127.0.0.1:8082/form-layout.css?v=78",
+          "initiatorType": "link",
+          "transferSize": 2600,
+          "encodedBodySize": 2300,
+          "decodedBodySize": 2300,
+          "duration": 17.39999999999418
+        },
+        {
+          "url": "http://127.0.0.1:8082/report-guidance.css?v=79",
+          "initiatorType": "link",
+          "transferSize": 2501,
+          "encodedBodySize": 2201,
+          "decodedBodySize": 2201,
+          "duration": 33.80000000000291
+        },
+        {
+          "url": "http://127.0.0.1:8082/observing-overview.css?v=80",
+          "initiatorType": "link",
+          "transferSize": 1392,
+          "encodedBodySize": 1092,
+          "decodedBodySize": 1092,
+          "duration": 19.30000000000291
+        },
+        {
+          "url": "http://127.0.0.1:8082/satellite-summary.css?v=82",
+          "initiatorType": "link",
+          "transferSize": 2055,
+          "encodedBodySize": 1755,
+          "decodedBodySize": 1755,
+          "duration": 22.60000000000582
+        },
+        {
+          "url": "http://127.0.0.1:8082/icons/madar-art-512-v76.png",
+          "initiatorType": "img",
+          "transferSize": 127405,
+          "encodedBodySize": 127105,
+          "decodedBodySize": 127105,
+          "duration": 20.90000000000873
+        },
+        {
+          "url": "http://127.0.0.1:8082/network-resources.js?v=82",
+          "initiatorType": "script",
+          "transferSize": 9032,
+          "encodedBodySize": 8732,
+          "decodedBodySize": 8732,
+          "duration": 4.399999999994179
+        },
+        {
+          "url": "http://127.0.0.1:8082/network-policy.js?v=43",
+          "initiatorType": "script",
+          "transferSize": 4735,
+          "encodedBodySize": 4435,
+          "decodedBodySize": 4435,
+          "duration": 2.8000000000029104
+        },
+        {
+          "url": "http://127.0.0.1:8082/i18n.js?v=88",
+          "initiatorType": "script",
+          "transferSize": 6670,
+          "encodedBodySize": 6370,
+          "decodedBodySize": 6370,
+          "duration": 2.1999999999970896
+        },
+        {
+          "url": "http://127.0.0.1:8082/data/en.json?v=88",
+          "initiatorType": "fetch",
+          "transferSize": 257829,
+          "encodedBodySize": 257529,
+          "decodedBodySize": 257529,
+          "duration": 3.400000000008731
+        },
+        {
+          "url": "http://127.0.0.1:8082/privacy.js?v=82",
+          "initiatorType": "script",
+          "transferSize": 5864,
+          "encodedBodySize": 5564,
+          "decodedBodySize": 5564,
+          "duration": 3.599999999991269
+        },
+        {
+          "url": "http://127.0.0.1:8082/observer-sites-core.js?v=77",
+          "initiatorType": "script",
+          "transferSize": 5148,
+          "encodedBodySize": 4848,
+          "decodedBodySize": 4848,
+          "duration": 2.3000000000029104
+        },
+        {
+          "url": "http://127.0.0.1:8082/observer-cities.js?v=80",
+          "initiatorType": "script",
+          "transferSize": 5569,
+          "encodedBodySize": 5269,
+          "decodedBodySize": 5269,
+          "duration": 2
+        },
+        {
+          "url": "http://127.0.0.1:8082/observer-sites.js?v=80",
+          "initiatorType": "script",
+          "transferSize": 6570,
+          "encodedBodySize": 6270,
+          "decodedBodySize": 6270,
+          "duration": 2.1000000000058208
+        },
+        {
+          "url": "http://127.0.0.1:8082/orbit-data.js?v=42",
+          "initiatorType": "script",
+          "transferSize": 8753,
+          "encodedBodySize": 8453,
+          "decodedBodySize": 8453,
+          "duration": 3
+        },
+        {
+          "url": "http://127.0.0.1:8082/vendor/satellite.min.js",
+          "initiatorType": "script",
+          "transferSize": 24340,
+          "encodedBodySize": 24040,
+          "decodedBodySize": 24040,
+          "duration": 2.1999999999970896
+        },
+        {
+          "url": "http://127.0.0.1:8082/vendor/globe.min.js",
+          "initiatorType": "script",
+          "transferSize": 1647949,
+          "encodedBodySize": 1647649,
+          "decodedBodySize": 1647649,
+          "duration": 7.599999999991269
+        },
+        {
+          "url": "http://127.0.0.1:8082/satellite-metadata.js?v=62",
+          "initiatorType": "script",
+          "transferSize": 10782,
+          "encodedBodySize": 10482,
+          "decodedBodySize": 10482,
+          "duration": 2.8000000000029104
+        },
+        {
+          "url": "http://127.0.0.1:8082/state-store.js?v=17",
+          "initiatorType": "script",
+          "transferSize": 3630,
+          "encodedBodySize": 3330,
+          "decodedBodySize": 3330,
+          "duration": 2.7999999999883585
+        },
+        {
+          "url": "http://127.0.0.1:8082/flag-assets.js?v=15",
+          "initiatorType": "script",
+          "transferSize": 2001,
+          "encodedBodySize": 1701,
+          "decodedBodySize": 1701,
+          "duration": 2.3000000000029104
+        },
+        {
+          "url": "http://127.0.0.1:8082/word-delivery.js?v=49",
+          "initiatorType": "script",
+          "transferSize": 4274,
+          "encodedBodySize": 3974,
+          "decodedBodySize": 3974,
+          "duration": 3
+        },
+        {
+          "url": "http://127.0.0.1:8082/orbit-service.js?v=45",
+          "initiatorType": "script",
+          "transferSize": 10199,
+          "encodedBodySize": 9899,
+          "decodedBodySize": 9899,
+          "duration": 2.8999999999941792
+        },
+        {
+          "url": "http://127.0.0.1:8082/satellite-groups.js?v=86",
+          "initiatorType": "script",
+          "transferSize": 13665,
+          "encodedBodySize": 13365,
+          "decodedBodySize": 13365,
+          "duration": 2.099999999991269
+        },
+        {
+          "url": "http://127.0.0.1:8082/type-picker.js?v=86",
+          "initiatorType": "script",
+          "transferSize": 6156,
+          "encodedBodySize": 5856,
+          "decodedBodySize": 5856,
+          "duration": 3.1999999999970896
+        },
+        {
+          "url": "http://127.0.0.1:8082/catalog-search.js?v=22",
+          "initiatorType": "script",
+          "transferSize": 2661,
+          "encodedBodySize": 2361,
+          "decodedBodySize": 2361,
+          "duration": 2.400000000008731
+        },
+        {
+          "url": "http://127.0.0.1:8082/user-guide.js?v=44",
+          "initiatorType": "script",
+          "transferSize": 3268,
+          "encodedBodySize": 2968,
+          "decodedBodySize": 2968,
+          "duration": 1.7999999999883585
+        },
+        {
+          "url": "http://127.0.0.1:8082/render-lifecycle.js?v=67",
+          "initiatorType": "script",
+          "transferSize": 3184,
+          "encodedBodySize": 2884,
+          "decodedBodySize": 2884,
+          "duration": 1.8000000000029104
+        },
+        {
+          "url": "http://127.0.0.1:8082/render-quality.js?v=74",
+          "initiatorType": "script",
+          "transferSize": 3360,
+          "encodedBodySize": 3060,
+          "decodedBodySize": 3060,
+          "duration": 2.1000000000058208
+        },
+        {
+          "url": "http://127.0.0.1:8082/globe-picking.js?v=78",
+          "initiatorType": "script",
+          "transferSize": 4657,
+          "encodedBodySize": 4357,
+          "decodedBodySize": 4357,
+          "duration": 1.6000000000058208
+        },
+        {
+          "url": "http://127.0.0.1:8082/source-details.js?v=50",
+          "initiatorType": "script",
+          "transferSize": 8513,
+          "encodedBodySize": 8213,
+          "decodedBodySize": 8213,
+          "duration": 2
+        },
+        {
+          "url": "http://127.0.0.1:8082/orbit-appearance.js?v=74",
+          "initiatorType": "script",
+          "transferSize": 1415,
+          "encodedBodySize": 1115,
+          "decodedBodySize": 1115,
+          "duration": 1.6000000000058208
+        },
+        {
+          "url": "http://127.0.0.1:8082/map-fleet-core.js?v=51",
+          "initiatorType": "script",
+          "transferSize": 3305,
+          "encodedBodySize": 3005,
+          "decodedBodySize": 3005,
+          "duration": 2
+        },
+        {
+          "url": "http://127.0.0.1:8082/live-values.js?v=50",
+          "initiatorType": "script",
+          "transferSize": 1489,
+          "encodedBodySize": 1189,
+          "decodedBodySize": 1189,
+          "duration": 1.5999999999912689
+        },
+        {
+          "url": "http://127.0.0.1:8082/map-swarm.js?v=54",
+          "initiatorType": "script",
+          "transferSize": 3805,
+          "encodedBodySize": 3505,
+          "decodedBodySize": 3505,
+          "duration": 1.6999999999970896
+        },
+        {
+          "url": "http://127.0.0.1:8082/satellite-selection.js?v=55",
+          "initiatorType": "script",
+          "transferSize": 1778,
+          "encodedBodySize": 1478,
+          "decodedBodySize": 1478,
+          "duration": 1.8000000000029104
+        },
+        {
+          "url": "http://127.0.0.1:8082/watchlist-state.js?v=56",
+          "initiatorType": "script",
+          "transferSize": 3273,
+          "encodedBodySize": 2973,
+          "decodedBodySize": 2973,
+          "duration": 2.8000000000029104
+        },
+        {
+          "url": "http://127.0.0.1:8082/satellite-card.js?v=82",
+          "initiatorType": "script",
+          "transferSize": 8862,
+          "encodedBodySize": 8562,
+          "decodedBodySize": 8562,
+          "duration": 2
+        },
+        {
+          "url": "http://127.0.0.1:8082/data-health.js?v=58",
+          "initiatorType": "script",
+          "transferSize": 7459,
+          "encodedBodySize": 7159,
+          "decodedBodySize": 7159,
+          "duration": 2.5
+        },
+        {
+          "url": "http://127.0.0.1:8082/catalog-rows.js?v=59",
+          "initiatorType": "script",
+          "transferSize": 2298,
+          "encodedBodySize": 1998,
+          "decodedBodySize": 1998,
+          "duration": 2.5
+        },
+        {
+          "url": "http://127.0.0.1:8082/catalog-list.js?v=67",
+          "initiatorType": "script",
+          "transferSize": 5924,
+          "encodedBodySize": 5624,
+          "decodedBodySize": 5624,
+          "duration": 2.1000000000058208
+        },
+        {
+          "url": "http://127.0.0.1:8082/globe-motion.js?v=67",
+          "initiatorType": "script",
+          "transferSize": 2209,
+          "encodedBodySize": 1909,
+          "decodedBodySize": 1909,
+          "duration": 2.2999999999883585
+        },
+        {
+          "url": "http://127.0.0.1:8082/globe-scene.js?v=79",
+          "initiatorType": "script",
+          "transferSize": 9026,
+          "encodedBodySize": 8726,
+          "decodedBodySize": 8726,
+          "duration": 2.2000000000116415
+        },
+        {
+          "url": "http://127.0.0.1:8082/time-controls.js?v=73",
+          "initiatorType": "script",
+          "transferSize": 5393,
+          "encodedBodySize": 5093,
+          "decodedBodySize": 5093,
+          "duration": 2.8000000000029104
+        },
+        {
+          "url": "http://127.0.0.1:8082/flat-map.js?v=85",
+          "initiatorType": "script",
+          "transferSize": 9137,
+          "encodedBodySize": 8837,
+          "decodedBodySize": 8837,
+          "duration": 2.3000000000029104
+        },
+        {
+          "url": "http://127.0.0.1:8082/app.js?v=84",
+          "initiatorType": "script",
+          "transferSize": 28935,
+          "encodedBodySize": 28635,
+          "decodedBodySize": 28635,
+          "duration": 2
+        },
+        {
+          "url": "http://127.0.0.1:8082/data/satellite-metadata-compact.json?v=62",
+          "initiatorType": "fetch",
+          "transferSize": 1198462,
+          "encodedBodySize": 1198162,
+          "decodedBodySize": 1198162,
+          "duration": 28.89999999999418
+        },
+        {
+          "url": "http://127.0.0.1:8082/data/mission-profiles.json?v=50",
+          "initiatorType": "fetch",
+          "transferSize": 115200,
+          "encodedBodySize": 114900,
+          "decodedBodySize": 114900,
+          "duration": 30
+        },
+        {
+          "url": "http://127.0.0.1:8082/watchlist-backup.js?v=67",
+          "initiatorType": "script",
+          "transferSize": 9394,
+          "encodedBodySize": 9094,
+          "decodedBodySize": 9094,
+          "duration": 7.600000000005821
+        },
+        {
+          "url": "http://127.0.0.1:8082/assets/earth.jpg",
+          "initiatorType": "img",
+          "transferSize": 1462177,
+          "encodedBodySize": 1461877,
+          "decodedBodySize": 1461877,
+          "duration": 16.10000000000582
+        },
+        {
+          "url": "http://127.0.0.1:8082/assets/stars.png",
+          "initiatorType": "img",
+          "transferSize": 904454,
+          "encodedBodySize": 904154,
+          "decodedBodySize": 904154,
+          "duration": 17.69999999999709
+        },
+        {
+          "url": "http://127.0.0.1:8082/report-archive.js?v=34",
+          "initiatorType": "script",
+          "transferSize": 1954,
+          "encodedBodySize": 1654,
+          "decodedBodySize": 1654,
+          "duration": 5.099999999991269
+        },
+        {
+          "url": "https://celestrak.org/NORAD/elements/gp.php?GROUP=active&FORMAT=json",
+          "initiatorType": "fetch",
+          "transferSize": 0,
+          "encodedBodySize": 0,
+          "decodedBodySize": 0,
+          "duration": 140.3000000000029
+        },
+        {
+          "url": "http://127.0.0.1:8082/report-brief.js?v=75",
+          "initiatorType": "script",
+          "transferSize": 15234,
+          "encodedBodySize": 14934,
+          "decodedBodySize": 14934,
+          "duration": 157.5
+        },
+        {
+          "url": "http://127.0.0.1:8082/report-layout.js?v=52",
+          "initiatorType": "script",
+          "transferSize": 13027,
+          "encodedBodySize": 12727,
+          "decodedBodySize": 12727,
+          "duration": 6.100000000005821
+        },
+        {
+          "url": "http://127.0.0.1:8082/report-exports.js?v=49",
+          "initiatorType": "script",
+          "transferSize": 17076,
+          "encodedBodySize": 16776,
+          "decodedBodySize": 16776,
+          "duration": 12.80000000000291
+        },
+        {
+          "url": "http://127.0.0.1:8082/report-insights.js?v=75",
+          "initiatorType": "script",
+          "transferSize": 13562,
+          "encodedBodySize": 13262,
+          "decodedBodySize": 13262,
+          "duration": 6.2999999999883585
+        },
+        {
+          "url": "http://127.0.0.1:8082/positions-worker.js?v=43",
+          "initiatorType": "other",
+          "transferSize": 1899,
+          "encodedBodySize": 1599,
+          "decodedBodySize": 1599,
+          "duration": -297.40000000000873
+        },
+        {
+          "url": "http://127.0.0.1:8082/report-document.js?v=75",
+          "initiatorType": "script",
+          "transferSize": 16897,
+          "encodedBodySize": 16597,
+          "decodedBodySize": 16597,
+          "duration": 9.30000000000291
+        },
+        {
+          "url": "http://127.0.0.1:8082/country-report-core.js?v=36",
+          "initiatorType": "script",
+          "transferSize": 12969,
+          "encodedBodySize": 12669,
+          "decodedBodySize": 12669,
+          "duration": 22
+        },
+        {
+          "url": "http://127.0.0.1:8082/pass-tools-core.js?v=74",
+          "initiatorType": "script",
+          "transferSize": 4012,
+          "encodedBodySize": 3712,
+          "decodedBodySize": 3712,
+          "duration": 16.5
+        },
+        {
+          "url": "http://127.0.0.1:8082/pass-map.js?v=75",
+          "initiatorType": "script",
+          "transferSize": 5035,
+          "encodedBodySize": 4735,
+          "decodedBodySize": 4735,
+          "duration": 11.19999999999709
+        },
+        {
+          "url": "http://127.0.0.1:8082/country-boundaries.js?v=81",
+          "initiatorType": "script",
+          "transferSize": 2866,
+          "encodedBodySize": 2566,
+          "decodedBodySize": 2566,
+          "duration": 13.900000000008731
+        },
+        {
+          "url": "http://127.0.0.1:8082/report.js?v=81",
+          "initiatorType": "script",
+          "transferSize": 17650,
+          "encodedBodySize": 17350,
+          "decodedBodySize": 17350,
+          "duration": 10.10000000000582
+        },
+        {
+          "url": "http://127.0.0.1:8082/data/country-index.json",
+          "initiatorType": "fetch",
+          "transferSize": 18575,
+          "encodedBodySize": 18275,
+          "decodedBodySize": 18275,
+          "duration": 13.30000000000291
+        },
+        {
+          "url": "http://127.0.0.1:8082/data/sa-border.json",
+          "initiatorType": "fetch",
+          "transferSize": 17392,
+          "encodedBodySize": 17092,
+          "decodedBodySize": 17092,
+          "duration": 11.30000000000291
+        },
+        {
+          "url": "http://127.0.0.1:8082/country-report-builder.js?v=75",
+          "initiatorType": "script",
+          "transferSize": 15172,
+          "encodedBodySize": 14872,
+          "decodedBodySize": 14872,
+          "duration": 5.899999999994179
+        },
+        {
+          "url": "http://127.0.0.1:8082/analysis-core.js?v=26",
+          "initiatorType": "script",
+          "transferSize": 7187,
+          "encodedBodySize": 6887,
+          "decodedBodySize": 6887,
+          "duration": 20.5
+        },
+        {
+          "url": "http://127.0.0.1:8082/analysis-document.js?v=75",
+          "initiatorType": "script",
+          "transferSize": 18788,
+          "encodedBodySize": 18488,
+          "decodedBodySize": 18488,
+          "duration": 6.400000000008731
+        },
+        {
+          "url": "http://127.0.0.1:8082/analysis.js?v=81",
+          "initiatorType": "script",
+          "transferSize": 23685,
+          "encodedBodySize": 23385,
+          "decodedBodySize": 23385,
+          "duration": 4.900000000008731
+        },
+        {
+          "url": "http://127.0.0.1:8082/date-calendar.js?v=78",
+          "initiatorType": "script",
+          "transferSize": 10507,
+          "encodedBodySize": 10207,
+          "decodedBodySize": 10207,
+          "duration": 5.5
+        },
+        {
+          "url": "http://127.0.0.1:8082/draft-state.js?v=75",
+          "initiatorType": "script",
+          "transferSize": 8318,
+          "encodedBodySize": 8018,
+          "decodedBodySize": 8018,
+          "duration": 7.5
+        },
+        {
+          "url": "http://127.0.0.1:8082/observer-engine.js?v=26",
+          "initiatorType": "script",
+          "transferSize": 5464,
+          "encodedBodySize": 5164,
+          "decodedBodySize": 5164,
+          "duration": 9.19999999999709
+        },
+        {
+          "url": "http://127.0.0.1:8082/observer-report.js?v=87",
+          "initiatorType": "script",
+          "transferSize": 7519,
+          "encodedBodySize": 7219,
+          "decodedBodySize": 7219,
+          "duration": 11.400000000008731
+        },
+        {
+          "url": "http://127.0.0.1:8082/observer-word.js?v=87",
+          "initiatorType": "script",
+          "transferSize": 2879,
+          "encodedBodySize": 2579,
+          "decodedBodySize": 2579,
+          "duration": 6
+        },
+        {
+          "url": "http://127.0.0.1:8082/observer.js?v=88",
+          "initiatorType": "script",
+          "transferSize": 12999,
+          "encodedBodySize": 12699,
+          "decodedBodySize": 12699,
+          "duration": 10.599999999991269
+        },
+        {
+          "url": "http://127.0.0.1:8082/country-inventory-core.js?v=50",
+          "initiatorType": "script",
+          "transferSize": 7851,
+          "encodedBodySize": 7551,
+          "decodedBodySize": 7551,
+          "duration": 8
+        },
+        {
+          "url": "http://127.0.0.1:8082/app-shell.js?v=83",
+          "initiatorType": "script",
+          "transferSize": 12525,
+          "encodedBodySize": 12225,
+          "decodedBodySize": 12225,
+          "duration": 7.30000000000291
+        },
+        {
+          "url": "http://127.0.0.1:8082/inventory-report.js?v=75",
+          "initiatorType": "script",
+          "transferSize": 16559,
+          "encodedBodySize": 16259,
+          "decodedBodySize": 16259,
+          "duration": 5.69999999999709
+        },
+        {
+          "url": "http://127.0.0.1:8082/map-display.js?v=81",
+          "initiatorType": "script",
+          "transferSize": 9175,
+          "encodedBodySize": 8875,
+          "decodedBodySize": 8875,
+          "duration": 6.5
+        },
+        {
+          "url": "http://127.0.0.1:8082/data-refresh.js?v=35",
+          "initiatorType": "script",
+          "transferSize": 3084,
+          "encodedBodySize": 2784,
+          "decodedBodySize": 2784,
+          "duration": 16.30000000000291
+        },
+        {
+          "url": "http://127.0.0.1:8082/program-extras.js?v=75",
+          "initiatorType": "script",
+          "transferSize": 8953,
+          "encodedBodySize": 8653,
+          "decodedBodySize": 8653,
+          "duration": 7.19999999999709
+        },
+        {
+          "url": "http://127.0.0.1:8082/experience.js?v=84",
+          "initiatorType": "script",
+          "transferSize": 5548,
+          "encodedBodySize": 5248,
+          "decodedBodySize": 5248,
+          "duration": 4.900000000008731
+        },
+        {
+          "url": "http://127.0.0.1:8082/icons/madar-symbol-64-v76.png",
+          "initiatorType": "img",
+          "transferSize": 3708,
+          "encodedBodySize": 3408,
+          "decodedBodySize": 3408,
+          "duration": 4.69999999999709
+        },
+        {
+          "url": "http://127.0.0.1:8082/mobile-map.js?v=75",
+          "initiatorType": "script",
+          "transferSize": 6653,
+          "encodedBodySize": 6353,
+          "decodedBodySize": 6353,
+          "duration": 6.5
+        },
+        {
+          "url": "http://127.0.0.1:8082/map-orbit-filter.js?v=72",
+          "initiatorType": "script",
+          "transferSize": 2127,
+          "encodedBodySize": 1827,
+          "decodedBodySize": 1827,
+          "duration": 13.19999999999709
+        },
+        {
+          "url": "http://127.0.0.1:8082/map-fleet.js?v=80",
+          "initiatorType": "script",
+          "transferSize": 10664,
+          "encodedBodySize": 10364,
+          "decodedBodySize": 10364,
+          "duration": 8.69999999999709
+        },
+        {
+          "url": "http://127.0.0.1:8082/observer-map-picker.js?v=81",
+          "initiatorType": "script",
+          "transferSize": 4994,
+          "encodedBodySize": 4694,
+          "decodedBodySize": 4694,
+          "duration": 4.400000000008731
+        },
+        {
+          "url": "http://127.0.0.1:8082/form-layout.js?v=78",
+          "initiatorType": "script",
+          "transferSize": 2281,
+          "encodedBodySize": 1981,
+          "decodedBodySize": 1981,
+          "duration": 5.69999999999709
+        },
+        {
+          "url": "http://127.0.0.1:8082/report-guidance.js?v=86",
+          "initiatorType": "script",
+          "transferSize": 19230,
+          "encodedBodySize": 18930,
+          "decodedBodySize": 18930,
+          "duration": 6.400000000008731
+        }
+      ],
+      "startupRequestCount": 100,
+      "startupCompletedResourceCount": 95,
+      "environment": {
+        "viewport": "390x844",
+        "deviceScaleFactor": 3,
+        "cpuSlowdown": 4,
+        "renderer": "headless Chromium with SwiftShader",
+        "network": "local static server; fixed orbital snapshot",
+        "physicalPhone": false
+      },
+      "medianUpdateMs": 1.989999999999418
+    },
+    {
+      "prepareMs": 158.1999999999971,
+      "eagerModelBuilds": 0,
+      "modelPositionIdentical": true,
+      "updateMs": [
+        2.05,
+        2.209999999999127,
+        1.85,
+        1.9,
+        1.8900000000008732
+      ],
+      "metricNodesAdded": 0,
+      "metricRowsRemoved": 0,
+      "firstMetricRetained": true,
+      "metricRows": 12,
+      "satellites": 16752,
+      "pixelRatio": 1.5,
+      "lab": {
+        "longTasks": [
+          82,
+          700,
+          229,
+          51,
+          71,
+          795,
+          108,
+          399,
+          972,
+          72,
+          72,
+          111,
+          143,
+          63,
+          81,
+          56,
+          50,
+          165,
+          608,
+          232,
+          51,
+          56,
+          472,
+          399,
+          54,
+          56,
+          71
+        ],
+        "cls": 0.0536660237656502,
+        "lcp": 220,
+        "arabicTranslationCallbacks": 0,
+        "arabicTranslationRecords": 0,
+        "dictionaryDecodedAt": 358.3999999999942,
+        "translationSetupMs": 2.1999999999970896
+      },
+      "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.8078.4 Safari/537.36",
+      "startupIdentityBytes": 1198162,
+      "startupFullCatalogRequests": 0,
+      "startupFullBoundaryRequests": 0,
+      "startupBoundaryBytes": 35367,
+      "readyMs": 9038.199999999997,
+      "startupRequests": [
+        {
+          "url": "http://127.0.0.1:8082/",
+          "method": "GET",
+          "type": "document"
+        },
+        {
+          "url": "http://127.0.0.1:8082/app-base.css?v=86",
+          "method": "GET",
+          "type": "stylesheet"
+        },
+        {
+          "url": "http://127.0.0.1:8082/app-shell.css?v=82",
+          "method": "GET",
+          "type": "stylesheet"
+        },
+        {
+          "url": "http://127.0.0.1:8082/flat-map.css?v=85",
+          "method": "GET",
+          "type": "stylesheet"
+        },
+        {
+          "url": "http://127.0.0.1:8082/experience.css?v=78",
+          "method": "GET",
+          "type": "stylesheet"
+        },
+        {
+          "url": "http://127.0.0.1:8082/map-display.css?v=45",
+          "method": "GET",
+          "type": "stylesheet"
+        },
+        {
+          "url": "http://127.0.0.1:8082/map-fleet.css?v=74",
+          "method": "GET",
+          "type": "stylesheet"
+        },
+        {
+          "url": "http://127.0.0.1:8082/date-calendar.css?v=71",
+          "method": "GET",
+          "type": "stylesheet"
+        },
+        {
+          "url": "http://127.0.0.1:8082/form-layout.css?v=78",
+          "method": "GET",
+          "type": "stylesheet"
+        },
+        {
+          "url": "http://127.0.0.1:8082/report-guidance.css?v=79",
+          "method": "GET",
+          "type": "stylesheet"
+        },
+        {
+          "url": "http://127.0.0.1:8082/observing-overview.css?v=80",
+          "method": "GET",
+          "type": "stylesheet"
+        },
+        {
+          "url": "http://127.0.0.1:8082/satellite-summary.css?v=82",
+          "method": "GET",
+          "type": "stylesheet"
+        },
+        {
+          "url": "http://127.0.0.1:8082/icons/madar-art-512-v76.png",
+          "method": "GET",
+          "type": "image"
+        },
+        {
+          "url": "http://127.0.0.1:8082/network-resources.js?v=82",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/network-policy.js?v=43",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/i18n.js?v=88",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/data/en.json?v=88",
+          "method": "GET",
+          "type": "fetch"
+        },
+        {
+          "url": "http://127.0.0.1:8082/privacy.js?v=82",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/observer-sites-core.js?v=77",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/observer-cities.js?v=80",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/observer-sites.js?v=80",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/orbit-data.js?v=42",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/vendor/satellite.min.js",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/vendor/globe.min.js",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/satellite-metadata.js?v=62",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/state-store.js?v=17",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/flag-assets.js?v=15",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/word-delivery.js?v=49",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/orbit-service.js?v=45",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/satellite-groups.js?v=86",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/type-picker.js?v=86",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/catalog-search.js?v=22",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/user-guide.js?v=44",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/render-lifecycle.js?v=67",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/render-quality.js?v=74",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/globe-picking.js?v=78",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/source-details.js?v=50",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/orbit-appearance.js?v=74",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/map-fleet-core.js?v=51",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/live-values.js?v=50",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/map-swarm.js?v=54",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/satellite-selection.js?v=55",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/watchlist-state.js?v=56",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/satellite-card.js?v=82",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/data-health.js?v=58",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/catalog-rows.js?v=59",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/catalog-list.js?v=67",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/globe-motion.js?v=67",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/globe-scene.js?v=79",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/time-controls.js?v=73",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/flat-map.js?v=85",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/app.js?v=84",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/data/satellite-metadata-compact.json?v=62",
+          "method": "GET",
+          "type": "fetch"
+        },
+        {
+          "url": "http://127.0.0.1:8082/data/mission-profiles.json?v=50",
+          "method": "GET",
+          "type": "fetch"
+        },
+        {
+          "url": "http://127.0.0.1:8082/watchlist-backup.js?v=67",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/assets/earth.jpg",
+          "method": "GET",
+          "type": "image"
+        },
+        {
+          "url": "http://127.0.0.1:8082/assets/stars.png",
+          "method": "GET",
+          "type": "image"
+        },
+        {
+          "url": "http://127.0.0.1:8082/report-archive.js?v=34",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/report-brief.js?v=75",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "https://celestrak.org/NORAD/elements/gp.php?GROUP=active&FORMAT=json",
+          "method": "GET",
+          "type": "fetch"
+        },
+        {
+          "url": "http://127.0.0.1:8082/report-layout.js?v=52",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/report-exports.js?v=49",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/report-insights.js?v=75",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/positions-worker.js?v=43",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/report-document.js?v=75",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/network-resources.js?v=43",
+          "method": "GET",
+          "type": "other"
+        },
+        {
+          "url": "http://127.0.0.1:8082/network-policy.js?v=43",
+          "method": "GET",
+          "type": "other"
+        },
+        {
+          "url": "http://127.0.0.1:8082/vendor/satellite.min.js",
+          "method": "GET",
+          "type": "other"
+        },
+        {
+          "url": "http://127.0.0.1:8082/orbit-data.js?v=19",
+          "method": "GET",
+          "type": "other"
+        },
+        {
+          "url": "http://127.0.0.1:8082/country-report-core.js?v=36",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/pass-tools-core.js?v=74",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/pass-map.js?v=75",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/country-boundaries.js?v=81",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/report.js?v=81",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/data/country-index.json",
+          "method": "GET",
+          "type": "fetch"
+        },
+        {
+          "url": "http://127.0.0.1:8082/data/sa-border.json",
+          "method": "GET",
+          "type": "fetch"
+        },
+        {
+          "url": "http://127.0.0.1:8082/country-report-builder.js?v=75",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/analysis-core.js?v=26",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/analysis-document.js?v=75",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/analysis.js?v=81",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/date-calendar.js?v=78",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/draft-state.js?v=75",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/observer-engine.js?v=26",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/observer-report.js?v=87",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/observer-word.js?v=87",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/observer.js?v=88",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/country-inventory-core.js?v=50",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/app-shell.js?v=83",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/inventory-report.js?v=75",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/map-display.js?v=81",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/data-refresh.js?v=35",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/program-extras.js?v=75",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/experience.js?v=84",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/icons/madar-symbol-64-v76.png",
+          "method": "GET",
+          "type": "image"
+        },
+        {
+          "url": "http://127.0.0.1:8082/mobile-map.js?v=75",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/map-orbit-filter.js?v=72",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/map-fleet.js?v=80",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/observer-map-picker.js?v=81",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/form-layout.js?v=78",
+          "method": "GET",
+          "type": "script"
+        },
+        {
+          "url": "http://127.0.0.1:8082/report-guidance.js?v=86",
+          "method": "GET",
+          "type": "script"
+        }
+      ],
+      "startupResources": [
+        {
+          "url": "http://127.0.0.1:8082/app-base.css?v=86",
+          "initiatorType": "link",
+          "transferSize": 19708,
+          "encodedBodySize": 19408,
+          "decodedBodySize": 19408,
+          "duration": 24.59999999999127
+        },
+        {
+          "url": "http://127.0.0.1:8082/app-shell.css?v=82",
+          "initiatorType": "link",
+          "transferSize": 31115,
+          "encodedBodySize": 30815,
+          "decodedBodySize": 30815,
+          "duration": 24.5
+        },
+        {
+          "url": "http://127.0.0.1:8082/flat-map.css?v=85",
+          "initiatorType": "link",
+          "transferSize": 1431,
+          "encodedBodySize": 1131,
+          "decodedBodySize": 1131,
+          "duration": 24
+        },
+        {
+          "url": "http://127.0.0.1:8082/experience.css?v=78",
+          "initiatorType": "link",
+          "transferSize": 16656,
+          "encodedBodySize": 16356,
+          "decodedBodySize": 16356,
+          "duration": 22.80000000000291
+        },
+        {
+          "url": "http://127.0.0.1:8082/map-display.css?v=45",
+          "initiatorType": "link",
+          "transferSize": 2949,
+          "encodedBodySize": 2649,
+          "decodedBodySize": 2649,
+          "duration": 22.60000000000582
+        },
+        {
+          "url": "http://127.0.0.1:8082/map-fleet.css?v=74",
+          "initiatorType": "link",
+          "transferSize": 5266,
+          "encodedBodySize": 4966,
+          "decodedBodySize": 4966,
+          "duration": 21.90000000000873
+        },
+        {
+          "url": "http://127.0.0.1:8082/date-calendar.css?v=71",
+          "initiatorType": "link",
+          "transferSize": 2245,
+          "encodedBodySize": 1945,
+          "decodedBodySize": 1945,
+          "duration": 30.39999999999418
+        },
+        {
+          "url": "http://127.0.0.1:8082/form-layout.css?v=78",
+          "initiatorType": "link",
+          "transferSize": 2600,
+          "encodedBodySize": 2300,
+          "decodedBodySize": 2300,
+          "duration": 30.5
+        },
+        {
+          "url": "http://127.0.0.1:8082/report-guidance.css?v=79",
+          "initiatorType": "link",
+          "transferSize": 2501,
+          "encodedBodySize": 2201,
+          "decodedBodySize": 2201,
+          "duration": 30.60000000000582
+        },
+        {
+          "url": "http://127.0.0.1:8082/observing-overview.css?v=80",
+          "initiatorType": "link",
+          "transferSize": 1392,
+          "encodedBodySize": 1092,
+          "decodedBodySize": 1092,
+          "duration": 29.30000000000291
+        },
+        {
+          "url": "http://127.0.0.1:8082/satellite-summary.css?v=82",
+          "initiatorType": "link",
+          "transferSize": 2055,
+          "encodedBodySize": 1755,
+          "decodedBodySize": 1755,
+          "duration": 29.80000000000291
+        },
+        {
+          "url": "http://127.0.0.1:8082/icons/madar-art-512-v76.png",
+          "initiatorType": "img",
+          "transferSize": 127405,
+          "encodedBodySize": 127105,
+          "decodedBodySize": 127105,
+          "duration": 28.39999999999418
+        },
+        {
+          "url": "http://127.0.0.1:8082/network-resources.js?v=82",
+          "initiatorType": "script",
+          "transferSize": 9032,
+          "encodedBodySize": 8732,
+          "decodedBodySize": 8732,
+          "duration": 4.19999999999709
+        },
+        {
+          "url": "http://127.0.0.1:8082/network-policy.js?v=43",
+          "initiatorType": "script",
+          "transferSize": 4735,
+          "encodedBodySize": 4435,
+          "decodedBodySize": 4435,
+          "duration": 6.5
+        },
+        {
+          "url": "http://127.0.0.1:8082/i18n.js?v=88",
+          "initiatorType": "script",
+          "transferSize": 6670,
+          "encodedBodySize": 6370,
+          "decodedBodySize": 6370,
+          "duration": 7.5
+        },
+        {
+          "url": "http://127.0.0.1:8082/data/en.json?v=88",
+          "initiatorType": "fetch",
+          "transferSize": 257829,
+          "encodedBodySize": 257529,
+          "decodedBodySize": 257529,
+          "duration": 4.7000000000116415
+        },
+        {
+          "url": "http://127.0.0.1:8082/privacy.js?v=82",
+          "initiatorType": "script",
+          "transferSize": 5864,
+          "encodedBodySize": 5564,
+          "decodedBodySize": 5564,
+          "duration": 4.399999999994179
+        },
+        {
+          "url": "http://127.0.0.1:8082/observer-sites-core.js?v=77",
+          "initiatorType": "script",
+          "transferSize": 5148,
+          "encodedBodySize": 4848,
+          "decodedBodySize": 4848,
+          "duration": 2.3999999999941792
+        },
+        {
+          "url": "http://127.0.0.1:8082/observer-cities.js?v=80",
+          "initiatorType": "script",
+          "transferSize": 5569,
+          "encodedBodySize": 5269,
+          "decodedBodySize": 5269,
+          "duration": 2.2000000000116415
+        },
+        {
+          "url": "http://127.0.0.1:8082/observer-sites.js?v=80",
+          "initiatorType": "script",
+          "transferSize": 6570,
+          "encodedBodySize": 6270,
+          "decodedBodySize": 6270,
+          "duration": 2
+        },
+        {
+          "url": "http://127.0.0.1:8082/orbit-data.js?v=42",
+          "initiatorType": "script",
+          "transferSize": 8753,
+          "encodedBodySize": 8453,
+          "decodedBodySize": 8453,
+          "duration": 1.8999999999941792
+        },
+        {
+          "url": "http://127.0.0.1:8082/vendor/satellite.min.js",
+          "initiatorType": "script",
+          "transferSize": 24340,
+          "encodedBodySize": 24040,
+          "decodedBodySize": 24040,
+          "duration": 1.8999999999941792
+        },
+        {
+          "url": "http://127.0.0.1:8082/vendor/globe.min.js",
+          "initiatorType": "script",
+          "transferSize": 1647949,
+          "encodedBodySize": 1647649,
+          "decodedBodySize": 1647649,
+          "duration": 7.399999999994179
+        },
+        {
+          "url": "http://127.0.0.1:8082/satellite-metadata.js?v=62",
+          "initiatorType": "script",
+          "transferSize": 10782,
+          "encodedBodySize": 10482,
+          "decodedBodySize": 10482,
+          "duration": 3.6000000000058208
+        },
+        {
+          "url": "http://127.0.0.1:8082/state-store.js?v=17",
+          "initiatorType": "script",
+          "transferSize": 3630,
+          "encodedBodySize": 3330,
+          "decodedBodySize": 3330,
+          "duration": 2.8000000000029104
+        },
+        {
+          "url": "http://127.0.0.1:8082/flag-assets.js?v=15",
+          "initiatorType": "script",
+          "transferSize": 2001,
+          "encodedBodySize": 1701,
+          "decodedBodySize": 1701,
+          "duration": 2.1000000000058208
+        },
+        {
+          "url": "http://127.0.0.1:8082/word-delivery.js?v=49",
+          "initiatorType": "script",
+          "transferSize": 4274,
+          "encodedBodySize": 3974,
+          "decodedBodySize": 3974,
+          "duration": 1.8000000000029104
+        },
+        {
+          "url": "http://127.0.0.1:8082/orbit-service.js?v=45",
+          "initiatorType": "script",
+          "transferSize": 10199,
+          "encodedBodySize": 9899,
+          "decodedBodySize": 9899,
+          "duration": 2.1999999999970896
+        },
+        {
+          "url": "http://127.0.0.1:8082/satellite-groups.js?v=86",
+          "initiatorType": "script",
+          "transferSize": 13665,
+          "encodedBodySize": 13365,
+          "decodedBodySize": 13365,
+          "duration": 2.099999999991269
+        },
+        {
+          "url": "http://127.0.0.1:8082/type-picker.js?v=86",
+          "initiatorType": "script",
+          "transferSize": 6156,
+          "encodedBodySize": 5856,
+          "decodedBodySize": 5856,
+          "duration": 2.6000000000058208
+        },
+        {
+          "url": "http://127.0.0.1:8082/catalog-search.js?v=22",
+          "initiatorType": "script",
+          "transferSize": 2661,
+          "encodedBodySize": 2361,
+          "decodedBodySize": 2361,
+          "duration": 2.5
+        },
+        {
+          "url": "http://127.0.0.1:8082/user-guide.js?v=44",
+          "initiatorType": "script",
+          "transferSize": 3268,
+          "encodedBodySize": 2968,
+          "decodedBodySize": 2968,
+          "duration": 2.1000000000058208
+        },
+        {
+          "url": "http://127.0.0.1:8082/render-lifecycle.js?v=67",
+          "initiatorType": "script",
+          "transferSize": 3184,
+          "encodedBodySize": 2884,
+          "decodedBodySize": 2884,
+          "duration": 2.3999999999941792
+        },
+        {
+          "url": "http://127.0.0.1:8082/render-quality.js?v=74",
+          "initiatorType": "script",
+          "transferSize": 3360,
+          "encodedBodySize": 3060,
+          "decodedBodySize": 3060,
+          "duration": 2
+        },
+        {
+          "url": "http://127.0.0.1:8082/globe-picking.js?v=78",
+          "initiatorType": "script",
+          "transferSize": 4657,
+          "encodedBodySize": 4357,
+          "decodedBodySize": 4357,
+          "duration": 1.8000000000029104
+        },
+        {
+          "url": "http://127.0.0.1:8082/source-details.js?v=50",
+          "initiatorType": "script",
+          "transferSize": 8513,
+          "encodedBodySize": 8213,
+          "decodedBodySize": 8213,
+          "duration": 2.1000000000058208
+        },
+        {
+          "url": "http://127.0.0.1:8082/orbit-appearance.js?v=74",
+          "initiatorType": "script",
+          "transferSize": 1415,
+          "encodedBodySize": 1115,
+          "decodedBodySize": 1115,
+          "duration": 1.8000000000029104
+        },
+        {
+          "url": "http://127.0.0.1:8082/map-fleet-core.js?v=51",
+          "initiatorType": "script",
+          "transferSize": 3305,
+          "encodedBodySize": 3005,
+          "decodedBodySize": 3005,
+          "duration": 2.3000000000029104
+        },
+        {
+          "url": "http://127.0.0.1:8082/live-values.js?v=50",
+          "initiatorType": "script",
+          "transferSize": 1489,
+          "encodedBodySize": 1189,
+          "decodedBodySize": 1189,
+          "duration": 1.9000000000087311
+        },
+        {
+          "url": "http://127.0.0.1:8082/map-swarm.js?v=54",
+          "initiatorType": "script",
+          "transferSize": 3805,
+          "encodedBodySize": 3505,
+          "decodedBodySize": 3505,
+          "duration": 1.8000000000029104
+        },
+        {
+          "url": "http://127.0.0.1:8082/satellite-selection.js?v=55",
+          "initiatorType": "script",
+          "transferSize": 1778,
+          "encodedBodySize": 1478,
+          "decodedBodySize": 1478,
+          "duration": 1.6999999999970896
+        },
+        {
+          "url": "http://127.0.0.1:8082/watchlist-state.js?v=56",
+          "initiatorType": "script",
+          "transferSize": 3273,
+          "encodedBodySize": 2973,
+          "decodedBodySize": 2973,
+          "duration": 1.8999999999941792
+        },
+        {
+          "url": "http://127.0.0.1:8082/satellite-card.js?v=82",
+          "initiatorType": "script",
+          "transferSize": 8862,
+          "encodedBodySize": 8562,
+          "decodedBodySize": 8562,
+          "duration": 2.8000000000029104
+        },
+        {
+          "url": "http://127.0.0.1:8082/data-health.js?v=58",
+          "initiatorType": "script",
+          "transferSize": 7459,
+          "encodedBodySize": 7159,
+          "decodedBodySize": 7159,
+          "duration": 1.6999999999970896
+        },
+        {
+          "url": "http://127.0.0.1:8082/catalog-rows.js?v=59",
+          "initiatorType": "script",
+          "transferSize": 2298,
+          "encodedBodySize": 1998,
+          "decodedBodySize": 1998,
+          "duration": 1.6000000000058208
+        },
+        {
+          "url": "http://127.0.0.1:8082/catalog-list.js?v=67",
+          "initiatorType": "script",
+          "transferSize": 5924,
+          "encodedBodySize": 5624,
+          "decodedBodySize": 5624,
+          "duration": 2.1000000000058208
+        },
+        {
+          "url": "http://127.0.0.1:8082/globe-motion.js?v=67",
+          "initiatorType": "script",
+          "transferSize": 2209,
+          "encodedBodySize": 1909,
+          "decodedBodySize": 1909,
+          "duration": 2.2999999999883585
+        },
+        {
+          "url": "http://127.0.0.1:8082/globe-scene.js?v=79",
+          "initiatorType": "script",
+          "transferSize": 9026,
+          "encodedBodySize": 8726,
+          "decodedBodySize": 8726,
+          "duration": 1.7000000000116415
+        },
+        {
+          "url": "http://127.0.0.1:8082/time-controls.js?v=73",
+          "initiatorType": "script",
+          "transferSize": 5393,
+          "encodedBodySize": 5093,
+          "decodedBodySize": 5093,
+          "duration": 2.099999999991269
+        },
+        {
+          "url": "http://127.0.0.1:8082/flat-map.js?v=85",
+          "initiatorType": "script",
+          "transferSize": 9137,
+          "encodedBodySize": 8837,
+          "decodedBodySize": 8837,
+          "duration": 3.3999999999941792
+        },
+        {
+          "url": "http://127.0.0.1:8082/app.js?v=84",
+          "initiatorType": "script",
+          "transferSize": 28935,
+          "encodedBodySize": 28635,
+          "decodedBodySize": 28635,
+          "duration": 1.8000000000029104
+        },
+        {
+          "url": "http://127.0.0.1:8082/data/satellite-metadata-compact.json?v=62",
+          "initiatorType": "fetch",
+          "transferSize": 1198462,
+          "encodedBodySize": 1198162,
+          "decodedBodySize": 1198162,
+          "duration": 29.5
+        },
+        {
+          "url": "http://127.0.0.1:8082/data/mission-profiles.json?v=50",
+          "initiatorType": "fetch",
+          "transferSize": 115200,
+          "encodedBodySize": 114900,
+          "decodedBodySize": 114900,
+          "duration": 30.89999999999418
+        },
+        {
+          "url": "http://127.0.0.1:8082/watchlist-backup.js?v=67",
+          "initiatorType": "script",
+          "transferSize": 9394,
+          "encodedBodySize": 9094,
+          "decodedBodySize": 9094,
+          "duration": 6.5
+        },
+        {
+          "url": "http://127.0.0.1:8082/assets/earth.jpg",
+          "initiatorType": "img",
+          "transferSize": 1462177,
+          "encodedBodySize": 1461877,
+          "decodedBodySize": 1461877,
+          "duration": 12
+        },
+        {
+          "url": "http://127.0.0.1:8082/assets/stars.png",
+          "initiatorType": "img",
+          "transferSize": 904454,
+          "encodedBodySize": 904154,
+          "decodedBodySize": 904154,
+          "duration": 12.69999999999709
+        },
+        {
+          "url": "http://127.0.0.1:8082/report-archive.js?v=34",
+          "initiatorType": "script",
+          "transferSize": 1954,
+          "encodedBodySize": 1654,
+          "decodedBodySize": 1654,
+          "duration": 8.700000000011642
+        },
+        {
+          "url": "http://127.0.0.1:8082/report-brief.js?v=75",
+          "initiatorType": "script",
+          "transferSize": 15234,
+          "encodedBodySize": 14934,
+          "decodedBodySize": 14934,
+          "duration": 2.8999999999941792
+        },
+        {
+          "url": "https://celestrak.org/NORAD/elements/gp.php?GROUP=active&FORMAT=json",
+          "initiatorType": "fetch",
+          "transferSize": 0,
+          "encodedBodySize": 0,
+          "decodedBodySize": 0,
+          "duration": 149.60000000000582
+        },
+        {
+          "url": "http://127.0.0.1:8082/report-layout.js?v=52",
+          "initiatorType": "script",
+          "transferSize": 13027,
+          "encodedBodySize": 12727,
+          "decodedBodySize": 12727,
+          "duration": 163.10000000000582
+        },
+        {
+          "url": "http://127.0.0.1:8082/report-exports.js?v=49",
+          "initiatorType": "script",
+          "transferSize": 17076,
+          "encodedBodySize": 16776,
+          "decodedBodySize": 16776,
+          "duration": 5.399999999994179
+        },
+        {
+          "url": "http://127.0.0.1:8082/report-insights.js?v=75",
+          "initiatorType": "script",
+          "transferSize": 13562,
+          "encodedBodySize": 13262,
+          "decodedBodySize": 13262,
+          "duration": 10.30000000000291
+        },
+        {
+          "url": "http://127.0.0.1:8082/report-document.js?v=75",
+          "initiatorType": "script",
+          "transferSize": 16897,
+          "encodedBodySize": 16597,
+          "decodedBodySize": 16597,
+          "duration": 3.8999999999941792
+        },
+        {
+          "url": "http://127.0.0.1:8082/positions-worker.js?v=43",
+          "initiatorType": "other",
+          "transferSize": 1899,
+          "encodedBodySize": 1599,
+          "decodedBodySize": 1599,
+          "duration": -283.6999999999971
+        },
+        {
+          "url": "http://127.0.0.1:8082/country-report-core.js?v=36",
+          "initiatorType": "script",
+          "transferSize": 12969,
+          "encodedBodySize": 12669,
+          "decodedBodySize": 12669,
+          "duration": 15.299999999988358
+        },
+        {
+          "url": "http://127.0.0.1:8082/pass-tools-core.js?v=74",
+          "initiatorType": "script",
+          "transferSize": 4012,
+          "encodedBodySize": 3712,
+          "decodedBodySize": 3712,
+          "duration": 8.30000000000291
+        },
+        {
+          "url": "http://127.0.0.1:8082/pass-map.js?v=75",
+          "initiatorType": "script",
+          "transferSize": 5035,
+          "encodedBodySize": 4735,
+          "decodedBodySize": 4735,
+          "duration": 8.400000000008731
+        },
+        {
+          "url": "http://127.0.0.1:8082/country-boundaries.js?v=81",
+          "initiatorType": "script",
+          "transferSize": 2866,
+          "encodedBodySize": 2566,
+          "decodedBodySize": 2566,
+          "duration": 4.80000000000291
+        },
+        {
+          "url": "http://127.0.0.1:8082/report.js?v=81",
+          "initiatorType": "script",
+          "transferSize": 17650,
+          "encodedBodySize": 17350,
+          "decodedBodySize": 17350,
+          "duration": 8.89999999999418
+        },
+        {
+          "url": "http://127.0.0.1:8082/data/country-index.json",
+          "initiatorType": "fetch",
+          "transferSize": 18575,
+          "encodedBodySize": 18275,
+          "decodedBodySize": 18275,
+          "duration": 7.19999999999709
+        },
+        {
+          "url": "http://127.0.0.1:8082/data/sa-border.json",
+          "initiatorType": "fetch",
+          "transferSize": 17392,
+          "encodedBodySize": 17092,
+          "decodedBodySize": 17092,
+          "duration": 6.400000000008731
+        },
+        {
+          "url": "http://127.0.0.1:8082/country-report-builder.js?v=75",
+          "initiatorType": "script",
+          "transferSize": 15172,
+          "encodedBodySize": 14872,
+          "decodedBodySize": 14872,
+          "duration": 5.30000000000291
+        },
+        {
+          "url": "http://127.0.0.1:8082/analysis-core.js?v=26",
+          "initiatorType": "script",
+          "transferSize": 7187,
+          "encodedBodySize": 6887,
+          "decodedBodySize": 6887,
+          "duration": 6.899999999994179
+        },
+        {
+          "url": "http://127.0.0.1:8082/analysis-document.js?v=75",
+          "initiatorType": "script",
+          "transferSize": 18788,
+          "encodedBodySize": 18488,
+          "decodedBodySize": 18488,
+          "duration": 12.400000000008731
+        },
+        {
+          "url": "http://127.0.0.1:8082/analysis.js?v=81",
+          "initiatorType": "script",
+          "transferSize": 23685,
+          "encodedBodySize": 23385,
+          "decodedBodySize": 23385,
+          "duration": 5.7000000000116415
+        },
+        {
+          "url": "http://127.0.0.1:8082/date-calendar.js?v=78",
+          "initiatorType": "script",
+          "transferSize": 10507,
+          "encodedBodySize": 10207,
+          "decodedBodySize": 10207,
+          "duration": 8.599999999991269
+        },
+        {
+          "url": "http://127.0.0.1:8082/draft-state.js?v=75",
+          "initiatorType": "script",
+          "transferSize": 8318,
+          "encodedBodySize": 8018,
+          "decodedBodySize": 8018,
+          "duration": 5.099999999991269
+        },
+        {
+          "url": "http://127.0.0.1:8082/observer-engine.js?v=26",
+          "initiatorType": "script",
+          "transferSize": 5464,
+          "encodedBodySize": 5164,
+          "decodedBodySize": 5164,
+          "duration": 12.400000000008731
+        },
+        {
+          "url": "http://127.0.0.1:8082/observer-report.js?v=87",
+          "initiatorType": "script",
+          "transferSize": 7519,
+          "encodedBodySize": 7219,
+          "decodedBodySize": 7219,
+          "duration": 6
+        },
+        {
+          "url": "http://127.0.0.1:8082/observer-word.js?v=87",
+          "initiatorType": "script",
+          "transferSize": 2879,
+          "encodedBodySize": 2579,
+          "decodedBodySize": 2579,
+          "duration": 7.80000000000291
+        },
+        {
+          "url": "http://127.0.0.1:8082/observer.js?v=88",
+          "initiatorType": "script",
+          "transferSize": 12999,
+          "encodedBodySize": 12699,
+          "decodedBodySize": 12699,
+          "duration": 5.30000000000291
+        },
+        {
+          "url": "http://127.0.0.1:8082/country-inventory-core.js?v=50",
+          "initiatorType": "script",
+          "transferSize": 7851,
+          "encodedBodySize": 7551,
+          "decodedBodySize": 7551,
+          "duration": 13.5
+        },
+        {
+          "url": "http://127.0.0.1:8082/app-shell.js?v=83",
+          "initiatorType": "script",
+          "transferSize": 12525,
+          "encodedBodySize": 12225,
+          "decodedBodySize": 12225,
+          "duration": 3.599999999991269
+        },
+        {
+          "url": "http://127.0.0.1:8082/inventory-report.js?v=75",
+          "initiatorType": "script",
+          "transferSize": 16559,
+          "encodedBodySize": 16259,
+          "decodedBodySize": 16259,
+          "duration": 11.69999999999709
+        },
+        {
+          "url": "http://127.0.0.1:8082/map-display.js?v=81",
+          "initiatorType": "script",
+          "transferSize": 9175,
+          "encodedBodySize": 8875,
+          "decodedBodySize": 8875,
+          "duration": 5.599999999991269
+        },
+        {
+          "url": "http://127.0.0.1:8082/data-refresh.js?v=35",
+          "initiatorType": "script",
+          "transferSize": 3084,
+          "encodedBodySize": 2784,
+          "decodedBodySize": 2784,
+          "duration": 5.7999999999883585
+        },
+        {
+          "url": "http://127.0.0.1:8082/program-extras.js?v=75",
+          "initiatorType": "script",
+          "transferSize": 8953,
+          "encodedBodySize": 8653,
+          "decodedBodySize": 8653,
+          "duration": 6.69999999999709
+        },
+        {
+          "url": "http://127.0.0.1:8082/experience.js?v=84",
+          "initiatorType": "script",
+          "transferSize": 5548,
+          "encodedBodySize": 5248,
+          "decodedBodySize": 5248,
+          "duration": 9.599999999991269
+        },
+        {
+          "url": "http://127.0.0.1:8082/icons/madar-symbol-64-v76.png",
+          "initiatorType": "img",
+          "transferSize": 3708,
+          "encodedBodySize": 3408,
+          "decodedBodySize": 3408,
+          "duration": 8
+        },
+        {
+          "url": "http://127.0.0.1:8082/mobile-map.js?v=75",
+          "initiatorType": "script",
+          "transferSize": 6653,
+          "encodedBodySize": 6353,
+          "decodedBodySize": 6353,
+          "duration": 8.10000000000582
+        },
+        {
+          "url": "http://127.0.0.1:8082/map-orbit-filter.js?v=72",
+          "initiatorType": "script",
+          "transferSize": 2127,
+          "encodedBodySize": 1827,
+          "decodedBodySize": 1827,
+          "duration": 4.30000000000291
+        },
+        {
+          "url": "http://127.0.0.1:8082/map-fleet.js?v=80",
+          "initiatorType": "script",
+          "transferSize": 10664,
+          "encodedBodySize": 10364,
+          "decodedBodySize": 10364,
+          "duration": 9.60000000000582
+        },
+        {
+          "url": "http://127.0.0.1:8082/observer-map-picker.js?v=81",
+          "initiatorType": "script",
+          "transferSize": 4994,
+          "encodedBodySize": 4694,
+          "decodedBodySize": 4694,
+          "duration": 5.19999999999709
+        },
+        {
+          "url": "http://127.0.0.1:8082/form-layout.js?v=78",
+          "initiatorType": "script",
+          "transferSize": 2281,
+          "encodedBodySize": 1981,
+          "decodedBodySize": 1981,
+          "duration": 4.5
+        },
+        {
+          "url": "http://127.0.0.1:8082/report-guidance.js?v=86",
+          "initiatorType": "script",
+          "transferSize": 19230,
+          "encodedBodySize": 18930,
+          "decodedBodySize": 18930,
+          "duration": 3.6999999999970896
+        }
+      ],
+      "startupRequestCount": 100,
+      "startupCompletedResourceCount": 95,
+      "environment": {
+        "viewport": "390x844",
+        "deviceScaleFactor": 3,
+        "cpuSlowdown": 4,
+        "renderer": "headless Chromium with SwiftShader",
+        "network": "local static server; fixed orbital snapshot",
+        "physicalPhone": false
+      },
+      "medianUpdateMs": 1.9
+    }
+  ]
+}

@@ -1,0 +1,1753 @@
+{
+  "commit": "3d4ed849b9cf6d8fafbb9b3080e2de93a1d2b25b",
+  "truncated": false,
+  "verifiedFiles": 291,
+  "files": [
+    {
+      "path": ".editorconfig",
+      "sha": "a4b824b5d5a62c113f5c1164009f976c8f27f956",
+      "size": 115,
+      "mode": "100644"
+    },
+    {
+      "path": ".github/dependabot.yml",
+      "sha": "bd51173c8dc2c74e52075e070294e1984b07f2a3",
+      "size": 356,
+      "mode": "100644"
+    },
+    {
+      "path": ".github/workflows/cloudflare-review.yml",
+      "sha": "041da481aa6f10478bc969cd9ea1d61111111302",
+      "size": 782,
+      "mode": "100644"
+    },
+    {
+      "path": ".github/workflows/dependency-security.yml",
+      "sha": "bdb520ad03d2f9739afefbcf8c35ede1fd267e2d",
+      "size": 476,
+      "mode": "100644"
+    },
+    {
+      "path": ".github/workflows/pages.yml",
+      "sha": "e4b14554425b3d73a0701c5f4583c5d52f4001fd",
+      "size": 746,
+      "mode": "100644"
+    },
+    {
+      "path": ".github/workflows/review.yml",
+      "sha": "242be3b6b76255742317fdc1bc72c30dd71b6357",
+      "size": 3075,
+      "mode": "100644"
+    },
+    {
+      "path": ".gitignore",
+      "sha": "74f8f6016103c599ba80fbdc40c7f8742446d42e",
+      "size": 633,
+      "mode": "100644"
+    },
+    {
+      "path": ".prettierignore",
+      "sha": "23e1c0c550db82ea3ea8c892f096d8953db597e1",
+      "size": 239,
+      "mode": "100644"
+    },
+    {
+      "path": ".prettierrc.json",
+      "sha": "57c0d4bbab6e86464aca8852fbe0916908550aad",
+      "size": 149,
+      "mode": "100644"
+    },
+    {
+      "path": "CODE_REVIEW.md",
+      "sha": "c0490887beaa3c6a329c7753a84390ab14457531",
+      "size": 5308,
+      "mode": "100644"
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "sha": "e36feb4aff0b056bc227beff3bdf4ac34a77e412",
+      "size": 16928,
+      "mode": "100644"
+    },
+    {
+      "path": "README.md",
+      "sha": "2e423779fb496669c663c9c1b96909531f82cb67",
+      "size": 43304,
+      "mode": "100644"
+    },
+    {
+      "path": "SECURITY.md",
+      "sha": "aadf22baea8bf387a1461c5f8868238957547c8e",
+      "size": 6916,
+      "mode": "100644"
+    },
+    {
+      "path": "data/mission-programs.json",
+      "sha": "a7561c150a7e780485b99fe51b91fb2df538a627",
+      "size": 8319,
+      "mode": "100644"
+    },
+    {
+      "path": "package-lock.json",
+      "sha": "20293b9df62d5a913b65a7a4fcf06fb9f9ec0ea0",
+      "size": 50976,
+      "mode": "100644"
+    },
+    {
+      "path": "package.json",
+      "sha": "1eed1b2ea3664e674b2183ecabc9930d22f49dd3",
+      "size": 2764,
+      "mode": "100644"
+    },
+    {
+      "path": "packed/active-omm.json.gz.part00",
+      "sha": "3782d6890405adc6601f24cacd26d2488d58a21e",
+      "size": 1021030,
+      "mode": "100644"
+    },
+    {
+      "path": "packed/active.txt.gz.part00",
+      "sha": "bdb64ae9f2d9977390e47136c87f2a8a1025655b",
+      "size": 180000,
+      "mode": "100644"
+    },
+    {
+      "path": "packed/active.txt.gz.part01",
+      "sha": "076b306c1266d4f0e8d10dd5c8ebad5f5990ee83",
+      "size": 180000,
+      "mode": "100644"
+    },
+    {
+      "path": "packed/active.txt.gz.part02",
+      "sha": "7307a7be7d5e90a6784d217dcc142418305c79d7",
+      "size": 180000,
+      "mode": "100644"
+    },
+    {
+      "path": "packed/active.txt.gz.part03",
+      "sha": "482b1a1a145b99b8a6aa5ca99560fd5af2587293",
+      "size": 180000,
+      "mode": "100644"
+    },
+    {
+      "path": "packed/active.txt.gz.part04",
+      "sha": "64794ca525568f379b7bc75d9625419e1ecc4a8c",
+      "size": 156121,
+      "mode": "100644"
+    },
+    {
+      "path": "packed/countries.json.gz.part00",
+      "sha": "fbf51a2d8a62bce75a0a8fcaa96f22c76865d767",
+      "size": 180000,
+      "mode": "100644"
+    },
+    {
+      "path": "packed/countries.json.gz.part01",
+      "sha": "ad77fe90d57a98364994d095790699f2bbb5f85b",
+      "size": 180000,
+      "mode": "100644"
+    },
+    {
+      "path": "packed/countries.json.gz.part02",
+      "sha": "1dcacfee24e4379db1f8a548bfa5ab86a3820c6f",
+      "size": 180000,
+      "mode": "100644"
+    },
+    {
+      "path": "packed/countries.json.gz.part03",
+      "sha": "0023789c2995b465717241450a6e1f58a3b6b048",
+      "size": 180000,
+      "mode": "100644"
+    },
+    {
+      "path": "packed/countries.json.gz.part04",
+      "sha": "5812b15e0c6a34efa847a74919677eb9032a37c0",
+      "size": 180000,
+      "mode": "100644"
+    },
+    {
+      "path": "packed/countries.json.gz.part05",
+      "sha": "3b0e8a734fbf1d17b76ffc3fe5883be6f52a7797",
+      "size": 180000,
+      "mode": "100644"
+    },
+    {
+      "path": "packed/countries.json.gz.part06",
+      "sha": "992128618bfef7672a886586ba30b264f3313965",
+      "size": 180000,
+      "mode": "100644"
+    },
+    {
+      "path": "packed/countries.json.gz.part07",
+      "sha": "c826610764b0481ee592a873a23938130aa74d32",
+      "size": 135693,
+      "mode": "100644"
+    },
+    {
+      "path": "packed/docx.js.gz.part00",
+      "sha": "9ca43a05123dcade73c9940e1d24b6f315b19666",
+      "size": 151563,
+      "mode": "100644"
+    },
+    {
+      "path": "packed/earth-detail.b64.part00",
+      "sha": "c557d7e2c588ab0c232f4e2030546b0e007ad86e",
+      "size": 150000,
+      "mode": "100644"
+    },
+    {
+      "path": "packed/earth-detail.b64.part01",
+      "sha": "a20932ead5596f1a465d1e3d8c928f84bc8875e4",
+      "size": 150000,
+      "mode": "100644"
+    },
+    {
+      "path": "packed/earth-detail.b64.part02",
+      "sha": "9b39396f321011c3178d4a88dbfcacca144e8310",
+      "size": 150000,
+      "mode": "100644"
+    },
+    {
+      "path": "packed/earth-detail.b64.part03",
+      "sha": "c3988deb069a2b0720a2f46bc88f76e37b03f967",
+      "size": 150000,
+      "mode": "100644"
+    },
+    {
+      "path": "packed/earth-detail.b64.part04",
+      "sha": "d16699c573b7f1e95adba94ac7994697f3af7da3",
+      "size": 150000,
+      "mode": "100644"
+    },
+    {
+      "path": "packed/earth-detail.b64.part05",
+      "sha": "f16db3b334027e569ed37bfc3d0bd29aef7ec63a",
+      "size": 150000,
+      "mode": "100644"
+    },
+    {
+      "path": "packed/earth-detail.b64.part06",
+      "sha": "b212fdf78aab77a59b9ce8750d0d2931ea448ff0",
+      "size": 150000,
+      "mode": "100644"
+    },
+    {
+      "path": "packed/earth-detail.b64.part07",
+      "sha": "c5fe6045df5465b6c00c8831ab023bb2cd1e4530",
+      "size": 150000,
+      "mode": "100644"
+    },
+    {
+      "path": "packed/earth-detail.b64.part08",
+      "sha": "0b9bee949169977eee47c2f99dc00452efec7ba7",
+      "size": 150000,
+      "mode": "100644"
+    },
+    {
+      "path": "packed/earth-detail.b64.part09",
+      "sha": "3967348cb13c338585574dcde355a050af462075",
+      "size": 150000,
+      "mode": "100644"
+    },
+    {
+      "path": "packed/earth-detail.b64.part10",
+      "sha": "5ff3ac8eb5d4c1052719476f78ff0a0f235589a4",
+      "size": 150000,
+      "mode": "100644"
+    },
+    {
+      "path": "packed/earth-detail.b64.part11",
+      "sha": "65ed76b8101faa2d7d9134eb20308eaa10b4bce2",
+      "size": 150000,
+      "mode": "100644"
+    },
+    {
+      "path": "packed/earth-detail.b64.part12",
+      "sha": "c964d72810866dbcc7ca5f36c68dbb9b961614c9",
+      "size": 150000,
+      "mode": "100644"
+    },
+    {
+      "path": "packed/earth-detail.b64.part13",
+      "sha": "039888a90b271c09b3cb0759ea5f4b7d235cf2fb",
+      "size": 150000,
+      "mode": "100644"
+    },
+    {
+      "path": "packed/earth-detail.b64.part14",
+      "sha": "63fb87a75682662c9400728bc4fdbaa36cda566d",
+      "size": 150000,
+      "mode": "100644"
+    },
+    {
+      "path": "packed/earth-detail.b64.part15",
+      "sha": "94ec8b227c911c4a9f16349751f7e7f0cbcdb086",
+      "size": 150000,
+      "mode": "100644"
+    },
+    {
+      "path": "packed/earth-detail.b64.part16",
+      "sha": "e7986b44f7cf8b939e5033c9a7d3540a2e8d6d13",
+      "size": 150000,
+      "mode": "100644"
+    },
+    {
+      "path": "packed/earth-detail.b64.part17",
+      "sha": "7af3e8ae89f5bd77bc3e7cfb261599f53bbc35ce",
+      "size": 150000,
+      "mode": "100644"
+    },
+    {
+      "path": "packed/earth-detail.b64.part18",
+      "sha": "935d342171f542e3398551640e5bb2824d23a26d",
+      "size": 150000,
+      "mode": "100644"
+    },
+    {
+      "path": "packed/earth-detail.b64.part19",
+      "sha": "8a5d4ca728cce1c4b6f438147ec1295660d4f852",
+      "size": 58052,
+      "mode": "100644"
+    },
+    {
+      "path": "packed/earth-detail.json",
+      "sha": "0fc67ae711bcf3ab094f2f5af3a64ee347ccfc03",
+      "size": 915,
+      "mode": "100644"
+    },
+    {
+      "path": "packed/globe-compat.min.js.gz.part00",
+      "sha": "4dcafad91957a5735789d0a218c1a8052cbb0ee0",
+      "size": 180000,
+      "mode": "100644"
+    },
+    {
+      "path": "packed/globe-compat.min.js.gz.part01",
+      "sha": "2c79a045e33268ea90bef274283d6461dc1744c5",
+      "size": 108434,
+      "mode": "100644"
+    },
+    {
+      "path": "packed/globe.min.js.gz.part00",
+      "sha": "97763ac1cea5d857d2608cd573a4c84bc79aa184",
+      "size": 180000,
+      "mode": "100644"
+    },
+    {
+      "path": "packed/globe.min.js.gz.part01",
+      "sha": "d0b96a116cdc0c7d0386bc9147a4d7b8bbef870c",
+      "size": 180000,
+      "mode": "100644"
+    },
+    {
+      "path": "packed/globe.min.js.gz.part02",
+      "sha": "78e63bb86ad01dce46906c66cc177bd9b76fd717",
+      "size": 94925,
+      "mode": "100644"
+    },
+    {
+      "path": "packed/manifest.json",
+      "sha": "a8f811123c22cc0ee4b866ea0c7b9c3be14f52ab",
+      "size": 2461,
+      "mode": "100644"
+    },
+    {
+      "path": "packed/satellite-metadata.json.gz.part00",
+      "sha": "31485b041242041fe8b82ede5347bd6ebd8d849f",
+      "size": 384240,
+      "mode": "100644"
+    },
+    {
+      "path": "packed/source-snapshot.json.gz.part00",
+      "sha": "66fb464a567a37ff25e281b1bbb13dd023911656",
+      "size": 146,
+      "mode": "100644"
+    },
+    {
+      "path": "packed/starlink.txt.gz.part00",
+      "sha": "21da9253c14936a977c047f85c3ef8c0d44f4d1d",
+      "size": 180000,
+      "mode": "100644"
+    },
+    {
+      "path": "packed/starlink.txt.gz.part01",
+      "sha": "850acd66a409304cb17609ddb94208da63da04ca",
+      "size": 180000,
+      "mode": "100644"
+    },
+    {
+      "path": "packed/starlink.txt.gz.part02",
+      "sha": "ee67dc6c4a33f1ff6c65d4879abb957c5196ac70",
+      "size": 180000,
+      "mode": "100644"
+    },
+    {
+      "path": "packed/starlink.txt.gz.part03",
+      "sha": "d060a42345a6240c19c15f3c406fc57a2c4627f9",
+      "size": 21196,
+      "mode": "100644"
+    },
+    {
+      "path": "public/_headers",
+      "sha": "076b35059b3d0277e2e564034a94e9843b2b0a77",
+      "size": 576,
+      "mode": "100644"
+    },
+    {
+      "path": "public/analysis-core.js",
+      "sha": "7d889c0682db2d580729efeeeac5990c4c41992e",
+      "size": 6887,
+      "mode": "100644"
+    },
+    {
+      "path": "public/analysis-document.js",
+      "sha": "4e2461ddceef478f67dcfe3e71dc2e2596113d36",
+      "size": 18488,
+      "mode": "100644"
+    },
+    {
+      "path": "public/analysis-worker.js",
+      "sha": "3edf4fd40ae64b299433c76662139020c45c5ada",
+      "size": 347,
+      "mode": "100644"
+    },
+    {
+      "path": "public/analysis.js",
+      "sha": "c8bdd171a0273c87c2961360c6cbc6b319d4d604",
+      "size": 23385,
+      "mode": "100644"
+    },
+    {
+      "path": "public/app-base.css",
+      "sha": "d5c2cee2fc2c15f67eb2c75fb8328469b4c6a44f",
+      "size": 19408,
+      "mode": "100644"
+    },
+    {
+      "path": "public/app-shell.css",
+      "sha": "c707c323c3636046f4226fa56cc9800e90fe82d3",
+      "size": 30815,
+      "mode": "100644"
+    },
+    {
+      "path": "public/app-shell.js",
+      "sha": "0651ef950466900689977265751f501293903ab5",
+      "size": 12225,
+      "mode": "100644"
+    },
+    {
+      "path": "public/app.js",
+      "sha": "63775ce0767098e087ed1995b0a5cc119b3d3ea8",
+      "size": 28635,
+      "mode": "100644"
+    },
+    {
+      "path": "public/assets/earth.jpg",
+      "sha": "e673a7c5e3da3f299d70c9daf608db4f6f9f2682",
+      "size": 1461877,
+      "mode": "100644"
+    },
+    {
+      "path": "public/assets/flags.bundle.zip",
+      "sha": "ae23ff7938da29e8af7ec2ac07e8f5a6f4651644",
+      "size": 219292,
+      "mode": "100644"
+    },
+    {
+      "path": "public/assets/flags/manifest.json",
+      "sha": "f0ea6a4082c3ffb59d27a79dad6df9378a9ebe83",
+      "size": 1410,
+      "mode": "100644"
+    },
+    {
+      "path": "public/assets/stars.part00",
+      "sha": "d6c3ff81a4e1a6c2681c31670311889bf1771950",
+      "size": 200000,
+      "mode": "100644"
+    },
+    {
+      "path": "public/assets/stars.part01",
+      "sha": "920ea0d7143ac295b488e412e0b67d0a9e4f170c",
+      "size": 200000,
+      "mode": "100644"
+    },
+    {
+      "path": "public/assets/stars.part02",
+      "sha": "305ff21bdcc256c2882f21b8ea52822087b175e7",
+      "size": 200000,
+      "mode": "100644"
+    },
+    {
+      "path": "public/assets/stars.part03",
+      "sha": "a1b4be9bb5e3379fe7e4f5ccee840b951cf97929",
+      "size": 200000,
+      "mode": "100644"
+    },
+    {
+      "path": "public/assets/stars.part04",
+      "sha": "12869dad27bde8f86d59e09667fae07918be4642",
+      "size": 104154,
+      "mode": "100644"
+    },
+    {
+      "path": "public/catalog-list.js",
+      "sha": "e1b6807632aed247d8d4d613fdb0d1422c03f6e6",
+      "size": 5624,
+      "mode": "100644"
+    },
+    {
+      "path": "public/catalog-rows.js",
+      "sha": "e95c8573eee66c672c1bd3949efcb05a1d06226b",
+      "size": 1998,
+      "mode": "100644"
+    },
+    {
+      "path": "public/catalog-search.js",
+      "sha": "563cc2bf5d14a50748c953a2ddf4345062d56eb8",
+      "size": 2361,
+      "mode": "100644"
+    },
+    {
+      "path": "public/country-boundaries.js",
+      "sha": "40d71bf710629a422314c7484c6b98edaecfd593",
+      "size": 2566,
+      "mode": "100644"
+    },
+    {
+      "path": "public/country-inventory-core.js",
+      "sha": "eee82714627e8619a789660059c6953647d71551",
+      "size": 7551,
+      "mode": "100644"
+    },
+    {
+      "path": "public/country-report-builder.js",
+      "sha": "82d387a7133b567747d1029f493eef14d9e61762",
+      "size": 14872,
+      "mode": "100644"
+    },
+    {
+      "path": "public/country-report-core.js",
+      "sha": "3751e704327e302d522d14ab7acf97ad1a71a652",
+      "size": 12669,
+      "mode": "100644"
+    },
+    {
+      "path": "public/credits.txt",
+      "sha": "2c5c555337306610aa0fb8cbb556164c878f06f7",
+      "size": 2471,
+      "mode": "100644"
+    },
+    {
+      "path": "public/data-health.js",
+      "sha": "acf16b53a6b475ff62ddf08dbcf52f1f8c530cf1",
+      "size": 7159,
+      "mode": "100644"
+    },
+    {
+      "path": "public/data-refresh.js",
+      "sha": "0b75c8151af8ff92425984ae33f862f888ca6160",
+      "size": 2784,
+      "mode": "100644"
+    },
+    {
+      "path": "public/data/en.json",
+      "sha": "403d35a4077c2d40ade8ca83a5a6f968ccf4809f",
+      "size": 257529,
+      "mode": "100644"
+    },
+    {
+      "path": "public/data/gps-ops.txt",
+      "sha": "f4258ec86d47cb422275c54396da83923ecec946",
+      "size": 5376,
+      "mode": "100644"
+    },
+    {
+      "path": "public/data/intelligence.txt",
+      "sha": "80dc9080e3f2dba180026e2a2d9917cc5d471846",
+      "size": 1041,
+      "mode": "100644"
+    },
+    {
+      "path": "public/data/military.txt",
+      "sha": "fe98a6b872d92ef33c7ec98d62fc492a35b587ff",
+      "size": 4686,
+      "mode": "100644"
+    },
+    {
+      "path": "public/data/program-overview-en.json",
+      "sha": "a0e297a15ba003d9534c2e222b2c47cffa3864ae",
+      "size": 8365,
+      "mode": "100644"
+    },
+    {
+      "path": "public/data/program-overview.json",
+      "sha": "73273459d41db15b3d00e500e04e77d3de22d0f1",
+      "size": 11417,
+      "mode": "100644"
+    },
+    {
+      "path": "public/data/stations.txt",
+      "sha": "e4fff5ae3e053a480c0a55e8aba710afa6b6e2e0",
+      "size": 3024,
+      "mode": "100644"
+    },
+    {
+      "path": "public/data/visual.txt",
+      "sha": "8e232412c0d8600c0637814582719a34acc4b4f2",
+      "size": 26040,
+      "mode": "100644"
+    },
+    {
+      "path": "public/data/weather.txt",
+      "sha": "b38cd5056cdf6e842eac989a075ae60223cadb81",
+      "size": 12096,
+      "mode": "100644"
+    },
+    {
+      "path": "public/date-calendar.css",
+      "sha": "a0e1d3eac883777972441d3e623254c639b91e43",
+      "size": 1945,
+      "mode": "100644"
+    },
+    {
+      "path": "public/date-calendar.js",
+      "sha": "9a2158a8c854c79910b698b7ec03849c28253471",
+      "size": 10207,
+      "mode": "100644"
+    },
+    {
+      "path": "public/downloads/madar-overview-en.docx",
+      "sha": "669b27aa12692b80e2a92dc1973375d04efe2db2",
+      "size": 39685,
+      "mode": "100644"
+    },
+    {
+      "path": "public/downloads/madar-overview.docx",
+      "sha": "cef24afe8bf794c5f3752301cbf80c016453ed14",
+      "size": 40274,
+      "mode": "100644"
+    },
+    {
+      "path": "public/draft-state.js",
+      "sha": "e9839460916ec5225122c55ab11324f13aa8804a",
+      "size": 8018,
+      "mode": "100644"
+    },
+    {
+      "path": "public/experience.css",
+      "sha": "112d79a11ce27f18f032825ea1b3ea7e8e6a6c4c",
+      "size": 16356,
+      "mode": "100644"
+    },
+    {
+      "path": "public/experience.js",
+      "sha": "9ff34687182d41e1675c4e7bb302dbb196b8f92e",
+      "size": 5248,
+      "mode": "100644"
+    },
+    {
+      "path": "public/flag-assets.js",
+      "sha": "ae169d71e8e94bd18b1c2b74c7237935e755f0cc",
+      "size": 1701,
+      "mode": "100644"
+    },
+    {
+      "path": "public/flat-map.css",
+      "sha": "eff8c8338797a1f36004b0e9fa20d08b25672b23",
+      "size": 1131,
+      "mode": "100644"
+    },
+    {
+      "path": "public/flat-map.js",
+      "sha": "f749cfd364490234a2f58978a4555426cd054ee4",
+      "size": 8837,
+      "mode": "100644"
+    },
+    {
+      "path": "public/fleet-experience.js",
+      "sha": "b719b8b8787aa7d2c445967657b181b6e5ce52eb",
+      "size": 15049,
+      "mode": "100644"
+    },
+    {
+      "path": "public/fleet-pass-core.js",
+      "sha": "b8b4a3abb24d0e9a0796ff1ea5cffe70ade63058",
+      "size": 2307,
+      "mode": "100644"
+    },
+    {
+      "path": "public/fleet-pass-worker.js",
+      "sha": "ee21c672e1dad3ff9677660f6accd0d83f9c327d",
+      "size": 557,
+      "mode": "100644"
+    },
+    {
+      "path": "public/fleet-passes.js",
+      "sha": "60860649f4aa732e87585be8d48737fb648e9b16",
+      "size": 19814,
+      "mode": "100644"
+    },
+    {
+      "path": "public/form-layout.css",
+      "sha": "9d067dbdfe970d3108ac2da93acb6df8c0f7b6bd",
+      "size": 2300,
+      "mode": "100644"
+    },
+    {
+      "path": "public/form-layout.js",
+      "sha": "dfe2bc63b5a4b68f6491427f8a27280d2c0109c5",
+      "size": 1981,
+      "mode": "100644"
+    },
+    {
+      "path": "public/globe-motion.js",
+      "sha": "f9c5c036ca935373e1ec1f24b422df19216358a4",
+      "size": 1909,
+      "mode": "100644"
+    },
+    {
+      "path": "public/globe-picking.js",
+      "sha": "5d9f0ab34188ab79bf75bdaa160317b90ed7cb1e",
+      "size": 4357,
+      "mode": "100644"
+    },
+    {
+      "path": "public/globe-scene.js",
+      "sha": "32bd45ad6834c4938c3f94a8c4278539b8f56b4e",
+      "size": 8726,
+      "mode": "100644"
+    },
+    {
+      "path": "public/i18n.js",
+      "sha": "a7c5fe602c99821862240759646b91b296da9fd8",
+      "size": 6370,
+      "mode": "100644"
+    },
+    {
+      "path": "public/icons/apple-touch-icon-v76.png",
+      "sha": "e0060e1093e26b8dcdff48f0359f7f4d65707895",
+      "size": 24195,
+      "mode": "100644"
+    },
+    {
+      "path": "public/icons/apple-touch-icon.png",
+      "sha": "7e400c935c3455d76025d4e40449aeca335769f2",
+      "size": 10647,
+      "mode": "100644"
+    },
+    {
+      "path": "public/icons/favicon-16-v76.png",
+      "sha": "7fc5793150772de084a5931932b13466852ee16c",
+      "size": 856,
+      "mode": "100644"
+    },
+    {
+      "path": "public/icons/favicon-32-v76.png",
+      "sha": "2b441cadfe737d4cf1e98af8e3c935eb48a70f24",
+      "size": 1649,
+      "mode": "100644"
+    },
+    {
+      "path": "public/icons/madar-192.png",
+      "sha": "c5e2f3352a2118843142d4f669cd300dfd8228ea",
+      "size": 11505,
+      "mode": "100644"
+    },
+    {
+      "path": "public/icons/madar-512.png",
+      "sha": "2ddfa0c43daffd8679a81c42ea5a4560433700a4",
+      "size": 36355,
+      "mode": "100644"
+    },
+    {
+      "path": "public/icons/madar-art-192-v76.png",
+      "sha": "34668408291ff7b39bf22ab844f326ee4e73e744",
+      "size": 26772,
+      "mode": "100644"
+    },
+    {
+      "path": "public/icons/madar-art-512-v76.png",
+      "sha": "b37e4cc8109b9464f6480a628e50d5622be074b9",
+      "size": 127105,
+      "mode": "100644"
+    },
+    {
+      "path": "public/icons/madar-maskable-512-v76.png",
+      "sha": "676b30c618ae64a225eb47dc208d80dccd76a4d8",
+      "size": 160959,
+      "mode": "100644"
+    },
+    {
+      "path": "public/icons/madar-maskable-512.png",
+      "sha": "30ae6284ad528bdd24bd9b6d8ed728142874d8e5",
+      "size": 31438,
+      "mode": "100644"
+    },
+    {
+      "path": "public/icons/madar-symbol-64-v76.png",
+      "sha": "d5b55f98c15a6fdd974507b53df998e90f4f3cfc",
+      "size": 3408,
+      "mode": "100644"
+    },
+    {
+      "path": "public/index.html",
+      "sha": "e970f620fef3f82358336820005523483128c648",
+      "size": 83616,
+      "mode": "100644"
+    },
+    {
+      "path": "public/inventory-report.js",
+      "sha": "b9a6350d686b81124e765a602e53df98f184faa1",
+      "size": 16259,
+      "mode": "100644"
+    },
+    {
+      "path": "public/inventory-word-worker.js",
+      "sha": "8e8b7f473a8072449f5a6f11cb79619ec2fd8027",
+      "size": 6197,
+      "mode": "100644"
+    },
+    {
+      "path": "public/inventory-zip.js",
+      "sha": "68b5352e8ce2ac7f1aea5f7dbf5bab09f7536ef6",
+      "size": 2168,
+      "mode": "100644"
+    },
+    {
+      "path": "public/live-values.js",
+      "sha": "559768ef27b5e277bcfa226947d1d5350b56750f",
+      "size": 1189,
+      "mode": "100644"
+    },
+    {
+      "path": "public/madar-mark.svg",
+      "sha": "9ec5850d7496ea8f63b4c4edd4727edf220b4332",
+      "size": 1194,
+      "mode": "100644"
+    },
+    {
+      "path": "public/manifest.webmanifest",
+      "sha": "05974aec3fec6bb401935b4e1648eaf8fe1773e0",
+      "size": 810,
+      "mode": "100644"
+    },
+    {
+      "path": "public/map-display.css",
+      "sha": "99bc69c05f8b1efaadf6bec07ec2508dd713e8c1",
+      "size": 2649,
+      "mode": "100644"
+    },
+    {
+      "path": "public/map-display.js",
+      "sha": "b00e50703f915649cc0ca284a7fccca639c325e8",
+      "size": 8875,
+      "mode": "100644"
+    },
+    {
+      "path": "public/map-fleet-core.js",
+      "sha": "b82a9d6a52d523e8d128e0faf88d5b13ea4fa2e5",
+      "size": 3005,
+      "mode": "100644"
+    },
+    {
+      "path": "public/map-fleet.css",
+      "sha": "4c53f67a957447eeb6bea7cf9797b0daef11cff1",
+      "size": 4966,
+      "mode": "100644"
+    },
+    {
+      "path": "public/map-fleet.js",
+      "sha": "5018db41c5a0f3f69dd945aeb8690da4d0ca4429",
+      "size": 10364,
+      "mode": "100644"
+    },
+    {
+      "path": "public/map-orbit-filter.js",
+      "sha": "fbcf1664e778d2b2d4911ab44dd534c1efa110f6",
+      "size": 1827,
+      "mode": "100644"
+    },
+    {
+      "path": "public/map-swarm.js",
+      "sha": "7f9aaa9fcb04177baacbb419dd72032f5ac00a8e",
+      "size": 3505,
+      "mode": "100644"
+    },
+    {
+      "path": "public/mobile-map.js",
+      "sha": "fffd0d951c51dc1a5d626ff5a700de28ac172727",
+      "size": 6353,
+      "mode": "100644"
+    },
+    {
+      "path": "public/network-policy.js",
+      "sha": "f473a998b87c629223d50d5f87226b67a9891080",
+      "size": 4435,
+      "mode": "100644"
+    },
+    {
+      "path": "public/observer-cities.js",
+      "sha": "159649c7f54774f43730ccf47a58c5b80b2d199b",
+      "size": 5269,
+      "mode": "100644"
+    },
+    {
+      "path": "public/observer-engine.js",
+      "sha": "82481c5c55aa6474f6bdf681969f789674f2b411",
+      "size": 5164,
+      "mode": "100644"
+    },
+    {
+      "path": "public/observer-map-picker.js",
+      "sha": "af8d51d49b2d577eb668ace9606f3aaa86f6e99a",
+      "size": 4694,
+      "mode": "100644"
+    },
+    {
+      "path": "public/observer-report.js",
+      "sha": "a6de7a1cead0e3690d987aa096066679e3c0497a",
+      "size": 7219,
+      "mode": "100644"
+    },
+    {
+      "path": "public/observer-sites-core.js",
+      "sha": "890d6f3d7a9df63c51ff753032de0959949f12ed",
+      "size": 4848,
+      "mode": "100644"
+    },
+    {
+      "path": "public/observer-sites.js",
+      "sha": "47b28edc9543efca7dd98ab1e566b99c4775def6",
+      "size": 6270,
+      "mode": "100644"
+    },
+    {
+      "path": "public/observer-word.js",
+      "sha": "50f37b3ff7d14986abe61f457e84784a0f572a4a",
+      "size": 2579,
+      "mode": "100644"
+    },
+    {
+      "path": "public/observer-worker.js",
+      "sha": "89fdb24224fd2c086b6207bf528bd20286b0aca4",
+      "size": 529,
+      "mode": "100644"
+    },
+    {
+      "path": "public/observer.js",
+      "sha": "21ec1ee3eea95a4da26c918543224a4100a3b251",
+      "size": 12699,
+      "mode": "100644"
+    },
+    {
+      "path": "public/observing-overview.css",
+      "sha": "6bdf9beeaeee55fa77b4b63967eeb26193894c2a",
+      "size": 1092,
+      "mode": "100644"
+    },
+    {
+      "path": "public/orbit-appearance.js",
+      "sha": "f54b09804e47c58bc051ea023f99e17f952ab093",
+      "size": 1115,
+      "mode": "100644"
+    },
+    {
+      "path": "public/orbit-data.js",
+      "sha": "997c8e657af5cd38d29b3475b06ee07018731d4d",
+      "size": 8453,
+      "mode": "100644"
+    },
+    {
+      "path": "public/orbit-service.js",
+      "sha": "aaac3aaaa73ca874cdcd8584c8f70e8e88f55d2c",
+      "size": 9899,
+      "mode": "100644"
+    },
+    {
+      "path": "public/pass-map.js",
+      "sha": "492722124fb41b61ac6dcdbb05b5883e88184562",
+      "size": 4735,
+      "mode": "100644"
+    },
+    {
+      "path": "public/pass-tools-core.js",
+      "sha": "cf5ddf3ec29b200f78a9b983695d71944dd2b943",
+      "size": 3712,
+      "mode": "100644"
+    },
+    {
+      "path": "public/positions-worker.js",
+      "sha": "20082d9c1dcdae254131b90b6afb8f14d038c5c5",
+      "size": 1599,
+      "mode": "100644"
+    },
+    {
+      "path": "public/privacy.js",
+      "sha": "8de83f272cde64d800205c96be4067a804776863",
+      "size": 5564,
+      "mode": "100644"
+    },
+    {
+      "path": "public/program-extras.js",
+      "sha": "166e51898e5e106f00a028fbd9c39bbcae9be5cb",
+      "size": 8653,
+      "mode": "100644"
+    },
+    {
+      "path": "public/render-lifecycle.js",
+      "sha": "81ba2c59d0bbd0498d8e10ee6a59a68fc6a9f6ff",
+      "size": 2884,
+      "mode": "100644"
+    },
+    {
+      "path": "public/render-quality.js",
+      "sha": "cfab771ebd1d4cb0caf1cbac63e4708385aa4c2c",
+      "size": 3060,
+      "mode": "100644"
+    },
+    {
+      "path": "public/report-archive.js",
+      "sha": "45938e832f93b000bc21751a0a03202240e156ab",
+      "size": 1654,
+      "mode": "100644"
+    },
+    {
+      "path": "public/report-brief.js",
+      "sha": "dd061d9b0ebfe4aa97921543e7ecbdc3dd447d21",
+      "size": 14934,
+      "mode": "100644"
+    },
+    {
+      "path": "public/report-document.js",
+      "sha": "8892788d42f147ad28f8f7e91e52fd8d693cafda",
+      "size": 16597,
+      "mode": "100644"
+    },
+    {
+      "path": "public/report-engine.js",
+      "sha": "282b9d7382349ad7c840ca42eac95dee0ac58fd5",
+      "size": 7474,
+      "mode": "100644"
+    },
+    {
+      "path": "public/report-exports.js",
+      "sha": "c471aa0d20e99f5d5f5f0cbbf9fca189142bf25c",
+      "size": 16776,
+      "mode": "100644"
+    },
+    {
+      "path": "public/report-guidance.css",
+      "sha": "73d7c5d6f3ab882c7696bc674d69981f37c8dba3",
+      "size": 2201,
+      "mode": "100644"
+    },
+    {
+      "path": "public/report-guidance.js",
+      "sha": "a537c4aa6d45adda928dc96fd9a9b6819b9545c2",
+      "size": 18930,
+      "mode": "100644"
+    },
+    {
+      "path": "public/report-insights.js",
+      "sha": "6a25f57728a61e2098f31fe9ce0cc5c18efb5924",
+      "size": 13262,
+      "mode": "100644"
+    },
+    {
+      "path": "public/report-layout.js",
+      "sha": "4487bcf96d2a455853d20a045c818ea5dc849d82",
+      "size": 12727,
+      "mode": "100644"
+    },
+    {
+      "path": "public/report-worker.js",
+      "sha": "82c609b7de4a5b3a00a023f66b250e8b017cbeec",
+      "size": 675,
+      "mode": "100644"
+    },
+    {
+      "path": "public/report.js",
+      "sha": "11a6e324a0a2da69754a00fb1c19e11c403c6919",
+      "size": 17350,
+      "mode": "100644"
+    },
+    {
+      "path": "public/satellite-card.js",
+      "sha": "219169c6b1ab10ebbdbbe1e665635973a15055d3",
+      "size": 8562,
+      "mode": "100644"
+    },
+    {
+      "path": "public/satellite-groups.js",
+      "sha": "5c6a6f1c85336c334e592a431607ce70a5d67c33",
+      "size": 13365,
+      "mode": "100644"
+    },
+    {
+      "path": "public/satellite-metadata.js",
+      "sha": "09dedd8df74d786d37571074c55048883433a18b",
+      "size": 10482,
+      "mode": "100644"
+    },
+    {
+      "path": "public/satellite-selection.js",
+      "sha": "e370ad42d2bd9c04c502e0fc3a3793f51f3cd2e5",
+      "size": 1478,
+      "mode": "100644"
+    },
+    {
+      "path": "public/satellite-summary.css",
+      "sha": "0209ac956fcd284740b4a171f043b6ea1adcfa97",
+      "size": 1755,
+      "mode": "100644"
+    },
+    {
+      "path": "public/source-details.js",
+      "sha": "cdd119bf02be4d7a3f7d4f965ae2d4e3e183fa41",
+      "size": 8213,
+      "mode": "100644"
+    },
+    {
+      "path": "public/state-store.js",
+      "sha": "81ce277ad1227b58f6686a7e77e3f7adbb10dfad",
+      "size": 3330,
+      "mode": "100644"
+    },
+    {
+      "path": "public/time-controls.js",
+      "sha": "cdec5dfadfda0de11041165f00398b838e728fd7",
+      "size": 5093,
+      "mode": "100644"
+    },
+    {
+      "path": "public/type-picker.js",
+      "sha": "ac3de8d5c2f16639bd65202ab1bc91d14bdf2556",
+      "size": 5856,
+      "mode": "100644"
+    },
+    {
+      "path": "public/user-guide.js",
+      "sha": "885ee27936009c3a25274cc7d2cbc2c77ae098e0",
+      "size": 2968,
+      "mode": "100644"
+    },
+    {
+      "path": "public/vendor/satellite.min.js",
+      "sha": "9d27aff288eb0ed659ca195aae3d335c8dca74d5",
+      "size": 24040,
+      "mode": "100644"
+    },
+    {
+      "path": "public/watchlist-backup.js",
+      "sha": "28d7a77299052d53f5d2ce54fef2d097c5be1e0a",
+      "size": 9094,
+      "mode": "100644"
+    },
+    {
+      "path": "public/watchlist-state.js",
+      "sha": "770fcc76d4fc2568b08becf5aa495fa3fbe0bffa",
+      "size": 2973,
+      "mode": "100644"
+    },
+    {
+      "path": "public/word-delivery.js",
+      "sha": "6279ac299414b182497e7d40da7ddf5d43d6fed3",
+      "size": 3974,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/browser-navigation.cjs",
+      "sha": "1bfb542c805fc6ad5493296e67ece4c82ad56d2a",
+      "size": 6482,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/browser-report-navigation.cjs",
+      "sha": "4d185a505e2568461bb81d67ecd0c47bb4c5c457",
+      "size": 2499,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/build-overview.py",
+      "sha": "a88a2ec0179705e0046efebbafbeaa9d7f632ba3",
+      "size": 2558,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-branding.mjs",
+      "sha": "f5132cdd06888336e2b8f184b2d44cde631b3cca",
+      "size": 1668,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-browser-boundaries.cjs",
+      "sha": "df23b257143c86c7ab71b6cf1001e16e1f763258",
+      "size": 3936,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-browser-calendar.cjs",
+      "sha": "bdda6309ae9767e8b8efb704cf0b89b89664d039",
+      "size": 6576,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-browser-catalog.cjs",
+      "sha": "cbe6cfbdfb3ee6764c74967b3c3310fee2dcffd9",
+      "size": 8782,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-browser-comprehensive.cjs",
+      "sha": "466bee96a95508ba72904a25c6883930382d4745",
+      "size": 10676,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-browser-connection.cjs",
+      "sha": "22fe748bb757411b9f8abc1c213187485a9da127",
+      "size": 5147,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-browser-experience.cjs",
+      "sha": "010039fb13573f5f0676fcac3fb87e306daa9c5d",
+      "size": 13095,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-browser-fleet-experience.cjs",
+      "sha": "f2ac8f546cf80bceae4e09ebd85ad07badee230a",
+      "size": 9305,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-browser-fleet-passes.cjs",
+      "sha": "8846a328dbe59ed0c5208ac6429d8e0331a88a94",
+      "size": 8769,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-browser-guide.cjs",
+      "sha": "17369bca721eeecacc20ea806b9e07c60812e86e",
+      "size": 5397,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-browser-help-quality.cjs",
+      "sha": "16ead7fe4e70e9a80325e7ea666a09b537c81ad7",
+      "size": 7599,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-browser-inventory.cjs",
+      "sha": "b1d86425300035dca510a5436c55388a4104904e",
+      "size": 10312,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-browser-lifecycle.cjs",
+      "sha": "ceb1ee1490fed82446abeca769f04d09b8398e1d",
+      "size": 7109,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-browser-map-display.cjs",
+      "sha": "62c20d5a0288f3c439668d7d164f20286abe7cfc",
+      "size": 6038,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-browser-map-fleet.cjs",
+      "sha": "94144200963b296f2b34ed8f52422edcb6504357",
+      "size": 8647,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-browser-map-site.cjs",
+      "sha": "abbda50fdba59a42fbe8ce5c440f63d2ff52e3e1",
+      "size": 14434,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-browser-mobile-focus.cjs",
+      "sha": "64af92c8559b08dd808fddb07dd1418cc5ecbca4",
+      "size": 14954,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-browser-motion.cjs",
+      "sha": "98e09fe1e7068d14b80c83e3b5fc1fd1dbbf9166",
+      "size": 6506,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-browser-no-webgl.cjs",
+      "sha": "f1bf461926c130175a23e581f9843bbe135e54eb",
+      "size": 10098,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-browser-observer-scopes.cjs",
+      "sha": "652be1e465205801bbfe76d8bd402fc80bb885ed",
+      "size": 10387,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-browser-observer-sites.cjs",
+      "sha": "990783bc0ad02131eaef5b2d5a04f202e55980be",
+      "size": 9653,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-browser-observing-overview.cjs",
+      "sha": "3668386dde2198bcf6a2369da426598a2138b307",
+      "size": 8300,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-browser-orbit-filter.cjs",
+      "sha": "b2097db77c13ef8c2c41dfe309fdafb72210d0a0",
+      "size": 7930,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-browser-orbits.cjs",
+      "sha": "83ec9ab7b41bcaf2c958c797f4bcf27b544a744a",
+      "size": 5393,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-browser-picking.cjs",
+      "sha": "76ca23a50376047e3f48314a926eb49a4b6e8d2a",
+      "size": 5556,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-browser-privacy.cjs",
+      "sha": "ae7e039c412044ebf6786ffbae9083e07761ae35",
+      "size": 5799,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-browser-program-extras.cjs",
+      "sha": "0507f898e2fcffa482d63fe6fb818ebb172dcaa1",
+      "size": 7663,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-browser-report-guidance.cjs",
+      "sha": "601f16f75d8867741a0127c390ea35fedf4dddc1",
+      "size": 9017,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-browser-reports.cjs",
+      "sha": "c5361f45c2d28b14afd60c19724d61d5b42c9ff7",
+      "size": 14995,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-browser-satellite-summary.cjs",
+      "sha": "a74e91dade7123d30b443684103ec17f378c3989",
+      "size": 6305,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-browser-security.cjs",
+      "sha": "e128937a6ad9573f6e0471752764ff722ee1a146",
+      "size": 5946,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-browser-shell.cjs",
+      "sha": "247116321465f12b15d3b18f89f67947a64240f3",
+      "size": 6886,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-browser-start-paths.cjs",
+      "sha": "465422ba2d8e98d679d8a3ca9824c24c9c3336fb",
+      "size": 6888,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-browser-startup.cjs",
+      "sha": "a54dffda50c8819c68051b354d5d7448ce6d9781",
+      "size": 5830,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-browser-watchlist.cjs",
+      "sha": "38ea444cfd79309d42abedb5693d0be0adabbf3d",
+      "size": 6646,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-browser.cjs",
+      "sha": "d540b8d14b97db6b4dcdc96bec407275983770eb",
+      "size": 17889,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-catalog-modules.mjs",
+      "sha": "03d37472f290a2ef9ab4005c980b19a3aa254445",
+      "size": 7054,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-catalog.mjs",
+      "sha": "df5fe35f6a599bceb910b8af91d646a597993454",
+      "size": 2678,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-cloudflare.mjs",
+      "sha": "ffa40f96608eca7c1b264dba041eeb247cf0f7f6",
+      "size": 1593,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-country-boundaries.mjs",
+      "sha": "1f1dca9afb88b388d2e926421f87a442fdcd16f0",
+      "size": 2732,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-country-inventory.mjs",
+      "sha": "b5ac58f13ccdd530491e552e5a84abfe54865566",
+      "size": 4060,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-country-report.mjs",
+      "sha": "6069d397f8c050dbd999ff4bddfe90719497609b",
+      "size": 5274,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-data-health.mjs",
+      "sha": "97fe3f82752573bfd2a37a527bfcfea05a2d22fc",
+      "size": 5341,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-data-refresh.mjs",
+      "sha": "f0c165400413f39ba025e1439442f907d054d737",
+      "size": 1594,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-date-calendar.mjs",
+      "sha": "7288f1aa633aba4499f8ba4b5abaf20c077f2674",
+      "size": 1379,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-flat-map.mjs",
+      "sha": "80a2aa9f51df670706ef5755e0a6bd81d0763594",
+      "size": 1795,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-fleet-passes.mjs",
+      "sha": "22766a12e5c69b7bee0d8766282f5e1fbce36f8d",
+      "size": 3552,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-globe-motion.mjs",
+      "sha": "42a6c2ecc7fc82e100cda915df42ca6447372260",
+      "size": 3059,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-globe-picking.mjs",
+      "sha": "adb17e52faa083984c62606fa5e0d33e734f33d8",
+      "size": 4276,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-i18n.mjs",
+      "sha": "e18bcf979a80aaff4a0a85e6973138212b570527",
+      "size": 9091,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-inventory-word.mjs",
+      "sha": "171349ae8617ebbf389c21ad66bf2c7f4eb81555",
+      "size": 3398,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-live-values.mjs",
+      "sha": "0a770b7711a734d3d2797893838e4b5502944b86",
+      "size": 1866,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-map-fleet.mjs",
+      "sha": "2985b5aee1c35aba490af054bb07d94e085f614a",
+      "size": 2583,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-map-orbit-filter.mjs",
+      "sha": "4fa36c0705e729a502b6d304a709aeb4a0aa2fda",
+      "size": 1963,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-metadata-loading.mjs",
+      "sha": "cf9fbcf2d95d1c1b382ffef2b61583a7080a4082",
+      "size": 4333,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-metadata.mjs",
+      "sha": "ca49f3aec3e623c631b60f5d261f56747d3c46c1",
+      "size": 4438,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-network-policy.mjs",
+      "sha": "643e6db2231b9086543fd73f45bb570a90dc63a0",
+      "size": 2898,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-observer-sites.mjs",
+      "sha": "d0a6181252a3a29f66c90be19597443c0509970c",
+      "size": 5616,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-observer-word.mjs",
+      "sha": "a5e0952a610beeabb9754ca467fbfd5b9fa5e28a",
+      "size": 5948,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-orbit-connection.mjs",
+      "sha": "8a398ab38d74cdaaea87511fdad113cd2bd1bb06",
+      "size": 8241,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-orbits.mjs",
+      "sha": "52f77a94ebea2d09d3c8510a0eeb3ecfd0b45ead",
+      "size": 4924,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-pass-tools.mjs",
+      "sha": "19efb121f5b53748aa73dd8032a3f3615294d7b6",
+      "size": 3047,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-program-overview.mjs",
+      "sha": "5443d90414de6b14278c8bdcdd25dd91a8d6c058",
+      "size": 1763,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-render-lifecycle.mjs",
+      "sha": "713c5db45028c46109724bbc5a70ca357838b717",
+      "size": 3282,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-report-insights.mjs",
+      "sha": "1130dbf55fe417076ce1b90dbf3537924caf9f29",
+      "size": 3140,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-report-quality.mjs",
+      "sha": "b63e7c3c0296710ee76fddcf1e1f8513ab663aa9",
+      "size": 15870,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-report-tools.mjs",
+      "sha": "8a341b574c4279c6906944ddef50b91be8bbf1e6",
+      "size": 3381,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-satellite-card.mjs",
+      "sha": "7ae5aa83a70e446be250aaa36861c8439ca53dad",
+      "size": 6820,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-satellite-selection.mjs",
+      "sha": "7bfee90dfcf450bfa6c98e77791f97fcc5c77523",
+      "size": 2771,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-scene-time.mjs",
+      "sha": "4f899e4554f0793d9a256b662caf2edaeca0963b",
+      "size": 10905,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-security.mjs",
+      "sha": "2ccc260f99fbbf7096e6fe760200c1fe41e7ef36",
+      "size": 5518,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-source-details.mjs",
+      "sha": "84982ed4a67ed20918911a2f0228dfe8f73dc9aa",
+      "size": 2215,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-update.mjs",
+      "sha": "bd794a81d789f748f12546321fc12c4b1e598157",
+      "size": 9883,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-watchlist-state.mjs",
+      "sha": "27701338bab39b4ee64caf62ad19dd0f04a33c72",
+      "size": 5383,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-watchlist.mjs",
+      "sha": "66730d0b8e167016b3e2be2531281d98451d13e9",
+      "size": 2797,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check-word-delivery.mjs",
+      "sha": "74cdd95983f4e414eef78bd53826be2e067eba77",
+      "size": 5099,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/check.mjs",
+      "sha": "107c4295c98fd83c74bea5ad72f6ab414c2c81f9",
+      "size": 1794,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/compact-metadata.mjs",
+      "sha": "3d523ae6a44c6800c1e84ac5ab96687f308fc7aa",
+      "size": 849,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/fixtures/omm-six-digit.json",
+      "sha": "70898ad30622d6848c9939f67236f0e0f5a33439",
+      "size": 413,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/fixtures/sgp4-vallado.json",
+      "sha": "26d4c76129cefadbe77a5e1dd1f788ed3a9392fd",
+      "size": 1470,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/measure-browser-performance.cjs",
+      "sha": "bcea2af2c5f8aa4b6b3d3b87a863fc425f53f337",
+      "size": 11346,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/overview-content.json",
+      "sha": "7882a25a377122dfb620510ee030509b89333722",
+      "size": 18218,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/prepare-assets.mjs",
+      "sha": "a4f1e604ce299926e5f81507e4b0d170fef6da5e",
+      "size": 3971,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/prepare-country-index.mjs",
+      "sha": "11158f1d9be719e85437fc748b5cc3cc4a24a074",
+      "size": 704,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/prepare-earth-detail.mjs",
+      "sha": "744fc94ebc50818518d2dd8639b6af7e331f3fdd",
+      "size": 955,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/prepare-mission-profiles.mjs",
+      "sha": "3a062093777f748d40227fed1920ad46cae95e53",
+      "size": 2259,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/prepare-security.mjs",
+      "sha": "fbb3473d41c9a54846e53f658e561805e425698e",
+      "size": 777,
+      "mode": "100644"
+    },
+    {
+      "path": "scripts/update-source-snapshots.py",
+      "sha": "f268c27b6f7cc2e3ab440edff5f1c10fcd923d31",
+      "size": 2336,
+      "mode": "100644"
+    },
+    {
+      "path": "security/headers.js",
+      "sha": "dc619a7fd608baee7c2f7e296d21d7716376b53d",
+      "size": 881,
+      "mode": "100644"
+    },
+    {
+      "path": "tools/vendor-audit/package-lock.json",
+      "sha": "81d10cbc18b1bf57c07f2be6df5aba37a100794b",
+      "size": 28012,
+      "mode": "100644"
+    },
+    {
+      "path": "tools/vendor-audit/package.json",
+      "sha": "5a1d836bc90a4bec7af6804f0ac5412f96a19468",
+      "size": 228,
+      "mode": "100644"
+    },
+    {
+      "path": "worker/docx-validation.js",
+      "sha": "7602ab28efa0053052e072f046bb15ede64e8645",
+      "size": 3387,
+      "mode": "100644"
+    },
+    {
+      "path": "worker/index.js",
+      "sha": "14ab4a827c08c2806250e6f272dffebb0e2b3d2e",
+      "size": 858,
+      "mode": "100644"
+    },
+    {
+      "path": "worker/orbit-groups.js",
+      "sha": "2529cd73d60121271468430608a93aef0df2dd17",
+      "size": 608,
+      "mode": "100644"
+    },
+    {
+      "path": "worker/orbits.js",
+      "sha": "c7959a5f3d79f906a5da01a82aaec08dad9abff8",
+      "size": 5391,
+      "mode": "100644"
+    },
+    {
+      "path": "wrangler.jsonc",
+      "sha": "f7b9e99f8e081a448e8715c179ab6d9e4a747dd7",
+      "size": 581,
+      "mode": "100644"
+    }
+  ]
+}
