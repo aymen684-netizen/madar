@@ -1,0 +1,34 @@
+{
+  "sourceBaseline": "3d4ed849b9cf6d8fafbb9b3080e2de93a1d2b25b",
+  "publicFiles": 380,
+  "publicBytes": 40491976,
+  "manifestSha256": "ae0013e677772a79fb23f6fa9c8e86ca92a829ef0e29aacf3116f5eff5f9f11d",
+  "fullBuildRepeatIdentical": true,
+  "allPublicBytesMatchOctober23Baseline": true,
+  "workerMutationChangedOnly": ["analysis-worker.js"],
+  "restoredManifestIdentical": true,
+  "nodeVersion": "v24.22.1",
+  "dependencyFix": {
+    "package": "undici",
+    "from": "7.29.1",
+    "to": "7.30.1",
+    "scope": "miniflare development dependency override",
+    "wranglerUnchanged": "4.151.0"
+  },
+  "localChecks": {
+    "cleanInstall": 0,
+    "check": 0,
+    "formatCheck": 0,
+    "auditBeforeFix": 1,
+    "auditAfterFix": 0,
+    "workerDryRun": 0
+  },
+  "logSha256": {
+    "check.log": "8017293842b6b2fa0be936cdf3c27b6bd2d472160eb184c639173df5c24155d9",
+    "format.log": "d42e758dcc3fd74be4007ea2efc125dfc6a9d91b1ff2155668ff00f7af67dae0",
+    "audit-before.log": "eb735bec0a664f1e02b89c3de014ab32af6068f2e4a05e8eac96a093d4762c0c",
+    "audit.log": "9f6f450224498173b36ae8a56d327253d8d3ce24f8cb7cf442f5b6198342803b",
+    "dry-run.log": "bfc29223ac53cdb64a03782d00c1784d189a090d3a981e4446efb25ac43d173f",
+    "build-repeat.log": "5fb88520c4c47d6caf97b9014c977e635cc08bb18bb4fc7c0a6946e7f780321c"
+  }
+}

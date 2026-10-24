@@ -29,3 +29,5 @@ public/data/satellite-metadata-compact.json
 public/network-resources.js
 public/data/country-index.json
 public/data/sa-border.json
+
+build/
