@@ -12,7 +12,7 @@
     "package": "undici",
     "from": "7.29.1",
     "to": "7.30.1",
-    "scope": "miniflare development dependency override",
+    "scope": "development dependency override (undici is used by Miniflare)",
     "wranglerUnchanged": "4.151.0"
   },
   "localChecks": {
@@ -21,7 +21,8 @@
     "formatCheck": 0,
     "auditBeforeFix": 1,
     "auditAfterFix": 0,
-    "workerDryRun": 0
+    "workerDryRun": 0,
+    "npm10CleanInstall": 0
   },
   "logSha256": {
     "check.log": "8017293842b6b2fa0be936cdf3c27b6bd2d472160eb184c639173df5c24155d9",
@@ -29,6 +30,16 @@
     "audit-before.log": "eb735bec0a664f1e02b89c3de014ab32af6068f2e4a05e8eac96a093d4762c0c",
     "audit.log": "9f6f450224498173b36ae8a56d327253d8d3ce24f8cb7cf442f5b6198342803b",
     "dry-run.log": "bfc29223ac53cdb64a03782d00c1784d189a090d3a981e4446efb25ac43d173f",
-    "build-repeat.log": "5fb88520c4c47d6caf97b9014c977e635cc08bb18bb4fc7c0a6946e7f780321c"
+    "build-repeat.log": "5fb88520c4c47d6caf97b9014c977e635cc08bb18bb4fc7c0a6946e7f780321c",
+    "npm10-ci.log": "d13fa2620fc5237a2a14e188338567c9ee34d3b12b2f200f0260a7a72d7b57f2"
+  },
+  "npmVersionsTested": ["11.9.0", "10.9.9"],
+  "initialCiFailure": {
+    "runId": 40072584495,
+    "head": "f20541c97ab44ee54a77c20a92348b22b57cf729",
+    "step": "npm ci --ignore-scripts",
+    "npmVersion": "10.9.9",
+    "error": "Missing: undici@7.29.1 from lock file",
+    "fix": "Flatten overrides.miniflare.undici to overrides.undici; unchanged resolved version 7.30.1"
   }
 }
