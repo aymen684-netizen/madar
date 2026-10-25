@@ -77,7 +77,15 @@ async function checkBrowserBoundaries(browser, baseUrl, output) {
       assert(
         requests
           .filter((url) => url.includes('/data/countries.json'))
-          .every((url) => !url.includes('?')),
+          .every((url) => {
+            const entries = [...new URL(url).searchParams];
+            return (
+              entries.length === 0 ||
+              (entries.length === 1 &&
+                entries[0][0] === 'v' &&
+                /^[a-f0-9]{64}$/.test(entries[0][1]))
+            );
+          }),
       );
       assert.deepEqual(errors, []);
       await page.screenshot({ path: output + '/deferred-boundaries-' + mobile + '.png' });
