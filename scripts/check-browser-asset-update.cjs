@@ -20,6 +20,11 @@ const assert = require('node:assert/strict'),
   const server = http.createServer((req, res) => {
     const url = new URL(req.url, 'http://localhost');
     traffic.push({ phase, url: req.url });
+    if (url.pathname === '/project/__cache-seed.html') {
+      res.setHeader('Content-Type', 'text/html');
+      res.setHeader('Cache-Control', 'no-store');
+      return res.end('<!doctype html><title>Cache test setup</title>');
+    }
     const relative = url.pathname.replace(/^\/project\//, '') || 'index.html';
     const file = path.resolve(root, relative);
     if (
@@ -53,15 +58,16 @@ const assert = require('node:assert/strict'),
       args: ['--no-sandbox', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'],
     });
     const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
-    await context.addInitScript(() => {
-      if (location.protocol !== 'http:') return;
-      localStorage.setItem('madar-public-updates', 'false');
-      localStorage.setItem('madar-language', 'en');
-    });
     const page = await context.newPage(),
       errors = [];
     page.on('pageerror', (error) => errors.push(error.message));
     const url = 'http://127.0.0.1:' + server.address().port + '/project/';
+    await page.goto(url + '__cache-seed.html');
+    // Seed once, outside the app. Later navigations must preserve these settings themselves.
+    await page.evaluate(() => {
+      localStorage.setItem('madar-public-updates', 'false');
+      localStorage.setItem('madar-language', 'en');
+    });
     async function load() {
       await page.goto(url);
       await page.waitForFunction(() => window.MadarShell && window.MadarStartupReady);
