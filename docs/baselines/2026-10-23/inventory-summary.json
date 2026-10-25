@@ -1,0 +1,128 @@
+{
+  "commit": "3d4ed849b9cf6d8fafbb9b3080e2de93a1d2b25b",
+  "trackedFiles": 291,
+  "trackedBytes": 12994131,
+  "builtPublicFiles": 380,
+  "builtPublicBytes": 40491976,
+  "builtPublicGzipBytesSum": 11859848,
+  "manualVersionReferences": 127,
+  "manualVersionSourceFiles": 18,
+  "manualVersionNumbers": [
+    15,
+    17,
+    19,
+    22,
+    26,
+    34,
+    35,
+    36,
+    41,
+    42,
+    43,
+    44,
+    45,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    54,
+    55,
+    56,
+    58,
+    59,
+    62,
+    65,
+    67,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78,
+    79,
+    80,
+    81,
+    82,
+    83,
+    84,
+    85,
+    86,
+    87,
+    88
+  ],
+  "indexManualVersionReferences": 84,
+  "indexScripts": 73,
+  "htmlDeclaredResources": 88,
+  "checkCommands": 41,
+  "largestPublicAssets": [
+    {
+      "path": "public/data/satellite-metadata.json",
+      "bytes": 9334544,
+      "gzipBytes": 384240,
+      "tracked": false
+    },
+    {
+      "path": "public/data/active-omm.json",
+      "bytes": 7077624,
+      "gzipBytes": 1021030,
+      "tracked": false
+    },
+    {
+      "path": "public/data/countries.json",
+      "bytes": 3941259,
+      "gzipBytes": 1395693,
+      "tracked": false
+    },
+    {
+      "path": "public/data/satellite-metadata-summary.json",
+      "bytes": 3312402,
+      "gzipBytes": 70211,
+      "tracked": false
+    },
+    {
+      "path": "public/data/active.txt",
+      "bytes": 2676912,
+      "gzipBytes": 876121,
+      "tracked": false
+    },
+    {
+      "path": "public/assets/earth-detail.jpg",
+      "bytes": 2181038,
+      "gzipBytes": 2093680,
+      "tracked": false
+    },
+    {
+      "path": "public/data/starlink.txt",
+      "bytes": 1789872,
+      "gzipBytes": 561196,
+      "tracked": false
+    },
+    {
+      "path": "public/vendor/globe.min.js",
+      "bytes": 1647649,
+      "gzipBytes": 454925,
+      "tracked": false
+    },
+    {
+      "path": "public/assets/earth.jpg",
+      "bytes": 1461877,
+      "gzipBytes": 1458998,
+      "tracked": true
+    },
+    {
+      "path": "public/data/satellite-metadata-compact.json",
+      "bytes": 1198162,
+      "gzipBytes": 62300,
+      "tracked": false
+    }
+  ],
+  "declaredResourceFiles": 88,
+  "declaredResourceBytes": 2337354,
+  "declaredResourceGzipBytesSum": 695747,
+  "requestCountNote": "HTML declarations are not runtime request counts. Dynamic requests and cache behavior require browser measurement.",
+  "gzipNote": "Sum of independent local gzip outputs; not measured production transfer size."
+}

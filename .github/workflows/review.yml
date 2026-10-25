@@ -213,6 +213,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       reviewed_artifact: ${{ steps.reviewed.outputs.artifact-id }}
+      transport_artifact: ${{ steps.transport.outputs.artifact-id }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -231,6 +232,15 @@ jobs:
         with:
           name: reviewed-release
           path: build/release/
+          if-no-files-found: error
+      - run: node scripts/package-reviewed-release.mjs
+      - uses: actions/upload-artifact@v4
+        id: transport
+        with:
+          name: release-transport
+          path: |
+            build/madar-reviewed-release.tar.gz
+            build/madar-reviewed-release.tar.gz.sha256
           if-no-files-found: error
 
   pages:
@@ -266,3 +276,28 @@ jobs:
           path: build/release/assets
       - uses: actions/deploy-pages@v4
         id: deployment
+
+  distribute:
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    needs: [release-ready, pages]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/download-artifact@v4
+        with:
+          artifact-ids: ${{ needs.release-ready.outputs.reviewed_artifact }}
+          merge-multiple: true
+          path: build/release
+      - uses: actions/download-artifact@v4
+        with:
+          artifact-ids: ${{ needs.release-ready.outputs.transport_artifact }}
+          merge-multiple: true
+          path: build
+      - run: node scripts/publish-reviewed-release.mjs
+        env:
+          GH_TOKEN: ${{ github.token }}
