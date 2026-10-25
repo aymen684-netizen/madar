@@ -1,6 +1,6 @@
-✔ JavaScript parsing preserves comments, regexes, templates and external URLs (11.105206ms)
-✔ dependency changes propagate through workers to HTML; stale maps and cycles fail safely (225.624047ms)
-✔ every real static and dynamic version matches final bytes; vendor bytes and script order survive (2227.352852ms)
+✔ JavaScript parsing preserves comments, regexes, templates and external URLs (11.376988ms)
+✔ dependency changes propagate through workers to HTML; stale maps and cycles fail safely (109.814966ms)
+✔ every real static and dynamic version matches final bytes; vendor bytes and script order survive (1899.535139ms)
 ℹ tests 3
 ℹ suites 0
 ℹ pass 3
@@ -8,4 +8,4 @@
 ℹ cancelled 0
 ℹ skipped 0
 ℹ todo 0
-ℹ duration_ms 2610.109405
+ℹ duration_ms 2151.753224

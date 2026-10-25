@@ -91,6 +91,7 @@ for (const prefix of ['https://madar.test/', 'https://madar.test/project/']) {
     'data/countries.json?v=' + hash.toUpperCase(),
     'data/countries.json?v=' + hash.slice(1),
     'data/countries.json?v=' + hash + 'a',
+    'data/countries.json?v=' + 'cd'.repeat(32),
     'missing.json?v=' + hash,
     'https://evil.test/data/countries.json?v=' + hash,
     'data/countries.json?v=' + hash + '#private',

@@ -28,7 +28,8 @@
           entries.length === 0 ||
           (entries.length === 1 &&
             entries[0][0] === 'v' &&
-            /^(?:\d{1,3}|[a-f0-9]{64})$/.test(entries[0][1]))
+            (/^\d{1,3}$/.test(entries[0][1]) ||
+              (/^[a-f0-9]{64}$/.test(entries[0][1]) && config.versions?.[path] === entries[0][1])))
         );
       if (u.pathname === '/api/orbits')
         return (

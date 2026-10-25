@@ -1,0 +1,1 @@
+PASS: exact public URL/method policy, no upload/body/identifier queries, no beacon/socket/unsafe XHR, stripped credentials/referrer/headers and cached-data-only update control

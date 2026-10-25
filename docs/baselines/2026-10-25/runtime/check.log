@@ -17,14 +17,14 @@ Prepared compact identity catalog; full source fields load on demand
 Prepared deduplicated startup identities; legacy summary retained for cached clients
 Prepared 11951 sourced profiles; 1276 previously lacked a mission description
 Fingerprinted 380 public files (SHA-256)
-✔ fingerprints follow file bytes, additions and deletions, independent of timestamps (25.891322ms)
-✔ build manifest matches every prepared public file, including generated assets and workers (395.591302ms)
-✔ HTML attributes receive exact hashes without changing comments, text, URLs or attribute values (4.042814ms)
-✔ preview is deterministic, preserves sources, follows file changes and rejects stale maps (101.439421ms)
-✔ real page references point to copied bytes with unchanged script order and no numeric versions (776.051728ms)
-✔ JavaScript parsing preserves comments, regexes, templates and external URLs (16.237843ms)
-✔ dependency changes propagate through workers to HTML; stale maps and cycles fail safely (166.952645ms)
-✔ every real static and dynamic version matches final bytes; vendor bytes and script order survive (1951.790242ms)
+✔ fingerprints follow file bytes, additions and deletions, independent of timestamps (39.362107ms)
+✔ build manifest matches every prepared public file, including generated assets and workers (613.149505ms)
+✔ HTML attributes receive exact hashes without changing comments, text, URLs or attribute values (6.502784ms)
+✔ preview is deterministic, preserves sources, follows file changes and rejects stale maps (82.009355ms)
+✔ real page references point to copied bytes with unchanged script order and no numeric versions (943.869589ms)
+✔ JavaScript parsing preserves comments, regexes, templates and external URLs (12.990198ms)
+✔ dependency changes propagate through workers to HTML; stale maps and cycles fail safely (151.631377ms)
+✔ every real static and dynamic version matches final bytes; vendor bytes and script order survive (2386.390842ms)
 ℹ tests 8
 ℹ suites 0
 ℹ pass 8
@@ -32,7 +32,7 @@ Fingerprinted 380 public files (SHA-256)
 ℹ cancelled 0
 ℹ skipped 0
 ℹ todo 0
-ℹ duration_ms 2309.977528
+ℹ duration_ms 2719.853265
 PASS: local static branding, PNG dimensions, install icons and byte budgets (344944 bytes)
 PASS: observing site validation and bounds, reload/cross-tab updates, limits, private/session storage, clear-generation protection and storage failures
 PASS: exact boundaries for every country; lightweight startup, deduplicated loading, retry, names, synthetic snapshots and unknown IDs
@@ -73,8 +73,8 @@ PASS: deduplicated startup metadata is under 40% of legacy bytes, every identity
 PASS: exact public URL/method policy, no upload/body/identifier queries, no beacon/socket/unsafe XHR, stripped credentials/referrer/headers and cached-data-only update control
 PASS: country inventory covers 16799 catalog payloads, exact launch/orbit fields, independent joint ownership, truthful unknowns, empty results, defensive copies and complete exports
 PASS: real Word worker packages 1,001 records into 3 valid landscape documents of at most 500 rows, with every record exactly once
-{"language":"ar","passes":1001,"documents":3,"bytes":91625,"elapsedMs":1905,"sha256":"327669509a6c03f61831501905c6830a210808375a10e87a769f3a806e50a44c"}
-{"language":"en","passes":1001,"documents":3,"bytes":91387,"elapsedMs":1706,"sha256":"3652174394bd82b21f42a1451b583b3545bf81abbbe599fc0fdc5193a5e81a96"}
+{"language":"ar","passes":1001,"documents":3,"bytes":91629,"elapsedMs":2391,"sha256":"fa336857db2651ea13ff700e671ab5f9a9dbae8fed9a939a2d59371f7b833fea"}
+{"language":"en","passes":1001,"documents":3,"bytes":91389,"elapsedMs":1582,"sha256":"3a346d01fd4697e2a2ad8e3e90e071c245d8c44d8f8a12c264420c992319ce7d"}
 PASS: bounded bilingual observer Word bundles preserve every pass, six columns, full-scope summaries, ZIP/DOCX structure and preparation cancellation
 PASS: deduplicated result metrics, scan denominators, zero/legacy/unknown data, mission evidence, overlapping-period scope, safe references, bilingual full and brief Word documents
 PASS: production inventory worker renders full and brief documents with complete record rows, repeated headers and an honest empty summary
@@ -96,8 +96,3 @@ PASS: gentle camera rotation, visibility and reduced-motion guards, permanent in
 Gregorian civil dates, leap years, bounds and month navigation passed.
 PASS: independent map orbit toggles, combined/empty views, stable cache, source replacement and non-destructive fleet path filtering
 PASS: polar geometry, true spherical visibility boundaries across poles/dateline, real SGP4 sky path/zenith gaps, UTC Gregorian ICS, UTF-8 folding and calendar injection protection
-npm notice
-npm notice New major version of npm available! 11.9.0 -> 12.2.1
-npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
-npm notice To update run: npm install -g npm@12.2.1
-npm notice

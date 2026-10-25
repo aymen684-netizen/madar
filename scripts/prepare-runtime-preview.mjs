@@ -76,7 +76,7 @@ export async function prepareRuntimePreview(root, output, manifest) {
   );
   config.versions = Object.fromEntries(
     Object.entries(assets)
-      .filter(([name]) => /^(?:assets\/flags\/[a-z]{2}\.png|data\/[^/]+\.txt)$/.test(name))
+      .filter(([name]) => !/\.(?:js|html|css)$/.test(name) && name !== '_headers')
       .map(([name, entry]) => [name, entry.sha256]),
   );
   const outputs = new Map([

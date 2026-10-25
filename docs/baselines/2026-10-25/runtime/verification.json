@@ -5,7 +5,7 @@
   "staticReferences": 158,
   "htmlReferences": 91,
   "javascriptReferences": 67,
-  "dynamicLeafUrls": 243,
+  "dynamicLeafUrls": 281,
   "numericVersionsReplaced": 126,
   "changedPreviewFiles": [
     "analysis-worker.js",
@@ -36,18 +36,20 @@
     "satellite-metadata.js",
     "word-delivery.js"
   ],
-  "previewHtmlSha256": "69ad086517bd228cff906b6e87f72cba89e7d2dd1b7482e0854b030e87b70f78",
-  "manifestSha256": "c3dd2426351ad9436c2cf390a2bbdab3ed66859d917e8c4bd26dee9e7d2f2a62",
-  "reportSha256": "cd746faf98736124a7b1a354310be0e3a9828ff4d99b9045cdf68d7ceb579b17",
+  "previewHtmlSha256": "5f67be8cb9aee4a602c42091c86a8ee5066ac39d7977ab0c55a6ce7a61709f0b",
+  "manifestSha256": "cdae52f78aace4663f3a7efce133ea62599f0d1d913459bcfea5644296c9e197",
+  "reportSha256": "ed8c41a59a4a950d376e0ae621384b460451a5c03adb92ec4a7a898f3d326dd5",
   "repeatedGenerationIdentical": true,
   "localChecksPassed": true,
   "localAuditPassed": true,
   "localBrowserAvailable": false,
   "nodeVersion": "v24.22.1",
   "logSha256": {
-    "check.log": "1fe7c62606cecdec5e979343e4ed690ebf18ecddcaaf5eb554583518fe67aa8c",
-    "runtime-tests.log": "a1c155c2a30e02156ae718412b0235ee470d5d668478bbd2258b80a9dd145faf",
+    "check.log": "1b40a29c661f84e947a8f6e2c3e3aa4a33b0cad842f11e941ebfd612e0cef93b",
+    "runtime-tests.log": "a3266dd823d7ed9fc1c54e5bbd8c79f9cd6325d50ad17fb670708cf0083aab90",
+    "network-tests.log": "e6ad8d63e3eab17a6110cd056e11f155c0eb0080853de184a6b26886be6dc658",
     "format.log": "d42e758dcc3fd74be4007ea2efc125dfc6a9d91b1ff2155668ff00f7af67dae0",
     "audit.log": "9911105a09d069562a8e2e7fc5d362feb7a10c918cdf430c6be4d96a7707b67d"
-  }
+  },
+  "hashQueriesMustMatchFile": true
 }
