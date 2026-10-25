@@ -18,10 +18,9 @@ jobs:
       - run: npm run build
       - run: node scripts/check-cloudflare.mjs
       - run: npx playwright install --with-deps chromium
-      - run: node scripts/check-browser.cjs
+      - run: node scripts/check-browser-production-experience.cjs
         env:
           MADAR_TEST_URL: https://madar.aymen684.workers.dev/
-          MADAR_BROWSER_SMOKE: '1'
       - uses: actions/upload-artifact@v4
         if: always()
         with:
