@@ -22,10 +22,12 @@ jobs:
       - run: npm run audit
       - run: npm run check
       - run: npm run release:verify
+      - run: node scripts/serve-release.mjs --prepare-only
       - name: Validate frozen Worker without rebuilding or deploying
-        run: npx wrangler deploy --dry-run --config build/release/wrangler.dev.json --outdir build/verified-worker
+        run: npx wrangler deploy --dry-run --config build/dev-config.json --outdir build/verified-worker
         env:
           WRANGLER_SEND_METRICS: 'false'
+      - run: npm run release:verify
       - uses: actions/upload-artifact@v4
         id: release
         with:

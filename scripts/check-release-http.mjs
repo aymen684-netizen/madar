@@ -13,17 +13,7 @@ const { manifest } = await verifyRelease(),
   log = createWriteStream('test-results/release-http-server.log'),
   child = spawn(
     process.execPath,
-    [
-      'node_modules/wrangler/bin/wrangler.js',
-      'dev',
-      '--config',
-      'build/release/wrangler.dev.json',
-      '--local',
-      '--port',
-      '8791',
-      '--ip',
-      '127.0.0.1',
-    ],
+    ['scripts/serve-release.mjs', '--local', '--port', '8791', '--ip', '127.0.0.1'],
     {
       stdio: ['ignore', 'pipe', 'pipe'],
       env: { ...process.env, CI: 'true', WRANGLER_SEND_METRICS: 'false' },
