@@ -1,0 +1,20 @@
+{
+  "baseCommit": "fd0a1b22e7cc2302d2946d739b0362704a89c75e",
+  "basePr": 82,
+  "references": 91,
+  "numericVersionsReplaced": 84,
+  "publicFiles": 380,
+  "changedPreviewFiles": ["index.html"],
+  "previewHtmlSha256": "252d1730a468e77ec44f5a79b07d700d1ab36b2c907fcacfa4be9c14c3e8a9da",
+  "previewManifestSha256": "a16a235695f4fb090b02569fa87522682637f4c99b6429975a6d09118337686b",
+  "repeatedGenerationIdentical": true,
+  "localCheckExitCode": 0,
+  "localAuditExitCode": 0,
+  "nodeVersion": "v24.22.1",
+  "logSha256": {
+    "audit.log": "9f6f450224498173b36ae8a56d327253d8d3ce24f8cb7cf442f5b6198342803b",
+    "check.log": "6fc2b6adac7a44124f4e72cc652f70f645f302fa4c917185e197afa0e1523ba3",
+    "format.log": "d42e758dcc3fd74be4007ea2efc125dfc6a9d91b1ff2155668ff00f7af67dae0",
+    "html-tests.log": "444ae63cab754f493437c53eccd9a92bbab892c06c689f1b4bc54ad5e87810f9"
+  }
+}

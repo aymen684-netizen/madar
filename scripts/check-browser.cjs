@@ -5,7 +5,7 @@ const fs = require('fs'),
   http = require('http'),
   path = require('path'),
   assert = require('assert/strict');
-const root = path.resolve('public');
+const root = path.resolve(process.env.MADAR_TEST_ROOT || 'public');
 assert(
   ['all', 'observing', 'interface', 'reports', 'extras'].includes(suite),
   'Unknown browser suite',
