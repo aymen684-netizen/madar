@@ -29,9 +29,14 @@ async function checkBrowserExperience(browser, url, output) {
     ...JSON.parse(fs.readFileSync('scripts/fixtures/omm-six-digit.json')),
     EPOCH: new Date().toISOString(),
   };
-  await page.route('https://celestrak.org/**', (r) =>
-    r.fulfill({ contentType: 'application/json', body: JSON.stringify([fixture]) }),
-  );
+  for (const pattern of ['https://celestrak.org/**', '**/api/orbits?*'])
+    await page.route(pattern, (r) =>
+      r.fulfill({
+        contentType: 'application/json',
+        headers: { 'X-Madar-Fetched-At': String(Date.now()), 'X-Madar-Connection': 'upstream' },
+        body: JSON.stringify([fixture]),
+      }),
+    );
   await page.route('**/data/satellite-metadata*.json*', (r) =>
     r.fulfill({
       contentType: 'application/json',
