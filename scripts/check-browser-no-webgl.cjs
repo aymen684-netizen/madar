@@ -39,7 +39,7 @@ async function checkBrowserNoWebGL(browser, url, output) {
             body: JSON.stringify([fixture]),
           });
         });
-      await page.route('**/vendor/globe-compat.min.js', async (route) => {
+      await page.route('**/vendor/globe-compat.min.js*', async (route) => {
         if (failure === 'compat-script') return route.abort();
         // Exercise failure after the welcome listener is installed as well as
         // an early script failure that the welcome must detect from stored state.

@@ -1,0 +1,11 @@
+✔ HTML attributes receive exact hashes without changing comments, text, URLs or attribute values (2.652393ms)
+✔ preview is deterministic, preserves sources, follows file changes and rejects stale maps (40.13609ms)
+✔ real page references point to copied bytes with unchanged script order and no numeric versions (441.810931ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 569.47476

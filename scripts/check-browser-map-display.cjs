@@ -62,7 +62,14 @@ async function checkBrowserMapDisplay(browser, url, output) {
         () => document.querySelectorAll('#globe .flag-body img').length === 3,
       );
       assert.equal(await page.locator('#globe .flag-body.neutral').count(), 1);
-      assert.equal(await page.locator('#globe img[src="assets/flags/us.png"]').count(), 2);
+      assert.equal(
+        await page.locator('#globe img').evaluateAll((images) => {
+          const expected = new URL(NetworkPolicy.assetUrl('assets/flags/us.png'), location.href)
+            .href;
+          return images.filter((image) => image.src === expected).length;
+        }),
+        2,
+      );
       await page.screenshot({
         path: output + '/map-flags-ar-' + (mobile ? 'mobile' : 'desktop') + '.png',
       });

@@ -171,7 +171,10 @@
       );
       const flag = $('globe-card-flag');
       flag.hidden = !m?.ownerIso2;
-      if (m?.ownerIso2) flag.src = 'assets/flags/' + m.ownerIso2.toLowerCase() + '.png';
+      if (m?.ownerIso2) {
+        const flagPath = 'assets/flags/' + m.ownerIso2.toLowerCase() + '.png';
+        flag.src = root.NetworkPolicy?.assetUrl?.(flagPath) || flagPath;
+      }
       $('track-selected').textContent = tracking ? 'إيقاف متابعة الحركة' : 'متابعة حركة القمر';
       $('track-selected').setAttribute('aria-pressed', String(tracking));
     }

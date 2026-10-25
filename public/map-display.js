@@ -50,7 +50,8 @@
         iso = m?.ownerIso2;
       if (/^[A-Z]{2}$/.test(iso || '')) {
         const img = document.createElement('img');
-        img.src = 'assets/flags/' + iso.toLowerCase() + '.png';
+        const flagPath = 'assets/flags/' + iso.toLowerCase() + '.png';
+        img.src = root.NetworkPolicy?.assetUrl?.(flagPath) || flagPath;
         img.alt = '';
         img.onerror = () => {
           img.remove();

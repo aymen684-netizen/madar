@@ -204,7 +204,8 @@
         return { data, derived: false, snapshot: data.snapshot };
       } catch {}
     if (g.local) {
-      const r = await fetch('data/' + key + '.txt');
+      const localPath = 'data/' + key + '.txt';
+      const r = await fetch(root.NetworkPolicy?.assetUrl?.(localPath) || localPath);
       if (!r.ok) throw Error();
       const data = parse(await r.text());
       if (data.length) return { data, derived: false };

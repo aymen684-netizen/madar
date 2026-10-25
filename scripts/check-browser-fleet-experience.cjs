@@ -165,11 +165,14 @@ async function checkBrowserFleetExperience(browser, baseUrl, output) {
         await page.evaluate(() => RenderQuality.setMode('detail'));
         await page.waitForFunction(
           () =>
-            world.globeImageUrl() === 'assets/earth-detail.jpg' ||
+            world.globeImageUrl().split('?')[0] === 'assets/earth-detail.jpg' ||
             world.renderer().capabilities.maxTextureSize < 8192,
         );
         await page.evaluate(() => RenderQuality.setMode('economy'));
-        assert.equal(await page.evaluate(() => world.globeImageUrl()), 'assets/earth.jpg');
+        assert.equal(
+          await page.evaluate(() => world.globeImageUrl().split('?')[0]),
+          'assets/earth.jpg',
+        );
       }
       // Archived replay uses its own orbital model, even if the catalog has the same ID.
       const replay = await page.evaluate(() => {

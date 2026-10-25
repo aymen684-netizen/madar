@@ -1,0 +1,32 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> madar-satellite-tracker@1.0.0 audit
+> npm audit --audit-level=high && npm --prefix tools/vendor-audit audit --audit-level=high
+
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+# npm audit report
+
+undici  7.0.0 - 7.30.0
+Severity: high
+undici vulnerable to Denial of Service via unbounded memory in the EventSource parser - https://github.com/advisories/GHSA-4qv8-2p9j-2685
+undici vulnerable to Subresource Integrity bypass via non-lowercase algorithm tokens - https://github.com/advisories/GHSA-f72v-6w45-q472
+undici vulnerable to Denial of Service via unhandled error on excessive content-encodings - https://github.com/advisories/GHSA-xjj6-f33q-929c
+fix available via `npm audit fix --force`
+Will install wrangler@4.35.0, which is a breaking change
+node_modules/undici
+  miniflare  >=4.20250906.1
+  Depends on vulnerable versions of undici
+  node_modules/miniflare
+    wrangler  <=0.0.0-31bfd374c || >=4.36.0
+    Depends on vulnerable versions of miniflare
+    node_modules/wrangler
+
+3 vulnerabilities (2 moderate, 1 high)
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice

@@ -38,7 +38,7 @@ async function checkBrowserObserverScopes(browser, baseUrl, output) {
     errors = [];
   page.on('pageerror', (error) => errors.push(error.message));
   // Intelligence is intentionally a local, independently sourced group, not a relay request.
-  await page.route('**/data/intelligence.txt', (r) =>
+  await page.route('**/data/intelligence.txt*', (r) =>
     r.fulfill({ contentType: 'application/json', body: JSON.stringify(data.slice(1, 3)) }),
   );
   for (const route of ['**/api/orbits?*', 'https://celestrak.org/**'])

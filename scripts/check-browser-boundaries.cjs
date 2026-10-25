@@ -23,7 +23,7 @@ async function checkBrowserBoundaries(browser, baseUrl, output) {
     let attempts = 0,
       release;
     const pending = new Promise((resolve) => (release = resolve));
-    await page.route('**/data/countries.json', async (route) => {
+    await page.route('**/data/countries.json*', async (route) => {
       attempts++;
       if (attempts === 1) return route.abort('failed');
       await pending;
@@ -51,7 +51,7 @@ async function checkBrowserBoundaries(browser, baseUrl, output) {
         ),
       );
       await Promise.all([
-        page.waitForRequest('**/data/countries.json'),
+        page.waitForRequest('**/data/countries.json*'),
         page.selectOption('#report-country', '250'),
       ]);
       await page.selectOption('#report-country', '682');
@@ -77,7 +77,15 @@ async function checkBrowserBoundaries(browser, baseUrl, output) {
       assert(
         requests
           .filter((url) => url.includes('/data/countries.json'))
-          .every((url) => !url.includes('?')),
+          .every((url) => {
+            const entries = [...new URL(url).searchParams];
+            return (
+              entries.length === 0 ||
+              (entries.length === 1 &&
+                entries[0][0] === 'v' &&
+                /^[a-f0-9]{64}$/.test(entries[0][1]))
+            );
+          }),
       );
       assert.deepEqual(errors, []);
       await page.screenshot({ path: output + '/deferred-boundaries-' + mobile + '.png' });

@@ -1,5 +1,7 @@
 export const CSP =
   "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://celestrak.org/NORAD/elements/gp.php; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'none'; frame-src 'none'";
+// Query fingerprints do not retain historical files. Revalidate every response.
+export const STATIC_CACHE_CONTROL = 'public, max-age=0, must-revalidate';
 export const SECURITY_HEADERS = {
   'Content-Security-Policy': CSP + "; frame-ancestors 'none'",
   'X-Frame-Options': 'DENY',

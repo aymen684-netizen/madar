@@ -22,7 +22,7 @@ async function checkBrowserStartup(browser, url, output) {
     let release, releaseData;
     const dataReady = new Promise((resolve) => (releaseData = resolve));
     const scriptsReady = new Promise((resolve) => (release = resolve));
-    await page.route('**/vendor/globe.min.js', async (route) => {
+    await page.route('**/vendor/globe.min.js*', async (route) => {
       await scriptsReady;
       await route.continue();
     });

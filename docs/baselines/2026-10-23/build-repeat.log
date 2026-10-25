@@ -1,0 +1,13 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> madar-satellite-tracker@1.0.0 build
+> node scripts/prepare-security.mjs && node scripts/prepare-assets.mjs && node scripts/prepare-mission-profiles.mjs
+
+Prepared bundled 8192x4096 Earth detail texture
+Prepared 235 country flags
+Prepared star texture
+Prepared orbital data and vendor libraries
+Prepared lightweight country index and exact Saudi boundary
+Prepared compact identity catalog; full source fields load on demand
+Prepared deduplicated startup identities; legacy summary retained for cached clients
+Prepared 11951 sourced profiles; 1276 previously lacked a mission description

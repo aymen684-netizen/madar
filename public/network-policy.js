@@ -26,7 +26,10 @@
       if (files.has(path))
         return (
           entries.length === 0 ||
-          (entries.length === 1 && entries[0][0] === 'v' && /^\d{1,3}$/.test(entries[0][1]))
+          (entries.length === 1 &&
+            entries[0][0] === 'v' &&
+            (/^\d{1,3}$/.test(entries[0][1]) ||
+              (/^[a-f0-9]{64}$/.test(entries[0][1]) && config.versions?.[path] === entries[0][1])))
         );
       if (u.pathname === '/api/orbits')
         return (
@@ -116,6 +119,23 @@
   });
   root.NetworkPolicy = {
     allowed,
+    // Only build-generated fingerprints of public files can alter a dynamic URL.
+    assetUrl(input) {
+      const url = new URL(input, base),
+        path = url.pathname.slice(base.pathname.length),
+        hash = config.versions?.[path];
+      if (
+        url.origin === base.origin &&
+        url.pathname.startsWith(base.pathname) &&
+        files.has(path) &&
+        /^[a-f0-9]{64}$/.test(hash || '') &&
+        allowed(url.href)
+      ) {
+        url.search = '?v=' + hash;
+        return url.href;
+      }
+      return input;
+    },
     updatesEnabled: () => updates,
     setUpdatesEnabled(value) {
       updates = !!value;
