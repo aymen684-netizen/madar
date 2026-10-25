@@ -54,6 +54,7 @@ const assert = require('node:assert/strict'),
     });
     const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
     await context.addInitScript(() => {
+      if (location.protocol !== 'http:') return;
       localStorage.setItem('madar-public-updates', 'false');
       localStorage.setItem('madar-language', 'en');
     });
