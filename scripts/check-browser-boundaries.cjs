@@ -23,7 +23,7 @@ async function checkBrowserBoundaries(browser, baseUrl, output) {
     let attempts = 0,
       release;
     const pending = new Promise((resolve) => (release = resolve));
-    await page.route('**/data/countries.json', async (route) => {
+    await page.route('**/data/countries.json*', async (route) => {
       attempts++;
       if (attempts === 1) return route.abort('failed');
       await pending;
@@ -51,7 +51,7 @@ async function checkBrowserBoundaries(browser, baseUrl, output) {
         ),
       );
       await Promise.all([
-        page.waitForRequest('**/data/countries.json'),
+        page.waitForRequest('**/data/countries.json*'),
         page.selectOption('#report-country', '250'),
       ]);
       await page.selectOption('#report-country', '682');

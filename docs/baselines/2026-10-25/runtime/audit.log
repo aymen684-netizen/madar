@@ -1,0 +1,9 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> madar-satellite-tracker@1.0.0 audit
+> npm audit --audit-level=high && npm --prefix tools/vendor-audit audit --audit-level=high
+
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+found 0 vulnerabilities
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+found 0 vulnerabilities

@@ -62,12 +62,12 @@
     try {
       const overview =
         overviews[lang] ||
-        (await fetch('data/program-overview' + (lang === 'en' ? '-en' : '') + '.json?v=48').then(
-          (r) => {
-            if (!r.ok) throw Error();
-            return r.json();
-          },
-        ));
+        (await fetch(
+          lang === 'en' ? 'data/program-overview-en.json' : 'data/program-overview.json',
+        ).then((r) => {
+          if (!r.ok) throw Error();
+          return r.json();
+        }));
       overviews[lang] = overview;
       if (token !== revision) return;
       body.replaceChildren();

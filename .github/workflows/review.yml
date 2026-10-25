@@ -15,12 +15,12 @@ jobs:
         with:
           node-version: '22'
       - run: npm ci --ignore-scripts
-      - run: npm run build:html-preview
+      - run: npm run build:runtime-preview
       - run: npx playwright install chromium
       - run: node scripts/check-browser.cjs
         env:
           MADAR_BROWSER_SMOKE: '1'
-          MADAR_TEST_ROOT: build/html-preview
+          MADAR_TEST_ROOT: build/runtime-preview
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -39,7 +39,7 @@ jobs:
       - run: npm run format:check
       - run: npm run audit
       - run: npm run check
-      - run: node scripts/prepare-html-preview.mjs
+      - run: node scripts/prepare-runtime-preview.mjs
       - name: Validate Worker tooling without deployment
         run: npx wrangler deploy --dry-run --outdir build/worker
         env:
@@ -49,8 +49,8 @@ jobs:
           name: asset-fingerprints
           path: |
             build/asset-manifest.json
-            build/html-preview-manifest.json
-            build/html-preview-report.json
+            build/runtime-preview-manifest.json
+            build/runtime-preview-report.json
           if-no-files-found: error
   browser:
     needs: checks
@@ -66,12 +66,12 @@ jobs:
         with:
           node-version: '22'
       - run: npm ci --ignore-scripts
-      - run: npm run build:html-preview
+      - run: npm run build:runtime-preview
       - run: npx playwright install chromium
       - run: node scripts/check-browser.cjs
         env:
           MADAR_BROWSER_SUITE: ${{ matrix.suite }}
-          MADAR_TEST_ROOT: build/html-preview
+          MADAR_TEST_ROOT: build/runtime-preview
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -87,7 +87,7 @@ jobs:
         with:
           node-version: '22'
       - run: npm ci --ignore-scripts
-      - run: npm run build:html-preview
+      - run: npm run build:runtime-preview
       - run: npx playwright install chromium
       - uses: actions/checkout@v4
         if: github.event_name == 'pull_request'
@@ -108,10 +108,37 @@ jobs:
         run: node scripts/measure-browser-performance.cjs
         env:
           MADAR_PERF_STABLE: '1'
-          MADAR_PERF_ROOT: build/html-preview
+          MADAR_PERF_ROOT: build/runtime-preview
           MADAR_PERF_OUTPUT: test-results/performance-candidate.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: performance-review
           path: test-results/performance-*.json
+
+  asset-update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci --ignore-scripts
+      - run: npm run build:runtime-preview
+      - uses: actions/checkout@v4
+        with:
+          ref: 5ccd1ea8fc7c5bf5b47927f634ab9d8074c0c1ed
+          path: cache-baseline
+      - name: Prepare cached numeric baseline
+        working-directory: cache-baseline
+        run: node scripts/prepare-security.mjs && node scripts/prepare-assets.mjs && node scripts/prepare-mission-profiles.mjs
+      - run: npx playwright install chromium
+      - run: node scripts/check-browser-asset-update.cjs
+        env:
+          MADAR_CACHE_BASELINE_ROOT: cache-baseline/public
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: asset-cache-update
+          path: test-results/asset-cache-update.json

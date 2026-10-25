@@ -1,13 +1,14 @@
 (function (root) {
   'use strict';
   const cache = new Map();
+  const assetUrl = (path) => root.NetworkPolicy?.assetUrl?.(path) || path;
   async function bytes(code) {
     code = String(code || '').toLowerCase();
     if (!/^[a-z]{2}$/.test(code)) return null;
     if (!cache.has(code))
       cache.set(
         code,
-        fetch('assets/flags/' + code + '.png')
+        fetch(assetUrl('assets/flags/' + code + '.png'))
           .then((r) => (r.ok ? r.arrayBuffer() : null))
           .then((b) => (b ? new Uint8Array(b) : null))
           .catch(() => null),
@@ -39,7 +40,7 @@
     const i = document.createElement('img');
     i.className = 'country-flag';
     i.alt = 'علم البلد';
-    i.src = 'assets/flags/' + String(code).toLowerCase() + '.png';
+    i.src = assetUrl('assets/flags/' + String(code).toLowerCase() + '.png');
     i.onerror = () => i.remove();
     return i;
   }
