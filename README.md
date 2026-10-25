@@ -6,7 +6,10 @@
 
 ## نشر النسخة الكاملة على Cloudflare
 
-في Cloudflare افتح Workers & Pages ثم Create application ثم Import a repository، واختر `aymen684-netizen/madar` وفرع `main`. دليل العمل هو جذر المستودع، وأمر البناء `npm run build` وأمر النشر `npx wrangler deploy`. بعد النشر يظهر رابط workers.dev ويمكن ربط نطاقك وتفعيل النشر عند تحديث main من إعدادات الربط مع GitHub.
+ينشر Cloudflare حزمة `reviewed-release` من تشغيل CI ناجح على `main`. تُنزّل الحزمة إلى
+`build/release/` داخل نسخة المصدر المطابقة لتشغيل المراجعة. يتحقق النشر من بايتات الحزمة
+ومدخلات البناء وسجل المراجعة ونتيجة التشغيل على GitHub، ثم يرفع Worker المجهز والأصول نفسها دون إعادة بنائها.
+البناء المحلي ينتج حزمة مرشحة للتطوير والفحص؛ لا ينتج سجل نجاح للمراجعة، ولا يكفي للنشر.
 
 أو من جهازك:
 
@@ -15,14 +18,17 @@ git clone https://github.com/aymen684-netizen/madar.git
 cd madar
 npm ci --ignore-scripts
 npx wrangler login
+# نزّل reviewed-release من تشغيل main الناجح إلى build/release/ أولًا.
 npm run deploy
 ```
 
-`wrangler.jsonc` يربط مجلد public بالملفات الثابتة وworker/index.js بخدمة تحديث المجموعات العامة. لا يحتاج التطبيق قاعدة بيانات؛ البحث والتقارير محفوظة في متصفح المستخدم، وتُنشأ ملفات Word وتُنزل داخل الجهاز دون رفعها.
+`wrangler.jsonc` يربط `build/release/assets/` بالأصول و`build/release/worker/index.js` بخدمة تحديث المجموعات العامة المجهزة مسبقًا. لا يحتاج التطبيق قاعدة بيانات؛ البحث والتقارير محفوظة في متصفح المستخدم، وتُنشأ ملفات Word وتُنزل داخل الجهاز دون رفعها.
 
 ## GitHub Pages
 
-في المستودع افتح Settings → Pages → Source → GitHub Actions، ثم Actions → Publish GitHub Pages → Run workflow. رابط النشر المتوقع بعد النجاح: https://aymen684-netizen.github.io/madar/
+في المستودع افتح Settings → Pages → Source → GitHub Actions. تنشر مراجعة `main` الحزمة نفسها
+بعد نجاح فحوصها كلها. يعيد Actions → Publish GitHub Pages → Run workflow تشغيل بوابة المراجعة الكاملة على `main` قبل النشر.
+رابط النشر المتوقع بعد النجاح: https://aymen684-netizen.github.io/madar/
 
 GitHub Pages يشغّل الواجهة فقط: تنزيل Word المباشر والمشاركة يعملان من المتصفح، وقد أزيل مسار رفع Word من Cloudflare أيضًا حفاظًا على الخصوصية.
 

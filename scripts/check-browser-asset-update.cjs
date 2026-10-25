@@ -9,8 +9,12 @@ const assert = require('node:assert/strict'),
   const baseline = path.resolve(
       process.env.MADAR_CACHE_BASELINE_ROOT || 'build/cache-baseline/public',
     ),
-    candidate = path.resolve('build/runtime-preview'),
-    report = JSON.parse(fs.readFileSync('build/runtime-preview-report.json')),
+    candidate = path.resolve(process.env.MADAR_CACHE_CANDIDATE_ROOT || 'build/runtime-preview'),
+    report = JSON.parse(
+      fs.readFileSync(
+        process.env.MADAR_CACHE_REFERENCE_REPORT || 'build/runtime-preview-report.json',
+      ),
+    ),
     traffic = [],
     output = path.resolve('test-results');
   fs.mkdirSync(output, { recursive: true });

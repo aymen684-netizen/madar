@@ -1,0 +1,120 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> madar-satellite-tracker@1.0.0 check
+> npm run build && node --test scripts/check-asset-fingerprints.mjs scripts/check-html-asset-references.mjs scripts/check-runtime-asset-references.mjs scripts/check-release.mjs && node scripts/check.mjs && node scripts/check-update.mjs && node scripts/check-security.mjs && node scripts/check-metadata.mjs && node scripts/check-orbits.mjs && node scripts/check-report-tools.mjs && node scripts/check-report-insights.mjs && node scripts/check-catalog.mjs && node scripts/check-watchlist.mjs && node scripts/check-render-lifecycle.mjs && node scripts/check-word-delivery.mjs && node scripts/check-country-report.mjs && node scripts/check-data-refresh.mjs && node scripts/check-program-overview.mjs && node scripts/check-i18n.mjs && node scripts/check-globe-picking.mjs && node scripts/check-orbit-connection.mjs && node scripts/check-source-details.mjs && node scripts/check-metadata-loading.mjs && node scripts/check-network-policy.mjs && node scripts/check-country-inventory.mjs && node --max-old-space-size=512 scripts/check-inventory-word.mjs && node --max-old-space-size=512 scripts/check-observer-word.mjs && node scripts/check-report-quality.mjs && node scripts/check-live-values.mjs && node scripts/check-map-fleet.mjs && node scripts/check-fleet-passes.mjs && node scripts/check-satellite-selection.mjs && node scripts/check-watchlist-state.mjs && node scripts/check-satellite-card.mjs && node scripts/check-data-health.mjs && node scripts/check-catalog-modules.mjs && node scripts/check-scene-time.mjs && node scripts/check-flat-map.mjs && node scripts/check-globe-motion.mjs && node scripts/check-date-calendar.mjs && node scripts/check-map-orbit-filter.mjs && node scripts/check-pass-tools.mjs
+
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> madar-satellite-tracker@1.0.0 build
+> npm run build:source && node scripts/prepare-release.mjs
+
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> madar-satellite-tracker@1.0.0 build:source
+> node scripts/prepare-security.mjs && node scripts/prepare-assets.mjs && node scripts/prepare-mission-profiles.mjs && node scripts/fingerprint-assets.mjs
+
+Prepared bundled 8192x4096 Earth detail texture
+Prepared 235 country flags
+Prepared star texture
+Prepared orbital data and vendor libraries
+Prepared lightweight country index and exact Saudi boundary
+Prepared compact identity catalog; full source fields load on demand
+Prepared deduplicated startup identities; legacy summary retained for cached clients
+Prepared 11951 sourced profiles; 1276 previously lacked a mission description
+Fingerprinted 380 public files (SHA-256)
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mProxy environment variables detected. We'll use your proxy for fetch requests.[0m
+
+
+
+ ⛅️ wrangler 4.151.0 (update available 4.152.0)
+───────────────────────────────────────────────
+✨ Read 386 files from the assets directory /workspace/scratch/b83e3721336c/madar/public
+Total Upload: 7.72 KiB / gzip: 2.82 KiB
+Your Worker has access to the following bindings:
+Binding                                  Resource
+env.ORBIT_LIMITER (30 requests/60s)      Rate Limit
+env.ASSETS                               Assets
+
+--dry-run: exiting now.
+Prepared frozen release: assets, prebuilt Worker, reference map and receipt
+✔ fingerprints follow file bytes, additions and deletions, independent of timestamps (40.403322ms)
+✔ build manifest matches every prepared public file, including generated assets and workers (795.367933ms)
+✔ HTML attributes receive exact hashes without changing comments, text, URLs or attribute values (5.435098ms)
+✔ preview is deterministic, preserves sources, follows file changes and rejects stale maps (85.32983ms)
+✔ real page references point to copied bytes with unchanged script order and no numeric versions (1218.672475ms)
+✔ release verification rejects changed/added/missing files, another commit and changed inputs (4349.915518ms)
+✔ production requires a matching main review and a successful run for the same commit (5619.361301ms)
+✔ JavaScript parsing preserves comments, regexes, templates and external URLs (15.017656ms)
+✔ dependency changes propagate through workers to HTML; stale maps and cycles fail safely (165.904999ms)
+✔ every real static and dynamic version matches final bytes; vendor bytes and script order survive (4484.752056ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 10105.662639
+PASS: local static branding, PNG dimensions, install icons and byte budgets (344944 bytes)
+PASS: observing site validation and bounds, reload/cross-tab updates, limits, private/session storage, clear-generation protection and storage failures
+PASS: exact boundaries for every country; lightweight startup, deduplicated loading, retry, names, synthetic snapshots and unknown IDs
+{"originalBytes":3941259,"startupBytes":35367,"originalGzipBytes":1380981,"startupGzipBytes":9715}
+PASS: scripts, assets, Cloudflare routes and retired report upload route
+PASS: static overview Word document and download link
+PASS: isolated dense-map instances, explicit dependencies, unsupported renderers, worker failures and constructor fallback
+PASS: 45 groups, offline fallback, 15934 worker positions, stale responses, TLE refresh and incomplete-report protection
+PASS: current-group report provenance and partial-load metadata
+PASS: 16,000-record preparation defers unused orbit models, caches each used model and retains failures safely
+PASS: CSP, security headers, strict Word validation, no report body consumption, blocked forms/frames and private storage
+PASS: 783 sourced identities, individual/program distinction, unknown missions, safe sources and offline fallback
+PASS: 11951 source-backed profiles with compact membership, separate reviewed operator, preserved catalog owner, per-source dates and no inferred legal ownership
+PASS: official Vallado reference vectors, six-digit OMM, old TLE compatibility, worker/report scans, freshness and two-hour cache/HTTP-stop policy
+PASS: independent overhead geometry, real SGP4 observer pass, failed propagation exclusions, parameter bounds, exact SHA-256 snapshots, defensive clones, normalized period metrics and CSV formula protection
+PASS: report union vs summed duration, freshness endpoints and thresholds, imported/unknown sources, empty and legacy reports
+PASS: reports retain the actual mixed snapshot dates and ignore imported or invalid date claims
+PASS: Arabic/Persian NORAD digits, international identifiers, Arabic normalization, program names and multi-term search
+PASS: inclusive 24/72-hour boundaries, future epochs, next-change time, numeric names, chronological sorting and immutable source order
+PASS: OMM/TLE backup roundtrip, six-digit IDs, strict schema/size limits, honest imported provenance, invalid/duplicate counts, non-destructive merge and no orbital downgrade
+PASS: visibility and intersection pause/resume, UI refresh offscreen, scroll fallback, cleanup and no stale resume callback
+PASS: report-specific sharing status, native sharing, fallback download, cancellation, errors and no stale status after clearing
+PASS: local Word attachment avoids upload encoding and lazy Word library loads once
+PASS: cached Word restores its content mode and rejects older editions or another language
+PASS: shipped Word edition invalidates pre-review Arabic/English report and analysis files
+PASS: combined owner/mission filters, unknowns, midnight/local-time windows, altitude boundaries, scan budgets, non-mutating views, overlap union, evidence-based recurrence, real SGP4 speed/full tracks and failed propagation exclusion
+PASS: source-cache expiry scheduling, visible/current-time gating, single in-flight refresh, unchanged upstream interval and failure backoff
+PASS: overview preview exactly matches Arabic and English Word paragraphs and SHA-256; embedded video is blocked
+PASS: bilingual text and dynamic numbers, word boundaries, reversible mutations and Word writing direction
+PASS: wrapped static and dynamic UI phrases translate completely without flattening unrelated line breaks or changing Arabic originals
+PASS: Arabic skips automatic DOM scans/observation and lazy English patterns; live originals and pre-ready language choices remain correct
+PASS: nearest screen target, touch radius, Earth occlusion, single taps, drag and pinch exclusion, cached-hover suppression
+PASS: selection does not activate a newly revealed card button; independent next clicks remain available
+PASS: explicit surface mode, zero coordinates, off-Earth rejection, no satellite sampling and drag/pinch exclusion
+PASS: safe same-origin orbital relay, shared cache and original timestamps, rate/stream-size/JSON framing limits, global HTTP-stop, browser migration/recheck and static hosting compatibility
+PASS: complete active snapshot and SATCAT identity coverage, optional OMM fields, explicit missing values, original-source attribution and source export
+PASS: deduplicated startup metadata is under 40% of legacy bytes, every identity/owner/source field is unchanged, malformed templates retry safely, details remain lazy with SHA-256 verification and defensive copies
+PASS: exact public URL/method policy, no upload/body/identifier queries, no beacon/socket/unsafe XHR, stripped credentials/referrer/headers and cached-data-only update control
+PASS: country inventory covers 16799 catalog payloads, exact launch/orbit fields, independent joint ownership, truthful unknowns, empty results, defensive copies and complete exports
+PASS: real Word worker packages 1,001 records into 3 valid landscape documents of at most 500 rows, with every record exactly once
+{"language":"ar","passes":1001,"documents":3,"bytes":91614,"elapsedMs":1717,"sha256":"983e9eb7ec535ac2afa67a15426ed28bf69f0d7a6a2e55b178fc7b0d05a0fdc4"}
+{"language":"en","passes":1001,"documents":3,"bytes":91390,"elapsedMs":1955,"sha256":"27ca29b095c658201e928a419483d800a461f12804f37e239a22f1b5971f995a"}
+PASS: bounded bilingual observer Word bundles preserve every pass, six columns, full-scope summaries, ZIP/DOCX structure and preparation cancellation
+PASS: deduplicated result metrics, scan denominators, zero/legacy/unknown data, mission evidence, overlapping-period scope, safe references, bilingual full and brief Word documents
+PASS: production inventory worker renders full and brief documents with complete record rows, repeated headers and an honest empty summary
+PASS: empty country observer and comparison summaries and empty English Word are fully translated
+PASS: incomplete datasets never round to full completeness and nonzero small shares remain explicit
+PASS: inventory Word keeps sourced constellation operators separate from catalog attribution in both languages
+PASS: executive overview stays within 3–4 sentences with actual nonzero sources, longest pass, calculation failures and honest empty results
+PASS: live detail nodes are retained, unchanged translations are preserved, changed values update and empty selections recover
+PASS: twelve-satellite selection limit, stable distinct colors, removal/replacement, defensive persistence, older-data rejection and fresh model updates
+PASS: twelve real SGP4 site passes, clipped overhead peaks, exact entry/exit countdown boundaries, invalid versus no-pass states, and bounded unique selections
+PASS: isolated satellite selection, catalog refresh, filter reconciliation, draft intent and tracking transitions
+PASS: isolated watchlist, legacy and durable revision precedence, invalid storage fallback, monotonic save snapshots, no orbital downgrade, source refresh, import ownership and session-only persistence
+PASS: isolated satellite card rendering, exact display units, safe literal text and source links, stable metric/source nodes, hidden-card propagation gating, null recovery, tracking and watchlist button sync
+PASS: isolated data health, honest source modes/timestamps, live connection refresh, stable cached nodes, fixed-time same-minute invalidation, advancing real age, filtered counts and empty recovery
+PASS: isolated catalog query/cache/filter/age boundaries and explicit invalidation; bounded 100-row pages, safe names, selection, focus, source/filter resets and empty/loading recovery
+PASS: isolated time controls, UTC/Riyadh midnight round-trip, invalid dates, fixed/live/pause routing; globe configuration, picking, fonts, camera bounds, resize and compatibility success/failure
+PASS: 2D projection poles/date line, invalid positions, capped filtered priorities, split ground tracks and unavailable Canvas fallback
+PASS: gentle camera rotation, visibility and reduced-motion guards, permanent interaction stop, explicit restart, tracking exclusion and renderer cleanup without timers or storage
+Gregorian civil dates, leap years, bounds and month navigation passed.
+PASS: independent map orbit toggles, combined/empty views, stable cache, source replacement and non-destructive fleet path filtering
+PASS: polar geometry, true spherical visibility boundaries across poles/dateline, real SGP4 sky path/zenith gaps, UTC Gregorian ICS, UTF-8 folding and calendar injection protection

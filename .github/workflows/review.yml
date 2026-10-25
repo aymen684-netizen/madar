@@ -3,33 +3,15 @@ on:
   pull_request:
   push:
     branches: [main]
+  workflow_call:
 permissions:
   contents: read
 jobs:
-  startup:
-    runs-on: ubuntu-latest
-    timeout-minutes: 9
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-      - run: npm ci --ignore-scripts
-      - run: npm run build:runtime-preview
-      - run: npx playwright install chromium
-      - run: node scripts/check-browser.cjs
-        env:
-          MADAR_BROWSER_SMOKE: '1'
-          MADAR_TEST_ROOT: build/runtime-preview
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: startup-review
-          path: test-results/
-
   checks:
     runs-on: ubuntu-latest
     timeout-minutes: 8
+    outputs:
+      release_artifact: ${{ steps.release.outputs.artifact-id }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -39,19 +21,54 @@ jobs:
       - run: npm run format:check
       - run: npm run audit
       - run: npm run check
-      - run: node scripts/prepare-runtime-preview.mjs
-      - name: Validate Worker tooling without deployment
-        run: npx wrangler deploy --dry-run --outdir build/worker
+      - run: npm run release:verify
+      - name: Validate frozen Worker without rebuilding or deploying
+        run: npx wrangler deploy --dry-run --config build/release/wrangler.dev.json --outdir build/verified-worker
         env:
           WRANGLER_SEND_METRICS: 'false'
+      - uses: actions/upload-artifact@v4
+        id: release
+        with:
+          name: release-candidate
+          path: build/release/
+          if-no-files-found: error
       - uses: actions/upload-artifact@v4
         with:
           name: asset-fingerprints
           path: |
             build/asset-manifest.json
-            build/runtime-preview-manifest.json
-            build/runtime-preview-report.json
+            build/release/asset-manifest.json
+            build/release/references.json
+            build/release/release.json
           if-no-files-found: error
+
+  startup:
+    needs: checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci --ignore-scripts
+      - uses: actions/download-artifact@v4
+        with:
+          artifact-ids: ${{ needs.checks.outputs.release_artifact }}
+          path: build/release
+      - run: node scripts/verify-release.mjs --fixtures
+      - run: npx playwright install chromium
+      - run: node scripts/check-browser.cjs
+        env:
+          MADAR_BROWSER_SMOKE: '1'
+          MADAR_TEST_ROOT: build/release/assets
+      - run: npm run release:verify
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: startup-review
+          path: test-results/
+
   browser:
     needs: checks
     runs-on: ubuntu-latest
@@ -66,12 +83,17 @@ jobs:
         with:
           node-version: '22'
       - run: npm ci --ignore-scripts
-      - run: npm run build:runtime-preview
+      - uses: actions/download-artifact@v4
+        with:
+          artifact-ids: ${{ needs.checks.outputs.release_artifact }}
+          path: build/release
+      - run: node scripts/verify-release.mjs --fixtures
       - run: npx playwright install chromium
       - run: node scripts/check-browser.cjs
         env:
           MADAR_BROWSER_SUITE: ${{ matrix.suite }}
-          MADAR_TEST_ROOT: build/runtime-preview
+          MADAR_TEST_ROOT: build/release/assets
+      - run: npm run release:verify
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -79,6 +101,7 @@ jobs:
           path: test-results/
 
   performance:
+    needs: checks
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
@@ -87,7 +110,11 @@ jobs:
         with:
           node-version: '22'
       - run: npm ci --ignore-scripts
-      - run: npm run build:runtime-preview
+      - uses: actions/download-artifact@v4
+        with:
+          artifact-ids: ${{ needs.checks.outputs.release_artifact }}
+          path: build/release
+      - run: node scripts/verify-release.mjs --fixtures
       - run: npx playwright install chromium
       - uses: actions/checkout@v4
         if: github.event_name == 'pull_request'
@@ -104,12 +131,13 @@ jobs:
         env:
           MADAR_PERF_ROOT: performance-baseline/public
           MADAR_PERF_OUTPUT: test-results/performance-baseline.json
-      - name: Measure candidate and assert stable detail nodes
+      - name: Measure frozen candidate and assert stable detail nodes
         run: node scripts/measure-browser-performance.cjs
         env:
           MADAR_PERF_STABLE: '1'
-          MADAR_PERF_ROOT: build/runtime-preview
+          MADAR_PERF_ROOT: build/release/assets
           MADAR_PERF_OUTPUT: test-results/performance-candidate.json
+      - run: npm run release:verify
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -117,6 +145,7 @@ jobs:
           path: test-results/performance-*.json
 
   asset-update:
+    needs: checks
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
@@ -125,7 +154,11 @@ jobs:
         with:
           node-version: '22'
       - run: npm ci --ignore-scripts
-      - run: npm run build:runtime-preview
+      - uses: actions/download-artifact@v4
+        with:
+          artifact-ids: ${{ needs.checks.outputs.release_artifact }}
+          path: build/release
+      - run: node scripts/verify-release.mjs --fixtures
       - uses: actions/checkout@v4
         with:
           ref: 5ccd1ea8fc7c5bf5b47927f634ab9d8074c0c1ed
@@ -137,8 +170,90 @@ jobs:
       - run: node scripts/check-browser-asset-update.cjs
         env:
           MADAR_CACHE_BASELINE_ROOT: cache-baseline/public
+          MADAR_CACHE_CANDIDATE_ROOT: build/release/assets
+          MADAR_CACHE_REFERENCE_REPORT: build/release/references.json
+      - run: npm run release:verify
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: asset-cache-update
           path: test-results/asset-cache-update.json
+
+  release-http:
+    needs: checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci --ignore-scripts
+      - uses: actions/download-artifact@v4
+        with:
+          artifact-ids: ${{ needs.checks.outputs.release_artifact }}
+          path: build/release
+      - run: npm run release:verify
+      - run: node scripts/check-release-http.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: release-http
+          path: test-results/
+
+  release-ready:
+    needs: [checks, startup, browser, performance, asset-update, release-http]
+    runs-on: ubuntu-latest
+    outputs:
+      reviewed_artifact: ${{ steps.reviewed.outputs.artifact-id }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/download-artifact@v4
+        with:
+          artifact-ids: ${{ needs.checks.outputs.release_artifact }}
+          path: build/release
+      - run: node scripts/record-release-review.mjs
+        env:
+          MADAR_REVIEW_JOBS: ${{ toJSON(needs) }}
+      - uses: actions/upload-artifact@v4
+        id: reviewed
+        with:
+          name: reviewed-release
+          path: build/release/
+          if-no-files-found: error
+
+  pages:
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    needs: release-ready
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/download-artifact@v4
+        with:
+          artifact-ids: ${{ needs.release-ready.outputs.reviewed_artifact }}
+          path: build/release
+      - run: node scripts/verify-release.mjs --reviewed --in-workflow
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/release/assets
+      - uses: actions/deploy-pages@v4
+        id: deployment

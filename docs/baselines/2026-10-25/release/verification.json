@@ -1,0 +1,18 @@
+{
+  "basePr": 84,
+  "baseCommit": "e977b901b4a15a9636eec17c99f85800295ab664",
+  "assets": 380,
+  "frozenFiles": 385,
+  "assetManifestSha256": "155140210255d064d5e5158aadf5f28aa3c7588b9cbfe31ab7ab72b143b2504e",
+  "workerSha256": "686d42d1a8384dd7e101b530a8259d850f09a8da3930f31cc4c8578b59953252",
+  "localFullChecksPassed": true,
+  "localFormatPassed": true,
+  "localAuditPassed": true,
+  "localHttpAvailable": false,
+  "localHttpError": "Wrangler uv_interface_addresses: environment cannot enumerate network interfaces",
+  "logSha256": {
+    "check.log": "f24b2c726431d6d9d8ffd41ce85d28a549c568d75acb4011880d5bbab24ab79b",
+    "format.log": "d42e758dcc3fd74be4007ea2efc125dfc6a9d91b1ff2155668ff00f7af67dae0",
+    "audit.log": "9911105a09d069562a8e2e7fc5d362feb7a10c918cdf430c6be4d96a7707b67d"
+  }
+}
