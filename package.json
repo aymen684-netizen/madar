@@ -19,7 +19,7 @@
   "devDependencies": {
     "playwright": "1.64.0",
     "prettier": "3.9.10",
-    "wrangler": "4.151.0"
+    "wrangler": "4.152.0"
   },
   "overrides": {
     "undici": "7.30.1"
