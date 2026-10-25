@@ -55,6 +55,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           artifact-ids: ${{ needs.checks.outputs.release_artifact }}
+          merge-multiple: true
           path: build/release
       - run: node scripts/verify-release.mjs --fixtures
       - run: npx playwright install chromium
@@ -86,6 +87,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           artifact-ids: ${{ needs.checks.outputs.release_artifact }}
+          merge-multiple: true
           path: build/release
       - run: node scripts/verify-release.mjs --fixtures
       - run: npx playwright install chromium
@@ -113,6 +115,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           artifact-ids: ${{ needs.checks.outputs.release_artifact }}
+          merge-multiple: true
           path: build/release
       - run: node scripts/verify-release.mjs --fixtures
       - run: npx playwright install chromium
@@ -157,6 +160,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           artifact-ids: ${{ needs.checks.outputs.release_artifact }}
+          merge-multiple: true
           path: build/release
       - run: node scripts/verify-release.mjs --fixtures
       - uses: actions/checkout@v4
@@ -192,6 +196,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           artifact-ids: ${{ needs.checks.outputs.release_artifact }}
+          merge-multiple: true
           path: build/release
       - run: npm run release:verify
       - run: node scripts/check-release-http.mjs
@@ -214,6 +219,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           artifact-ids: ${{ needs.checks.outputs.release_artifact }}
+          merge-multiple: true
           path: build/release
       - run: node scripts/record-release-review.mjs
         env:
@@ -247,6 +253,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           artifact-ids: ${{ needs.release-ready.outputs.reviewed_artifact }}
+          merge-multiple: true
           path: build/release
       - run: node scripts/verify-release.mjs --reviewed --in-workflow
         env:
