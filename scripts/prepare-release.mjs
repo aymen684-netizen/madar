@@ -25,9 +25,9 @@ export async function prepareRelease(project = process.cwd()) {
         'deploy',
         '--dry-run',
         '--config',
-        'build/bundle-config.json',
+        path.join(build, 'bundle-config.json'),
         '--outdir',
-        'build/worker-build',
+        path.join(build, 'worker-build'),
       ],
       {
         cwd: project,
