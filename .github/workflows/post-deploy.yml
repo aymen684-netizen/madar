@@ -43,6 +43,8 @@ jobs:
         env:
           WORKERS_CI_COMMIT_SHA: ${{ github.event.workflow_run.head_sha }}
           WORKERS_CI_BRANCH: main
+      - name: Restore generated browser fixtures from reviewed release
+        run: node scripts/verify-release.mjs --fixtures
       - name: Verify published bytes and ETag revalidation on both hosts
         run: node scripts/post-deploy-review.mjs assets
       - name: Check production security headers and retired API routes
