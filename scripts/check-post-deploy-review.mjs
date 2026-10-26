@@ -23,9 +23,13 @@ const entry = (status, conclusion, expectedSha = sha) => ({
   conclusion,
   started_at: '2026-10-26T20:00:00Z',
 });
-assert.equal(latestCloudflareCheck([entry('completed', 'success', 'b'.repeat(40))], sha), undefined);
+assert.equal(
+  latestCloudflareCheck([entry('completed', 'success', 'b'.repeat(40))], sha),
+  undefined,
+);
 assert.equal(latestCloudflareCheck([entry('completed', 'success')], sha).conclusion, 'success');
-const statusResponse = (runs) => new Response(JSON.stringify({ check_runs: runs }), { status: 200 });
+const statusResponse = (runs) =>
+  new Response(JSON.stringify({ check_runs: runs }), { status: 200 });
 const success = await waitForCloudflareDeployment({
   sha,
   token,
@@ -68,11 +72,15 @@ try {
   const request = async (url, options) => {
     const asset = new URL(url).pathname.replace('/subdir/', '') || 'index.html';
     assert(sampleData.has(asset), `Unexpected URL: ${url}`);
-    if (options?.headers?.['If-None-Match'])
-      return new Response(null, { status: 304 });
+    if (options?.headers?.['If-None-Match']) return new Response(null, { status: 304 });
     return new Response(sampleData.get(asset), { status: 200, headers: { ETag: '"synthetic"' } });
   };
-  const verified = await inspectLiveAssets({ root: directory, sourceSha: sha, hosts: [host], request });
+  const verified = await inspectLiveAssets({
+    root: directory,
+    sourceSha: sha,
+    hosts: [host],
+    request,
+  });
   assert.equal(verified.length, SAMPLE_ASSETS.length);
   await assert.rejects(
     inspectLiveAssets({
@@ -90,4 +98,6 @@ try {
 } finally {
   await rm(directory, { recursive: true, force: true });
 }
-console.log('PASS: Cloudflare commit gating, wrong-commit rejection, reviewed asset bytes, ETag/304');
+console.log(
+  'PASS: Cloudflare commit gating, wrong-commit rejection, reviewed asset bytes, ETag/304',
+);

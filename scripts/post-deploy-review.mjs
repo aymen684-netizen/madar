@@ -29,12 +29,12 @@ export function latestCloudflareCheck(checks, sha) {
   checkedSha(sha);
   const matches = checks.filter(
     (item) =>
-      item.name === CLOUDFLARE_CHECK &&
-      item.app?.slug === CLOUDFLARE_APP &&
-      item.head_sha === sha,
+      item.name === CLOUDFLARE_CHECK && item.app?.slug === CLOUDFLARE_APP && item.head_sha === sha,
   );
   return matches.sort(
-    (a, b) => Date.parse(b.started_at || b.completed_at || 0) - Date.parse(a.started_at || a.completed_at || 0),
+    (a, b) =>
+      Date.parse(b.started_at || b.completed_at || 0) -
+      Date.parse(a.started_at || a.completed_at || 0),
   )[0];
 }
 
@@ -96,7 +96,11 @@ export async function inspectLiveAssets({
       const response = await request(url, { signal: AbortSignal.timeout(45_000) });
       assert.equal(response.status, 200, `${host.name} HTTP ${response.status}: ${asset}`);
       const bytes = Buffer.from(await response.arrayBuffer());
-      assert.equal(digest(bytes), expected.sha256, `${host.name} has a different release: ${asset}`);
+      assert.equal(
+        digest(bytes),
+        expected.sha256,
+        `${host.name} has a different release: ${asset}`,
+      );
       const etag = response.headers.get('etag');
       assert(etag, `${host.name} is missing ETag: ${asset}`);
       const conditional = await request(url, {
@@ -137,7 +141,10 @@ export async function waitForReviewedSites({
 
 async function main() {
   const [, , mode] = process.argv;
-  assert(['deployment', 'assets'].includes(mode), 'Usage: post-deploy-review.mjs deployment|assets');
+  assert(
+    ['deployment', 'assets'].includes(mode),
+    'Usage: post-deploy-review.mjs deployment|assets',
+  );
   const sha = checkedSha(process.env.MADAR_SOURCE_SHA);
   let output;
   if (mode === 'deployment') {
