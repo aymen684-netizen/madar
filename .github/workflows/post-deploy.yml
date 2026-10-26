@@ -1,0 +1,61 @@
+name: Verify reviewed production deployment
+
+on:
+  workflow_run:
+    workflows: [Review application]
+    types: [completed]
+    branches: [main]
+
+permissions:
+  contents: read
+  actions: read
+  checks: read
+
+concurrency:
+  group: verify-production-${{ github.event.workflow_run.head_sha }}
+  cancel-in-progress: false
+
+jobs:
+  production-smoke:
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_branch == 'main' &&
+      github.event.workflow_run.head_repository.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      MADAR_SOURCE_SHA: ${{ github.event.workflow_run.head_sha }}
+      GITHUB_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci --ignore-scripts
+      - name: Confirm Cloudflare built and deployed the same main commit
+        run: node scripts/post-deploy-review.mjs deployment
+      - name: Fetch and cryptographically verify that commit's reviewed release
+        run: node scripts/fetch-reviewed-release.mjs
+        env:
+          WORKERS_CI_COMMIT_SHA: ${{ github.event.workflow_run.head_sha }}
+          WORKERS_CI_BRANCH: main
+      - name: Verify published bytes and ETag revalidation on both hosts
+        run: node scripts/post-deploy-review.mjs assets
+      - name: Check production security headers and retired API routes
+        run: node scripts/check-cloudflare.mjs
+      - run: npx playwright install --with-deps chromium
+      - name: Test production startup, language, mobile layout and Word
+        run: node scripts/check-browser.cjs
+        env:
+          MADAR_BROWSER_SMOKE: '1'
+          MADAR_TEST_URL: https://madar.aymen684.workers.dev/
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: post-deploy-review-${{ github.event.workflow_run.head_sha }}
+          path: test-results/
+          if-no-files-found: warn
