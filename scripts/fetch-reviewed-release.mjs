@@ -12,6 +12,32 @@ import {
 } from './release-archive.mjs';
 import { verifyReviewedRelease } from './verify-release.mjs';
 
+// GitHub may respond with 403/429 for rate limits. Never retry unrelated 403s.
+export async function githubReviewRetryMs(response, failures, nowMs = Date.now()) {
+  const status = response.status;
+  const remaining = response.headers.get('x-ratelimit-remaining');
+  const retryAfter = response.headers.get('retry-after');
+  const resetAt = response.headers.get('x-ratelimit-reset');
+  let rateLimited = remaining === '0' || retryAfter !== null;
+  if (status === 403 && !rateLimited) {
+    try {
+      const error = await response.json();
+      rateLimited = /(?:secondary )?rate limit/i.test(String(error?.message || ''));
+    } catch {
+      // Unknown forbidden responses are not retried.
+    }
+  }
+  const retryable =
+    status === 429 || (status === 403 && rateLimited) || (status >= 500 && status < 600);
+  if (!retryable) return null;
+  let waitMs = (status >= 500 ? 5000 : 60000) * 2 ** Math.min(failures, 3);
+  if (retryAfter && /^\\d+(?:\\.\\d+)?$/.test(retryAfter))
+    waitMs = Math.max(waitMs, Math.ceil(Number(retryAfter) * 1000));
+  if (remaining === '0' && resetAt && /^\\d+$/.test(resetAt))
+    waitMs = Math.max(waitMs, Number(resetAt) * 1000 - nowMs + 1000);
+  return Math.max(0, waitMs);
+}
+
 export async function fetchReviewedRelease({
   sha = process.env.WORKERS_CI_COMMIT_SHA,
   project = process.cwd(),
@@ -19,16 +45,19 @@ export async function fetchReviewedRelease({
   waitMs = 30000,
   timeoutMs = 18 * 60000,
   verify = verifyReviewedRelease,
+  pause = delay,
+  now = Date.now,
 } = {}) {
   assert.match(sha || '', /^[a-f0-9]{40}$/, 'A full source commit SHA is required');
   if (process.env.WORKERS_CI_BRANCH) assert.equal(process.env.WORKERS_CI_BRANCH, 'main');
   const api = 'https://api.github.com/repos/' + RELEASE_REPOSITORY;
-  const deadline = Date.now() + timeoutMs;
+  const deadline = now() + timeoutMs;
   let run,
-    checkedAt = -Infinity;
+    checkedAt = -Infinity,
+    consecutiveFailures = 0;
   await mkdir(path.join(project, 'build'), { recursive: true });
   while (true) {
-    if (Date.now() - checkedAt >= 60000) {
+    if (now() - checkedAt >= 60000) {
       const response = await request(api + '/actions/runs?head_sha=' + sha + '&per_page=20', {
         headers: {
           Accept: 'application/vnd.github+json',
@@ -38,7 +67,35 @@ export async function fetchReviewedRelease({
         },
         signal: AbortSignal.timeout(20000),
       });
-      assert.equal(response.status, 200, 'Cannot read the GitHub release review');
+      if (response.status !== 200) {
+        const retryMs = await githubReviewRetryMs(response, consecutiveFailures, now());
+        const safe = (name) =>
+          String(response.headers.get(name) || 'unknown')
+            .replace(/[^a-zA-Z0-9.-]/g, '')
+            .slice(0, 72);
+        const detail =
+          'HTTP ' +
+          response.status +
+          ', remaining=' +
+          safe('x-ratelimit-remaining') +
+          ', reset=' +
+          safe('x-ratelimit-reset') +
+          ', request=' +
+          safe('x-github-request-id');
+        if (retryMs === null)
+          throw Error('Cannot read the GitHub release review (' + detail + ')');
+        if (consecutiveFailures >= 3 || now() + retryMs >= deadline)
+          throw Error('GitHub release review retry deadline/budget exceeded (' + detail + ')');
+        consecutiveFailures++;
+        console.warn(
+          'Retrying GitHub release review after',
+          Math.ceil(retryMs / 1000),
+          'seconds (' + detail + ')',
+        );
+        await pause(retryMs);
+        continue;
+      }
+      consecutiveFailures = 0;
       const runs = (await response.json()).workflow_runs.filter(
         (item) =>
           item.head_sha === sha &&
@@ -53,7 +110,7 @@ export async function fetchReviewedRelease({
         !run || run.status !== 'completed' || run.conclusion === 'success',
         'Source commit review failed',
       );
-      checkedAt = Date.now();
+      checkedAt = now();
     }
     if (run?.status === 'completed') {
       const tag = releaseTag(sha, run.id, run.run_attempt);
@@ -101,9 +158,9 @@ export async function fetchReviewedRelease({
         await rm(temporary, { recursive: true, force: true });
       }
     }
-    assert(Date.now() < deadline, 'Timed out waiting for the reviewed release');
+    assert(now() < deadline, 'Timed out waiting for the reviewed release');
     console.log('Waiting for the main review to complete for', sha);
-    await delay(waitMs);
+    await pause(waitMs);
   }
 }
 
