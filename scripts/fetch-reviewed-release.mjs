@@ -31,9 +31,9 @@ export async function githubReviewRetryMs(response, failures, nowMs = Date.now()
     status === 429 || (status === 403 && rateLimited) || (status >= 500 && status < 600);
   if (!retryable) return null;
   let waitMs = (status >= 500 ? 5000 : 60000) * 2 ** Math.min(failures, 3);
-  if (retryAfter && /^\\d+(?:\\.\\d+)?$/.test(retryAfter))
+  if (retryAfter && /^\d+(?:\.\d+)?$/.test(retryAfter))
     waitMs = Math.max(waitMs, Math.ceil(Number(retryAfter) * 1000));
-  if (remaining === '0' && resetAt && /^\\d+$/.test(resetAt))
+  if (remaining === '0' && resetAt && /^\d+$/.test(resetAt))
     waitMs = Math.max(waitMs, Number(resetAt) * 1000 - nowMs + 1000);
   return Math.max(0, waitMs);
 }
