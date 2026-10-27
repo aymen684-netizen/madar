@@ -140,6 +140,7 @@ test('Cloudflare importer requires the latest successful source review and check
     await assert.rejects(fetchReviewedRelease(options), /review failed/);
     failed = false;
     throttled = true;
+    const attemptsBeforeRetry = attempts;
     const waits = [];
     const result = await fetchReviewedRelease({
       ...options,
@@ -147,6 +148,7 @@ test('Cloudflare importer requires the latest successful source review and check
       pause: async (ms) => waits.push(ms),
     });
     assert.deepEqual(waits, [60000], 'secondary rate limit waits before retry');
+    assert.equal(attempts, attemptsBeforeRetry + 2, 'transient 403 retried once');
     assert.equal(result.sourceSha, sha);
     assert(verified);
     await verifyRelease({
@@ -154,7 +156,6 @@ test('Cloudflare importer requires the latest successful source review and check
       project: process.cwd(),
       expectedSha: sha,
     });
-    const requestsBeforeForbidden = attempts;
     await assert.rejects(
       fetchReviewedRelease({
         ...options,
@@ -170,7 +171,6 @@ test('Cloudflare importer requires the latest successful source review and check
       }),
       /Cannot read the GitHub release review/,
     );
-    assert(attempts >= requestsBeforeForbidden);
     await assert.rejects(
       fetchReviewedRelease({
         ...options,
