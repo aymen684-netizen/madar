@@ -82,8 +82,7 @@ export async function fetchReviewedRelease({
           safe('x-ratelimit-reset') +
           ', request=' +
           safe('x-github-request-id');
-        if (retryMs === null)
-          throw Error('Cannot read the GitHub release review (' + detail + ')');
+        if (retryMs === null) throw Error('Cannot read the GitHub release review (' + detail + ')');
         if (consecutiveFailures >= 3 || now() + retryMs >= deadline)
           throw Error('GitHub release review retry deadline/budget exceeded (' + detail + ')');
         consecutiveFailures++;
