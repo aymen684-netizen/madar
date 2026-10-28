@@ -3,7 +3,9 @@ import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { copyFile, mkdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
+import { setTimeout as delay } from 'node:timers/promises';
 import { fileURLToPath } from 'node:url';
+import { githubReviewRetryMs, githubReviewDiagnostics } from './github-review-api.mjs';
 import { createAssetManifest } from './fingerprint-assets.mjs';
 
 export async function releaseInputs(project) {
@@ -92,9 +94,15 @@ export async function verifyReviewedRelease(options = {}) {
     assert.equal(review.sourceSha, process.env.GITHUB_SHA);
     return result;
   }
-  const response = await (options.request || fetch)(
-    'https://api.github.com/repos/aymen684-netizen/madar/actions/runs/' + review.runId,
-    {
+  const request = options.request || fetch;
+  const pause = options.pause || delay;
+  const now = options.now || Date.now;
+  const deadline = now() + (options.retryTimeoutMs ?? 3 * 60 * 1000);
+  const url = 'https://api.github.com/repos/aymen684-netizen/madar/actions/runs/' + review.runId;
+  let response,
+    failures = 0;
+  while (true) {
+    response = await request(url, {
       headers: {
         Accept: 'application/vnd.github+json',
         ...(process.env.GITHUB_TOKEN
@@ -102,9 +110,22 @@ export async function verifyReviewedRelease(options = {}) {
           : {}),
       },
       signal: AbortSignal.timeout(20000),
-    },
-  );
-  assert.equal(response.status, 200, 'Cannot verify the GitHub review run');
+    });
+    if (response.status === 200) break;
+    const retryMs = await githubReviewRetryMs(response, failures, now()),
+      diagnostic = githubReviewDiagnostics(response);
+    if (retryMs === null)
+      throw Error('Cannot verify the GitHub review run (' + diagnostic + ')');
+    if (failures >= 2 || now() + retryMs >= deadline)
+      throw Error('GitHub review retry budget/deadline exceeded (' + diagnostic + ')');
+    failures++;
+    console.warn(
+      'Retrying GitHub review verification after',
+      Math.ceil(retryMs / 1000),
+      'seconds (' + diagnostic + ')',
+    );
+    await pause(retryMs);
+  }
   const run = await response.json();
   assert.equal(run.conclusion, 'success', 'GitHub review run has not succeeded');
   assert.equal(run.head_sha, review.sourceSha, 'GitHub review run belongs to another commit');

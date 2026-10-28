@@ -78,6 +78,51 @@ test('production requires a matching main review and a successful run for the sa
         request: async () => new Response(JSON.stringify({ ...run, ...overrides })),
       });
     await verify();
+    let calls = 0;
+    const waits = [];
+    await verifyReviewedRelease({
+      root,
+      expectedSha: sourceSha,
+      request: async () => {
+        calls++;
+        if (calls === 1)
+          return new Response(JSON.stringify({ message: 'You have exceeded a secondary rate limit' }), {
+            status: 403,
+            headers: { 'content-type': 'application/json' },
+          });
+        return new Response(JSON.stringify(run));
+      },
+      pause: async (ms) => waits.push(ms),
+    });
+    assert.equal(calls, 2, 'a rate-limited reviewed run is retried once');
+    assert.deepEqual(waits, [60000], 'only the documented backoff is requested');
+    await assert.rejects(
+      verifyReviewedRelease({
+        root,
+        expectedSha: sourceSha,
+        request: async () =>
+          new Response(JSON.stringify({ message: 'Resource not accessible by integration' }), {
+            status: 403,
+            headers: { 'content-type': 'application/json' },
+          }),
+        pause: async () => {
+          throw Error('unrelated forbidden requests must never be retried');
+        },
+      }),
+      /Cannot verify the GitHub review run \(HTTP 403/,
+    );
+    await assert.rejects(
+      verifyReviewedRelease({
+        root,
+        expectedSha: sourceSha,
+        retryTimeoutMs: 1000,
+        request: async () => new Response('rate limited', { status: 429 }),
+        pause: async () => {
+          throw Error('the deadline must stop before sleeping');
+        },
+      }),
+      /GitHub review retry budget\/deadline exceeded/,
+    );
     await assert.rejects(verify({ conclusion: 'failure' }), /has not succeeded/);
     await assert.rejects(verify({ head_sha: '2'.repeat(40) }), /another commit/);
     await assert.rejects(verify({ path: '.github/workflows/other.yml' }));
