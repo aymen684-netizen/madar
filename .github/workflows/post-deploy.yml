@@ -28,7 +28,7 @@ jobs:
       MADAR_SOURCE_SHA: ${{ github.event.workflow_run.head_sha }}
       GITHUB_TOKEN: ${{ github.token }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           ref: ${{ github.event.workflow_run.head_sha }}
           persist-credentials: false
