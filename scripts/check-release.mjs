@@ -86,10 +86,10 @@ test('production requires a matching main review and a successful run for the sa
       request: async () => {
         calls++;
         if (calls === 1)
-          return new Response(JSON.stringify({ message: 'You have exceeded a secondary rate limit' }), {
-            status: 403,
-            headers: { 'content-type': 'application/json' },
-          });
+          return new Response(
+            JSON.stringify({ message: 'You have exceeded a secondary rate limit' }),
+            { status: 403, headers: { 'content-type': 'application/json' } },
+          );
         return new Response(JSON.stringify(run));
       },
       pause: async (ms) => waits.push(ms),

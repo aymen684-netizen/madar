@@ -114,8 +114,7 @@ export async function verifyReviewedRelease(options = {}) {
     if (response.status === 200) break;
     const retryMs = await githubReviewRetryMs(response, failures, now()),
       diagnostic = githubReviewDiagnostics(response);
-    if (retryMs === null)
-      throw Error('Cannot verify the GitHub review run (' + diagnostic + ')');
+    if (retryMs === null) throw Error('Cannot verify the GitHub review run (' + diagnostic + ')');
     if (failures >= 2 || now() + retryMs >= deadline)
       throw Error('GitHub review retry budget/deadline exceeded (' + diagnostic + ')');
     failures++;
