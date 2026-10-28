@@ -123,6 +123,48 @@ test('production requires a matching main review and a successful run for the sa
       }),
       /GitHub review retry budget\/deadline exceeded/,
     );
+    let clock = 0;
+    await assert.rejects(
+      verifyReviewedRelease({
+        root,
+        expectedSha: sourceSha,
+        retryTimeoutMs: 1000,
+        now: () => clock,
+        request: async (_url, { signal }) => {
+          assert.equal(signal.aborted, false);
+          clock = 1001; // A successful response arrives after the overall deadline.
+          return new Response(JSON.stringify(run));
+        },
+      }),
+      /GitHub review retry budget\/deadline exceeded/,
+    );
+    clock = 0;
+    let attempts = 0;
+    await assert.rejects(
+      verifyReviewedRelease({
+        root,
+        expectedSha: sourceSha,
+        retryTimeoutMs: 61000,
+        now: () => clock,
+        request: async () => {
+          attempts++;
+          if (attempts === 1)
+            return new Response('limited', { status: 429 });
+          throw Error('should not start a request after the global deadline');
+        },
+        pause: async (ms) => { clock += ms + 1001; },
+      }),
+      /GitHub review retry budget\/deadline exceeded/,
+    );
+    assert.equal(attempts, 1, 'no request begins after the overall deadline');
+    await assert.rejects(
+      verifyReviewedRelease({
+        root,
+        expectedSha: sourceSha,
+        request: async () => { throw new DOMException('timed out', 'TimeoutError'); },
+      }),
+      /timed out/,
+    );
     await assert.rejects(verify({ conclusion: 'failure' }), /has not succeeded/);
     await assert.rejects(verify({ head_sha: '2'.repeat(40) }), /another commit/);
     await assert.rejects(verify({ path: '.github/workflows/other.yml' }));
