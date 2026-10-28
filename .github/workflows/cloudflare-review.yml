@@ -22,7 +22,7 @@ jobs:
         env:
           MADAR_TEST_URL: https://madar.aymen684.workers.dev/
           MADAR_BROWSER_SMOKE: '1'
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: cloudflare-production-review
