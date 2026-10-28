@@ -102,6 +102,8 @@ export async function verifyReviewedRelease(options = {}) {
   let response,
     failures = 0;
   while (true) {
+    const remainingMs = deadline - now();
+    if (remainingMs <= 0) throw Error('GitHub review retry budget/deadline exceeded');
     response = await request(url, {
       headers: {
         Accept: 'application/vnd.github+json',
@@ -109,8 +111,9 @@ export async function verifyReviewedRelease(options = {}) {
           ? { Authorization: 'Bearer ' + process.env.GITHUB_TOKEN }
           : {}),
       },
-      signal: AbortSignal.timeout(20000),
+      signal: AbortSignal.timeout(Math.min(20000, Math.max(1, Math.ceil(remainingMs)))),
     });
+    if (now() >= deadline) throw Error('GitHub review retry budget/deadline exceeded');
     if (response.status === 200) break;
     const retryMs = await githubReviewRetryMs(response, failures, now()),
       diagnostic = githubReviewDiagnostics(response);
