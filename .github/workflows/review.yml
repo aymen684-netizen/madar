@@ -54,7 +54,7 @@ jobs:
         with:
           node-version: '22'
       - run: npm ci --ignore-scripts
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v7
         with:
           artifact-ids: ${{ needs.checks.outputs.release_artifact }}
           merge-multiple: true
@@ -86,7 +86,7 @@ jobs:
         with:
           node-version: '22'
       - run: npm ci --ignore-scripts
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v7
         with:
           artifact-ids: ${{ needs.checks.outputs.release_artifact }}
           merge-multiple: true
@@ -114,7 +114,7 @@ jobs:
         with:
           node-version: '22'
       - run: npm ci --ignore-scripts
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v7
         with:
           artifact-ids: ${{ needs.checks.outputs.release_artifact }}
           merge-multiple: true
@@ -159,7 +159,7 @@ jobs:
         with:
           node-version: '22'
       - run: npm ci --ignore-scripts
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v7
         with:
           artifact-ids: ${{ needs.checks.outputs.release_artifact }}
           merge-multiple: true
@@ -195,7 +195,7 @@ jobs:
         with:
           node-version: '22'
       - run: npm ci --ignore-scripts
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v7
         with:
           artifact-ids: ${{ needs.checks.outputs.release_artifact }}
           merge-multiple: true
@@ -219,7 +219,7 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: '22'
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v7
         with:
           artifact-ids: ${{ needs.checks.outputs.release_artifact }}
           merge-multiple: true
@@ -262,7 +262,7 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: '22'
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v7
         with:
           artifact-ids: ${{ needs.release-ready.outputs.reviewed_artifact }}
           merge-multiple: true
@@ -288,12 +288,12 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: '22'
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v7
         with:
           artifact-ids: ${{ needs.release-ready.outputs.reviewed_artifact }}
           merge-multiple: true
           path: build/release
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v7
         with:
           artifact-ids: ${{ needs.release-ready.outputs.transport_artifact }}
           merge-multiple: true
