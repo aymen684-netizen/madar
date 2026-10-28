@@ -28,13 +28,13 @@ jobs:
         env:
           WRANGLER_SEND_METRICS: 'false'
       - run: npm run release:verify
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         id: release
         with:
           name: release-candidate
           path: build/release/
           if-no-files-found: error
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: asset-fingerprints
           path: |
@@ -66,7 +66,7 @@ jobs:
           MADAR_BROWSER_SMOKE: '1'
           MADAR_TEST_ROOT: build/release/assets
       - run: npm run release:verify
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: startup-review
@@ -98,7 +98,7 @@ jobs:
           MADAR_BROWSER_SUITE: ${{ matrix.suite }}
           MADAR_TEST_ROOT: build/release/assets
       - run: npm run release:verify
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: browser-review-${{ matrix.suite }}
@@ -143,7 +143,7 @@ jobs:
           MADAR_PERF_ROOT: build/release/assets
           MADAR_PERF_OUTPUT: test-results/performance-candidate.json
       - run: npm run release:verify
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: performance-review
@@ -179,7 +179,7 @@ jobs:
           MADAR_CACHE_CANDIDATE_ROOT: build/release/assets
           MADAR_CACHE_REFERENCE_REPORT: build/release/references.json
       - run: npm run release:verify
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: asset-cache-update
@@ -202,7 +202,7 @@ jobs:
           path: build/release
       - run: npm run release:verify
       - run: node scripts/check-release-http.mjs
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: release-http
@@ -227,14 +227,14 @@ jobs:
       - run: node scripts/record-release-review.mjs
         env:
           MADAR_REVIEW_JOBS: ${{ toJSON(needs) }}
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         id: reviewed
         with:
           name: reviewed-release
           path: build/release/
           if-no-files-found: error
       - run: node scripts/package-reviewed-release.mjs
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         id: transport
         with:
           name: release-transport
