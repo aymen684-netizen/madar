@@ -148,8 +148,7 @@ test('production requires a matching main review and a successful run for the sa
         now: () => clock,
         request: async () => {
           attempts++;
-          if (attempts === 1)
-            return new Response('limited', { status: 429 });
+          if (attempts === 1) return new Response('limited', { status: 429 });
           throw Error('should not start a request after the global deadline');
         },
         pause: async (ms) => {
