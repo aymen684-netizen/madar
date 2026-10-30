@@ -152,7 +152,9 @@ test('production requires a matching main review and a successful run for the sa
             return new Response('limited', { status: 429 });
           throw Error('should not start a request after the global deadline');
         },
-        pause: async (ms) => { clock += ms + 1001; },
+        pause: async (ms) => {
+          clock += ms + 1001;
+        },
       }),
       /GitHub review retry budget\/deadline exceeded/,
     );
@@ -161,7 +163,9 @@ test('production requires a matching main review and a successful run for the sa
       verifyReviewedRelease({
         root,
         expectedSha: sourceSha,
-        request: async () => { throw new DOMException('timed out', 'TimeoutError'); },
+        request: async () => {
+          throw new DOMException('timed out', 'TimeoutError');
+        },
       }),
       /timed out/,
     );
