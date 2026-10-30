@@ -4,8 +4,7 @@ import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const readJson = async (root, name) =>
-  JSON.parse(await readFile(path.join(root, name), 'utf8'));
+const readJson = async (root, name) => JSON.parse(await readFile(path.join(root, name), 'utf8'));
 const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex');
 
 export async function verifyVendorAudit({ root = process.cwd(), release = false } = {}) {
