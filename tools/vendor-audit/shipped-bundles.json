@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "statement": "Version labels are audit declarations pinned to shipped SHA-256 bytes. Independent upstream byte identity for docx and satellite.js remains unverified.",
+  "bundles": [
+    {
+      "package": "docx",
+      "declaredVersion": "9.5.1",
+      "asset": "vendor/docx.js",
+      "sha256": "aee5cf06c948263b7489f7e1bd08f4b8f612bb845275d6b931c6ef5b0d0a20de",
+      "versionEvidence": "audit-declaration-only",
+      "license": "MIT"
+    },
+    {
+      "package": "satellite.js",
+      "declaredVersion": "6.0.1",
+      "asset": "vendor/satellite.min.js",
+      "sha256": "6fd7487abb99bec37ea2c8d1f5739b59143a6130a00b0faa6c44dd44585aebbf",
+      "versionEvidence": "audit-declaration-only",
+      "license": "MIT"
+    },
+    {
+      "package": "globe.gl",
+      "declaredVersion": "2.41.4",
+      "asset": "vendor/globe.min.js",
+      "sha256": "983fefdaad2a6d51d84f63b906acb728c32875dc396d33e78fc7c2ff210ed054",
+      "versionEvidence": "bundle-version-banner",
+      "license": "MIT"
+    },
+    {
+      "package": "globe-compat",
+      "declaredVersion": "2.31.0",
+      "asset": "vendor/globe-compat.min.js",
+      "sha256": "042a0092f352252bb2fdb5ff7c02788689c1bdb05c30e1fed5e2d9a61dade83b",
+      "versionEvidence": "bundle-version-banner",
+      "license": "MIT"
+    }
+  ]
+}
