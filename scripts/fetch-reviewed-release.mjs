@@ -11,32 +11,9 @@ import {
   unpackRelease,
 } from './release-archive.mjs';
 import { verifyReviewedRelease } from './verify-release.mjs';
+import { githubReviewRetryMs, githubReviewDiagnostics } from './github-review-api.mjs';
 
-// GitHub may respond with 403/429 for rate limits. Never retry unrelated 403s.
-export async function githubReviewRetryMs(response, failures, nowMs = Date.now()) {
-  const status = response.status;
-  const remaining = response.headers.get('x-ratelimit-remaining');
-  const retryAfter = response.headers.get('retry-after');
-  const resetAt = response.headers.get('x-ratelimit-reset');
-  let rateLimited = remaining === '0' || retryAfter !== null;
-  if (status === 403 && !rateLimited) {
-    try {
-      const error = await response.json();
-      rateLimited = /(?:secondary )?rate limit/i.test(String(error?.message || ''));
-    } catch {
-      // Unknown forbidden responses are not retried.
-    }
-  }
-  const retryable =
-    status === 429 || (status === 403 && rateLimited) || (status >= 500 && status < 600);
-  if (!retryable) return null;
-  let waitMs = (status >= 500 ? 5000 : 60000) * 2 ** Math.min(failures, 3);
-  if (retryAfter && /^\d+(?:\.\d+)?$/.test(retryAfter))
-    waitMs = Math.max(waitMs, Math.ceil(Number(retryAfter) * 1000));
-  if (remaining === '0' && resetAt && /^\d+$/.test(resetAt))
-    waitMs = Math.max(waitMs, Number(resetAt) * 1000 - nowMs + 1000);
-  return Math.max(0, waitMs);
-}
+export { githubReviewRetryMs } from './github-review-api.mjs';
 
 export async function fetchReviewedRelease({
   sha = process.env.WORKERS_CI_COMMIT_SHA,
@@ -69,19 +46,7 @@ export async function fetchReviewedRelease({
       });
       if (response.status !== 200) {
         const retryMs = await githubReviewRetryMs(response, consecutiveFailures, now());
-        const safe = (name) =>
-          String(response.headers.get(name) || 'unknown')
-            .replace(/[^a-zA-Z0-9.-]/g, '')
-            .slice(0, 72);
-        const detail =
-          'HTTP ' +
-          response.status +
-          ', remaining=' +
-          safe('x-ratelimit-remaining') +
-          ', reset=' +
-          safe('x-ratelimit-reset') +
-          ', request=' +
-          safe('x-github-request-id');
+        const detail = githubReviewDiagnostics(response);
         if (retryMs === null) throw Error('Cannot read the GitHub release review (' + detail + ')');
         if (consecutiveFailures >= 3 || now() + retryMs >= deadline)
           throw Error('GitHub release review retry deadline/budget exceeded (' + detail + ')');
