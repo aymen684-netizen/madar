@@ -39,7 +39,12 @@ test('manifest-only version upgrades fail before npm audit', async () => {
     const manifest = JSON.parse(await readFile(file));
     manifest.dependencies.docx = '9.14.0';
     await writeFile(file, JSON.stringify(manifest));
-    await assert.rejects(verifyVendorAudit({ root }), /Audit\/version drift|Audit lock root/);
+    const lockFile = path.join(root, 'tools/vendor-audit/package-lock.json');
+    const lock = JSON.parse(await readFile(lockFile));
+    lock.packages[''].dependencies.docx = '9.14.0';
+    lock.packages['node_modules/docx'].version = '9.14.0';
+    await writeFile(lockFile, JSON.stringify(lock));
+    await assert.rejects(verifyVendorAudit({ root }), /Audit\/version drift/);
   });
 });
 
