@@ -20,13 +20,26 @@ const targets = [
     upstream: 'dist/satellite.min.js',
     shipped: 'public/vendor/satellite.min.js',
   },
+  {
+    name: 'globe.gl',
+    upstream: 'dist/globe.gl.min.js',
+    shipped: 'public/vendor/globe.min.js',
+  },
+  {
+    name: 'globe-compat',
+    upstream: 'dist/globe.gl.min.js',
+    shipped: 'public/vendor/globe-compat.min.js',
+  },
 ];
 let mismatches = 0;
 for (const target of targets) {
   const pkgRoot = path.join(auditRoot, 'node_modules', target.name);
   const pkg = JSON.parse(await readFile(path.join(pkgRoot, 'package.json'), 'utf8'));
-  const version = declared.dependencies[target.name];
   const locked = lock.packages['node_modules/' + target.name];
+  assert(locked, 'Missing locked npm package: ' + target.name);
+  const version = locked.version;
+  const spec = target.name === 'globe-compat' ? 'npm:globe.gl@' + version : version;
+  assert.equal(declared.dependencies[target.name], spec, 'Audit dependency drift');
   const pinned = hashes.bundles.find((item) => item.package === target.name);
   assert(pinned, 'Missing shipped provenance record: ' + target.name);
   assert.equal(pkg.version, version, 'Installed npm package version mismatch: ' + target.name);
