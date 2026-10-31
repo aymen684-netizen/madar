@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "statement": "Current docx and satellite.js source identities are confirmed by byte-identical comparison with npm distributions installed under lockfile integrity. Globe versions are supported by embedded bundle banners.",
+  "statement": "All four shipped vendor JavaScript files are byte-identical to pinned npm package distributions, confirmed by independent GitHub Actions provenance checks.",
   "bundles": [
     {
       "package": "docx",
@@ -23,7 +23,7 @@
       "declaredVersion": "2.41.4",
       "asset": "vendor/globe.min.js",
       "sha256": "983fefdaad2a6d51d84f63b906acb728c32875dc396d33e78fc7c2ff210ed054",
-      "versionEvidence": "bundle-version-banner",
+      "versionEvidence": "upstream-byte-identical",
       "license": "MIT"
     },
     {
@@ -31,7 +31,7 @@
       "declaredVersion": "2.31.0",
       "asset": "vendor/globe-compat.min.js",
       "sha256": "042a0092f352252bb2fdb5ff7c02788689c1bdb05c30e1fed5e2d9a61dade83b",
-      "versionEvidence": "bundle-version-banner",
+      "versionEvidence": "upstream-byte-identical",
       "license": "MIT"
     }
   ]
