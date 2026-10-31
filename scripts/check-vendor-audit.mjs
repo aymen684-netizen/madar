@@ -70,7 +70,9 @@ export async function verifyVendorAudit({ root = process.cwd(), release = false 
       }
     }
     assert(
-      ['audit-declaration-only', 'bundle-version-banner'].includes(bundle.versionEvidence),
+      ['audit-declaration-only', 'bundle-version-banner', 'upstream-byte-identical'].includes(
+        bundle.versionEvidence,
+      ),
       'Missing version evidence classification: ' + name,
     );
     results.push({

@@ -29,7 +29,10 @@ test('the audit is pinned to the four shipped bundle identities', async () => {
   await fixture(async (root) => {
     const bundles = await verifyVendorAudit({ root });
     assert.equal(bundles.length, 4);
-    assert(bundles.some((bundle) => bundle.evidence === 'audit-declaration-only'));
+    assert.equal(
+      bundles.filter((bundle) => bundle.evidence === 'upstream-byte-identical').length,
+      2,
+    );
   });
 });
 
