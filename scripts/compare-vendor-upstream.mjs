@@ -45,6 +45,11 @@ for (const target of targets) {
   assert.equal(pkg.version, version, 'Installed npm package version mismatch: ' + target.name);
   assert.equal(locked.version, version, 'Locked npm version mismatch: ' + target.name);
   assert.equal(pinned.declaredVersion, version, 'Audit-declared version mismatch: ' + target.name);
+  assert.equal(
+    pinned.versionEvidence,
+    'upstream-byte-identical',
+    'Missing upstream distribution provenance: ' + target.name,
+  );
   assert.match(locked.integrity || '', /^sha512-/, 'Missing upstream npm tarball integrity');
   const [upstream, shipped] = await Promise.all([
     readFile(path.join(pkgRoot, target.upstream)),

@@ -31,7 +31,7 @@ test('the audit is pinned to the four shipped bundle identities', async () => {
     assert.equal(bundles.length, 4);
     assert.equal(
       bundles.filter((bundle) => bundle.evidence === 'upstream-byte-identical').length,
-      2,
+      4,
     );
   });
 });

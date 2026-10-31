@@ -7,11 +7,14 @@ pins the SHA-256 bytes actually served to users alongside exact audit versions.
 | --- | --- | --- |
 | `vendor/docx.js` | `docx@9.5.1` | Byte-identical to locked npm `dist/index.umd.cjs` |
 | `vendor/satellite.min.js` | `satellite.js@6.0.1` | Byte-identical to locked npm `dist/satellite.min.js` |
-| `vendor/globe.min.js` | `globe.gl@2.41.4` | Embedded version banner |
-| `vendor/globe-compat.min.js` | `globe.gl@2.31.0` | Embedded version banner |
+| `vendor/globe.min.js` | `globe.gl@2.41.4` | Byte-identical to locked npm `dist/globe.gl.min.js` |
+| `vendor/globe-compat.min.js` | `globe.gl@2.31.0` | Byte-identical to locked npm `dist/globe.gl.min.js` |
 
 The exact docx and satellite.js matches were verified by GitHub Actions workflow
 `Verify upstream vendor bundle identity` (run 41165362998, 31 October 2026).
+Both Globe files were matched against the locked npm distribution in run 41168227288:
+`globe.gl@2.41.4` (1,647,649 bytes; SHA-256 `983fefdaad2a6d51d84f63b906acb728c32875dc396d33e78fc7c2ff210ed054`)
+and `globe.gl@2.31.0` (1,032,461 bytes; SHA-256 `042a0092f352252bb2fdb5ff7c02788689c1bdb05c30e1fed5e2d9a61dade83b`).
 It installs npm dependencies with `npm ci --ignore-scripts` from
 `tools/vendor-audit/package-lock.json`, reconstructs locally packed assets, and
 compares entire upstream and shipped files byte-for-byte, including SHA-256.
