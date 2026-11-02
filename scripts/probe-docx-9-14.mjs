@@ -28,7 +28,16 @@ fs.mkdirSync(outputDir, { recursive: true });
 const packed = JSON.parse(
   execFileSync(
     'npm',
-    ['pack', 'docx@9.14.0', '--json', '--pack-destination', work, '--ignore-scripts', '--no-audit', '--no-fund'],
+    [
+      'pack',
+      'docx@9.14.0',
+      '--json',
+      '--pack-destination',
+      work,
+      '--ignore-scripts',
+      '--no-audit',
+      '--no-fund',
+    ],
     { encoding: 'utf8', timeout: 180000 },
   ),
 )[0];
@@ -36,7 +45,11 @@ assert.equal(packed.name, 'docx');
 assert.equal(packed.version, '9.14.0');
 const tarball = fs.readFileSync(path.join(work, packed.filename));
 const actualIntegrity = 'sha512-' + createHash('sha512').update(tarball).digest('base64');
-assert.equal(actualIntegrity, expectedIntegrity, 'The npm tarball does not match the locked registry integrity');
+assert.equal(
+  actualIntegrity,
+  expectedIntegrity,
+  'The npm tarball does not match the locked registry integrity',
+);
 execFileSync('tar', ['-xzf', path.join(work, packed.filename), '-C', work], {
   timeout: 30000,
 });
@@ -57,9 +70,20 @@ async function probe(bytes, version) {
   const D = root.docx;
   assert.ok(D && typeof D === 'object', 'UMD bundle did not create the docx global: ' + version);
   for (const symbol of [
-    'Document', 'Paragraph', 'TextRun', 'Table', 'TableRow', 'TableCell',
-    'ImageRun', 'ExternalHyperlink', 'Footer', 'PageNumber',
-    'AlignmentType', 'WidthType', 'PageOrientation', 'Packer',
+    'Document',
+    'Paragraph',
+    'TextRun',
+    'Table',
+    'TableRow',
+    'TableCell',
+    'ImageRun',
+    'ExternalHyperlink',
+    'Footer',
+    'PageNumber',
+    'AlignmentType',
+    'WidthType',
+    'PageOrientation',
+    'Packer',
   ])
     assert.ok(D[symbol], 'Missing public Word API ' + symbol + ' in ' + version);
   assert.equal(typeof D.Packer.toBlob, 'function');
@@ -75,15 +99,16 @@ async function probe(bytes, version) {
     const rtl = language === 'ar';
     const label = rtl ? 'مدار تقرير تجريبي' : 'Madar Word compatibility test';
     const start = Date.now();
-    const cells = [label, 'NORAD 100001'].map((word) =>
-      new D.TableCell({
-        children: [
-          new D.Paragraph({
-            bidirectional: rtl,
-            children: [new D.TextRun({ text: word, rightToLeft: rtl })],
-          }),
-        ],
-      }),
+    const cells = [label, 'NORAD 100001'].map(
+      (word) =>
+        new D.TableCell({
+          children: [
+            new D.Paragraph({
+              bidirectional: rtl,
+              children: [new D.TextRun({ text: word, rightToLeft: rtl })],
+            }),
+          ],
+        }),
     );
     const word = new D.Document({
       creator: 'Madar',
@@ -108,7 +133,10 @@ async function probe(bytes, version) {
             }),
           },
           children: [
-            new D.Paragraph({ bidirectional: rtl, children: [new D.TextRun({ text: label, rightToLeft: rtl })] }),
+            new D.Paragraph({
+              bidirectional: rtl,
+              children: [new D.TextRun({ text: label, rightToLeft: rtl })],
+            }),
             new D.Table({
               visuallyRightToLeft: rtl,
               width: { size: 8000, type: D.WidthType.DXA },
@@ -155,4 +183,6 @@ console.log(JSON.stringify(evidence, null, 2));
 // Only change this ignored generated file inside the disposable CI checkout.
 // The repository's packed manifest, main, release and deployed assets stay untouched.
 fs.copyFileSync(candidateFile, currentFile);
-console.log('PASS: pinned docx 9.14.0 UMD candidate staged locally for existing Word regression scripts');
+console.log(
+  'PASS: pinned docx 9.14.0 UMD candidate staged locally for existing Word regression scripts',
+);
