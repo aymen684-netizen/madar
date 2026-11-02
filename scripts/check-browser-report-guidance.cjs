@@ -99,6 +99,10 @@ async function checkBrowserReportGuidance(browser, baseUrl, output) {
       assert.equal(await page.locator('#observer-lat').getAttribute('aria-invalid'), 'true');
       await page.fill('#observer-lat', '0');
       await next('observer');
+      // Near 23:00 local time the default +1 hour selection crosses midnight.
+      // Reset it explicitly so an end before the start is invalid in this case.
+      await page.uncheck('#observer-next');
+      assert.equal(await page.locator('#observer-next').isChecked(), false);
       await page.fill('#observer-date', '2026-10-19');
       await page.fill('#observer-start', '01:00:00');
       await page.fill('#observer-end', '00:00:00');
