@@ -23,6 +23,11 @@ jobs:
           node-version: '22'
       - name: Install locked application tooling without lifecycle scripts
         run: npm ci --ignore-scripts
+      - name: Display canonical Prettier output for test source review
+        run: |
+          echo 'MADAR_FORMAT_START'
+          npx prettier scripts/probe-docx-9-14.mjs
+          echo 'MADAR_FORMAT_END'
       - name: Reconstruct existing pinned vendor files for a clean baseline
         run: npm run build:source
       - name: Check official 9.14.0 npm integrity and UMD/browser compatibility
