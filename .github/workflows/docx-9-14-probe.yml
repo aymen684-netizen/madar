@@ -43,3 +43,57 @@ jobs:
           name: docx-9-14-isolated-umd-results
           path: test-results/docx-9-14-probe.json
           if-no-files-found: warn
+
+  stress-word:
+    if: github.head_ref == 'test/docx-9-14-umd-compat-20261102'
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      matrix:
+        rows: [5000, 10000, 20000]
+    env:
+      MADAR_WORD_STRESS_ROWS: ${{ matrix.rows }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+      - run: npm ci --ignore-scripts
+      - run: npm run build:source
+      - name: Compare bounded Word generators using the same runner
+        shell: bash
+        run: |
+          mkdir -p test-results
+          set +e
+          /usr/bin/time -v node --max-old-space-size=512 scripts/check-observer-word.mjs > "test-results/docx-baseline-${MADAR_WORD_STRESS_ROWS}.log" 2>&1
+          baseline=$?
+          node scripts/probe-docx-9-14.mjs > "test-results/docx-probe-${MADAR_WORD_STRESS_ROWS}.log" 2>&1
+          setup=$?
+          candidate=99
+          if [ "$setup" -eq 0 ]; then
+            /usr/bin/time -v node --max-old-space-size=512 scripts/check-observer-word.mjs > "test-results/docx-candidate-${MADAR_WORD_STRESS_ROWS}.log" 2>&1
+            candidate=$?
+          fi
+          echo "Rows: $MADAR_WORD_STRESS_ROWS; baseline=$baseline; probe=$setup; candidate=$candidate"
+          echo 'BASELINE (last 30 lines)'
+          tail -n 30 "test-results/docx-baseline-${MADAR_WORD_STRESS_ROWS}.log"
+          echo 'CANDIDATE (last 30 lines, if available)'
+          if [ -f "test-results/docx-candidate-${MADAR_WORD_STRESS_ROWS}.log" ]; then
+            tail -n 30 "test-results/docx-candidate-${MADAR_WORD_STRESS_ROWS}.log"
+          else
+            tail -n 25 "test-results/docx-probe-${MADAR_WORD_STRESS_ROWS}.log"
+          fi
+          if [ "$baseline" -ne 0 ] || [ "$setup" -ne 0 ] || [ "$candidate" -ne 0 ]; then
+            exit 1
+          fi
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: docx-9-14-stress-${{ matrix.rows }}
+          path: |
+            test-results/docx-*.log
+            test-results/docx-9-14-probe.json
+          if-no-files-found: warn
