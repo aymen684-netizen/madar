@@ -1,0 +1,43 @@
+name: Probe docx 9.14 without changing shipped vendor bytes
+
+on:
+  pull_request:
+    paths:
+      - scripts/probe-docx-9-14.mjs
+      - .github/workflows/docx-9-14-probe.yml
+
+permissions:
+  contents: read
+
+jobs:
+  docx-umd-probe:
+    if: github.head_ref == 'test/docx-9-14-umd-compat-20261102'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+      - name: Install locked application tooling without lifecycle scripts
+        run: npm ci --ignore-scripts
+      - name: Reconstruct existing pinned vendor files for a clean baseline
+        run: npm run build:source
+      - name: Check official 9.14.0 npm integrity and UMD/browser compatibility
+        run: node scripts/probe-docx-9-14.mjs
+      - name: Validate real bilingual full and brief Word generators
+        run: node scripts/check-report-quality.mjs
+      - name: Verify local download and share behavior
+        run: node scripts/check-word-delivery.mjs
+      - name: Validate 1,001-row inventory Word/ZIP package
+        run: node --max-old-space-size=512 scripts/check-inventory-word.mjs
+      - name: Validate bilingual 1,001-row observer Word/ZIP and cancellation
+        run: node --max-old-space-size=512 scripts/check-observer-word.mjs
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: docx-9-14-isolated-umd-results
+          path: test-results/docx-9-14-probe.json
+          if-no-files-found: warn
