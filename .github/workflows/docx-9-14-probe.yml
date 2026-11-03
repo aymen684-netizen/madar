@@ -171,3 +171,37 @@ jobs:
           name: docx-9-14-stage-profile
           path: test-results/docx-profile-*.json
           if-no-files-found: warn
+
+  visual-word-qa:
+    if: github.head_ref == 'test/docx-9-14-umd-compat-20261102'
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+      - run: npm ci --ignore-scripts
+      - name: Restore known shipped baseline asset bytes
+        run: npm run build:source
+      - name: Generate bilingual baseline report documents
+        run: node scripts/check-report-quality.mjs
+        env:
+          MADAR_REPORT_QA_DIR: test-results/visual/baseline
+      - name: Prepare and verify pinned candidate UMD in disposable checkout
+        run: node scripts/probe-docx-9-14.mjs
+      - name: Generate bilingual candidate report documents
+        run: node scripts/check-report-quality.mjs
+        env:
+          MADAR_REPORT_QA_DIR: test-results/visual/candidate
+      - name: Preserve documents for side-by-side Word and LibreOffice rendering review
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: docx-9-14-bilingual-visual-qa
+          path: test-results/visual/
+          if-no-files-found: warn
