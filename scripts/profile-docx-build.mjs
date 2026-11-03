@@ -8,7 +8,10 @@ import vm from 'node:vm';
 import { validDocx } from '../worker/docx-validation.js';
 
 const [bundlePath, version, outputPath] = process.argv.slice(2);
-assert(bundlePath && version && outputPath, 'Usage: node scripts/profile-docx-build.mjs <UMD file> <version> <JSON output>');
+assert(
+  bundlePath && version && outputPath,
+  'Usage: node scripts/profile-docx-build.mjs <UMD file> <version> <JSON output>',
+);
 const bytes = fs.readFileSync(bundlePath);
 const sandbox = { Blob, TextEncoder, TextDecoder, Uint8Array, URL, setTimeout, clearTimeout };
 sandbox.self = sandbox;
@@ -23,28 +26,33 @@ assert(D?.Packer?.toBlob, 'UMD docx global or Packer.toBlob is missing');
 function buildDocument(language) {
   const rtl = language === 'ar';
   const label = rtl ? 'تقرير مدار واختبار الأداء' : 'Madar Word performance probe';
-  const rows = Array.from({ length: 500 }, (_, index) =>
-    new D.TableRow({
-      cantSplit: true,
-      children: Array.from({ length: 6 }, (_, col) =>
-        new D.TableCell({
-          children: [
-            new D.Paragraph({
-              bidirectional: rtl,
-              alignment: D.AlignmentType.START,
+  const rows = Array.from(
+    { length: 500 },
+    (_, index) =>
+      new D.TableRow({
+        cantSplit: true,
+        children: Array.from(
+          { length: 6 },
+          (_, col) =>
+            new D.TableCell({
               children: [
-                new D.TextRun({
-                  text: col === 0 ? 'NORAD ' + (100000 + index) : label + ' ' + index + ' ' + col,
-                  rightToLeft: rtl,
-                  font: 'Arial',
-                  size: 19,
+                new D.Paragraph({
+                  bidirectional: rtl,
+                  alignment: D.AlignmentType.START,
+                  children: [
+                    new D.TextRun({
+                      text:
+                        col === 0 ? 'NORAD ' + (100000 + index) : label + ' ' + index + ' ' + col,
+                      rightToLeft: rtl,
+                      font: 'Arial',
+                      size: 19,
+                    }),
+                  ],
                 }),
               ],
             }),
-          ],
-        }),
-      ),
-    }),
+        ),
+      }),
   );
   return new D.Document({
     creator: 'Madar',
@@ -68,10 +76,12 @@ function buildDocument(language) {
             rows: [
               new D.TableRow({
                 tableHeader: true,
-                children: Array.from({ length: 6 }, (_, col) =>
-                  new D.TableCell({
-                    children: [new D.Paragraph({ text: label + ' ' + col, bidirectional: rtl })],
-                  }),
+                children: Array.from(
+                  { length: 6 },
+                  (_, col) =>
+                    new D.TableCell({
+                      children: [new D.Paragraph({ text: label + ' ' + col, bidirectional: rtl })],
+                    }),
                 ),
               }),
               ...rows,
