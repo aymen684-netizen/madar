@@ -97,3 +97,43 @@ jobs:
             test-results/docx-*.log
             test-results/docx-9-14-probe.json
           if-no-files-found: warn
+
+  candidate-browser:
+    if: github.head_ref == 'test/docx-9-14-umd-compat-20261102'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        suite: [interface, reports]
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+      - run: npm ci --ignore-scripts
+      - name: Build and validate original frozen release before local substitution
+        run: |
+          npm run build
+          node scripts/verify-release.mjs --fixtures
+      - name: Verify candidate tarball and stage only into ephemeral browser assets
+        run: |
+          node scripts/probe-docx-9-14.mjs
+          cp public/vendor/docx.js build/release/assets/vendor/docx.js
+          node --input-type=module -e "import fs from 'node:fs'; import crypto from 'node:crypto'; const sha=crypto.createHash('sha256').update(fs.readFileSync('build/release/assets/vendor/docx.js')).digest('hex'); if(sha!=='2024b090d888c4d0396d3088ae72b841de1e69e8a5bd8373e34ea31413d9dfdf') throw Error('Wrong candidate bytes');"
+      - run: npx playwright install chromium
+      - name: Test candidate Word inside actual browser and Worker flows
+        run: node scripts/check-browser.cjs
+        env:
+          MADAR_TEST_ROOT: build/release/assets
+          MADAR_BROWSER_SUITE: ${{ matrix.suite }}
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: docx-9-14-browser-${{ matrix.suite }}
+          path: test-results/
+          if-no-files-found: warn
