@@ -152,11 +152,8 @@ jobs:
         with:
           node-version: '22'
       - run: npm ci --ignore-scripts
-      - name: Display canonical profiler formatting for review
-        run: |
-          echo 'MADAR_PROFILE_FORMAT_BEGIN'
-          npx prettier scripts/profile-docx-build.mjs
-          echo 'MADAR_PROFILE_FORMAT_END'
+      - name: Enforce formatting of Word phase profiler
+        run: npx prettier --check scripts/profile-docx-build.mjs
       - run: npm run build:source
       - name: Preserve baseline UMD from locked shipped assets
         run: |
