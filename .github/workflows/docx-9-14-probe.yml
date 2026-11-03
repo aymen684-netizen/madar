@@ -137,3 +137,40 @@ jobs:
           name: docx-9-14-browser-${{ matrix.suite }}
           path: test-results/
           if-no-files-found: warn
+
+  profile-docx:
+    if: github.head_ref == 'test/docx-9-14-umd-compat-20261102'
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+      - run: npm ci --ignore-scripts
+      - name: Display canonical profiler formatting for review
+        run: |
+          echo 'MADAR_PROFILE_FORMAT_BEGIN'
+          npx prettier scripts/profile-docx-build.mjs
+          echo 'MADAR_PROFILE_FORMAT_END'
+      - run: npm run build:source
+      - name: Preserve baseline UMD from locked shipped assets
+        run: |
+          mkdir -p test-results
+          cp public/vendor/docx.js test-results/docx-baseline-9-5.umd.js
+      - name: Prepare pinned npm candidate without changing release assets
+        run: node scripts/probe-docx-9-14.mjs
+      - name: Profile baseline in its own process
+        run: node --max-old-space-size=512 scripts/profile-docx-build.mjs test-results/docx-baseline-9-5.umd.js 9.5.1 test-results/docx-profile-9-5.json
+      - name: Profile candidate in its own process
+        run: node --max-old-space-size=512 scripts/profile-docx-build.mjs public/vendor/docx.js 9.14.0 test-results/docx-profile-9-14.json
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: docx-9-14-stage-profile
+          path: test-results/docx-profile-*.json
+          if-no-files-found: warn
