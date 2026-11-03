@@ -72,7 +72,7 @@ test('GitHub review API retries only rate limits and temporary server failures',
   assert.equal(await githubReviewRetryMs(new Response('', { status: 503 }), 2, nowMs), 20000);
 });
 
-test('GitHub 403 diagnostics expose only bounded allowlisted headers, not private data', () => {
+test('GitHub 403 diagnostics expose only bounded allowlisted headers, not private data', async () => {
   const response = new Response(JSON.stringify({ message: 'PRIVATE_RESPONSE_BODY_MARKER' }), {
     status: 403,
     headers: {
