@@ -5,6 +5,7 @@ import { test } from 'node:test';
 import { gzipSync } from 'node:zlib';
 import { packRelease, unpackRelease, releaseTag, sha256 } from './release-archive.mjs';
 import { fetchReviewedRelease, githubReviewRetryMs } from './fetch-reviewed-release.mjs';
+import { githubReviewDiagnostics } from './github-review-api.mjs';
 import { verifyRelease } from './verify-release.mjs';
 
 function maliciousTar(name, type = '0') {
@@ -69,6 +70,32 @@ test('GitHub review API retries only rate limits and temporary server failures',
   assert.equal(await githubReviewRetryMs(retryAfter, 0, nowMs), 180000);
   assert.equal(await githubReviewRetryMs(new Response('', { status: 503 }), 0, nowMs), 5000);
   assert.equal(await githubReviewRetryMs(new Response('', { status: 503 }), 2, nowMs), 20000);
+});
+
+test('GitHub 403 diagnostics omit private data and bound provider headers', async () => {
+  const response = new Response(JSON.stringify({ message: 'PRIVATE_RESPONSE_BODY_MARKER' }), {
+    status: 403,
+    headers: {
+      'x-ratelimit-remaining': '0',
+      'x-ratelimit-reset': '1793741400',
+      'retry-after': '120',
+      'x-github-request-id': 'A'.repeat(150) + ':?<>',
+      authorization: 'Bearer PRIVATE_AUTH_TOKEN_MARKER',
+      'x-untrusted-description': 'PRIVATE_OTHER_HEADER_MARKER',
+    },
+  });
+  const diagnostic = githubReviewDiagnostics(response);
+  assert.equal(
+    diagnostic,
+    'HTTP 403, remaining=0, reset=1793741400, retry-after=120, request=' + 'A'.repeat(72),
+  );
+  assert(!diagnostic.includes('PRIVATE_RESPONSE_BODY_MARKER'), 'no response body may enter logs');
+  assert(!diagnostic.includes('PRIVATE_AUTH_TOKEN_MARKER'), 'no authorization data may enter logs');
+  assert(!diagnostic.includes('PRIVATE_OTHER_HEADER_MARKER'), 'unknown headers are never logged');
+  assert(!/[\r\n<>:?]/.test(diagnostic), 'diagnostics cannot contain control characters or markup');
+  assert.equal(await githubReviewRetryMs(new Response('', { status: 401 }), 0), null);
+  assert.equal(await githubReviewRetryMs(new Response('', { status: 404 }), 0), null);
+  assert.equal(await githubReviewRetryMs(new Response('', { status: 502 }), 0), 5000);
 });
 
 test('Cloudflare importer requires the latest successful source review and checksum before replacing files', async () => {
